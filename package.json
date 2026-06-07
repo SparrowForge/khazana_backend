@@ -1,0 +1,50 @@
+{
+  "name": "khazana pos backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nest start",
+    "dev": "nest start --watch",
+    "build": "nest build",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "db:seed": "ts-node --project tsconfig.seed.json prisma/seed.ts"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.2",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/jwt": "^11.0.2",
+    "@nestjs/mapped-types": "^2.1.1",
+    "@nestjs/passport": "^11.0.5",
+    "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/swagger": "^11.4.4",
+    "@prisma/client": "^6.8.2",
+    "bcryptjs": "^2.4.3",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^11.0.7",
+    "@nestjs/schematics": "^11.0.5",
+    "@nestjs/testing": "^11.0.1",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.15.0",
+    "@types/passport-jwt": "^4.0.1",
+    "prisma": "^6.8.2",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.8.3"
+  },
+  "prisma": {
+    "seed": "ts-node --project tsconfig.seed.json prisma/seed.ts"
+  }
+}

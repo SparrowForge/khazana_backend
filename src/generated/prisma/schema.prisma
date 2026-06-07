@@ -1,0 +1,840 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ==================== BRANCH & SYSTEM ====================
+
+model Branch {
+  id         String  @id @default(dbgenerated("gen_random_uuid()")) @map("Id") @db.Uuid
+  branchCode String? @map("BranchCode")
+  branchName String? @map("BranchName")
+  address    String? @map("Address")
+  vatNo      String? @map("VatNo")
+  mobileNo   String? @map("MobileNo")
+  users      User[]
+
+  @@map("Branch")
+}
+
+model Bank {
+  id         String     @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  name       String?    @map("Name")
+  createBy   String?    @map("CreateBy")
+  createDate DateTime?  @map("CreateDate")
+  sales      t_SOMstr[]
+
+  @@map("Bank")
+}
+
+model Setup_System {
+  id             String  @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  companyName    String  @map("CompanyName")
+  companyAddress String? @map("CompanyAddress")
+  companyUtility String? @map("CompanyUtility")
+  reportFooter   String? @map("ReportFooter")
+
+  @@map("Setup_System")
+}
+
+// ==================== AUTHENTICATION & USERS ====================
+
+model User {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  name           String?      @map("Name")
+  userName       String       @unique @map("UserName")
+  password       String?      @map("Password")
+  branchId       String       @map("BranchId") @db.Uuid
+  validUntil     DateTime?    @map("ValidUntil")
+  isActive       String?      @map("IsActive")
+  creator        String?      @map("Creator")
+  creationDate   DateTime?    @map("CreationDate")
+  lastUpdateBy   String?      @map("LastUpdateBy")
+  lastUpdateDate DateTime?    @map("LastUpdateDate")
+  isDeleted      String?      @map("IsDeleted")
+  deletedBy      String?      @map("DeletedBy")
+  deletionDate   DateTime?    @map("DeletionDate")
+  remarks        String?      @map("Remarks")
+  branch         Branch       @relation(fields: [branchId], references: [id])
+  userRoles      t_UserRole[]
+
+  @@map("t_User")
+}
+
+model t_UserRole {
+  userId       String  @map("UserID")
+  controlName  String  @map("ControlName")
+  isEnable     String? @map("IsEnable")
+  addAccess    String? @map("AddAccess")
+  editAccess   String? @map("EditAccess")
+  deleteAccess String? @map("DeleteAccess")
+  user         User    @relation(fields: [userId], references: [userName])
+
+  @@id([userId, controlName])
+  @@map("t_UserRole")
+}
+
+model AuditLog {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  actionPage String?   @map("ActionPage")
+  actionDone String?   @map("ActionDone")
+  userName   String?   @map("UserName")
+  date       DateTime? @map("Date")
+  module     String?   @map("Module")
+  ipAddress  String?   @map("IpAddress")
+  userAgent  String?   @map("UserAgent")
+
+  @@map("AuditLog")
+}
+
+model AuditLogs {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String?  @map("user_id") @db.Uuid
+  action     String   @db.VarChar(100)
+  entityType String?  @map("entity_type") @db.VarChar(100)
+  entityId   String?  @map("entity_id") @db.Uuid
+  oldValues  Json?    @map("old_values")
+  newValues  Json?    @map("new_values")
+  ipAddress  String?  @map("ip_address") @db.VarChar(45)
+  userAgent  String?  @map("user_agent")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz()
+
+  @@index([userId], map: "idx_audit_logs_user_id")
+  @@index([createdAt], map: "idx_audit_logs_created_at")
+  @@map("audit_logs")
+}
+
+model MenuItem {
+  id          String @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  manuName    String @map("ManuName")
+  controlName String @map("ControlName")
+
+  @@id([manuName, controlName])
+  @@map("MenuItem")
+}
+
+model Menu {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  menuName    String       @map("MenuName")
+  controlName String       @map("ControlName")
+  description String?      @map("Description")
+  icon        String?      @map("Icon")
+  order       Int?         @map("Order")
+  parentMenu  String?      @map("ParentMenu")
+  isActive    Boolean?     @map("IsActive")
+  permissions Permission[]
+
+  @@map("Menu")
+}
+
+model Role {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  name        String       @unique @map("Name")
+  description String?      @map("Description")
+  permissions Permission[]
+
+  @@map("Role")
+}
+
+model Permission {
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  roleId    String  @map("RoleId") @db.Uuid
+  menuId    String  @map("MenuId") @db.Uuid
+  isEnable  Boolean @default(false) @map("IsEnable")
+  canCreate Boolean @default(false) @map("CanCreate")
+  canEdit   Boolean @default(false) @map("CanEdit")
+  canDelete Boolean @default(false) @map("CanDelete")
+  role      Role    @relation(fields: [roleId], references: [id])
+  menu      Menu    @relation(fields: [menuId], references: [id])
+
+  @@unique([roleId, menuId])
+  @@map("Permission")
+}
+
+// ==================== CUSTOMERS ====================
+
+model Customer {
+  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  code               String               @unique @map("Code")
+  name               String               @map("Name")
+  mobile             String?              @map("Mobile")
+  address            String?              @map("Address")
+  email              String?              @map("EMail")
+  joiningDate        DateTime?            @map("JoiningDate")
+  sales              CSMaster[]
+  salesVat           CSVMaster[]
+  clientTransactions Client_Transaction[]
+  moneyReceives      MoneyReceive[]
+
+  @@map("Customer")
+}
+
+model Client_Transaction {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  clientCode    String?   @map("ClientCode")
+  paymentDate   DateTime? @map("PaymentDate")
+  paymentAmount Decimal?  @map("PaymentAmount") @db.Decimal(9, 2)
+  tType         String?   @map("TType")
+  serialNo      String?   @map("SerialNo")
+  moneyReceptNo String?   @map("MoneyReceptNo")
+  bankName      String?   @map("BankName")
+  bankNo        String?   @map("BankNo")
+  customer      Customer? @relation(fields: [clientCode], references: [code])
+
+  @@map("Client_Transaction")
+}
+
+// ==================== EMPLOYEES ====================
+
+model Employee {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  code        String    @unique @map("Code")
+  name        String?   @map("Name")
+  mobile      String?   @map("Mobile")
+  address     String?   @map("Address")
+  email       String?   @map("Email")
+  nationalId  String?   @map("NationalID")
+  education   String?   @map("Education")
+  dateOfBirth DateTime? @map("DateOfBirth")
+  joiningDate DateTime? @map("JoiningDate")
+
+  @@map("Employee")
+}
+
+// ==================== ITEMS ====================
+
+model Item_Information {
+  id                    String         @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  itmCode               String         @unique @map("itmCode")
+  itmName               String?        @map("itmName")
+  itmCategory           String?        @map("itmCategory")
+  itmType               String?        @map("itmType")
+  itmUOM                String?        @map("itmUOM")
+  itmRemarks            String?        @map("itmRemarks")
+  itmOrderLevel         Decimal?       @map("itmOrderLevel") @db.Decimal(9, 2)
+  orderLevelUOM         String?        @map("OrderLevelUOM")
+  isActive              String?        @map("IsActive")
+  // Relations using Item_Information.ID (uuid)
+  runningSaleDetails    t_SODet[]
+  runningSaleVatDetails t_SODeV[]
+  ncDetails             t_NCDet[]
+  asstDetails           AsstDet[]
+  itemRejects           ItemReject[]
+  // Relations using Item_Information.itmCode (varchar)
+  itemReceives          Item_Receive[]
+  itemIssues            Item_Issue[]
+  inventory             Inventory?
+  prices                t_Price[]      @relation("ItemPrices")
+  costPrices            t_CostPr[]     @relation("ItemCostPrices")
+
+  @@map("Item_Information")
+}
+
+model Item_Category {
+  id      String  @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  code    String  @unique @map("Code")
+  name    String? @map("Name")
+  remarks String? @map("Remarks")
+
+  @@map("Item_Category")
+}
+
+model RW_Stock {
+  itemCode  String  @id @map("ItemCode")
+  stockQty  Decimal @map("StockQty") @db.Decimal(9, 2)
+  unitPrice Decimal @map("UnitPrice") @db.Decimal(9, 4)
+  branchId  Int?    @map("BranchId")
+
+  @@map("RW_Stock")
+}
+
+model Inventory {
+  itemCode String           @id @map("ItemCode")
+  quantity Decimal          @default(0) @map("Quantity") @db.Decimal(18, 4)
+  item     Item_Information @relation(fields: [itemCode], references: [itmCode])
+
+  @@map("Inventory")
+}
+
+// ==================== PRICING ====================
+
+model t_Price {
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @map("Price_OId") @db.Uuid
+  priceItemOId      String            @map("Price_ItemOId")
+  priceFromDate     DateTime?         @map("Price_FromDate")
+  priceToDate       DateTime?         @map("Price_ToDate")
+  priceListPrice    Float?            @map("Price_ListPrice")
+  priceVatPercent   Float?            @map("Price_VatPercent")
+  priceVatPrice     Float?            @map("Price_VatPrice")
+  priceDiscPrice    Float?            @map("Price_DiscPrice")
+  priceCreator      String?           @map("Price_Creator")
+  priceCreationDate DateTime?         @map("Price_CreationDate")
+  priceUpdateBy     String?           @map("Price_UpdateBy")
+  priceUpdateDate   DateTime?         @map("Price_UpdateDate")
+  priceIsActive     Int?              @map("Price_IsActive")
+  item              Item_Information? @relation("ItemPrices", fields: [priceItemOId], references: [itmCode])
+
+  @@map("t_Price")
+}
+
+model t_CostPr {
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @map("Price_OId") @db.Uuid
+  priceItemOId      String            @map("Price_ItemOId")
+  priceFromDate     DateTime?         @map("Price_FromDate")
+  priceToDate       DateTime?         @map("Price_ToDate")
+  priceListPrice    Float?            @map("Price_ListPrice")
+  priceVatPercent   Float?            @map("Price_VatPercent")
+  priceVatPrice     Float?            @map("Price_VatPrice")
+  priceDiscPrice    Float?            @map("Price_DiscPrice")
+  priceCreator      String?           @map("Price_Creator")
+  priceCreationDate DateTime?         @map("Price_CreationDate")
+  priceUpdateBy     String?           @map("Price_UpdateBy")
+  priceUpdateDate   DateTime?         @map("Price_UpdateDate")
+  priceIsActive     Int?              @map("Price_IsActive")
+  item              Item_Information? @relation("ItemCostPrices", fields: [priceItemOId], references: [itmCode])
+
+  @@map("t_CostPr")
+}
+
+// ==================== CREDIT SALES (NON-VAT) ====================
+
+model CSMaster {
+  id              String     @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  invNo           String     @unique @map("InvNo")
+  invDate         DateTime?  @map("InvDate")
+  poNo            String?    @map("PONo")
+  invoiceBy       String?    @map("InvoiceBy")
+  manualInvoice   String?    @map("ManualInvoice")
+  clientCode      String?    @map("ClientCode")
+  totalAmount     Decimal?   @map("TotalAmount") @db.Decimal(9, 2)
+  totalDiscount   Decimal?   @map("TotalDiscount") @db.Decimal(8, 2)
+  totalVat        Decimal?   @map("TotalVat") @db.Decimal(8, 2)
+  discountRemarks String?    @map("DiscountRemarks")
+  isActive        Int?       @map("IsActive")
+  branchId        Int?       @map("BranchId")
+  createDate      DateTime?  @map("CreateDate")
+  customer        Customer?  @relation(fields: [clientCode], references: [code])
+  details         CSDetail[]
+
+  @@map("CSMaster")
+}
+
+model CSDetail {
+  id      String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  invNo   String?   @map("InvNo")
+  itemOId String?   @map("ItemOId")
+  rate    Decimal?  @map("Rate") @db.Decimal(8, 2)
+  qty     Decimal?  @map("Qty") @db.Decimal(8, 2)
+  value   Decimal?  @map("Value") @db.Decimal(8, 2)
+  disc    Decimal?  @map("Disc") @db.Decimal(8, 2)
+  vat     Decimal?  @map("vat") @db.Decimal(8, 2)
+  total   Decimal?  @map("total") @db.Decimal(18, 2)
+  sale    CSMaster? @relation(fields: [invNo], references: [invNo])
+
+  @@map("CSDetail")
+}
+
+// ==================== CREDIT SALES (VAT) ====================
+
+model CSVMaster {
+  id              String      @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  invNo           String      @unique @map("InvNo")
+  invDate         DateTime?   @map("InvDate")
+  poNo            String?     @map("PONo")
+  invoiceBy       String?     @map("InvoiceBy")
+  manualInvoice   String?     @map("ManualInvoice")
+  clientCode      String?     @map("ClientCode")
+  totalAmount     Decimal?    @map("TotalAmount") @db.Decimal(18, 6)
+  totalDiscount   Decimal?    @map("TotalDiscount") @db.Decimal(18, 6)
+  totalVat        Decimal?    @map("TotalVat") @db.Decimal(18, 6)
+  discountRemarks String?     @map("DiscountRemarks")
+  branchId        Int?        @map("BranchId")
+  customer        Customer?   @relation(fields: [clientCode], references: [code])
+  details         CSVDetail[]
+
+  @@map("CSVMaster")
+}
+
+model CSVDetail {
+  id      String     @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  invNo   String?    @map("InvNo")
+  itemOId String?    @map("ItemOId")
+  rate    Decimal?   @map("Rate") @db.Decimal(18, 6)
+  qty     Decimal?   @map("Qty") @db.Decimal(18, 6)
+  value   Decimal?   @map("Value") @db.Decimal(18, 6)
+  disc    Decimal?   @map("Disc") @db.Decimal(18, 6)
+  vat     Decimal?   @map("vat") @db.Decimal(18, 6)
+  total   Decimal?   @map("total") @db.Decimal(18, 6)
+  sale    CSVMaster? @relation(fields: [invNo], references: [invNo])
+
+  @@map("CSVDetail")
+}
+
+// ==================== RUNNING SALES (CASH / NON-VAT) ====================
+
+model t_SOMstr {
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @map("SOMstr_OID") @db.Uuid
+  somstrCode            String?   @map("SOMstr_Code")
+  somstrDate            DateTime? @map("SOMstr_Date")
+  somstrTotalAmt        Decimal?  @map("SOMstr_TotalAmt") @db.Decimal(18, 4)
+  somstrDiscAmt         Decimal?  @map("SOMstr_DiscAmt") @db.Decimal(18, 4)
+  somstrNetAmt          Decimal?  @map("SOMstr_NetAmt") @db.Decimal(18, 4)
+  somstrVatClnNo        String?   @map("SOMstr_VatClnNo")
+  somstrVatDate         DateTime? @map("SOMstr_VatDate")
+  somstrPricingDate     DateTime? @map("SOMstr_PricingDate")
+  somstrCreator         String?   @map("SOMstr_Creator")
+  somstrCreationDate    DateTime? @map("SOMstr_CreationDate")
+  somstrUpdateBy        String?   @map("SOMstr_UpdateBy")
+  somstrUpdateDate      DateTime? @map("SOMstr_UpdateDate")
+  somstrIsActive        Boolean?  @map("SOMstr_IsActive")
+  somstrCustomerpay     Decimal?  @map("SOMstr_Customerpay") @db.Decimal(18, 4)
+  somstrChange          Decimal?  @map("SOMstr_Change") @db.Decimal(18, 4)
+  branchId              Int?      @map("BranchId")
+  soMstrDiscountRemarks String?   @map("SoMstr_DiscountRemarks")
+  soMstrModifyRemarks   String?   @map("SoMstr_ModifyRemarks")
+  soMstrDiscountContact String?   @map("SoMstr_DiscountContact")
+  mtype                 String?   @map("Mtype")
+  soMstrMBank           String?   @map("SoMstr_MBank") @db.Uuid
+  bank                  Bank?     @relation(fields: [soMstrMBank], references: [id])
+  details               t_SODet[]
+
+  @@map("t_SOMstr")
+}
+
+model t_SODet {
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @map("SODet_OID") @db.Uuid
+  t_SOMstr_id    String?           @map("SODet_MStrOID") @db.Uuid
+  sodetItemSLNum String?           @map("SODet_ItemSLNum")
+  sodetItemOID   String            @map("SODet_ItemOID") @db.Uuid
+  sodetQTY       Decimal?          @map("SODet_QTY") @db.Decimal(18, 4)
+  sodetUOM       String?           @map("SODet_UOM")
+  sodetPrice     Decimal?          @map("SODet_Price") @db.Decimal(18, 4)
+  sodetAmount    Decimal?          @map("SODet_Amount") @db.Decimal(18, 4)
+  sodetSDValue   Decimal?          @map("SODet_SDValue") @db.Decimal(18, 4)
+  sodetSDAmount  Decimal?          @map("SODet_SDAmount") @db.Decimal(18, 4)
+  sodetVATValue  Decimal?          @map("SODet_VATValue") @db.Decimal(18, 4)
+  sodetVATAmount Decimal?          @map("SODet_VATAmount") @db.Decimal(18, 4)
+  sodetDiscount  Decimal?          @map("SODet_Discount") @db.Decimal(18, 4)
+  sodetNetAmount Decimal?          @map("SODet_NetAmount") @db.Decimal(18, 4)
+  branchId       Int?              @map("BranchId")
+  sale           t_SOMstr?         @relation(fields: [t_SOMstr_id], references: [id])
+  item           Item_Information? @relation(fields: [sodetItemOID], references: [id])
+
+  @@map("t_SODet")
+}
+
+// ==================== RUNNING SALES (VAT) ====================
+
+model t_SOMstV {
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @map("SOMstr_OID") @db.Uuid
+  somstrCode            String?   @map("SOMstr_Code")
+  somstrDate            DateTime? @map("SOMstr_Date")
+  somstrTotalAmt        Decimal?  @map("SOMstr_TotalAmt") @db.Decimal(18, 6)
+  somstrDiscAmt         Decimal?  @map("SOMstr_DiscAmt") @db.Decimal(18, 6)
+  somstrNetAmt          Decimal?  @map("SOMstr_NetAmt") @db.Decimal(18, 6)
+  somstrVatClnNo        String?   @map("SOMstr_VatClnNo")
+  somstrVatDate         DateTime? @map("SOMstr_VatDate")
+  somstrPricingDate     DateTime? @map("SOMstr_PricingDate")
+  somstrCreator         String?   @map("SOMstr_Creator")
+  somstrCreationDate    DateTime? @map("SOMstr_CreationDate")
+  somstrUpdateBy        String?   @map("SOMstr_UpdateBy")
+  somstrUpdateDate      DateTime? @map("SOMstr_UpdateDate")
+  somstrIsActive        Boolean?  @map("SOMstr_IsActive")
+  somstrCustomerpay     Decimal?  @map("SOMstr_Customerpay") @db.Decimal(18, 4)
+  somstrChange          Decimal?  @map("SOMstr_Change") @db.Decimal(18, 4)
+  branchId              Int?      @map("BranchId")
+  soMstrDiscountRemarks String?   @map("SoMstr_DiscountRemarks")
+  soMstrModifyRemarks   String?   @map("SoMstr_ModifyRemarks")
+  soMstrDiscountContact String?   @map("SoMstr_DiscountContact")
+  mtype                 String?   @map("Mtype")
+  details               t_SODeV[]
+
+  @@map("t_SOMstV")
+}
+
+model t_SODeV {
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @map("SODet_OID") @db.Uuid
+  t_SOMstV_id    String?           @map("SODet_MStrOID") @db.Uuid
+  sodetItemSLNum String?           @map("SODet_ItemSLNum")
+  sodetItemOID   String            @map("SODet_ItemOID") @db.Uuid
+  sodetQTY       Decimal?          @map("SODet_QTY") @db.Decimal(18, 6)
+  sodetUOM       String?           @map("SODet_UOM")
+  sodetPrice     Decimal?          @map("SODet_Price") @db.Decimal(18, 6)
+  sodetAmount    Decimal?          @map("SODet_Amount") @db.Decimal(18, 6)
+  sodetSDValue   Decimal?          @map("SODet_SDValue") @db.Decimal(18, 6)
+  sodetSDAmount  Decimal?          @map("SODet_SDAmount") @db.Decimal(18, 6)
+  sodetVATValue  Decimal?          @map("SODet_VATValue") @db.Decimal(18, 6)
+  sodetVATAmount Decimal?          @map("SODet_VATAmount") @db.Decimal(18, 6)
+  sodetDiscount  Decimal?          @map("SODet_Discount") @db.Decimal(18, 6)
+  sodetNetAmount Decimal?          @map("SODet_NetAmount") @db.Decimal(18, 6)
+  branchId       Int?              @map("BranchId")
+  sale           t_SOMstV?         @relation(fields: [t_SOMstV_id], references: [id])
+  item           Item_Information? @relation(fields: [sodetItemOID], references: [id])
+
+  @@map("t_SODeV")
+}
+
+// ==================== ASSORTMENT SALES ====================
+
+model AsstMsrt {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @map("Master_OID") @db.Uuid
+  code            String?   @map("Code")
+  date            DateTime? @map("Date")
+  totalAmt        Decimal?  @map("TotalAmt") @db.Decimal(8, 4)
+  discAmt         Decimal?  @map("DiscAmt") @db.Decimal(8, 4)
+  netAmt          Decimal?  @map("NetAmt") @db.Decimal(8, 4)
+  vatClnNo        String?   @map("VatClnNo")
+  vatDate         DateTime? @map("VatDate")
+  pricingDate     DateTime? @map("PricingDate")
+  type            String?   @map("Type")
+  creator         String?   @map("Creator")
+  creationDate    DateTime? @map("CreationDate")
+  updateBy        String?   @map("UpdateBy")
+  updateDate      DateTime? @map("UpdateDate")
+  isActive        Boolean?  @map("IsActive")
+  customerpay     Decimal?  @map("Customerpay") @db.Decimal(8, 4)
+  change          Decimal?  @map("Change") @db.Decimal(8, 4)
+  branchId        Int?      @map("BranchId")
+  discountRemarks String?   @map("DiscountRemarks")
+  details         AsstDet[]
+
+  @@map("AsstMsrt")
+}
+
+model AsstDet {
+  id          String           @id @default(dbgenerated("gen_random_uuid()")) @map("id") @db.Uuid
+  itemSLNum   String?          @map("ItemSLNum")
+  itemOID     String           @map("ItemOID") @db.Uuid
+  qty         Decimal?         @map("QTY") @db.Decimal(18, 4)
+  uom         String?          @map("UOM")
+  price       Decimal?         @map("Price") @db.Decimal(8, 4)
+  amount      Decimal?         @map("Amount") @db.Decimal(8, 4)
+  sdValue     Decimal?         @map("SDValue") @db.Decimal(8, 4)
+  sdAmount    Decimal?         @map("SDAmount") @db.Decimal(8, 4)
+  vatValue    Decimal?         @map("VATValue") @db.Decimal(8, 4)
+  vatAmount   Decimal?         @map("VATAmount") @db.Decimal(8, 4)
+  discount    Decimal?         @map("Discount") @db.Decimal(8, 4)
+  netAmount   Decimal?         @map("NetAmount") @db.Decimal(8, 4)
+  AsstMsrt_id String?          @map("AsstMsrt_id") @db.Uuid
+  item        Item_Information @relation(fields: [itemOID], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  sale        AsstMsrt?        @relation(fields: [AsstMsrt_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  @@map("AsstDet")
+}
+
+// ==================== NC ADJUSTMENT ====================
+
+model t_NCMstr {
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @map("NCMstr_OID") @db.Uuid
+  ncmstrCode         String?   @map("NCMstr_Code")
+  ncmstrDate         DateTime? @map("NCMstr_Date")
+  ncmstrCreator      String?   @map("NCMstr_Creator")
+  ncmstrCreationDate DateTime? @map("NCMstr_CreationDate")
+  ncmstrUpdateBy     String?   @map("NCMstr_UpdateBy")
+  ncmstrUpdateDate   DateTime? @map("NCMstr_UpdateDate")
+  ncmstrIsActive     Boolean?  @map("NCMstr_IsActive")
+  branchId           Int?      @map("BranchId")
+  ncmstrName         String?   @map("NCMstr_Name")
+  ncmstrContactNo    String?   @map("NCMstr_ContactNo")
+  ncmstrReference    String?   @map("NCMstr_Reference")
+  details            t_NCDet[]
+
+  @@map("t_NCMstr")
+}
+
+model t_NCDet {
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @map("NCDet_OID") @db.Uuid
+  t_NCMstr_id    String?           @map("NCDet_MStrOID") @db.Uuid
+  ncdetItemSLNum String?           @map("NCDet_ItemSLNum")
+  ncdetItemOID   String            @map("NCDet_ItemOID") @db.Uuid
+  ncdetQTY       Decimal?          @map("NCDet_QTY") @db.Decimal(18, 4)
+  ncdetUOM       String?           @map("NCDet_UOM")
+  ncdetPrice     Decimal?          @map("NCDet_Price") @db.Decimal(8, 4)
+  ncdetAmount    Decimal?          @map("NCDet_Amount") @db.Decimal(8, 4)
+  ncdetSDValue   Decimal?          @map("NCDet_SDValue") @db.Decimal(8, 4)
+  ncdetSDAmount  Decimal?          @map("NCDet_SDAmount") @db.Decimal(8, 4)
+  ncdetVATValue  Decimal?          @map("NCDet_VATValue") @db.Decimal(8, 4)
+  ncdetVATAmount Decimal?          @map("NCDet_VATAmount") @db.Decimal(8, 4)
+  ncdetDiscount  Decimal?          @map("NCDet_Discount") @db.Decimal(8, 4)
+  ncdetNetAmount Decimal?          @map("NCDet_NetAmount") @db.Decimal(8, 4)
+  branchId       Int?              @map("BranchId")
+  sale           t_NCMstr?         @relation(fields: [t_NCMstr_id], references: [id])
+  item           Item_Information? @relation(fields: [ncdetItemOID], references: [id])
+
+  @@map("t_NCDet")
+}
+
+// ==================== ITEM TRANSACTIONS ====================
+
+model Item_Receive {
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  serialNo        String?           @map("SerialNo")
+  voucharNo       String?           @map("VoucharNo")
+  itemCode        String?           @map("ItemCode")
+  itemName        String?           @map("ItemName")
+  qty             Decimal?          @map("Qty") @db.Decimal(9, 2)
+  purDate         DateTime?         @map("Pur_Date")
+  isActive        Int?              @map("IsActive")
+  createBy        String?           @map("CreateBy")
+  createDate      DateTime?         @map("CreateDate")
+  updateBy        String?           @map("UpdateBy")
+  updateDate      DateTime?         @map("UpdateDate")
+  branchId        Int               @map("BranchId")
+  receiveBranchID Int?              @map("ReceiveBranchID")
+  item            Item_Information? @relation(fields: [itemCode], references: [itmCode])
+
+  @@map("Item_Receive")
+}
+
+model Item_Issue {
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  serialNo        String?           @map("SerialNo")
+  voucharNo       String?           @map("VoucharNo")
+  itemCode        String?           @map("ItemCode")
+  unitPrice       Decimal?          @map("UnitPrice") @db.Decimal(18, 6)
+  qty             Decimal?          @map("Qty") @db.Decimal(18, 6)
+  issueDate       DateTime?         @map("IssueDate")
+  issueBranchId   Int               @map("IssueBranchId")
+  receiveBranchId Int               @map("ReceiveBranchId")
+  isActive        Int?              @map("IsActive")
+  createBy        String?           @map("CreateBy")
+  createDate      DateTime?         @map("CreateDate")
+  updateBy        String?           @map("UpdateBy")
+  updateDate      DateTime?         @map("UpdateDate")
+  item            Item_Information? @relation(fields: [itemCode], references: [itmCode])
+
+  @@map("Item_Issue")
+}
+
+model ItemReject {
+  id       String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  invNo    String?           @map("InvNo")
+  itmOId   String?           @map("itmOId") @db.Uuid
+  reject   Decimal?          @map("Reject") @db.Decimal(8, 2)
+  excess   Decimal?          @map("Excess") @db.Decimal(8, 2)
+  short    Decimal?          @map("Short") @db.Decimal(8, 2)
+  date     DateTime?         @map("Date")
+  branchId Int?              @map("BranchId")
+  assort   Decimal?          @map("Assort") @db.Decimal(8, 2)
+  isActive Int?              @map("IsActive")
+  item     Item_Information? @relation(fields: [itmOId], references: [id])
+
+  @@map("ItemReject")
+}
+
+// ==================== PACKET MANAGEMENT ====================
+
+model PacketInfo {
+  id         String           @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  code       String           @unique @map("Code")
+  name       String?          @map("Name")
+  uom        String?          @map("UOM")
+  weight     Decimal?         @map("Weight") @db.Decimal(18, 2)
+  rate       Decimal?         @map("Rate") @db.Decimal(18, 2)
+  remarks    String?          @map("Remarks")
+  isActive   Int?             @map("IsActive")
+  createBy   String?          @map("CreateBy")
+  createDate DateTime?        @map("CreateDate")
+  updateBy   String?          @map("UpdateBy")
+  updateDate DateTime?        @map("UpdateDate")
+  receives   Packet_Receive[]
+  issues     Packet_Issue[]
+
+  @@map("PacketInfo")
+}
+
+model Packet_Receive {
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  serialNo    String?     @map("SerialNo")
+  voucharNo   String?     @map("VoucharNo")
+  code        String?     @map("Code")
+  qty         Decimal?    @map("Qty") @db.Decimal(18, 2)
+  receiveDate DateTime?   @map("ReceiveDate")
+  isActive    Int?        @map("IsActive")
+  createBy    String?     @map("CreateBy")
+  createDate  DateTime?   @map("CreateDate")
+  branchId    Int         @map("BranchId")
+  packet      PacketInfo? @relation(fields: [code], references: [code])
+
+  @@map("Packet_Receive")
+}
+
+model Packet_Issue {
+  id         String      @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  serialNo   String?     @map("SerialNo")
+  invoiceNo  String?     @map("InvoiceNo")
+  issueType  String?     @map("IssueType")
+  code       String?     @map("Code")
+  qty        Decimal?    @map("Qty") @db.Decimal(18, 2)
+  issueDate  DateTime?   @map("IssueDate")
+  isActive   Int?        @map("IsActive")
+  updateDate DateTime?   @map("UpdateDate")
+  createBy   String?     @map("CreateBy")
+  createDate DateTime?   @map("CreateDate")
+  updateBy   String?     @map("UpdateBy")
+  branchId   Int         @map("BranchId")
+  packet     PacketInfo? @relation(fields: [code], references: [code])
+
+  @@map("Packet_Issue")
+}
+
+// ==================== ORDERS ====================
+
+model OrderReceive_Master {
+  id              String                @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  clientCode      String                @map("ClientCode")
+  serialNo        String?               @map("SerialNo")
+  advance         Decimal?              @map("Advance") @db.Decimal(9, 2)
+  orderDate       DateTime?             @map("OrderDate")
+  totalPrice      Decimal?              @map("TotalPrice") @db.Decimal(18, 2)
+  discount        Decimal?              @map("Discount") @db.Decimal(18, 2)
+  deliveryDate    DateTime?             @map("DeliveryDate")
+  deliveryAddress String?               @map("DeliveryAddress")
+  cType           String?               @map("CType")
+  branchId        Int?                  @map("BranchId")
+  deliveryTime    DateTime?             @map("DeliveryTime")
+  isActive        Int?                  @map("IsActive")
+  createBy        String?               @map("CreateBy")
+  createDate      DateTime?             @map("CreateDate")
+  updateBy        String?               @map("UpdateBy")
+  updateDate      DateTime?             @map("UpdateDate")
+  details         OrderReceive_Detail[]
+
+  @@map("OrderReceive_Master")
+}
+
+model OrderReceive_Detail {
+  id        String               @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  masterId  String?              @map("MasterId") @db.Uuid
+  itemCode  String               @map("ItemCode")
+  qty       Decimal              @map("Qty") @db.Decimal(9, 2)
+  unitPrice Decimal?             @map("UnitPrice") @db.Decimal(9, 2)
+  serialNo  String?              @map("SerialNo")
+  vatPrice  Decimal?             @map("VatPrice") @db.Decimal(18, 2)
+  amount    Decimal?             @map("Amount") @db.Decimal(18, 2)
+  master    OrderReceive_Master? @relation(fields: [masterId], references: [id])
+
+  @@map("OrderReceive_Detail")
+}
+
+model VOrderReceive_Master {
+  id              String                 @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  clientCode      String                 @map("ClientCode")
+  serialNo        String?                @map("SerialNo")
+  advance         Decimal?               @map("Advance") @db.Decimal(9, 2)
+  orderDate       DateTime?              @map("OrderDate")
+  deliveryDate    DateTime?              @map("DeliveryDate")
+  deliveryAddress String?                @map("DeliveryAddress")
+  cType           String?                @map("CType")
+  branchId        Int?                   @map("BranchId")
+  deliveryTime    DateTime?              @map("DeliveryTime")
+  createBy        String?                @map("CreateBy")
+  createDate      DateTime?              @map("CreateDate")
+  updateBy        String?                @map("UpdateBy")
+  updateDate      DateTime?              @map("UpdateDate")
+  details         VOrderReceive_Detail[]
+
+  @@map("VOrderReceive_Master")
+}
+
+model VOrderReceive_Detail {
+  id        String                @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  masterId  String?               @map("MasterId") @db.Uuid
+  itemCode  String                @map("ItemCode")
+  qty       Decimal               @map("Qty") @db.Decimal(9, 2)
+  unitPrice Decimal?              @map("UnitPrice") @db.Decimal(9, 2)
+  serialNo  String?               @map("SerialNo")
+  master    VOrderReceive_Master? @relation(fields: [masterId], references: [id])
+
+  @@map("VOrderReceive_Detail")
+}
+
+// ==================== SALE AMOUNT POST ====================
+
+model t_SaleAmountPost {
+  id       String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  cashSale Decimal   @map("CashSale") @db.Decimal(10, 2)
+  cardSale Decimal   @map("CardSale") @db.Decimal(10, 2)
+  date     DateTime? @map("Date")
+  branchId Int?      @map("BranchId")
+
+  @@map("t_SaleAmountPost")
+}
+
+// ==================== FINANCE ====================
+
+model MoneyReceive {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  receiptNo     String    @unique @map("ReceiptNo")
+  receiptDate   DateTime? @map("ReceiptDate")
+  customerCode  String?   @map("CustomerCode")
+  amount        Decimal?  @map("Amount") @db.Decimal(18, 2)
+  paymentMethod String?   @map("PaymentMethod")
+  description   String?   @map("Description")
+  createdBy     String?   @map("CreatedBy")
+  customer      Customer? @relation(fields: [customerCode], references: [code])
+
+  @@map("MoneyReceive")
+}
+
+model CashPurchase {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  voucherNo   String    @unique @map("VoucherNo")
+  voucherDate DateTime? @map("VoucherDate")
+  supplier    String?   @map("Supplier")
+  amount      Decimal?  @map("Amount") @db.Decimal(18, 2)
+  description String?   @map("Description")
+  createdBy   String?   @map("CreatedBy")
+
+  @@map("CashPurchase")
+}
+
+// ==================== TEMP TABLE (REPORTS) ====================
+
+model temp_table {
+  itmCode  String   @id @map("itmCode")
+  name     String?  @map("Name")
+  uom      String?  @map("UOM")
+  d1       Decimal? @map("D1") @db.Decimal(18, 2)
+  d2       Decimal? @map("D2") @db.Decimal(18, 2)
+  d3       Decimal? @map("D3") @db.Decimal(18, 2)
+  d4       Decimal? @map("D4") @db.Decimal(18, 2)
+  d5       Decimal? @map("D5") @db.Decimal(18, 2)
+  d6       Decimal? @map("D6") @db.Decimal(18, 2)
+  d7       Decimal? @map("D7") @db.Decimal(18, 2)
+  d8       Decimal? @map("D8") @db.Decimal(18, 2)
+  d9       Decimal? @map("D9") @db.Decimal(18, 2)
+  d10      Decimal? @map("D10") @db.Decimal(18, 2)
+  d11      Decimal? @map("D11") @db.Decimal(18, 2)
+  d12      Decimal? @map("D12") @db.Decimal(18, 2)
+  d13      Decimal? @map("D13") @db.Decimal(18, 2)
+  d14      Decimal? @map("D14") @db.Decimal(18, 2)
+  d15      Decimal? @map("D15") @db.Decimal(18, 2)
+  d16      Decimal? @map("D16") @db.Decimal(18, 2)
+  d17      Decimal? @map("D17") @db.Decimal(18, 2)
+  d18      Decimal? @map("D18") @db.Decimal(18, 2)
+  d19      Decimal? @map("D19") @db.Decimal(18, 2)
+  d20      Decimal? @map("D20") @db.Decimal(18, 2)
+  d21      Decimal? @map("D21") @db.Decimal(18, 2)
+  d22      Decimal? @map("D22") @db.Decimal(18, 2)
+  d23      Decimal? @map("D23") @db.Decimal(18, 2)
+  d24      Decimal? @map("D24") @db.Decimal(18, 2)
+  d25      Decimal? @map("D25") @db.Decimal(18, 2)
+  d26      Decimal? @map("D26") @db.Decimal(18, 2)
+  d27      Decimal? @map("D27") @db.Decimal(18, 2)
+  d28      Decimal? @map("D28") @db.Decimal(18, 2)
+  d29      Decimal? @map("D29") @db.Decimal(18, 2)
+  d30      Decimal? @map("D30") @db.Decimal(18, 2)
+  d31      Decimal? @map("D31") @db.Decimal(18, 2)
+  totalQty Decimal? @map("TotalQty") @db.Decimal(18, 2)
+  amount   Decimal? @map("Amount") @db.Decimal(18, 2)
+  vat      Decimal? @map("Vat") @db.Decimal(18, 2)
+
+  @@map("temp_table")
+}
