@@ -13,7 +13,7 @@ datasource db {
 
 model Branch {
   id         String  @id @default(dbgenerated("gen_random_uuid()")) @map("Id") @db.Uuid
-  branchCode String? @map("BranchCode")
+  branchCode String? @unique @map("BranchCode")
   branchName String? @map("BranchName")
   address    String? @map("Address")
   vatNo      String? @map("VatNo")
@@ -110,19 +110,10 @@ model AuditLogs {
   @@map("audit_logs")
 }
 
-model MenuItem {
-  id          String @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  manuName    String @map("ManuName")
-  controlName String @map("ControlName")
-
-  @@id([manuName, controlName])
-  @@map("MenuItem")
-}
-
 model Menu {
   id          String       @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   menuName    String       @map("MenuName")
-  controlName String       @map("ControlName")
+  controlName String       @unique @map("ControlName")
   description String?      @map("Description")
   icon        String?      @map("Icon")
   order       Int?         @map("Order")
@@ -483,7 +474,7 @@ model t_SODeV {
 // ==================== ASSORTMENT SALES ====================
 
 model AsstMsrt {
-  id              String    @id @default(dbgenerated("gen_random_uuid()")) @map("Master_OID") @db.Uuid
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @map("id") @db.Uuid
   code            String?   @map("Code")
   date            DateTime? @map("Date")
   totalAmt        Decimal?  @map("TotalAmt") @db.Decimal(8, 4)

@@ -196,12 +196,6 @@ exports.Prisma.AuditLogsScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.MenuItemScalarFieldEnum = {
-  id: 'id',
-  manuName: 'manuName',
-  controlName: 'controlName'
-};
-
 exports.Prisma.MenuScalarFieldEnum = {
   id: 'id',
   menuName: 'menuName',
@@ -793,7 +787,6 @@ exports.Prisma.ModelName = {
   t_UserRole: 't_UserRole',
   AuditLog: 'AuditLog',
   AuditLogs: 'AuditLogs',
-  MenuItem: 'MenuItem',
   Menu: 'Menu',
   Role: 'Role',
   Permission: 'Permission',

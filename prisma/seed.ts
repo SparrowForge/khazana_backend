@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../src/generated/prisma';
 import * as bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -67,7 +67,7 @@ async function main() {
   }
 
   // Admin role with full access
-  const adminRole = await prisma.role.upsert({
+  await prisma.role.upsert({
     where: { name: 'ADMIN' },
     update: {},
     create: { name: 'ADMIN', description: 'Full system access' },
