@@ -5,11 +5,32 @@ import { AppModule } from './app.module';
 import { AuditInterceptor } from './common/interceptors/audit.interceptor';
 import { PrismaService } from './database/prisma.service';
 
+const parseOrigins = (value?: string): string[] =>
+  value
+    ?.split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean) ?? [];
+
+const getAllowedOrigins = (): string[] => {
+  const origins = new Set<string>(['http://localhost:3000']);
+
+  for (const origin of parseOrigins(process.env.FRONTEND_URL)) {
+    origins.add(origin);
+  }
+
+  for (const origin of parseOrigins(process.env.CORS_ORIGINS)) {
+    origins.add(origin);
+  }
+
+  return [...origins];
+};
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const prefix = process.env.API_PREFIX || 'api';
   const version = process.env.API_VERSION || 'v1';
+  const allowedOrigins = getAllowedOrigins();
   const globalPrefix = `${prefix}/${version}`;
 
   app.setGlobalPrefix(globalPrefix);
@@ -23,60 +44,43 @@ async function bootstrap() {
   );
 
   const prisma = app.get(PrismaService);
-  app.useGlobalInterceptors(new AuditInterceptor(prisma));
+  app.useGlobalInterceptors(new AuditInterceptor(prisma)); 
 
-  const allowedOrigins = process.env.FRONTEND_URL
-    ? process.env.FRONTEND_URL.split(',').map((o) => o.trim())
-    : ['http://localhost:3000', 'http://localhost:5173'];
+  // Swagger Configuration
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Pharmacy Management API')
+    .setDescription('Pharmacy backend API documentation')
+    .setVersion('1.0.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        in: 'header',
+        description: 'Enter JWT access token',
+      },
+      'bearer',
+    )
+    .addSecurityRequirements('bearer')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('api/docs', app, document);
 
   app.enableCors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`Origin ${origin} is not allowed by CORS`), false);
+    },
     credentials: true,
   });
 
-  // Swagger Configuration
-  const config = new DocumentBuilder()
-    .setTitle('Khazana POS API')
-    .setDescription(
-      '## Khazana POS Backend API\n\n' +
-      'A complete Point of Sale system for retail management.\n\n' +
-      '### Modules\n' +
-      '- **Auth** — Login, profile, change password\n' +
-      '- **Users** — User management and role assignment\n' +
-      '- **Roles & Permissions** — RBAC management\n' +
-      '- **Menus** — Menu item configuration\n' +
-      '- **Customers** — Customer management and ledger\n' +
-      '- **Sales** — Cash sales, credit sales, VAT cash/credit\n' +
-      '- **Inventory** — Items, stock receive, issue, adjustment\n' +
-      '- **Pricing** — Sale prices and cost prices\n' +
-      
-      '- **Orders** — Order management (cash and VAT)\n' +
-      '- **Finance** — Money receive and cash purchases\n' +
-      '- **Packets** — Packet stock management\n' +
-      '- **NC Adjustment** — Non-conformance adjustments\n' +
-      '- **Assortment** — Assortment sales\n' +
-      '- **Reports** — Sales, stock, daily, customer statement\n' +
-      '- **Admin** — Branches, system settings, banks, audit logs\n\n' +
-      '### Authentication\n' +
-      'All endpoints except `POST /auth/login` require a Bearer JWT token.',
-    )
-    .setVersion('1.0')
-    .addBearerAuth(
-      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', description: 'Enter JWT token' },
-      'access-token',
-    )
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
-  
-  // Swagger at root path (not prefixed with api/v1)
-  SwaggerModule.setup('api/docs', app, document);
-
-  const port = process.env.PORT || 3000;
-  await app.listen(port);
-  
-  console.log(`Backend running on http://localhost:${port}/${globalPrefix}`);
-  console.log(`Swagger documentation available at http://localhost:${port}/api/docs`);
+  await app.listen(process.env.PORT ?? 4000);
 }
 
 bootstrap();
