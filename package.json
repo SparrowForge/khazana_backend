@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "free-lock": "node scripts/free-lock.js",
+    "prestart": "node scripts/free-lock.js",
+    "predev": "node scripts/free-lock.js",
     "start": "nest start",
     "dev": "nest start --watch",
     "build": "nest build",

@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Khazana POS API",
-    "description": "## Khazana POS Backend API\n\nAvailable modules:\n- **Auth** – Login, profile, change password\n- **Users** – User management and role assignment\n- **Sales** – Cash, credit, VAT cash, VAT credit sales\n- **Inventory** – Items, stock receive / issue / adjust\n- **Customers** – Customer management, ledger, payments\n- **Roles** – Role management\n- **Menus** – Menu items\n- **Permissions** – Role-based permissions\n- **Orders** – Sales orders (regular and VAT)\n- **Pricing** – Sale prices and cost prices\n- **Finance** – Money receive and cash purchases\n- **Packets** – Packet stock management\n- **NC Adjustment** – Non-conformance adjustments\n- **Assortment** – Assortment records\n- **Reports** – Sales, stock, item-wise, customer statements\n- **Admin** – Branches, settings, banks, audit log",
+    "description": "## Khazana POS Backend API\n\nAvailable modules:\n- **Auth** – Login, profile, change password\n- **Users** – User management and role assignment\n- **Sales** – Cash, credit, VAT cash, VAT credit sales\n- **Inventory** – Items, stock receive / issue / adjust\n- **Customers** – Customer management, ledger, payments\n- **Roles** – Role management\n- **Menus** – Menu items\n- **Permissions** – Role-based permissions\n- **Orders** – Sales orders (regular and VAT)\n- **Pricing** – Sale prices and cost prices\n- **Finance** – Money receive and cash purchases\n- **Packets** – Packet stock management\n- **NC Adjustment** – Non-conformance adjustments\n- **Assortment** – Assortment records\n- **Reports** – Sales, stock, item-wise, customer statements\n- **Admin** – Branches, settings, banks, audit log\n- **Dashboard** – Summary statistics\n- **Categories** – Item category management",
     "version": "1.0",
     "contact": {}
   },
@@ -156,18 +156,60 @@
           "receiveBranchId": { "type": "integer", "example": 2 }
         }
       },
-      "AdjustStockDto": {
+      "AdjustStockItemDto": {
         "type": "object",
-        "required": ["itmOId", "date"],
+        "required": ["itmOId"],
         "properties": {
-          "invNo": { "type": "string", "example": "ADJ-001" },
-          "itmOId": { "type": "string", "format": "uuid" },
+          "itmOId": { "type": "string", "format": "uuid", "description": "Item UUID" },
           "reject": { "type": "number", "minimum": 0, "example": 2 },
           "excess": { "type": "number", "minimum": 0, "example": 1 },
           "short": { "type": "number", "minimum": 0, "example": 0 },
-          "assort": { "type": "number", "minimum": 0, "example": 5 },
+          "assort": { "type": "number", "minimum": 0, "example": 5 }
+        }
+      },
+      "AdjustStockDto": {
+        "type": "object",
+        "required": ["date", "items"],
+        "description": "Multi-line stock adjustment. Each line carries reject/excess/short/assort for one item.",
+        "properties": {
+          "invNo": { "type": "string", "example": "ADJ-001" },
           "date": { "type": "string", "format": "date", "example": "2024-01-15" },
-          "branchId": { "type": "integer", "example": 1 }
+          "branchId": { "type": "integer", "example": 1 },
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AdjustStockItemDto" }
+          }
+        }
+      },
+      "TransferStockDto": {
+        "type": "object",
+        "required": ["issueDate", "issueBranchId", "receiveBranchId", "items"],
+        "description": "Transfer stock between branches (records an issue from the source and a receive at the destination per line).",
+        "properties": {
+          "voucherNo": { "type": "string", "example": "TRF-001" },
+          "issueDate": { "type": "string", "format": "date", "example": "2024-01-15" },
+          "issueBranchId": { "type": "integer", "example": 1 },
+          "receiveBranchId": { "type": "integer", "example": 2 },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["itemCode", "qty"],
+              "properties": {
+                "itemCode": { "type": "string", "example": "ITM-001" },
+                "qty": { "type": "number", "example": 10 }
+              }
+            }
+          }
+        }
+      },
+      "CategoryDto": {
+        "type": "object",
+        "required": ["code"],
+        "properties": {
+          "code": { "type": "string", "example": "SWEETS" },
+          "name": { "type": "string", "example": "Sweets" },
+          "remarks": { "type": "string", "example": "All sweet items" }
         }
       }
     }
@@ -194,7 +236,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "access_token": { "type": "string" },
+                    "accessToken": { "type": "string" },
                     "user": { "type": "object" }
                   }
                 }
@@ -527,6 +569,38 @@
         "responses": {
           "200": { "description": "Item updated successfully" }
         }
+      },
+      "delete": {
+        "tags": ["Inventory"],
+        "summary": "Delete (deactivate) item by ID",
+        "operationId": "InventoryController_deleteItem",
+        "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" }, "description": "Item UUID" }
+        ],
+        "responses": {
+          "200": { "description": "Item deleted successfully" },
+          "404": { "description": "Item not found" }
+        }
+      }
+    },
+    "/inventory/transfer": {
+      "post": {
+        "tags": ["Inventory"],
+        "summary": "Transfer stock between branches",
+        "operationId": "InventoryController_transferStock",
+        "security": [{ "access-token": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TransferStockDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Stock transferred successfully" }
+        }
       }
     },
     "/inventory/stock/{itemCode}": {
@@ -685,6 +759,45 @@
         },
         "responses": {
           "200": { "description": "Customer updated successfully" }
+        }
+      },
+      "delete": {
+        "tags": ["Customers"],
+        "summary": "Delete customer by code",
+        "operationId": "CustomersController_remove",
+        "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "code", "in": "path", "required": true, "schema": { "type": "string" }, "description": "Customer code" }
+        ],
+        "responses": {
+          "200": { "description": "Customer deleted successfully" },
+          "404": { "description": "Customer not found" }
+        }
+      }
+    },
+    "/customers/payments": {
+      "get": {
+        "tags": ["Customers"],
+        "summary": "Get all customer payments (register)",
+        "operationId": "CustomersController_findAllPayments",
+        "security": [{ "access-token": [] }],
+        "responses": {
+          "200": { "description": "List of all payments" }
+        }
+      },
+      "post": {
+        "tags": ["Customers"],
+        "summary": "Record a payment (client code in body)",
+        "operationId": "CustomersController_createPayment",
+        "security": [{ "access-token": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "type": "object" } }
+          }
+        },
+        "responses": {
+          "201": { "description": "Payment recorded successfully" }
         }
       }
     },
@@ -1071,6 +1184,27 @@
         }
       }
     },
+    "/pricing/prices/{id}": {
+      "patch": {
+        "tags": ["Pricing"],
+        "summary": "Update a sale price by ID",
+        "operationId": "PricingController_updatePrice",
+        "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" }, "description": "Price record UUID" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "type": "object" } }
+          }
+        },
+        "responses": {
+          "200": { "description": "Sale price updated successfully" },
+          "404": { "description": "Price record not found" }
+        }
+      }
+    },
     "/pricing/prices/current": {
       "get": {
         "tags": ["Pricing"],
@@ -1112,6 +1246,27 @@
         },
         "responses": {
           "201": { "description": "Cost price created successfully" }
+        }
+      }
+    },
+    "/pricing/cost-prices/{id}": {
+      "patch": {
+        "tags": ["Pricing"],
+        "summary": "Update a cost price by ID",
+        "operationId": "PricingController_updateCostPrice",
+        "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" }, "description": "Cost price record UUID" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "type": "object" } }
+          }
+        },
+        "responses": {
+          "200": { "description": "Cost price updated successfully" },
+          "404": { "description": "Cost price record not found" }
         }
       }
     },
@@ -1237,6 +1392,19 @@
         },
         "responses": {
           "200": { "description": "Packet updated successfully" }
+        }
+      },
+      "delete": {
+        "tags": ["Packets"],
+        "summary": "Delete (deactivate) packet by code",
+        "operationId": "PacketsController_remove",
+        "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "code", "in": "path", "required": true, "schema": { "type": "string" }, "description": "Packet code" }
+        ],
+        "responses": {
+          "200": { "description": "Packet deleted successfully" },
+          "404": { "description": "Packet not found" }
         }
       }
     },
@@ -1570,6 +1738,96 @@
           "201": { "description": "Bank created successfully" }
         }
       }
+    },
+    "/dashboard": {
+      "get": {
+        "tags": ["Dashboard"],
+        "summary": "Get dashboard summary statistics",
+        "operationId": "DashboardController_getStats",
+        "security": [{ "access-token": [] }],
+        "responses": {
+          "200": {
+            "description": "Dashboard stats",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "todaySales": { "type": "integer", "example": 12 },
+                    "todayRevenue": { "type": "number", "example": 15400.00 },
+                    "totalItems": { "type": "integer", "example": 230 },
+                    "totalCustomers": { "type": "integer", "example": 85 },
+                    "lowStockItems": { "type": "integer", "example": 7 },
+                    "pendingOrders": { "type": "integer", "example": 3 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": ["Categories"],
+        "summary": "Get all item categories",
+        "operationId": "CategoriesController_findAll",
+        "security": [{ "access-token": [] }],
+        "responses": {
+          "200": { "description": "List of categories" }
+        }
+      },
+      "post": {
+        "tags": ["Categories"],
+        "summary": "Create a new category",
+        "operationId": "CategoriesController_create",
+        "security": [{ "access-token": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CategoryDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Category created successfully" },
+          "409": { "description": "Category code already exists" }
+        }
+      }
+    },
+    "/categories/{id}": {
+      "patch": {
+        "tags": ["Categories"],
+        "summary": "Update category by ID",
+        "operationId": "CategoriesController_update",
+        "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" }, "description": "Category UUID" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "type": "object" } }
+          }
+        },
+        "responses": {
+          "200": { "description": "Category updated successfully" }
+        }
+      },
+      "delete": {
+        "tags": ["Categories"],
+        "summary": "Delete category by ID",
+        "operationId": "CategoriesController_remove",
+        "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" }, "description": "Category UUID" }
+        ],
+        "responses": {
+          "200": { "description": "Category deleted successfully" },
+          "404": { "description": "Category not found" }
+        }
+      }
     }
   },
   "tags": [
@@ -1588,6 +1846,8 @@
     { "name": "NC Adjustment", "description": "Non-conformance adjustments" },
     { "name": "Assortment", "description": "Assortment records" },
     { "name": "Reports", "description": "Business reports and analytics" },
-    { "name": "Admin", "description": "System administration" }
+    { "name": "Admin", "description": "System administration" },
+    { "name": "Dashboard", "description": "Summary statistics" },
+    { "name": "Categories", "description": "Item category management" }
   ]
 }

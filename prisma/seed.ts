@@ -66,16 +66,48 @@ async function main() {
     });
   }
 
-  // Admin role with full access
-  await prisma.role.upsert({
+  // Roles
+  const adminRole = await prisma.role.upsert({
     where: { name: 'ADMIN' },
     update: {},
     create: { name: 'ADMIN', description: 'Full system access' },
   });
 
-  await prisma.role.upsert({ where: { name: 'MANAGER' }, update: {}, create: { name: 'MANAGER', description: 'Manager access' } });
-  await prisma.role.upsert({ where: { name: 'CASHIER' }, update: {}, create: { name: 'CASHIER', description: 'Cashier access' } });
-  await prisma.role.upsert({ where: { name: 'VIEWER' }, update: {}, create: { name: 'VIEWER', description: 'Read-only access' } });
+  const managerRole = await prisma.role.upsert({ where: { name: 'MANAGER' }, update: {}, create: { name: 'MANAGER', description: 'Manager access' } });
+  const cashierRole = await prisma.role.upsert({ where: { name: 'CASHIER' }, update: {}, create: { name: 'CASHIER', description: 'Cashier access' } });
+  const viewerRole = await prisma.role.upsert({ where: { name: 'VIEWER' }, update: {}, create: { name: 'VIEWER', description: 'Read-only access' } });
+
+  // Permissions (Role <-> Menu)
+  const seededMenus = await prisma.menu.findMany();
+  for (const menu of seededMenus) {
+    // ADMIN: full access on every menu
+    await prisma.permission.upsert({
+      where: { roleId_menuId: { roleId: adminRole.id, menuId: menu.id } },
+      update: { isEnable: true, canCreate: true, canEdit: true, canDelete: true },
+      create: { roleId: adminRole.id, menuId: menu.id, isEnable: true, canCreate: true, canEdit: true, canDelete: true },
+    });
+
+    // MANAGER: create + edit, no delete
+    await prisma.permission.upsert({
+      where: { roleId_menuId: { roleId: managerRole.id, menuId: menu.id } },
+      update: { isEnable: true, canCreate: true, canEdit: true, canDelete: false },
+      create: { roleId: managerRole.id, menuId: menu.id, isEnable: true, canCreate: true, canEdit: true, canDelete: false },
+    });
+
+    // CASHIER: create only
+    await prisma.permission.upsert({
+      where: { roleId_menuId: { roleId: cashierRole.id, menuId: menu.id } },
+      update: { isEnable: true, canCreate: true, canEdit: false, canDelete: false },
+      create: { roleId: cashierRole.id, menuId: menu.id, isEnable: true, canCreate: true, canEdit: false, canDelete: false },
+    });
+
+    // VIEWER: read-only
+    await prisma.permission.upsert({
+      where: { roleId_menuId: { roleId: viewerRole.id, menuId: menu.id } },
+      update: { isEnable: true, canCreate: false, canEdit: false, canDelete: false },
+      create: { roleId: viewerRole.id, menuId: menu.id, isEnable: true, canCreate: false, canEdit: false, canDelete: false },
+    });
+  }
 
   // Grant admin full access to all menus via t_UserRole
   const allMenus = await prisma.menu.findMany();

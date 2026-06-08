@@ -9,9 +9,14 @@ export class InventoryService {
 
   // ── Current Stock ─────────────────────────────────────────────
 
-  async findAll(branchId?: number) {
-    return this.prisma.inventory.findMany({
-      include: { item: { include: { prices: { where: { priceIsActive: 1 } } } } },
+  async findAll(_branchId?: number) {
+    const rows = await this.prisma.inventory.findMany({
+      include: { item: { include: { prices: { where: { priceIsActive: 1 }, orderBy: { priceFromDate: 'desc' }, take: 1 } } } },
+    });
+    return rows.map((row) => {
+      const price = Number(row.item?.prices?.[0]?.priceListPrice ?? 0);
+      const qty = Number(row.quantity);
+      return { ...row, unitCost: price, totalValue: price * qty };
     });
   }
 

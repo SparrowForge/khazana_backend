@@ -10,18 +10,30 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 export class ReportsController {
   constructor(private reportsService: ReportsService) {}
 
+  // The frontend sends `from`/`to` (and `customerCode`); the original API
+  // documented `fromDate`/`toDate` (and `clientCode`). Accept both so the
+  // contract is resilient regardless of which the caller uses.
+  private range(from?: string, fromDate?: string, to?: string, toDate?: string) {
+    return { fromDate: from ?? fromDate, toDate: to ?? toDate };
+  }
+
   @Get('sales')
   @ApiOperation({ summary: 'Get sales report for a date range' })
-  @ApiQuery({ name: 'fromDate', required: true, description: 'Start date (ISO 8601)' })
-  @ApiQuery({ name: 'toDate', required: true, description: 'End date (ISO 8601)' })
+  @ApiQuery({ name: 'from', required: true, description: 'Start date (ISO 8601)' })
+  @ApiQuery({ name: 'to', required: true, description: 'End date (ISO 8601)' })
   @ApiQuery({ name: 'branchId', required: false, description: 'Filter by branch ID' })
-  @ApiResponse({ status: 200, description: 'Sales report data' })
+  @ApiResponse({ status: 200, description: 'Sales report rows' })
   getSalesReport(
-    @Query('fromDate') fromDate: string,
-    @Query('toDate') toDate: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+    @Query('fromDate') fromDate?: string,
+    @Query('toDate') toDate?: string,
     @Query('branchId') branchId?: string,
   ) {
-    return this.reportsService.getSalesReport({ fromDate, toDate, branchId: branchId ? +branchId : undefined });
+    return this.reportsService.getSalesReport({
+      ...this.range(from, fromDate, to, toDate),
+      branchId: branchId ? +branchId : undefined,
+    });
   }
 
   @Get('daily')
@@ -40,41 +52,51 @@ export class ReportsController {
 
   @Get('item-sales')
   @ApiOperation({ summary: 'Get item-wise sales report for a date range' })
-  @ApiQuery({ name: 'fromDate', required: true, description: 'Start date (ISO 8601)' })
-  @ApiQuery({ name: 'toDate', required: true, description: 'End date (ISO 8601)' })
+  @ApiQuery({ name: 'from', required: true, description: 'Start date (ISO 8601)' })
+  @ApiQuery({ name: 'to', required: true, description: 'End date (ISO 8601)' })
   @ApiQuery({ name: 'branchId', required: false, description: 'Filter by branch ID' })
-  @ApiResponse({ status: 200, description: 'Item-wise sales data' })
+  @ApiResponse({ status: 200, description: 'Item-wise sales rows' })
   getItemSalesReport(
-    @Query('fromDate') fromDate: string,
-    @Query('toDate') toDate: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+    @Query('fromDate') fromDate?: string,
+    @Query('toDate') toDate?: string,
     @Query('branchId') branchId?: string,
   ) {
-    return this.reportsService.getItemSalesReport({ fromDate, toDate, branchId: branchId ? +branchId : undefined });
+    return this.reportsService.getItemSalesReport({
+      ...this.range(from, fromDate, to, toDate),
+      branchId: branchId ? +branchId : undefined,
+    });
   }
 
   @Get('customer-statement')
   @ApiOperation({ summary: 'Get customer statement for a date range' })
-  @ApiQuery({ name: 'clientCode', required: true, description: 'Customer code' })
-  @ApiQuery({ name: 'fromDate', required: true, description: 'Start date (ISO 8601)' })
-  @ApiQuery({ name: 'toDate', required: true, description: 'End date (ISO 8601)' })
-  @ApiResponse({ status: 200, description: 'Customer statement data' })
+  @ApiQuery({ name: 'customerCode', required: true, description: 'Customer code' })
+  @ApiQuery({ name: 'from', required: true, description: 'Start date (ISO 8601)' })
+  @ApiQuery({ name: 'to', required: true, description: 'End date (ISO 8601)' })
+  @ApiResponse({ status: 200, description: 'Customer statement rows' })
   getCustomerStatement(
-    @Query('clientCode') clientCode: string,
-    @Query('fromDate') fromDate: string,
-    @Query('toDate') toDate: string,
+    @Query('customerCode') customerCode?: string,
+    @Query('clientCode') clientCode?: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+    @Query('fromDate') fromDate?: string,
+    @Query('toDate') toDate?: string,
   ) {
-    return this.reportsService.getCustomerStatement(clientCode, { fromDate, toDate });
+    return this.reportsService.getCustomerStatement(customerCode ?? clientCode, this.range(from, fromDate, to, toDate));
   }
 
   @Get('packet')
   @ApiOperation({ summary: 'Get packet analysis report for a date range' })
-  @ApiQuery({ name: 'fromDate', required: true, description: 'Start date (ISO 8601)' })
-  @ApiQuery({ name: 'toDate', required: true, description: 'End date (ISO 8601)' })
-  @ApiResponse({ status: 200, description: 'Packet analysis data' })
+  @ApiQuery({ name: 'from', required: true, description: 'Start date (ISO 8601)' })
+  @ApiQuery({ name: 'to', required: true, description: 'End date (ISO 8601)' })
+  @ApiResponse({ status: 200, description: 'Packet analysis rows' })
   getPacketAnalysis(
-    @Query('fromDate') fromDate: string,
-    @Query('toDate') toDate: string,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+    @Query('fromDate') fromDate?: string,
+    @Query('toDate') toDate?: string,
   ) {
-    return this.reportsService.getPacketAnalysis({ fromDate, toDate });
+    return this.reportsService.getPacketAnalysis(this.range(from, fromDate, to, toDate));
   }
 }
