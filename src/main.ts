@@ -25,8 +25,12 @@ async function bootstrap() {
   const prisma = app.get(PrismaService);
   app.useGlobalInterceptors(new AuditInterceptor(prisma));
 
+  const allowedOrigins = process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(',').map((o) => o.trim())
+    : ['http://localhost:3000', 'http://localhost:5173'];
+
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: allowedOrigins,
     credentials: true,
   });
 
