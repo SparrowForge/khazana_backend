@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { CustomersService, CreateCustomerDto } from './customers.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
@@ -14,6 +14,17 @@ export class CustomersController {
   @ApiOperation({ summary: 'Get all customers' })
   @ApiResponse({ status: 200, description: 'List of customers' })
   findAll() { return this.customersService.findAll(); }
+
+  // NOTE: static 'payments' routes must be declared before ':code' so they are matched first
+  @Get('payments')
+  @ApiOperation({ summary: 'Get all customer payments (register)' })
+  @ApiResponse({ status: 200, description: 'List of all payments' })
+  findAllPayments() { return this.customersService.findAllPayments(); }
+
+  @Post('payments')
+  @ApiOperation({ summary: 'Record a payment (client code in body)' })
+  @ApiResponse({ status: 201, description: 'Payment recorded successfully' })
+  createPayment(@Body() body: any) { return this.customersService.addPayment(body); }
 
   @Get(':code')
   @ApiOperation({ summary: 'Get customer by code' })
@@ -61,4 +72,11 @@ export class CustomersController {
   @ApiParam({ name: 'code', description: 'Customer code' })
   @ApiResponse({ status: 200, description: 'List of payments' })
   findPayments(@Param('code') code: string) { return this.customersService.findPayments(code); }
+
+  @Delete(':code')
+  @ApiOperation({ summary: 'Delete customer by code' })
+  @ApiParam({ name: 'code', description: 'Customer code' })
+  @ApiResponse({ status: 200, description: 'Customer deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Customer not found' })
+  remove(@Param('code') code: string) { return this.customersService.remove(code); }
 }

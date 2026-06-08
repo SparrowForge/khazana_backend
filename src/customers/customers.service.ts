@@ -102,4 +102,17 @@ export class CustomersService {
       orderBy: { paymentDate: 'desc' },
     });
   }
+
+  findAllPayments() {
+    return this.prisma.client_Transaction.findMany({
+      include: { customer: { select: { name: true } } },
+      orderBy: { paymentDate: 'desc' },
+    });
+  }
+
+  async remove(code: string) {
+    await this.findOne(code);
+    await this.prisma.customer.delete({ where: { code } });
+    return { message: 'Customer deleted successfully' };
+  }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { PacketsService, CreatePacketDto } from './packets.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
@@ -42,6 +42,15 @@ export class PacketsController {
   @ApiResponse({ status: 200, description: 'Packet updated successfully' })
   update(@Param('code') code: string, @Body() dto: Partial<CreatePacketDto>, @CurrentUser('userName') userName: string) {
     return this.packetsService.update(code, dto, userName);
+  }
+
+  @Delete(':code')
+  @ApiOperation({ summary: 'Delete (deactivate) packet by code' })
+  @ApiParam({ name: 'code', description: 'Packet code' })
+  @ApiResponse({ status: 200, description: 'Packet deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Packet not found' })
+  remove(@Param('code') code: string, @CurrentUser('userName') userName: string) {
+    return this.packetsService.remove(code, userName);
   }
 
   @Post('receive')

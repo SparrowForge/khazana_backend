@@ -2,7 +2,6 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { PrismaService } from '../database/prisma.service';
 import { ReceiveStockDto } from './dto/receive-stock.dto';
 import { IssueStockDto } from './dto/issue-stock.dto';
-import { AdjustStockDto } from './dto/adjust-stock.dto';
 
 @Injectable()
 export class InventoryService {
@@ -58,6 +57,61 @@ export class InventoryService {
   async updateItem(id: string, data: Partial<{ itmName: string; itmCategory: string; isActive: string }>) {
     await this.findItem(id);
     return this.prisma.item_Information.update({ where: { id }, data });
+  }
+
+  async deleteItem(id: string) {
+    await this.findItem(id);
+    // Soft delete: items are referenced by sales/inventory, so deactivate instead of hard delete
+    return this.prisma.item_Information.update({ where: { id }, data: { isActive: 'N' } });
+  }
+
+  // ── Transfer (between branches) ───────────────────────────────
+
+  async transferStock(
+    dto: {
+      voucherNo?: string;
+      issueDate: string;
+      issueBranchId: number;
+      receiveBranchId: number;
+      items: { itemCode: string; qty: number }[];
+    },
+    createdBy: string,
+  ) {
+    if (!dto.items?.length) throw new BadRequestException('No items to transfer');
+    const issueDate = dto.issueDate ? new Date(dto.issueDate) : new Date();
+
+    return this.prisma.$transaction(
+      dto.items.flatMap((line) => [
+        // Stock leaves the issuing branch
+        this.prisma.item_Issue.create({
+          data: {
+            itemCode: line.itemCode,
+            qty: line.qty,
+            issueDate,
+            issueBranchId: dto.issueBranchId,
+            receiveBranchId: dto.receiveBranchId,
+            voucharNo: dto.voucherNo,
+            isActive: 1,
+            createBy: createdBy,
+            createDate: new Date(),
+          },
+        }),
+        // Stock arrives at the receiving branch
+        this.prisma.item_Receive.create({
+          data: {
+            itemCode: line.itemCode,
+            qty: line.qty,
+            purDate: issueDate,
+            branchId: dto.receiveBranchId,
+            receiveBranchID: dto.receiveBranchId,
+            voucharNo: dto.voucherNo,
+            isActive: 1,
+            createBy: createdBy,
+            createDate: new Date(),
+          },
+        }),
+      ]),
+    );
   }
 
   // ── Receive ───────────────────────────────────────────────────
@@ -122,34 +176,57 @@ export class InventoryService {
 
   // ── Adjust ────────────────────────────────────────────────────
 
-  async adjustStock(dto: AdjustStockDto) {
-    const reject = await this.prisma.itemReject.create({
-      data: {
-        invNo: dto.invNo,
-        itmOId: dto.itmOId,
-        reject: dto.reject ?? 0,
-        excess: dto.excess ?? 0,
-        short: dto.short ?? 0,
-        assort: dto.assort ?? 0,
-        date: new Date(dto.date),
-        branchId: dto.branchId,
-        isActive: 1,
-      },
-    });
+  async adjustStock(body: {
+    invNo?: string;
+    date: string;
+    branchId?: number;
+    // Either a single line (legacy) or a list of lines (frontend)
+    itmOId?: string;
+    reject?: number;
+    excess?: number;
+    short?: number;
+    assort?: number;
+    items?: { itmOId: string; reject?: number; excess?: number; short?: number; assort?: number }[];
+  }) {
+    const lines =
+      body.items && body.items.length
+        ? body.items
+        : [{ itmOId: body.itmOId!, reject: body.reject, excess: body.excess, short: body.short, assort: body.assort }];
 
-    // Net adjustment: excess adds to stock, reject/short/assort deducts
-    const netChange = (dto.excess ?? 0) - ((dto.reject ?? 0) + (dto.short ?? 0) + (dto.assort ?? 0));
-    if (netChange !== 0) {
-      const item = await this.prisma.item_Information.findUnique({ where: { id: dto.itmOId } });
-      if (item?.itmCode) {
-        await this.prisma.inventory.update({
-          where: { itemCode: item.itmCode },
-          data: { quantity: { increment: netChange } },
-        });
+    if (!lines.length || !lines[0].itmOId) throw new BadRequestException('No items to adjust');
+    const date = body.date ? new Date(body.date) : new Date();
+
+    const results = [];
+    for (const line of lines) {
+      const reject = await this.prisma.itemReject.create({
+        data: {
+          invNo: body.invNo,
+          itmOId: line.itmOId,
+          reject: line.reject ?? 0,
+          excess: line.excess ?? 0,
+          short: line.short ?? 0,
+          assort: line.assort ?? 0,
+          date,
+          branchId: body.branchId,
+          isActive: 1,
+        },
+      });
+
+      // Net adjustment: excess adds to stock, reject/short/assort deducts
+      const netChange = (line.excess ?? 0) - ((line.reject ?? 0) + (line.short ?? 0) + (line.assort ?? 0));
+      if (netChange !== 0) {
+        const item = await this.prisma.item_Information.findUnique({ where: { id: line.itmOId } });
+        if (item?.itmCode) {
+          await this.prisma.inventory.update({
+            where: { itemCode: item.itmCode },
+            data: { quantity: { increment: netChange } },
+          });
+        }
       }
+      results.push(reject);
     }
 
-    return reject;
+    return results;
   }
 
   async findReceiveHistory(branchId?: number) {

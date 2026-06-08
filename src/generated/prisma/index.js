@@ -810,7 +810,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\SF\\KhazanaPOS\\app\\apps\\backend\\src\\generated\\prisma",
+      "value": "D:\\SF\\KhazanaPOS\\apps\\backend\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -824,7 +824,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\SF\\KhazanaPOS\\app\\apps\\backend\\prisma\\schema.prisma",
+    "sourceFilePath": "D:\\SF\\KhazanaPOS\\apps\\backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -838,6 +838,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {

@@ -38,6 +38,16 @@ export class PacketsService {
     });
   }
 
+  async remove(code: string, updatedBy: string) {
+    await this.findOne(code);
+    // Soft delete: packets are referenced by receive/issue history, so deactivate
+    await this.prisma.packetInfo.update({
+      where: { code },
+      data: { isActive: 0, updateBy: updatedBy, updateDate: new Date() },
+    });
+    return { message: 'Packet deleted successfully' };
+  }
+
   receivePacket(dto: {
     code: string; qty: number; receiveDate: string; branchId: number;
     serialNo?: string; voucharNo?: string; createBy: string;

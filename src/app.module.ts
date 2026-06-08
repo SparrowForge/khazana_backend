@@ -17,6 +17,8 @@ import { NcAdjustmentModule } from './nc-adjustment/nc-adjustment.module';
 import { AssortmentModule } from './assortment/assortment.module';
 import { ReportsModule } from './reports/reports.module';
 import { AdminModule } from './admin/admin.module';
+import { CategoriesModule } from './categories/categories.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { AdminModule } from './admin/admin.module';
     AssortmentModule,
     ReportsModule,
     AdminModule,
+    CategoriesModule,
+    DashboardModule,
   ],
 })
 export class AppModule {}

@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
-import { PricingService, CreatePriceDto } from './pricing.service';
+import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery, ApiParam } from '@nestjs/swagger';
+import { PricingService } from './pricing.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CurrentUser } from '../common/decorators';
 
@@ -31,8 +31,16 @@ export class PricingController {
   @Post('prices')
   @ApiOperation({ summary: 'Create a new sale price' })
   @ApiResponse({ status: 201, description: 'Sale price created successfully' })
-  createPrice(@Body() dto: CreatePriceDto, @CurrentUser('userName') userName: string) {
-    return this.pricingService.createPrice(dto, userName);
+  createPrice(@Body() body: any, @CurrentUser('userName') userName: string) {
+    return this.pricingService.createPrice(body, userName);
+  }
+
+  @Patch('prices/:id')
+  @ApiOperation({ summary: 'Update a sale price by ID' })
+  @ApiParam({ name: 'id', description: 'Price record UUID' })
+  @ApiResponse({ status: 200, description: 'Sale price updated successfully' })
+  updatePrice(@Param('id') id: string, @Body() body: any, @CurrentUser('userName') userName: string) {
+    return this.pricingService.updatePrice(id, body, userName);
   }
 
   @Get('cost-prices')
@@ -46,7 +54,15 @@ export class PricingController {
   @Post('cost-prices')
   @ApiOperation({ summary: 'Create a new cost price' })
   @ApiResponse({ status: 201, description: 'Cost price created successfully' })
-  createCostPrice(@Body() dto: CreatePriceDto, @CurrentUser('userName') userName: string) {
-    return this.pricingService.createCostPrice(dto, userName);
+  createCostPrice(@Body() body: any, @CurrentUser('userName') userName: string) {
+    return this.pricingService.createCostPrice(body, userName);
+  }
+
+  @Patch('cost-prices/:id')
+  @ApiOperation({ summary: 'Update a cost price by ID' })
+  @ApiParam({ name: 'id', description: 'Cost price record UUID' })
+  @ApiResponse({ status: 200, description: 'Cost price updated successfully' })
+  updateCostPrice(@Param('id') id: string, @Body() body: any, @CurrentUser('userName') userName: string) {
+    return this.pricingService.updateCostPrice(id, body, userName);
   }
 }
