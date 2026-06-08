@@ -48,8 +48,8 @@ async function bootstrap() {
 
   // Swagger Configuration
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Pharmacy Management API')
-    .setDescription('Pharmacy backend API documentation')
+    .setTitle('Khazana Mithai API')
+    .setDescription('Khazana Mithai API documentation')
     .setVersion('1.0.0')
     .addBearerAuth(
       {
