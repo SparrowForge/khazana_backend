@@ -7,6 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { Prisma } from '../../generated/prisma';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -17,15 +18,34 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    let status = HttpStatus.INTERNAL_SERVER_ERROR;
+    let message: unknown = 'Internal server error';
 
-    const message =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : 'Internal server error';
+    if (exception instanceof HttpException) {
+      status = exception.getStatus();
+      message = exception.getResponse();
+    } else if (exception instanceof Prisma.PrismaClientKnownRequestError) {
+      switch (exception.code) {
+        case 'P2002': // Unique constraint
+          status = HttpStatus.CONFLICT;
+          message = `Duplicate value: ${(exception.meta?.target as string[] | undefined)?.join(', ') ?? 'field'} already exists`;
+          break;
+        case 'P2003': // Foreign key constraint
+          status = HttpStatus.BAD_REQUEST;
+          message = `Invalid reference: ${exception.meta?.field_name ?? 'related record'} not found`;
+          break;
+        case 'P2025': // Record not found for update/delete
+          status = HttpStatus.NOT_FOUND;
+          message = 'Record not found';
+          break;
+        default:
+          status = HttpStatus.UNPROCESSABLE_ENTITY;
+          message = `Database error (${exception.code})`;
+      }
+    } else if (exception instanceof Prisma.PrismaClientValidationError) {
+      status = HttpStatus.BAD_REQUEST;
+      message = 'Invalid data provided';
+    }
 
     this.logger.error(
       `${request.method} ${request.url} - ${status}`,

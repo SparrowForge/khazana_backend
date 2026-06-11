@@ -40,12 +40,13 @@
       },
       "CreateUserDto": {
         "type": "object",
-        "required": ["userName", "password"],
+        "required": ["userName", "password", "email", "branchId"],
         "properties": {
           "userName": { "type": "string", "example": "john_doe" },
           "password": { "type": "string", "example": "password123" },
           "name": { "type": "string", "example": "John Doe" },
-          "branchId": { "type": "integer", "example": 1 }
+          "email": { "type": "string", "format": "email", "example": "john@example.com" },
+          "branchId": { "type": "string", "format": "uuid", "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890" }
         }
       },
       "SaleItemDto": {
