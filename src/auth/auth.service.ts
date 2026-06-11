@@ -2,7 +2,6 @@ import {
   Injectable,
   UnauthorizedException,
   BadRequestException,
-  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
@@ -49,8 +48,7 @@ export class AuthService {
       throw new UnauthorizedException('Account has expired');
     }
 
-    // Block login if user has an email but hasn't verified it
-    if (user.email && !user.isVerified) {
+    if (!user.isVerified) {
       throw new UnauthorizedException(
         'Please verify your email address before logging in. Check your inbox or request a new verification link.',
       );
