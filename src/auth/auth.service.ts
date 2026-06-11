@@ -30,10 +30,16 @@ export class AuthService {
   // ── Login ─────────────────────────────────────────────────────
 
   async login(dto: LoginDto) {
-    const user = await this.prisma.user.findUnique({
-      where: { userName: dto.userName },
-      include: { userRoles: true, branch: true },
-    });
+    const isEmail = dto.userName.includes('@');
+    const user = isEmail
+      ? await this.prisma.user.findFirst({
+          where: { email: dto.userName },
+          include: { userRoles: true, branch: true },
+        })
+      : await this.prisma.user.findUnique({
+          where: { userName: dto.userName },
+          include: { userRoles: true, branch: true },
+        });
 
     if (!user || user.isActive !== 'Y') {
       throw new UnauthorizedException('Invalid credentials');
