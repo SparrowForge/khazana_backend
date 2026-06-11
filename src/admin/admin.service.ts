@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
+import { PaginationQueryDto } from '../common/dto';
+import { buildPaginationMeta } from '../common/helpers';
 
 export class CreateBranchDto {
   branchCode: string;
@@ -22,8 +24,13 @@ export class AdminService {
 
   // ── Branches ──────────────────────────────────────────────────
 
-  findAllBranches() {
-    return this.prisma.branch.findMany({ orderBy: { branchName: 'asc' } });
+  async findAllBranches(query: PaginationQueryDto) {
+    const { page, limit } = query;
+    const [branches, total] = await Promise.all([
+      this.prisma.branch.findMany({ orderBy: { branchName: 'asc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.branch.count(),
+    ]);
+    return { items: branches, meta: buildPaginationMeta(total, page, limit) };
   }
 
   createBranch(dto: CreateBranchDto) {
@@ -59,8 +66,13 @@ export class AdminService {
 
   // ── Banks ─────────────────────────────────────────────────────
 
-  findAllBanks() {
-    return this.prisma.bank.findMany();
+  async findAllBanks(query: PaginationQueryDto) {
+    const { page, limit } = query;
+    const [banks, total] = await Promise.all([
+      this.prisma.bank.findMany({ skip: (page - 1) * limit, take: limit }),
+      this.prisma.bank.count(),
+    ]);
+    return { items: banks, meta: buildPaginationMeta(total, page, limit) };
   }
 
   createBank(name: string, createBy: string) {

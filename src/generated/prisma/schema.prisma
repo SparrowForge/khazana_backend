@@ -46,23 +46,31 @@ model Setup_System {
 // ==================== AUTHENTICATION & USERS ====================
 
 model User {
-  id             String       @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  name           String?      @map("Name")
-  userName       String       @unique @map("UserName")
-  password       String?      @map("Password")
-  branchId       String       @map("BranchId") @db.Uuid
-  validUntil     DateTime?    @map("ValidUntil")
-  isActive       String?      @map("IsActive")
-  creator        String?      @map("Creator")
-  creationDate   DateTime?    @map("CreationDate")
-  lastUpdateBy   String?      @map("LastUpdateBy")
-  lastUpdateDate DateTime?    @map("LastUpdateDate")
-  isDeleted      String?      @map("IsDeleted")
-  deletedBy      String?      @map("DeletedBy")
-  deletionDate   DateTime?    @map("DeletionDate")
-  remarks        String?      @map("Remarks")
-  branch         Branch       @relation(fields: [branchId], references: [id])
-  userRoles      t_UserRole[]
+  id                         String       @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  name                       String?      @map("Name")
+  userName                   String       @unique @map("UserName")
+  password                   String?      @map("Password")
+  branchId                   String       @map("BranchId") @db.Uuid
+  validUntil                 DateTime?    @map("ValidUntil")
+  isActive                   String?      @map("IsActive")
+  creator                    String?      @map("Creator")
+  creationDate               DateTime?    @map("CreationDate")
+  lastUpdateBy               String?      @map("LastUpdateBy")
+  lastUpdateDate             DateTime?    @map("LastUpdateDate")
+  isDeleted                  String?      @map("IsDeleted")
+  deletedBy                  String?      @map("DeletedBy")
+  deletionDate               DateTime?    @map("DeletionDate")
+  remarks                    String?      @map("Remarks")
+  email                      String?      @unique @map("Email")
+  isVerified                 Boolean      @default(false) @map("IsVerified")
+  verificationToken          String?      @map("VerificationToken")
+  refreshTokenHash           String?      @map("RefreshTokenHash")
+  refreshTokenExpiredAt      DateTime?    @map("RefreshTokenExpiredAt")
+  passwordResetCode          String?      @map("PasswordResetCode")
+  passwordResetCodeExpiredAt DateTime?    @map("PasswordResetCodeExpiredAt")
+  passwordResetVerifiedAt    DateTime?    @map("PasswordResetVerifiedAt")
+  branch                     Branch       @relation(fields: [branchId], references: [id])
+  userRoles                  t_UserRole[]
 
   @@map("t_User")
 }

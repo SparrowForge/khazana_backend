@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
+import { BranchPaginationQueryDto } from '../common/dto';
+import { buildPaginationMeta } from '../common/helpers';
 
 export class CreateOrderDto {
   clientCode: string;
@@ -22,12 +24,14 @@ export class OrdersService {
 
   // ── Regular Orders ────────────────────────────────────────────
 
-  findAll(branchId?: number) {
-    return this.prisma.orderReceive_Master.findMany({
-      where: { isActive: 1, ...(branchId && { branchId }) },
-      include: { details: true },
-      orderBy: { orderDate: 'desc' },
-    });
+  async findAll(query: BranchPaginationQueryDto) {
+    const { page, limit, branchId } = query;
+    const where = { isActive: 1, ...(branchId && { branchId }) };
+    const [rows, total] = await Promise.all([
+      this.prisma.orderReceive_Master.findMany({ where, include: { details: true }, orderBy: { orderDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.orderReceive_Master.count({ where }),
+    ]);
+    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
   }
 
   async findOne(id: string) {
@@ -82,12 +86,14 @@ export class OrdersService {
 
   // ── VAT Orders ────────────────────────────────────────────────
 
-  findAllVat(branchId?: number) {
-    return this.prisma.vOrderReceive_Master.findMany({
-      where: branchId ? { branchId } : {},
-      include: { details: true },
-      orderBy: { orderDate: 'desc' },
-    });
+  async findAllVat(query: BranchPaginationQueryDto) {
+    const { page, limit, branchId } = query;
+    const where = branchId ? { branchId } : {};
+    const [rows, total] = await Promise.all([
+      this.prisma.vOrderReceive_Master.findMany({ where, include: { details: true }, orderBy: { orderDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.vOrderReceive_Master.count({ where }),
+    ]);
+    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
   }
 
   async createVat(dto: Omit<CreateOrderDto, 'totalPrice' | 'discount'>, createdBy: string) {

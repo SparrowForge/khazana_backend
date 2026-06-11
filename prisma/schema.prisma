@@ -60,9 +60,17 @@ model User {
   isDeleted      String?      @map("IsDeleted")
   deletedBy      String?      @map("DeletedBy")
   deletionDate   DateTime?    @map("DeletionDate")
-  remarks        String?      @map("Remarks")
-  branch         Branch       @relation(fields: [branchId], references: [id])
-  userRoles      t_UserRole[]
+  remarks                    String?      @map("Remarks")
+  email                      String?      @unique @map("Email")
+  isVerified                 Boolean      @default(false) @map("IsVerified")
+  verificationToken          String?      @map("VerificationToken")
+  refreshTokenHash           String?      @map("RefreshTokenHash")
+  refreshTokenExpiredAt      DateTime?    @map("RefreshTokenExpiredAt")
+  passwordResetCode          String?      @map("PasswordResetCode")
+  passwordResetCodeExpiredAt DateTime?    @map("PasswordResetCodeExpiredAt")
+  passwordResetVerifiedAt    DateTime?    @map("PasswordResetVerifiedAt")
+  branch                     Branch       @relation(fields: [branchId], references: [id])
+  userRoles                  t_UserRole[]
 
   @@map("t_User")
 }

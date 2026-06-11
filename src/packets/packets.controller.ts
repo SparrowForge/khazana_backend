@@ -3,6 +3,8 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery }
 import { PacketsService, CreatePacketDto } from './packets.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CurrentUser } from '../common/decorators';
+import { PaginationQueryDto } from '../common/dto';
+import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Packets')
 @ApiBearerAuth('access-token')
@@ -14,7 +16,10 @@ export class PacketsController {
   @Get()
   @ApiOperation({ summary: 'Get all packets' })
   @ApiResponse({ status: 200, description: 'List of packets' })
-  findAll() { return this.packetsService.findAll(); }
+  async findAll(@Query() query: PaginationQueryDto) {
+    const { items, meta } = await this.packetsService.findAll(query);
+    return paginatedResponse(items, meta, 'Packet');
+  }
 
   @Get('stock')
   @ApiOperation({ summary: 'Get packet stock balance' })

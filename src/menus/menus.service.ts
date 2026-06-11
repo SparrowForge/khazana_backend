@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
+import { PaginationQueryDto } from '../common/dto';
+import { buildPaginationMeta } from '../common/helpers';
 
 export class CreateMenuDto {
   menuName: string;
@@ -15,8 +17,13 @@ export class CreateMenuDto {
 export class MenusService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.menu.findMany({ orderBy: [{ parentMenu: 'asc' }, { order: 'asc' }] });
+  async findAll(query: PaginationQueryDto) {
+    const { page, limit } = query;
+    const [menus, total] = await Promise.all([
+      this.prisma.menu.findMany({ orderBy: [{ parentMenu: 'asc' }, { order: 'asc' }], skip: (page - 1) * limit, take: limit }),
+      this.prisma.menu.count(),
+    ]);
+    return { items: menus, meta: buildPaginationMeta(total, page, limit) };
   }
 
   async findOne(id: string) {

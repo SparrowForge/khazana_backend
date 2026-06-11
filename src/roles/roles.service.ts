@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
+import { PaginationQueryDto } from '../common/dto';
+import { buildPaginationMeta } from '../common/helpers';
 
 export class CreateRoleDto {
   name: string;
@@ -10,8 +12,13 @@ export class CreateRoleDto {
 export class RolesService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.role.findMany({ include: { permissions: { include: { menu: true } } } });
+  async findAll(query: PaginationQueryDto) {
+    const { page, limit } = query;
+    const [roles, total] = await Promise.all([
+      this.prisma.role.findMany({ include: { permissions: { include: { menu: true } } }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.role.count(),
+    ]);
+    return { items: roles, meta: buildPaginationMeta(total, page, limit) };
   }
 
   async findOne(id: string) {

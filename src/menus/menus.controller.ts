@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { MenusService, CreateMenuDto } from './menus.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { PaginationQueryDto } from '../common/dto';
+import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Menus')
 @ApiBearerAuth('access-token')
@@ -13,7 +15,10 @@ export class MenusController {
   @Get()
   @ApiOperation({ summary: 'Get all menu items' })
   @ApiResponse({ status: 200, description: 'List of menus' })
-  findAll() { return this.menusService.findAll(); }
+  async findAll(@Query() query: PaginationQueryDto) {
+    const { items, meta } = await this.menusService.findAll(query);
+    return paginatedResponse(items, meta, 'Menu');
+  }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get menu by ID' })

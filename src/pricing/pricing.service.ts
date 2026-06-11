@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
+import { PriceQueryDto } from './dto/price-query.dto';
+import { buildPaginationMeta } from '../common/helpers';
 
 export class CreatePriceDto {
   itemCode: string;
@@ -17,11 +19,14 @@ export class PricingService {
 
   // ── Selling Prices ────────────────────────────────────────────
 
-  findAllPrices(itemCode?: string) {
-    return this.prisma.t_Price.findMany({
-      where: { priceIsActive: 1, ...(itemCode && { priceItemOId: itemCode }) },
-      include: { item: true },
-    });
+  async findAllPrices(query: PriceQueryDto) {
+    const { page, limit, itemCode } = query;
+    const where = { priceIsActive: 1, ...(itemCode && { priceItemOId: itemCode }) };
+    const [rows, total] = await Promise.all([
+      this.prisma.t_Price.findMany({ where, include: { item: true }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.t_Price.count({ where }),
+    ]);
+    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
   }
 
   async getCurrentPrice(itemCode: string, date?: Date) {
@@ -97,11 +102,14 @@ export class PricingService {
 
   // ── Cost Prices ───────────────────────────────────────────────
 
-  findAllCostPrices(itemCode?: string) {
-    return this.prisma.t_CostPr.findMany({
-      where: { priceIsActive: 1, ...(itemCode && { priceItemOId: itemCode }) },
-      include: { item: true },
-    });
+  async findAllCostPrices(query: PriceQueryDto) {
+    const { page, limit, itemCode } = query;
+    const where = { priceIsActive: 1, ...(itemCode && { priceItemOId: itemCode }) };
+    const [rows, total] = await Promise.all([
+      this.prisma.t_CostPr.findMany({ where, include: { item: true }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.t_CostPr.count({ where }),
+    ]);
+    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
   }
 
   async createCostPrice(body: any, createdBy: string) {

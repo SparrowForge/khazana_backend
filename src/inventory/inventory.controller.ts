@@ -5,6 +5,8 @@ import { ReceiveStockDto } from './dto/receive-stock.dto';
 import { IssueStockDto } from './dto/issue-stock.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CurrentUser } from '../common/decorators';
+import { PaginationQueryDto, BranchPaginationQueryDto } from '../common/dto';
+import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Inventory')
 @ApiBearerAuth('access-token')
@@ -14,18 +16,19 @@ export class InventoryController {
   constructor(private inventoryService: InventoryService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get current stock levels by branch' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Filter by branch ID' })
-  @ApiResponse({ status: 200, description: 'Stock summary' })
-  findAll(@Query('branchId') branchId?: string) {
-    return this.inventoryService.findAll(branchId ? +branchId : undefined);
+  @ApiOperation({ summary: 'Get current stock levels' })
+  @ApiResponse({ status: 200, description: 'Paginated stock summary' })
+  async findAll(@Query() query: BranchPaginationQueryDto) {
+    const { items, meta } = await this.inventoryService.findAll(query);
+    return paginatedResponse(items, meta, 'Inventory');
   }
 
   @Get('items')
   @ApiOperation({ summary: 'Get all items' })
-  @ApiResponse({ status: 200, description: 'List of all items' })
-  findAllItems() {
-    return this.inventoryService.findAllItems();
+  @ApiResponse({ status: 200, description: 'Paginated list of all items' })
+  async findAllItems(@Query() query: PaginationQueryDto) {
+    const { items, meta } = await this.inventoryService.findAllItems(query);
+    return paginatedResponse(items, meta, 'Item');
   }
 
   @Get('items/:id')

@@ -3,6 +3,8 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery, ApiParam }
 import { PricingService } from './pricing.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CurrentUser } from '../common/decorators';
+import { PriceQueryDto } from './dto/price-query.dto';
+import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Pricing')
 @ApiBearerAuth('access-token')
@@ -13,10 +15,10 @@ export class PricingController {
 
   @Get('prices')
   @ApiOperation({ summary: 'Get sale prices (optionally filter by item code)' })
-  @ApiQuery({ name: 'itemCode', required: false, description: 'Filter by item code' })
-  @ApiResponse({ status: 200, description: 'List of sale prices' })
-  findAllPrices(@Query('itemCode') itemCode?: string) {
-    return this.pricingService.findAllPrices(itemCode);
+  @ApiResponse({ status: 200, description: 'Paginated list of sale prices' })
+  async findAllPrices(@Query() query: PriceQueryDto) {
+    const { items, meta } = await this.pricingService.findAllPrices(query);
+    return paginatedResponse(items, meta, 'Price');
   }
 
   @Get('prices/current')
@@ -45,10 +47,10 @@ export class PricingController {
 
   @Get('cost-prices')
   @ApiOperation({ summary: 'Get cost prices (optionally filter by item code)' })
-  @ApiQuery({ name: 'itemCode', required: false, description: 'Filter by item code' })
-  @ApiResponse({ status: 200, description: 'List of cost prices' })
-  findAllCostPrices(@Query('itemCode') itemCode?: string) {
-    return this.pricingService.findAllCostPrices(itemCode);
+  @ApiResponse({ status: 200, description: 'Paginated list of cost prices' })
+  async findAllCostPrices(@Query() query: PriceQueryDto) {
+    const { items, meta } = await this.pricingService.findAllCostPrices(query);
+    return paginatedResponse(items, meta, 'Cost Price');
   }
 
   @Post('cost-prices')

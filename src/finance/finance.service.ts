@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
+import { PaginationQueryDto } from '../common/dto';
+import { buildPaginationMeta } from '../common/helpers';
 
 export class CreateMoneyReceiveDto {
   receiptNo: string;
@@ -24,11 +26,13 @@ export class FinanceService {
 
   // ── Money Receive ─────────────────────────────────────────────
 
-  findAllMoneyReceive() {
-    return this.prisma.moneyReceive.findMany({
-      include: { customer: true },
-      orderBy: { receiptDate: 'desc' },
-    });
+  async findAllMoneyReceive(query: PaginationQueryDto) {
+    const { page, limit } = query;
+    const [rows, total] = await Promise.all([
+      this.prisma.moneyReceive.findMany({ include: { customer: true }, orderBy: { receiptDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.moneyReceive.count(),
+    ]);
+    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
   }
 
   createMoneyReceive(dto: CreateMoneyReceiveDto, createdBy: string) {
@@ -47,8 +51,13 @@ export class FinanceService {
 
   // ── Cash Purchase ─────────────────────────────────────────────
 
-  findAllCashPurchases() {
-    return this.prisma.cashPurchase.findMany({ orderBy: { voucherDate: 'desc' } });
+  async findAllCashPurchases(query: PaginationQueryDto) {
+    const { page, limit } = query;
+    const [rows, total] = await Promise.all([
+      this.prisma.cashPurchase.findMany({ orderBy: { voucherDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.cashPurchase.count(),
+    ]);
+    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
   }
 
   createCashPurchase(dto: CreateCashPurchaseDto, createdBy: string) {

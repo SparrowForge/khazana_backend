@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { CustomersService, CreateCustomerDto } from './customers.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { PaginationQueryDto } from '../common/dto';
+import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Customers')
 @ApiBearerAuth('access-token')
@@ -13,13 +15,19 @@ export class CustomersController {
   @Get()
   @ApiOperation({ summary: 'Get all customers' })
   @ApiResponse({ status: 200, description: 'List of customers' })
-  findAll() { return this.customersService.findAll(); }
+  async findAll(@Query() query: PaginationQueryDto) {
+    const { items, meta } = await this.customersService.findAll(query);
+    return paginatedResponse(items, meta, 'Customer');
+  }
 
   // NOTE: static 'payments' routes must be declared before ':code' so they are matched first
   @Get('payments')
   @ApiOperation({ summary: 'Get all customer payments (register)' })
   @ApiResponse({ status: 200, description: 'List of all payments' })
-  findAllPayments() { return this.customersService.findAllPayments(); }
+  async findAllPayments(@Query() query: PaginationQueryDto) {
+    const { items, meta } = await this.customersService.findAllPayments(query);
+    return paginatedResponse(items, meta, 'Payment');
+  }
 
   @Post('payments')
   @ApiOperation({ summary: 'Record a payment (client code in body)' })

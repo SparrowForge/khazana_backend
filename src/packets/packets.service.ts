@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
+import { PaginationQueryDto } from '../common/dto';
+import { buildPaginationMeta } from '../common/helpers';
 
 export class CreatePacketDto {
   code: string;
@@ -14,8 +16,14 @@ export class CreatePacketDto {
 export class PacketsService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.packetInfo.findMany({ where: { isActive: 1 }, orderBy: { name: 'asc' } });
+  async findAll(query: PaginationQueryDto) {
+    const { page, limit } = query;
+    const where = { isActive: 1 };
+    const [packets, total] = await Promise.all([
+      this.prisma.packetInfo.findMany({ where, orderBy: { name: 'asc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.packetInfo.count({ where }),
+    ]);
+    return { items: packets, meta: buildPaginationMeta(total, page, limit) };
   }
 
   async findOne(code: string) {

@@ -3,6 +3,8 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery }
 import { AssortmentService, CreateAssortmentDto } from './assortment.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CurrentUser } from '../common/decorators';
+import { BranchPaginationQueryDto } from '../common/dto';
+import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Assortment')
 @ApiBearerAuth('access-token')
@@ -13,10 +15,10 @@ export class AssortmentController {
 
   @Get()
   @ApiOperation({ summary: 'Get all assortment records' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Filter by branch ID' })
-  @ApiResponse({ status: 200, description: 'List of assortment records' })
-  findAll(@Query('branchId') branchId?: string) {
-    return this.assortmentService.findAll(branchId ? +branchId : undefined);
+  @ApiResponse({ status: 200, description: 'Paginated list of assortment records' })
+  async findAll(@Query() query: BranchPaginationQueryDto) {
+    const { items, meta } = await this.assortmentService.findAll(query);
+    return paginatedResponse(items, meta, 'Assortment');
   }
 
   @Get(':id')

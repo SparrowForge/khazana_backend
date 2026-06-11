@@ -160,7 +160,15 @@ exports.Prisma.UserScalarFieldEnum = {
   isDeleted: 'isDeleted',
   deletedBy: 'deletedBy',
   deletionDate: 'deletionDate',
-  remarks: 'remarks'
+  remarks: 'remarks',
+  email: 'email',
+  isVerified: 'isVerified',
+  verificationToken: 'verificationToken',
+  refreshTokenHash: 'refreshTokenHash',
+  refreshTokenExpiredAt: 'refreshTokenExpiredAt',
+  passwordResetCode: 'passwordResetCode',
+  passwordResetCodeExpiredAt: 'passwordResetCodeExpiredAt',
+  passwordResetVerifiedAt: 'passwordResetVerifiedAt'
 };
 
 exports.Prisma.T_UserRoleScalarFieldEnum = {

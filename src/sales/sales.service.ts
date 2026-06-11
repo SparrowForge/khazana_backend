@@ -4,6 +4,9 @@ import { CreateCashSaleDto } from './dto/create-cash-sale.dto';
 import { CreateCreditSaleDto } from './dto/create-credit-sale.dto';
 import { CreateVatCashSaleDto } from './dto/create-vat-cash-sale.dto';
 import { CreateVatCreditSaleDto } from './dto/create-vat-credit-sale.dto';
+import { SalesQueryDto } from './dto/sales-query.dto';
+import { buildPaginationMeta } from '../common/helpers';
+import type { PaginationMeta } from '../common/helpers';
 
 @Injectable()
 export class SalesService {
@@ -170,35 +173,40 @@ export class SalesService {
 
   // ── List / Get ────────────────────────────────────────────────
 
-  async findAll(type: 'cash' | 'credit' | 'vat-cash' | 'vat-credit', branchId?: number) {
+  async findAll(query: SalesQueryDto): Promise<{ items: object[]; meta: PaginationMeta }> {
+    const { page, limit, type, branchId } = query;
+    const skip = (page - 1) * limit;
+
     if (type === 'cash') {
-      return this.prisma.t_SOMstr.findMany({
-        where: { somstrIsActive: true, ...(branchId && { branchId }) },
-        orderBy: { somstrDate: 'desc' },
-        take: 100,
-      });
+      const where = { somstrIsActive: true, ...(branchId && { branchId }) };
+      const [items, total] = await Promise.all([
+        this.prisma.t_SOMstr.findMany({ where, orderBy: { somstrDate: 'desc' }, skip, take: limit }),
+        this.prisma.t_SOMstr.count({ where }),
+      ]);
+      return { items, meta: buildPaginationMeta(total, page, limit) };
     }
     if (type === 'credit') {
-      return this.prisma.cSMaster.findMany({
-        where: { isActive: 1, ...(branchId && { branchId }) },
-        include: { customer: true },
-        orderBy: { invDate: 'desc' },
-        take: 100,
-      });
+      const where = { isActive: 1, ...(branchId && { branchId }) };
+      const [items, total] = await Promise.all([
+        this.prisma.cSMaster.findMany({ where, include: { customer: true }, orderBy: { invDate: 'desc' }, skip, take: limit }),
+        this.prisma.cSMaster.count({ where }),
+      ]);
+      return { items, meta: buildPaginationMeta(total, page, limit) };
     }
     if (type === 'vat-cash') {
-      return this.prisma.t_SOMstV.findMany({
-        where: { somstrIsActive: true, ...(branchId && { branchId }) },
-        orderBy: { somstrDate: 'desc' },
-        take: 100,
-      });
+      const where = { somstrIsActive: true, ...(branchId && { branchId }) };
+      const [items, total] = await Promise.all([
+        this.prisma.t_SOMstV.findMany({ where, orderBy: { somstrDate: 'desc' }, skip, take: limit }),
+        this.prisma.t_SOMstV.count({ where }),
+      ]);
+      return { items, meta: buildPaginationMeta(total, page, limit) };
     }
-    return this.prisma.cSVMaster.findMany({
-      where: { ...(branchId && { branchId }) },
-      include: { customer: true },
-      orderBy: { invDate: 'desc' },
-      take: 100,
-    });
+    const where = branchId ? { branchId } : {};
+    const [items, total] = await Promise.all([
+      this.prisma.cSVMaster.findMany({ where, include: { customer: true }, orderBy: { invDate: 'desc' }, skip, take: limit }),
+      this.prisma.cSVMaster.count({ where }),
+    ]);
+    return { items, meta: buildPaginationMeta(total, page, limit) };
   }
 
   // ── Helpers ───────────────────────────────────────────────────

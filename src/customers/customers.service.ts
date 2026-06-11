@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
+import { PaginationQueryDto } from '../common/dto';
+import { buildPaginationMeta } from '../common/helpers';
 
 export class CreateCustomerDto {
   code: string;
@@ -14,8 +16,13 @@ export class CreateCustomerDto {
 export class CustomersService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.customer.findMany({ orderBy: { name: 'asc' } });
+  async findAll(query: PaginationQueryDto) {
+    const { page, limit } = query;
+    const [customers, total] = await Promise.all([
+      this.prisma.customer.findMany({ orderBy: { name: 'asc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.customer.count(),
+    ]);
+    return { items: customers, meta: buildPaginationMeta(total, page, limit) };
   }
 
   async findOne(code: string) {
@@ -103,11 +110,18 @@ export class CustomersService {
     });
   }
 
-  findAllPayments() {
-    return this.prisma.client_Transaction.findMany({
-      include: { customer: { select: { name: true } } },
-      orderBy: { paymentDate: 'desc' },
-    });
+  async findAllPayments(query: PaginationQueryDto) {
+    const { page, limit } = query;
+    const [payments, total] = await Promise.all([
+      this.prisma.client_Transaction.findMany({
+        include: { customer: { select: { name: true } } },
+        orderBy: { paymentDate: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.client_Transaction.count(),
+    ]);
+    return { items: payments, meta: buildPaginationMeta(total, page, limit) };
   }
 
   async remove(code: string) {

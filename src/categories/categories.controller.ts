@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { CategoriesService } from './categories.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { PaginationQueryDto } from '../common/dto';
+import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Categories')
 @ApiBearerAuth('access-token')
@@ -13,7 +15,10 @@ export class CategoriesController {
   @Get()
   @ApiOperation({ summary: 'Get all item categories' })
   @ApiResponse({ status: 200, description: 'List of categories' })
-  findAll() { return this.categoriesService.findAll(); }
+  async findAll(@Query() query: PaginationQueryDto) {
+    const { items, meta } = await this.categoriesService.findAll(query);
+    return paginatedResponse(items, meta, 'Category');
+  }
 
   @Post()
   @ApiOperation({ summary: 'Create a new category' })

@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { FinanceService, CreateMoneyReceiveDto, CreateCashPurchaseDto } from './finance.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CurrentUser } from '../common/decorators';
+import { PaginationQueryDto } from '../common/dto';
+import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Finance')
 @ApiBearerAuth('access-token')
@@ -14,7 +16,10 @@ export class FinanceController {
   @Get('money-receive')
   @ApiOperation({ summary: 'Get all money receive records' })
   @ApiResponse({ status: 200, description: 'List of money receive records' })
-  findAllMoneyReceive() { return this.financeService.findAllMoneyReceive(); }
+  async findAllMoneyReceive(@Query() query: PaginationQueryDto) {
+    const { items, meta } = await this.financeService.findAllMoneyReceive(query);
+    return paginatedResponse(items, meta, 'Money Receive');
+  }
 
   @Post('money-receive')
   @ApiOperation({ summary: 'Record a money receipt from customer' })
@@ -26,7 +31,10 @@ export class FinanceController {
   @Get('cash-purchase')
   @ApiOperation({ summary: 'Get all cash purchase records' })
   @ApiResponse({ status: 200, description: 'List of cash purchases' })
-  findAllCashPurchases() { return this.financeService.findAllCashPurchases(); }
+  async findAllCashPurchases(@Query() query: PaginationQueryDto) {
+    const { items, meta } = await this.financeService.findAllCashPurchases(query);
+    return paginatedResponse(items, meta, 'Cash Purchase');
+  }
 
   @Post('cash-purchase')
   @ApiOperation({ summary: 'Record a cash purchase' })

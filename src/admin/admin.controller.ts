@@ -3,6 +3,8 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery }
 import { AdminService, CreateBranchDto, UpdateSystemDto } from './admin.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CurrentUser } from '../common/decorators';
+import { PaginationQueryDto } from '../common/dto';
+import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Admin')
 @ApiBearerAuth('access-token')
@@ -14,7 +16,10 @@ export class AdminController {
   @Get('branches')
   @ApiOperation({ summary: 'Get all branches' })
   @ApiResponse({ status: 200, description: 'List of branches' })
-  findAllBranches() { return this.adminService.findAllBranches(); }
+  async findAllBranches(@Query() query: PaginationQueryDto) {
+    const { items, meta } = await this.adminService.findAllBranches(query);
+    return paginatedResponse(items, meta, 'Branch');
+  }
 
   @Post('branches')
   @ApiOperation({ summary: 'Create a new branch' })
@@ -50,7 +55,10 @@ export class AdminController {
   @Get('banks')
   @ApiOperation({ summary: 'Get all banks' })
   @ApiResponse({ status: 200, description: 'List of banks' })
-  findAllBanks() { return this.adminService.findAllBanks(); }
+  async findAllBanks(@Query() query: PaginationQueryDto) {
+    const { items, meta } = await this.adminService.findAllBanks(query);
+    return paginatedResponse(items, meta, 'Bank');
+  }
 
   @Post('banks')
   @ApiOperation({ summary: 'Create a new bank' })

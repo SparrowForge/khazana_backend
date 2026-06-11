@@ -2,6 +2,8 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { PrismaService } from '../database/prisma.service';
 import { ReceiveStockDto } from './dto/receive-stock.dto';
 import { IssueStockDto } from './dto/issue-stock.dto';
+import { PaginationQueryDto, BranchPaginationQueryDto } from '../common/dto';
+import { buildPaginationMeta } from '../common/helpers';
 
 @Injectable()
 export class InventoryService {
@@ -9,15 +11,22 @@ export class InventoryService {
 
   // ── Current Stock ─────────────────────────────────────────────
 
-  async findAll(_branchId?: number) {
-    const rows = await this.prisma.inventory.findMany({
-      include: { item: { include: { prices: { where: { priceIsActive: 1 }, orderBy: { priceFromDate: 'desc' }, take: 1 } } } },
-    });
-    return rows.map((row) => {
+  async findAll(query: BranchPaginationQueryDto) {
+    const { page, limit } = query;
+    const [rows, total] = await Promise.all([
+      this.prisma.inventory.findMany({
+        include: { item: { include: { prices: { where: { priceIsActive: 1 }, orderBy: { priceFromDate: 'desc' }, take: 1 } } } },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.inventory.count(),
+    ]);
+    const items = rows.map((row) => {
       const price = Number(row.item?.prices?.[0]?.priceListPrice ?? 0);
       const qty = Number(row.quantity);
       return { ...row, unitCost: price, totalValue: price * qty };
     });
+    return { items, meta: buildPaginationMeta(total, page, limit) };
   }
 
   async findOne(itemCode: string) {
@@ -31,12 +40,14 @@ export class InventoryService {
 
   // ── Items ─────────────────────────────────────────────────────
 
-  async findAllItems() {
-    return this.prisma.item_Information.findMany({
-      where: { isActive: 'Y' },
-      include: { inventory: true },
-      orderBy: { itmName: 'asc' },
-    });
+  async findAllItems(query: PaginationQueryDto) {
+    const { page, limit } = query;
+    const where = { isActive: 'Y' as const };
+    const [items, total] = await Promise.all([
+      this.prisma.item_Information.findMany({ where, include: { inventory: true }, orderBy: { itmName: 'asc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.item_Information.count({ where }),
+    ]);
+    return { items, meta: buildPaginationMeta(total, page, limit) };
   }
 
   async findItem(id: string) {

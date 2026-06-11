@@ -44,10 +44,8 @@
         "properties": {
           "userName": { "type": "string", "example": "john_doe" },
           "password": { "type": "string", "example": "password123" },
-          "fullName": { "type": "string", "example": "John Doe" },
-          "email": { "type": "string", "example": "john@example.com" },
-          "branchId": { "type": "integer", "example": 1 },
-          "isActive": { "type": "boolean", "example": true }
+          "name": { "type": "string", "example": "John Doe" },
+          "branchId": { "type": "integer", "example": 1 }
         }
       },
       "SaleItemDto": {
@@ -203,6 +201,17 @@
           }
         }
       },
+      "PaginationMeta": {
+        "type": "object",
+        "properties": {
+          "total": { "type": "integer", "example": 100 },
+          "page": { "type": "integer", "example": 1 },
+          "limit": { "type": "integer", "example": 10 },
+          "totalPages": { "type": "integer", "example": 10 },
+          "hasNextPage": { "type": "boolean", "example": true },
+          "hasPreviousPage": { "type": "boolean", "example": false }
+        }
+      },
       "CategoryDto": {
         "type": "object",
         "required": ["code"],
@@ -280,14 +289,180 @@
         }
       }
     },
+    "/auth/verify-email": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Verify email address using token from verification link",
+        "operationId": "AuthController_verifyEmail",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["token"],
+                "properties": { "token": { "type": "string", "example": "a3f8b2c1d4e5..." } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Email verified successfully" },
+          "400": { "description": "Invalid or expired token" }
+        }
+      }
+    },
+    "/auth/resend-verification-email": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Resend email verification link",
+        "operationId": "AuthController_resendVerificationEmail",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email"],
+                "properties": { "email": { "type": "string", "format": "email", "example": "user@example.com" } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Verification link sent if email is registered" }
+        }
+      }
+    },
+    "/auth/send-verification-email": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Send verification email (admin / manual trigger)",
+        "operationId": "AuthController_sendVerificationEmail",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email"],
+                "properties": { "email": { "type": "string", "format": "email", "example": "user@example.com" } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Verification link sent if email is registered" }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Request a 6-digit password reset code sent to email",
+        "operationId": "AuthController_forgotPassword",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email"],
+                "properties": { "email": { "type": "string", "format": "email", "example": "user@example.com" } }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Reset code sent if email is registered (always 200 to prevent enumeration)" }
+        }
+      }
+    },
+    "/auth/verify-reset-code": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Validate 6-digit password reset code from email",
+        "operationId": "AuthController_verifyResetCode",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "code"],
+                "properties": {
+                  "email": { "type": "string", "format": "email", "example": "user@example.com" },
+                  "code": { "type": "string", "minLength": 6, "maxLength": 6, "example": "847291" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Code verified — user can now call reset-password" },
+          "400": { "description": "Invalid or expired code" }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Set a new password after verifying reset code",
+        "operationId": "AuthController_resetPassword",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "code", "newPassword"],
+                "properties": {
+                  "email": { "type": "string", "format": "email", "example": "user@example.com" },
+                  "code": { "type": "string", "minLength": 6, "maxLength": 6, "example": "847291" },
+                  "newPassword": { "type": "string", "minLength": 8, "example": "NewSecure@123", "description": "Min 8 chars, must contain uppercase, lowercase, and a number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Password reset successfully" },
+          "400": { "description": "Invalid code, expired session, or password too weak" }
+        }
+      }
+    },
     "/users": {
       "get": {
         "tags": ["Users"],
         "summary": "Get all users",
         "operationId": "UsersController_findAll",
         "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" }
+        ],
         "responses": {
-          "200": { "description": "List of all users" }
+          "200": {
+            "description": "Paginated list of users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "User retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -399,23 +574,33 @@
         "operationId": "SalesController_findAll",
         "security": [{ "access-token": [] }],
         "parameters": [
-          {
-            "name": "type",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "string", "enum": ["cash", "credit", "vat-cash", "vat-credit"] },
-            "description": "Sale type"
-          },
-          {
-            "name": "branchId",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "integer" },
-            "description": "Filter by branch ID"
-          }
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" },
+          { "name": "type", "in": "query", "required": false, "schema": { "type": "string", "enum": ["cash", "credit", "vat-cash", "vat-credit"], "default": "cash" }, "description": "Sale type" },
+          { "name": "branchId", "in": "query", "required": false, "schema": { "type": "integer" }, "description": "Filter by branch ID" }
         ],
         "responses": {
-          "200": { "description": "List of sales" }
+          "200": {
+            "description": "Paginated list of sales",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Sale retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -503,10 +688,32 @@
         "operationId": "InventoryController_findAll",
         "security": [{ "access-token": [] }],
         "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" },
           { "name": "branchId", "in": "query", "required": false, "schema": { "type": "integer" }, "description": "Filter by branch ID" }
         ],
         "responses": {
-          "200": { "description": "Stock summary" }
+          "200": {
+            "description": "Paginated stock summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Inventory retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -516,8 +723,32 @@
         "summary": "Get all items",
         "operationId": "InventoryController_findAllItems",
         "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" }
+        ],
         "responses": {
-          "200": { "description": "List of all items" }
+          "200": {
+            "description": "Paginated list of items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Item retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -708,8 +939,32 @@
         "summary": "Get all customers",
         "operationId": "CustomersController_findAll",
         "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" }
+        ],
         "responses": {
-          "200": { "description": "List of customers" }
+          "200": {
+            "description": "Paginated list of customers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Customer retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -781,8 +1036,32 @@
         "summary": "Get all customer payments (register)",
         "operationId": "CustomersController_findAllPayments",
         "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" }
+        ],
         "responses": {
-          "200": { "description": "List of all payments" }
+          "200": {
+            "description": "Paginated list of payments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Payment retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -867,8 +1146,32 @@
         "summary": "Get all roles with permissions",
         "operationId": "RolesController_findAll",
         "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" }
+        ],
         "responses": {
-          "200": { "description": "List of roles" }
+          "200": {
+            "description": "Paginated list of roles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Role retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -939,8 +1242,32 @@
         "summary": "Get all menu items",
         "operationId": "MenusController_findAll",
         "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" }
+        ],
         "responses": {
-          "200": { "description": "List of menus" }
+          "200": {
+            "description": "Paginated list of menus",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Menu retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -1069,10 +1396,32 @@
         "operationId": "OrdersController_findAll",
         "security": [{ "access-token": [] }],
         "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" },
           { "name": "branchId", "in": "query", "required": false, "schema": { "type": "integer" }, "description": "Filter by branch ID" }
         ],
         "responses": {
-          "200": { "description": "List of orders" }
+          "200": {
+            "description": "Paginated list of orders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Order retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -1131,10 +1480,32 @@
         "operationId": "OrdersController_findAllVat",
         "security": [{ "access-token": [] }],
         "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" },
           { "name": "branchId", "in": "query", "required": false, "schema": { "type": "integer" }, "description": "Filter by branch ID" }
         ],
         "responses": {
-          "200": { "description": "List of VAT orders" }
+          "200": {
+            "description": "Paginated list of VAT orders",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "VAT Order retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -1162,10 +1533,32 @@
         "operationId": "PricingController_findAllPrices",
         "security": [{ "access-token": [] }],
         "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" },
           { "name": "itemCode", "in": "query", "required": false, "schema": { "type": "string" }, "description": "Filter by item code" }
         ],
         "responses": {
-          "200": { "description": "List of sale prices" }
+          "200": {
+            "description": "Paginated list of sale prices",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Price retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -1227,10 +1620,32 @@
         "operationId": "PricingController_findAllCostPrices",
         "security": [{ "access-token": [] }],
         "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" },
           { "name": "itemCode", "in": "query", "required": false, "schema": { "type": "string" }, "description": "Filter by item code" }
         ],
         "responses": {
-          "200": { "description": "List of cost prices" }
+          "200": {
+            "description": "Paginated list of cost prices",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Cost Price retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -1276,8 +1691,32 @@
         "summary": "Get all money receive records",
         "operationId": "FinanceController_findAllMoneyReceive",
         "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" }
+        ],
         "responses": {
-          "200": { "description": "List of money receive records" }
+          "200": {
+            "description": "Paginated list of money receive records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Money Receive retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -1302,8 +1741,32 @@
         "summary": "Get all cash purchase records",
         "operationId": "FinanceController_findAllCashPurchases",
         "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" }
+        ],
         "responses": {
-          "200": { "description": "List of cash purchases" }
+          "200": {
+            "description": "Paginated list of cash purchases",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Cash Purchase retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -1328,8 +1791,32 @@
         "summary": "Get all packets",
         "operationId": "PacketsController_findAll",
         "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" }
+        ],
         "responses": {
-          "200": { "description": "List of packets" }
+          "200": {
+            "description": "Paginated list of packets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Packet retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -1449,10 +1936,32 @@
         "operationId": "NcAdjustmentController_findAll",
         "security": [{ "access-token": [] }],
         "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" },
           { "name": "branchId", "in": "query", "required": false, "schema": { "type": "integer" }, "description": "Filter by branch ID" }
         ],
         "responses": {
-          "200": { "description": "List of NC adjustments" }
+          "200": {
+            "description": "Paginated list of NC adjustments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "NC Adjustment retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -1493,10 +2002,32 @@
         "operationId": "AssortmentController_findAll",
         "security": [{ "access-token": [] }],
         "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" },
           { "name": "branchId", "in": "query", "required": false, "schema": { "type": "integer" }, "description": "Filter by branch ID" }
         ],
         "responses": {
-          "200": { "description": "List of assortment records" }
+          "200": {
+            "description": "Paginated list of assortment records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Assortment retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -1625,8 +2156,32 @@
         "summary": "Get all branches",
         "operationId": "AdminController_findAllBranches",
         "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" }
+        ],
         "responses": {
-          "200": { "description": "List of branches" }
+          "200": {
+            "description": "Paginated list of branches",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Branch retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -1711,8 +2266,32 @@
         "summary": "Get all banks",
         "operationId": "AdminController_findAllBanks",
         "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" }
+        ],
         "responses": {
-          "200": { "description": "List of banks" }
+          "200": {
+            "description": "Paginated list of banks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Bank retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {
@@ -1773,8 +2352,32 @@
         "summary": "Get all item categories",
         "operationId": "CategoriesController_findAll",
         "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 100 }, "description": "Items per page" }
+        ],
         "responses": {
-          "200": { "description": "List of categories" }
+          "200": {
+            "description": "Paginated list of categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "example": true },
+                    "message": { "type": "string", "example": "Category retrieved successfully" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": { "type": "array", "items": { "type": "object" } },
+                        "meta": { "$ref": "#/components/schemas/PaginationMeta" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "post": {

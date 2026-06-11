@@ -8629,6 +8629,14 @@ export namespace Prisma {
     deletedBy: string | null
     deletionDate: Date | null
     remarks: string | null
+    email: string | null
+    isVerified: boolean | null
+    verificationToken: string | null
+    refreshTokenHash: string | null
+    refreshTokenExpiredAt: Date | null
+    passwordResetCode: string | null
+    passwordResetCodeExpiredAt: Date | null
+    passwordResetVerifiedAt: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -8647,6 +8655,14 @@ export namespace Prisma {
     deletedBy: string | null
     deletionDate: Date | null
     remarks: string | null
+    email: string | null
+    isVerified: boolean | null
+    verificationToken: string | null
+    refreshTokenHash: string | null
+    refreshTokenExpiredAt: Date | null
+    passwordResetCode: string | null
+    passwordResetCodeExpiredAt: Date | null
+    passwordResetVerifiedAt: Date | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -8665,6 +8681,14 @@ export namespace Prisma {
     deletedBy: number
     deletionDate: number
     remarks: number
+    email: number
+    isVerified: number
+    verificationToken: number
+    refreshTokenHash: number
+    refreshTokenExpiredAt: number
+    passwordResetCode: number
+    passwordResetCodeExpiredAt: number
+    passwordResetVerifiedAt: number
     _all: number
   }
 
@@ -8685,6 +8709,14 @@ export namespace Prisma {
     deletedBy?: true
     deletionDate?: true
     remarks?: true
+    email?: true
+    isVerified?: true
+    verificationToken?: true
+    refreshTokenHash?: true
+    refreshTokenExpiredAt?: true
+    passwordResetCode?: true
+    passwordResetCodeExpiredAt?: true
+    passwordResetVerifiedAt?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -8703,6 +8735,14 @@ export namespace Prisma {
     deletedBy?: true
     deletionDate?: true
     remarks?: true
+    email?: true
+    isVerified?: true
+    verificationToken?: true
+    refreshTokenHash?: true
+    refreshTokenExpiredAt?: true
+    passwordResetCode?: true
+    passwordResetCodeExpiredAt?: true
+    passwordResetVerifiedAt?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -8721,6 +8761,14 @@ export namespace Prisma {
     deletedBy?: true
     deletionDate?: true
     remarks?: true
+    email?: true
+    isVerified?: true
+    verificationToken?: true
+    refreshTokenHash?: true
+    refreshTokenExpiredAt?: true
+    passwordResetCode?: true
+    passwordResetCodeExpiredAt?: true
+    passwordResetVerifiedAt?: true
     _all?: true
   }
 
@@ -8812,6 +8860,14 @@ export namespace Prisma {
     deletedBy: string | null
     deletionDate: Date | null
     remarks: string | null
+    email: string | null
+    isVerified: boolean
+    verificationToken: string | null
+    refreshTokenHash: string | null
+    refreshTokenExpiredAt: Date | null
+    passwordResetCode: string | null
+    passwordResetCodeExpiredAt: Date | null
+    passwordResetVerifiedAt: Date | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -8847,6 +8903,14 @@ export namespace Prisma {
     deletedBy?: boolean
     deletionDate?: boolean
     remarks?: boolean
+    email?: boolean
+    isVerified?: boolean
+    verificationToken?: boolean
+    refreshTokenHash?: boolean
+    refreshTokenExpiredAt?: boolean
+    passwordResetCode?: boolean
+    passwordResetCodeExpiredAt?: boolean
+    passwordResetVerifiedAt?: boolean
     branch?: boolean | BranchDefaultArgs<ExtArgs>
     userRoles?: boolean | User$userRolesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -8868,6 +8932,14 @@ export namespace Prisma {
     deletedBy?: boolean
     deletionDate?: boolean
     remarks?: boolean
+    email?: boolean
+    isVerified?: boolean
+    verificationToken?: boolean
+    refreshTokenHash?: boolean
+    refreshTokenExpiredAt?: boolean
+    passwordResetCode?: boolean
+    passwordResetCodeExpiredAt?: boolean
+    passwordResetVerifiedAt?: boolean
     branch?: boolean | BranchDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -8887,6 +8959,14 @@ export namespace Prisma {
     deletedBy?: boolean
     deletionDate?: boolean
     remarks?: boolean
+    email?: boolean
+    isVerified?: boolean
+    verificationToken?: boolean
+    refreshTokenHash?: boolean
+    refreshTokenExpiredAt?: boolean
+    passwordResetCode?: boolean
+    passwordResetCodeExpiredAt?: boolean
+    passwordResetVerifiedAt?: boolean
     branch?: boolean | BranchDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -8906,9 +8986,17 @@ export namespace Prisma {
     deletedBy?: boolean
     deletionDate?: boolean
     remarks?: boolean
+    email?: boolean
+    isVerified?: boolean
+    verificationToken?: boolean
+    refreshTokenHash?: boolean
+    refreshTokenExpiredAt?: boolean
+    passwordResetCode?: boolean
+    passwordResetCodeExpiredAt?: boolean
+    passwordResetVerifiedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userName" | "password" | "branchId" | "validUntil" | "isActive" | "creator" | "creationDate" | "lastUpdateBy" | "lastUpdateDate" | "isDeleted" | "deletedBy" | "deletionDate" | "remarks", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userName" | "password" | "branchId" | "validUntil" | "isActive" | "creator" | "creationDate" | "lastUpdateBy" | "lastUpdateDate" | "isDeleted" | "deletedBy" | "deletionDate" | "remarks" | "email" | "isVerified" | "verificationToken" | "refreshTokenHash" | "refreshTokenExpiredAt" | "passwordResetCode" | "passwordResetCodeExpiredAt" | "passwordResetVerifiedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     branch?: boolean | BranchDefaultArgs<ExtArgs>
     userRoles?: boolean | User$userRolesArgs<ExtArgs>
@@ -8943,6 +9031,14 @@ export namespace Prisma {
       deletedBy: string | null
       deletionDate: Date | null
       remarks: string | null
+      email: string | null
+      isVerified: boolean
+      verificationToken: string | null
+      refreshTokenHash: string | null
+      refreshTokenExpiredAt: Date | null
+      passwordResetCode: string | null
+      passwordResetCodeExpiredAt: Date | null
+      passwordResetVerifiedAt: Date | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -9383,6 +9479,14 @@ export namespace Prisma {
     readonly deletedBy: FieldRef<"User", 'String'>
     readonly deletionDate: FieldRef<"User", 'DateTime'>
     readonly remarks: FieldRef<"User", 'String'>
+    readonly email: FieldRef<"User", 'String'>
+    readonly isVerified: FieldRef<"User", 'Boolean'>
+    readonly verificationToken: FieldRef<"User", 'String'>
+    readonly refreshTokenHash: FieldRef<"User", 'String'>
+    readonly refreshTokenExpiredAt: FieldRef<"User", 'DateTime'>
+    readonly passwordResetCode: FieldRef<"User", 'String'>
+    readonly passwordResetCodeExpiredAt: FieldRef<"User", 'DateTime'>
+    readonly passwordResetVerifiedAt: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -58866,7 +58970,15 @@ export namespace Prisma {
     isDeleted: 'isDeleted',
     deletedBy: 'deletedBy',
     deletionDate: 'deletionDate',
-    remarks: 'remarks'
+    remarks: 'remarks',
+    email: 'email',
+    isVerified: 'isVerified',
+    verificationToken: 'verificationToken',
+    refreshTokenHash: 'refreshTokenHash',
+    refreshTokenExpiredAt: 'refreshTokenExpiredAt',
+    passwordResetCode: 'passwordResetCode',
+    passwordResetCodeExpiredAt: 'passwordResetCodeExpiredAt',
+    passwordResetVerifiedAt: 'passwordResetVerifiedAt'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -59659,6 +59771,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -59683,13 +59802,6 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -59905,6 +60017,14 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"User"> | string | null
     deletionDate?: DateTimeNullableFilter<"User"> | Date | string | null
     remarks?: StringNullableFilter<"User"> | string | null
+    email?: StringNullableFilter<"User"> | string | null
+    isVerified?: BoolFilter<"User"> | boolean
+    verificationToken?: StringNullableFilter<"User"> | string | null
+    refreshTokenHash?: StringNullableFilter<"User"> | string | null
+    refreshTokenExpiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    passwordResetCode?: StringNullableFilter<"User"> | string | null
+    passwordResetCodeExpiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    passwordResetVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
     userRoles?: T_UserRoleListRelationFilter
   }
@@ -59925,6 +60045,14 @@ export namespace Prisma {
     deletedBy?: SortOrderInput | SortOrder
     deletionDate?: SortOrderInput | SortOrder
     remarks?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    isVerified?: SortOrder
+    verificationToken?: SortOrderInput | SortOrder
+    refreshTokenHash?: SortOrderInput | SortOrder
+    refreshTokenExpiredAt?: SortOrderInput | SortOrder
+    passwordResetCode?: SortOrderInput | SortOrder
+    passwordResetCodeExpiredAt?: SortOrderInput | SortOrder
+    passwordResetVerifiedAt?: SortOrderInput | SortOrder
     branch?: BranchOrderByWithRelationInput
     userRoles?: t_UserRoleOrderByRelationAggregateInput
   }
@@ -59932,6 +60060,7 @@ export namespace Prisma {
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     userName?: string
+    email?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -59948,9 +60077,16 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"User"> | string | null
     deletionDate?: DateTimeNullableFilter<"User"> | Date | string | null
     remarks?: StringNullableFilter<"User"> | string | null
+    isVerified?: BoolFilter<"User"> | boolean
+    verificationToken?: StringNullableFilter<"User"> | string | null
+    refreshTokenHash?: StringNullableFilter<"User"> | string | null
+    refreshTokenExpiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    passwordResetCode?: StringNullableFilter<"User"> | string | null
+    passwordResetCodeExpiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    passwordResetVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
     userRoles?: T_UserRoleListRelationFilter
-  }, "id" | "userName">
+  }, "id" | "userName" | "email">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -59968,6 +60104,14 @@ export namespace Prisma {
     deletedBy?: SortOrderInput | SortOrder
     deletionDate?: SortOrderInput | SortOrder
     remarks?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    isVerified?: SortOrder
+    verificationToken?: SortOrderInput | SortOrder
+    refreshTokenHash?: SortOrderInput | SortOrder
+    refreshTokenExpiredAt?: SortOrderInput | SortOrder
+    passwordResetCode?: SortOrderInput | SortOrder
+    passwordResetCodeExpiredAt?: SortOrderInput | SortOrder
+    passwordResetVerifiedAt?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -59992,6 +60136,14 @@ export namespace Prisma {
     deletedBy?: StringNullableWithAggregatesFilter<"User"> | string | null
     deletionDate?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     remarks?: StringNullableWithAggregatesFilter<"User"> | string | null
+    email?: StringNullableWithAggregatesFilter<"User"> | string | null
+    isVerified?: BoolWithAggregatesFilter<"User"> | boolean
+    verificationToken?: StringNullableWithAggregatesFilter<"User"> | string | null
+    refreshTokenHash?: StringNullableWithAggregatesFilter<"User"> | string | null
+    refreshTokenExpiredAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    passwordResetCode?: StringNullableWithAggregatesFilter<"User"> | string | null
+    passwordResetCodeExpiredAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    passwordResetVerifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   }
 
   export type t_UserRoleWhereInput = {
@@ -63852,6 +64004,14 @@ export namespace Prisma {
     deletedBy?: string | null
     deletionDate?: Date | string | null
     remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
     branch: BranchCreateNestedOneWithoutUsersInput
     userRoles?: t_UserRoleCreateNestedManyWithoutUserInput
   }
@@ -63872,6 +64032,14 @@ export namespace Prisma {
     deletedBy?: string | null
     deletionDate?: Date | string | null
     remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
     userRoles?: t_UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -63890,6 +64058,14 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branch?: BranchUpdateOneRequiredWithoutUsersNestedInput
     userRoles?: t_UserRoleUpdateManyWithoutUserNestedInput
   }
@@ -63910,6 +64086,14 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     userRoles?: t_UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -63929,6 +64113,14 @@ export namespace Prisma {
     deletedBy?: string | null
     deletionDate?: Date | string | null
     remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -63946,6 +64138,14 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -63964,6 +64164,14 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type t_UserRoleCreateInput = {
@@ -68380,6 +68588,11 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type BranchScalarRelationFilter = {
     is?: BranchWhereInput
     isNot?: BranchWhereInput
@@ -68411,6 +68624,14 @@ export namespace Prisma {
     deletedBy?: SortOrder
     deletionDate?: SortOrder
     remarks?: SortOrder
+    email?: SortOrder
+    isVerified?: SortOrder
+    verificationToken?: SortOrder
+    refreshTokenHash?: SortOrder
+    refreshTokenExpiredAt?: SortOrder
+    passwordResetCode?: SortOrder
+    passwordResetCodeExpiredAt?: SortOrder
+    passwordResetVerifiedAt?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -68429,6 +68650,14 @@ export namespace Prisma {
     deletedBy?: SortOrder
     deletionDate?: SortOrder
     remarks?: SortOrder
+    email?: SortOrder
+    isVerified?: SortOrder
+    verificationToken?: SortOrder
+    refreshTokenHash?: SortOrder
+    refreshTokenExpiredAt?: SortOrder
+    passwordResetCode?: SortOrder
+    passwordResetCodeExpiredAt?: SortOrder
+    passwordResetVerifiedAt?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -68447,6 +68676,22 @@ export namespace Prisma {
     deletedBy?: SortOrder
     deletionDate?: SortOrder
     remarks?: SortOrder
+    email?: SortOrder
+    isVerified?: SortOrder
+    verificationToken?: SortOrder
+    refreshTokenHash?: SortOrder
+    refreshTokenExpiredAt?: SortOrder
+    passwordResetCode?: SortOrder
+    passwordResetCodeExpiredAt?: SortOrder
+    passwordResetVerifiedAt?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type UserScalarRelationFilter = {
@@ -68764,11 +69009,6 @@ export namespace Prisma {
     description?: SortOrder
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type RoleScalarRelationFilter = {
     is?: RoleWhereInput
     isNot?: RoleWhereInput
@@ -68812,14 +69052,6 @@ export namespace Prisma {
     canCreate?: SortOrder
     canEdit?: SortOrder
     canDelete?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type CSMasterListRelationFilter = {
@@ -71427,6 +71659,10 @@ export namespace Prisma {
     connect?: t_UserRoleWhereUniqueInput | t_UserRoleWhereUniqueInput[]
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type BranchUpdateOneRequiredWithoutUsersNestedInput = {
     create?: XOR<BranchCreateWithoutUsersInput, BranchUncheckedCreateWithoutUsersInput>
     connectOrCreate?: BranchCreateOrConnectWithoutUsersInput
@@ -71587,10 +71823,6 @@ export namespace Prisma {
     create?: XOR<MenuCreateWithoutPermissionsInput, MenuUncheckedCreateWithoutPermissionsInput>
     connectOrCreate?: MenuCreateOrConnectWithoutPermissionsInput
     connect?: MenuWhereUniqueInput
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type RoleUpdateOneRequiredWithoutPermissionsNestedInput = {
@@ -73169,6 +73401,19 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedUuidNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -73280,19 +73525,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedBoolNullableFilter<$PrismaModel>
     _max?: NestedBoolNullableFilter<$PrismaModel>
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedDecimalNullableFilter<$PrismaModel = never> = {
@@ -73407,6 +73639,14 @@ export namespace Prisma {
     deletedBy?: string | null
     deletionDate?: Date | string | null
     remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
     userRoles?: t_UserRoleCreateNestedManyWithoutUserInput
   }
 
@@ -73425,6 +73665,14 @@ export namespace Prisma {
     deletedBy?: string | null
     deletionDate?: Date | string | null
     remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
     userRoles?: t_UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -73473,6 +73721,14 @@ export namespace Prisma {
     deletedBy?: StringNullableFilter<"User"> | string | null
     deletionDate?: DateTimeNullableFilter<"User"> | Date | string | null
     remarks?: StringNullableFilter<"User"> | string | null
+    email?: StringNullableFilter<"User"> | string | null
+    isVerified?: BoolFilter<"User"> | boolean
+    verificationToken?: StringNullableFilter<"User"> | string | null
+    refreshTokenHash?: StringNullableFilter<"User"> | string | null
+    refreshTokenExpiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    passwordResetCode?: StringNullableFilter<"User"> | string | null
+    passwordResetCodeExpiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    passwordResetVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
   }
 
   export type t_SOMstrCreateWithoutBankInput = {
@@ -73700,6 +73956,14 @@ export namespace Prisma {
     deletedBy?: string | null
     deletionDate?: Date | string | null
     remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
     branch: BranchCreateNestedOneWithoutUsersInput
   }
 
@@ -73719,6 +73983,14 @@ export namespace Prisma {
     deletedBy?: string | null
     deletionDate?: Date | string | null
     remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
   }
 
   export type UserCreateOrConnectWithoutUserRolesInput = {
@@ -73752,6 +74024,14 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branch?: BranchUpdateOneRequiredWithoutUsersNestedInput
   }
 
@@ -73771,6 +74051,14 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type PermissionCreateWithoutMenuInput = {
@@ -77874,6 +78162,14 @@ export namespace Prisma {
     deletedBy?: string | null
     deletionDate?: Date | string | null
     remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
   }
 
   export type UserUpdateWithoutBranchInput = {
@@ -77891,6 +78187,14 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     userRoles?: t_UserRoleUpdateManyWithoutUserNestedInput
   }
 
@@ -77909,6 +78213,14 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     userRoles?: t_UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -77927,6 +78239,14 @@ export namespace Prisma {
     deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
     deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type t_SOMstrCreateManyBankInput = {

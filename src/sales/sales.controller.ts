@@ -5,8 +5,10 @@ import { CreateCashSaleDto } from './dto/create-cash-sale.dto';
 import { CreateCreditSaleDto } from './dto/create-credit-sale.dto';
 import { CreateVatCashSaleDto } from './dto/create-vat-cash-sale.dto';
 import { CreateVatCreditSaleDto } from './dto/create-vat-credit-sale.dto';
+import { SalesQueryDto } from './dto/sales-query.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CurrentUser } from '../common/decorators';
+import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Sales')
 @ApiBearerAuth('access-token')
@@ -20,11 +22,9 @@ export class SalesController {
   @ApiQuery({ name: 'type', required: false, enum: ['cash', 'credit', 'vat-cash', 'vat-credit'], description: 'Sale type' })
   @ApiQuery({ name: 'branchId', required: false, description: 'Filter by branch ID' })
   @ApiResponse({ status: 200, description: 'List of sales' })
-  findAll(
-    @Query('type') type: 'cash' | 'credit' | 'vat-cash' | 'vat-credit' = 'cash',
-    @Query('branchId') branchId?: string,
-  ) {
-    return this.salesService.findAll(type, branchId ? +branchId : undefined);
+  async findAll(@Query() query: SalesQueryDto) {
+    const { items, meta } = await this.salesService.findAll(query);
+    return paginatedResponse(items, meta, 'Sale');
   }
 
   @Post('cash')

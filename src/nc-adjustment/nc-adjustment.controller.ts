@@ -3,6 +3,8 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery }
 import { NcAdjustmentService, CreateNcAdjustmentDto } from './nc-adjustment.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CurrentUser } from '../common/decorators';
+import { BranchPaginationQueryDto } from '../common/dto';
+import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('NC Adjustment')
 @ApiBearerAuth('access-token')
@@ -13,10 +15,10 @@ export class NcAdjustmentController {
 
   @Get()
   @ApiOperation({ summary: 'Get all NC adjustments' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Filter by branch ID' })
-  @ApiResponse({ status: 200, description: 'List of NC adjustments' })
-  findAll(@Query('branchId') branchId?: string) {
-    return this.ncService.findAll(branchId ? +branchId : undefined);
+  @ApiResponse({ status: 200, description: 'Paginated list of NC adjustments' })
+  async findAll(@Query() query: BranchPaginationQueryDto) {
+    const { items, meta } = await this.ncService.findAll(query);
+    return paginatedResponse(items, meta, 'NC Adjustment');
   }
 
   @Get(':id')

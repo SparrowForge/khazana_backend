@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
+import { BranchPaginationQueryDto } from '../common/dto';
+import { buildPaginationMeta } from '../common/helpers';
 
 export class CreateAssortmentDto {
   code?: string;
@@ -29,12 +31,14 @@ export class CreateAssortmentDto {
 export class AssortmentService {
   constructor(private prisma: PrismaService) {}
 
-  findAll(branchId?: number) {
-    return this.prisma.asstMsrt.findMany({
-      where: { isActive: true, ...(branchId && { branchId }) },
-      include: { details: true },
-      orderBy: { date: 'desc' },
-    });
+  async findAll(query: BranchPaginationQueryDto) {
+    const { page, limit, branchId } = query;
+    const where = { isActive: true, ...(branchId && { branchId }) };
+    const [rows, total] = await Promise.all([
+      this.prisma.asstMsrt.findMany({ where, include: { details: true }, orderBy: { date: 'desc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.asstMsrt.count({ where }),
+    ]);
+    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
   }
 
   async findOne(id: string) {

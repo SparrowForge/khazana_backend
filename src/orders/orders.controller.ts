@@ -3,6 +3,8 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery }
 import { OrdersService, CreateOrderDto } from './orders.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CurrentUser } from '../common/decorators';
+import { BranchPaginationQueryDto } from '../common/dto';
+import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Orders')
 @ApiBearerAuth('access-token')
@@ -13,10 +15,10 @@ export class OrdersController {
 
   @Get()
   @ApiOperation({ summary: 'Get all orders' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Filter by branch ID' })
-  @ApiResponse({ status: 200, description: 'List of orders' })
-  findAll(@Query('branchId') branchId?: string) {
-    return this.ordersService.findAll(branchId ? +branchId : undefined);
+  @ApiResponse({ status: 200, description: 'Paginated list of orders' })
+  async findAll(@Query() query: BranchPaginationQueryDto) {
+    const { items, meta } = await this.ordersService.findAll(query);
+    return paginatedResponse(items, meta, 'Order');
   }
 
   @Get(':id')
@@ -47,10 +49,10 @@ export class OrdersController {
 
   @Get('vat/list')
   @ApiOperation({ summary: 'Get all VAT orders' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Filter by branch ID' })
-  @ApiResponse({ status: 200, description: 'List of VAT orders' })
-  findAllVat(@Query('branchId') branchId?: string) {
-    return this.ordersService.findAllVat(branchId ? +branchId : undefined);
+  @ApiResponse({ status: 200, description: 'Paginated list of VAT orders' })
+  async findAllVat(@Query() query: BranchPaginationQueryDto) {
+    const { items, meta } = await this.ordersService.findAllVat(query);
+    return paginatedResponse(items, meta, 'VAT Order');
   }
 
   @Post('vat')

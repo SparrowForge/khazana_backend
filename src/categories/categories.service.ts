@@ -1,12 +1,19 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
+import { PaginationQueryDto } from '../common/dto';
+import { buildPaginationMeta } from '../common/helpers';
 
 @Injectable()
 export class CategoriesService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.item_Category.findMany({ orderBy: { name: 'asc' } });
+  async findAll(query: PaginationQueryDto) {
+    const { page, limit } = query;
+    const [categories, total] = await Promise.all([
+      this.prisma.item_Category.findMany({ orderBy: { name: 'asc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.item_Category.count(),
+    ]);
+    return { items: categories, meta: buildPaginationMeta(total, page, limit) };
   }
 
   async findOne(id: string) {
