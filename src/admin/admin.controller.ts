@@ -2,7 +2,7 @@ import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@ne
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { AdminService, CreateBranchDto, UpdateSystemDto } from './admin.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { CurrentUser } from '../common/decorators';
+import { CurrentUser, Public } from '../common/decorators';
 import { PaginationQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
@@ -13,6 +13,7 @@ import { paginatedResponse } from '../common/helpers';
 export class AdminController {
   constructor(private adminService: AdminService) {}
 
+  @Public()
   @Get('branches')
   @ApiOperation({ summary: 'Get all branches' })
   @ApiResponse({ status: 200, description: 'List of branches' })
