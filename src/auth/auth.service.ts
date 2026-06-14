@@ -45,6 +45,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    if (user.branchId !== dto.branchId) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
     const passwordMatch = await bcrypt.compare(dto.password, user.password ?? '');
     if (!passwordMatch) {
       throw new UnauthorizedException('Invalid credentials');
