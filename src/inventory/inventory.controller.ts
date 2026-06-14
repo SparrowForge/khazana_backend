@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery }
 import { InventoryService } from './inventory.service';
 import { ReceiveStockDto } from './dto/receive-stock.dto';
 import { IssueStockDto } from './dto/issue-stock.dto';
+import { CreateItemDto, UpdateItemDto } from './dto/create-item.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CurrentUser } from '../common/decorators';
 import { PaginationQueryDto, BranchPaginationQueryDto } from '../common/dto';
@@ -43,16 +44,17 @@ export class InventoryController {
   @Post('items')
   @ApiOperation({ summary: 'Create a new item' })
   @ApiResponse({ status: 201, description: 'Item created successfully' })
-  createItem(@Body() body: any) {
-    return this.inventoryService.createItem(body);
+  @ApiResponse({ status: 409, description: 'Item code already exists' })
+  createItem(@Body() dto: CreateItemDto) {
+    return this.inventoryService.createItem(dto);
   }
 
   @Patch('items/:id')
   @ApiOperation({ summary: 'Update item by ID' })
   @ApiParam({ name: 'id', description: 'Item UUID' })
   @ApiResponse({ status: 200, description: 'Item updated successfully' })
-  updateItem(@Param('id') id: string, @Body() body: any) {
-    return this.inventoryService.updateItem(id, body);
+  updateItem(@Param('id') id: string, @Body() dto: UpdateItemDto) {
+    return this.inventoryService.updateItem(id, dto);
   }
 
   @Delete('items/:id')

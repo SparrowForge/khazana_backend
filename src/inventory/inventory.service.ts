@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
+import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../database/prisma.service';
 import { ReceiveStockDto } from './dto/receive-stock.dto';
 import { IssueStockDto } from './dto/issue-stock.dto';
@@ -61,13 +62,30 @@ export class InventoryService {
 
   async createItem(data: {
     itmCode: string;
-    itmName: string;
+    itmName?: string;
     itmCategory?: string;
     itmType?: string;
     itmUOM?: string;
     itmRemarks?: string;
   }) {
-    return this.prisma.item_Information.create({ data: { ...data, isActive: 'Y' } });
+    try {
+      return await this.prisma.item_Information.create({
+        data: {
+          itmCode: data.itmCode,
+          itmName: data.itmName,
+          itmCategory: data.itmCategory,
+          itmType: data.itmType || null,
+          itmUOM: data.itmUOM,
+          itmRemarks: data.itmRemarks,
+          isActive: 'Y',
+        },
+      });
+    } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+        throw new ConflictException(`Item code "${data.itmCode}" already exists`);
+      }
+      throw e;
+    }
   }
 
   async updateItem(id: string, data: Partial<{ itmName: string; itmCategory: string; isActive: string }>) {
