@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Khazana POS API",
-    "description": "## Khazana POS Backend API\n\nAvailable modules:\n- **Auth** – Login, profile, change password\n- **Users** – User management and role assignment\n- **Sales** – Cash, credit, VAT cash, VAT credit sales\n- **Inventory** – Items, stock receive / issue / adjust\n- **Customers** – Customer management, ledger, payments\n- **Roles** – Role management\n- **Menus** – Menu items\n- **Permissions** – Role-based permissions\n- **Orders** – Sales orders (regular and VAT)\n- **Pricing** – Sale prices and cost prices\n- **Finance** – Money receive and cash purchases\n- **Packets** – Packet stock management\n- **NC Adjustment** – Non-conformance adjustments\n- **Assortment** – Assortment records\n- **Reports** – Sales, stock, item-wise, customer statements\n- **Admin** – Branches, settings, banks, audit log\n- **Dashboard** – Summary statistics\n- **Categories** – Item category management",
+    "description": "## Khazana POS Backend API\n\nAvailable modules:\n- **Auth** – Login, profile, change password\n- **Users** – User management and role assignment\n- **POS Products** – Active items with live prices for the POS terminal (from Item_Information + t_Price)\n- **POS Sales** – Quick cash billing: create invoice, list, print (writes t_SOMstr + t_SODet, deducts inventory)\n- **Sales** – Cash, credit, VAT cash, VAT credit sales\n- **Inventory** – Items, stock receive / issue / adjust\n- **Customers** – Customer management, ledger, payments\n- **Roles** – Role management\n- **Menus** – Menu items\n- **Permissions** – Role-based permissions\n- **Orders** – Sales orders (regular and VAT)\n- **Pricing** – Sale prices and cost prices\n- **Finance** – Money receive and cash purchases\n- **Packets** – Packet stock management\n- **NC Adjustment** – Non-conformance adjustments\n- **Assortment** – Assortment records\n- **Reports** – Sales, stock, item-wise, customer statements\n- **Admin** – Branches, settings, banks, audit log\n- **Dashboard** – Summary statistics\n- **Categories** – Item category management",
     "version": "1.0",
     "contact": {}
   },
@@ -220,6 +220,75 @@
           "code": { "type": "string", "example": "SWEETS" },
           "name": { "type": "string", "example": "Sweets" },
           "remarks": { "type": "string", "example": "All sweet items" }
+        }
+      },
+      "PosProduct": {
+        "type": "object",
+        "description": "Item_Information row joined with its current active t_Price entry. Only items that have at least one active price are returned.",
+        "properties": {
+          "id": { "type": "string", "format": "uuid", "description": "Item_Information.id", "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890" },
+          "itmCode": { "type": "string", "example": "ITM-001" },
+          "name": { "type": "string", "example": "Gulab Jamun" },
+          "uom": { "type": "string", "example": "PCS" },
+          "price": { "type": "number", "description": "Unit price from t_Price.priceListPrice", "example": 150.00 },
+          "vatPercentage": { "type": "number", "description": "VAT % from t_Price.priceVatPercent", "example": 15 }
+        }
+      },
+      "PosCartItemDto": {
+        "type": "object",
+        "required": ["itemId", "qty"],
+        "properties": {
+          "itemId": { "type": "string", "format": "uuid", "description": "Item_Information.id (UUID)", "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890" },
+          "qty": { "type": "number", "minimum": 0.001, "example": 2 }
+        }
+      },
+      "CreatePosSaleDto": {
+        "type": "object",
+        "required": ["items", "paidAmount"],
+        "description": "Backend resolves item prices and VAT from t_Price. Client never sends rates.",
+        "properties": {
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "#/components/schemas/PosCartItemDto" }
+          },
+          "paidAmount": { "type": "number", "minimum": 0, "example": 500.00 },
+          "servedBy": { "type": "string", "description": "Staff name (defaults to logged-in username)", "example": "Ahmed" },
+          "salesType": { "type": "string", "enum": ["Cash", "Card"], "default": "Cash", "example": "Cash" },
+          "branchId": { "type": "integer", "description": "Optional — stored on t_SOMstr.BranchId", "example": 1 }
+        }
+      },
+      "PosSaleItem": {
+        "type": "object",
+        "description": "Mapped from t_SODet joined with Item_Information",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "productName": { "type": "string", "description": "Item_Information.itmName", "example": "Gulab Jamun" },
+          "qty": { "type": "number", "example": 2 },
+          "rate": { "type": "number", "description": "Unit price from t_Price", "example": 150.00 },
+          "vatPct": { "type": "number", "description": "VAT % (sodetVATValue)", "example": 15 },
+          "vat": { "type": "number", "description": "Calculated VAT amount (sodetVATAmount)", "example": 45.00 },
+          "total": { "type": "number", "description": "Gross line total before VAT (sodetAmount = rate × qty)", "example": 300.00 }
+        }
+      },
+      "PosSale": {
+        "type": "object",
+        "description": "Mapped from t_SOMstr + t_SODet + Item_Information. Invoice numbers use DS-YYYYMM-NNNNN prefix.",
+        "properties": {
+          "id": { "type": "string", "format": "uuid", "description": "t_SOMstr.id" },
+          "invoiceNo": { "type": "string", "description": "Auto-generated (DS-YYYYMM-NNNNN)", "example": "DS-202601-00001" },
+          "dateTime": { "type": "string", "format": "date-time", "description": "t_SOMstr.somstrDate" },
+          "salesType": { "type": "string", "example": "Cash" },
+          "totalAmount": { "type": "number", "description": "Sum of (rate × qty) — t_SOMstr.somstrTotalAmt", "example": 300.00 },
+          "vatAmount": { "type": "number", "description": "Sum of sodetVATAmount across all lines", "example": 45.00 },
+          "payableAmount": { "type": "number", "description": "totalAmount + vatAmount — t_SOMstr.somstrNetAmt", "example": 345.00 },
+          "paidAmount": { "type": "number", "description": "t_SOMstr.somstrCustomerpay", "example": 500.00 },
+          "changeAmount": { "type": "number", "description": "paidAmount − payableAmount — t_SOMstr.somstrChange", "example": 155.00 },
+          "servedBy": { "type": "string", "description": "t_SOMstr.somstrCreator", "example": "Ahmed" },
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PosSaleItem" }
+          }
         }
       }
     }
@@ -2432,11 +2501,142 @@
           "404": { "description": "Category not found" }
         }
       }
+    },
+
+    "/pos/products": {
+      "get": {
+        "tags": ["POS Products"],
+        "summary": "Get all items available at POS terminal",
+        "description": "Returns Item_Information rows that have at least one currently active t_Price entry (priceIsActive=1, date range covers today). Price and VAT % are taken from t_Price. Manage items via Inventory → Items and prices via Pricing → Price Setup.",
+        "operationId": "PosProductsController_findAll",
+        "security": [{ "access-token": [] }],
+        "responses": {
+          "200": {
+            "description": "Array of POS-ready products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PosProduct" }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+
+    "/pos/sales": {
+      "post": {
+        "tags": ["POS Sales"],
+        "summary": "Create a POS sale and generate invoice",
+        "description": "Resolves item prices and VAT from t_Price, calculates all totals server-side, writes one t_SOMstr record and one t_SODet row per cart line, then deducts inventory. Returns the mapped PosSale invoice object. Invoice numbers follow the pattern DS-YYYYMM-NNNNN.",
+        "operationId": "PosSalesController_create",
+        "security": [{ "access-token": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreatePosSaleDto" },
+              "example": {
+                "items": [
+                  { "itemId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890", "qty": 2 },
+                  { "itemId": "b2c3d4e5-f6a7-8901-bcde-f12345678901", "qty": 1 }
+                ],
+                "paidAmount": 500.00,
+                "servedBy": "Ahmed",
+                "salesType": "Cash",
+                "branchId": 1
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Invoice created — redirect to /pos/invoice/{id} for print",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PosSale" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error — cart empty, item not found, no active price, or insufficient payment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": { "type": "integer", "example": 400 },
+                    "message": { "type": "string", "example": "Insufficient payment — payable: ৳345.00, paid: ৳200.00" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" }
+        }
+      },
+      "get": {
+        "tags": ["POS Sales"],
+        "summary": "List all POS sales",
+        "description": "Returns t_SOMstr rows whose somstrCode starts with 'DS-', ordered newest-first. Each entry includes its t_SODet lines with Item_Information names.",
+        "operationId": "PosSalesController_findAll",
+        "security": [{ "access-token": [] }],
+        "responses": {
+          "200": {
+            "description": "Array of POS sales",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/PosSale" }
+                }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" }
+        }
+      }
+    },
+
+    "/pos/sales/{id}": {
+      "get": {
+        "tags": ["POS Sales"],
+        "summary": "Get a POS sale by ID (for invoice print)",
+        "description": "Fetches one t_SOMstr record by UUID, joins t_SODet + Item_Information, and returns the full PosSale invoice shape. Used by the frontend invoice print page.",
+        "operationId": "PosSalesController_findOne",
+        "security": [{ "access-token": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "t_SOMstr UUID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Full invoice data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PosSale" }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized" },
+          "404": { "description": "Invoice not found" }
+        }
+      }
     }
   },
   "tags": [
     { "name": "Auth", "description": "Authentication and session management" },
     { "name": "Users", "description": "User account management" },
+    { "name": "POS Products", "description": "Active items with live prices for the POS terminal (read from Item_Information + t_Price)" },
+    { "name": "POS Sales", "description": "Quick cash billing — creates t_SOMstr + t_SODet, deducts inventory, returns printable invoice (DS-YYYYMM-NNNNN)" },
     { "name": "Sales", "description": "Cash, credit, and VAT sales transactions" },
     { "name": "Inventory", "description": "Item catalog and stock management" },
     { "name": "Customers", "description": "Customer management, ledger, and payments" },

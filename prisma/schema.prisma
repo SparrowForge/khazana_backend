@@ -837,3 +837,4 @@ model temp_table {
 
   @@map("temp_table")
 }
+
