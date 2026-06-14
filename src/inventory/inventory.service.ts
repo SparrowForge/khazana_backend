@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
-import { Prisma } from '../generated/prisma';
 import { PrismaService } from '../database/prisma.service';
 import { ReceiveStockDto } from './dto/receive-stock.dto';
 import { IssueStockDto } from './dto/issue-stock.dto';
@@ -80,9 +79,9 @@ export class InventoryService {
           isActive: 'Y',
         },
       });
-    } catch (e) {
-      if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
-        throw new ConflictException(`Item code "${data.itmCode}" already exists`);
+    } catch (e: any) {
+      if (e?.code === 'P2002') {
+        throw new ConflictException(`Duplicate item found. Item code "${data.itmCode}" already exists`);
       }
       throw e;
     }
