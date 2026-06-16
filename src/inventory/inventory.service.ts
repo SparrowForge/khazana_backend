@@ -42,10 +42,9 @@ export class InventoryService {
 
   async findAllItems(query: PaginationQueryDto) {
     const { page, limit } = query;
-    const where = { isActive: 'Y' as const };
     const [items, total] = await Promise.all([
-      this.prisma.item_Information.findMany({ where, include: { inventory: true }, orderBy: { itmName: 'asc' }, skip: (page - 1) * limit, take: limit }),
-      this.prisma.item_Information.count({ where }),
+      this.prisma.item_Information.findMany({ include: { inventory: true }, orderBy: { itmName: 'asc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.item_Information.count(),
     ]);
     return { items, meta: buildPaginationMeta(total, page, limit) };
   }
@@ -149,30 +148,41 @@ export class InventoryService {
 
   // ── Receive ───────────────────────────────────────────────────
 
-  async receiveStock(dto: ReceiveStockDto, createdBy: string) {
-    const receive = await this.prisma.item_Receive.create({
-      data: {
-        itemCode: dto.itemCode,
-        itemName: dto.itemName,
-        qty: dto.qty,
-        purDate: new Date(dto.purDate),
-        branchId: dto.branchId,
-        receiveBranchID: dto.receiveBranchID,
-        serialNo: dto.serialNo,
-        voucharNo: dto.voucharNo,
-        isActive: 1,
-        createBy: createdBy,
-        createDate: new Date(),
-      },
+  async receiveStock(dto: ReceiveStockDto, createdBy: string, userBranchId: number) {
+    const branchId = dto.branchId ?? userBranchId;
+    const purDate = new Date(dto.purDate);
+
+    const results = await this.prisma.$transaction(async (tx) => {
+      const receives = [];
+      for (const line of dto.items) {
+        const receive = await tx.item_Receive.create({
+          data: {
+            itemCode: line.itemCode,
+            itemName: line.itemName,
+            qty: line.qty,
+            purDate,
+            branchId,
+            receiveBranchID: branchId,
+            serialNo: dto.serialNo,
+            voucharNo: dto.voucherNo,
+            isActive: 1,
+            createBy: createdBy,
+            createDate: new Date(),
+          },
+        });
+
+        await tx.inventory.upsert({
+          where: { itemCode: line.itemCode },
+          create: { itemCode: line.itemCode, quantity: line.qty },
+          update: { quantity: { increment: line.qty } },
+        });
+
+        receives.push(receive);
+      }
+      return receives;
     });
 
-    await this.prisma.inventory.upsert({
-      where: { itemCode: dto.itemCode },
-      create: { itemCode: dto.itemCode, quantity: dto.qty },
-      update: { quantity: { increment: dto.qty } },
-    });
-
-    return receive;
+    return results;
   }
 
   // ── Issue / Transfer ──────────────────────────────────────────

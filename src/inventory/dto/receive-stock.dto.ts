@@ -1,41 +1,46 @@
-import { IsString, IsNumber, IsPositive, IsOptional, IsDateString, IsInt } from 'class-validator';
+import { IsString, IsNumber, IsPositive, IsOptional, IsDateString, IsInt, IsArray, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class ReceiveStockDto {
-  @ApiPropertyOptional({ example: 'GRN-001', description: 'Serial / GRN number' })
-  @IsString()
-  @IsOptional()
-  serialNo?: string;
-
-  @ApiPropertyOptional({ example: 'VCHR-001', description: 'Voucher number' })
-  @IsString()
-  @IsOptional()
-  voucharNo?: string;
-
-  @ApiProperty({ example: 'ITM-001', description: 'Item code' })
+export class ReceiveStockLineDto {
+  @ApiProperty({ example: 'ITM-001' })
   @IsString()
   itemCode: string;
 
-  @ApiPropertyOptional({ example: 'Widget A', description: 'Item name (for reference)' })
+  @ApiPropertyOptional({ example: 'Widget A' })
   @IsString()
   @IsOptional()
   itemName?: string;
 
-  @ApiProperty({ example: 50, description: 'Quantity received (must be > 0)' })
+  @ApiProperty({ example: 10 })
   @IsNumber()
   @IsPositive()
   qty: number;
+}
 
-  @ApiProperty({ example: '2024-01-15', description: 'Purchase / receive date (ISO 8601)' })
+export class ReceiveStockDto {
+  @ApiPropertyOptional({ example: 'GRN-001' })
+  @IsString()
+  @IsOptional()
+  serialNo?: string;
+
+  @ApiPropertyOptional({ example: 'VCHR-001' })
+  @IsString()
+  @IsOptional()
+  voucherNo?: string;
+
+  @ApiProperty({ example: '2024-01-15' })
   @IsDateString()
   purDate: string;
 
-  @ApiProperty({ example: 1, description: 'Branch receiving the stock' })
-  @IsInt()
-  branchId: number;
-
-  @ApiPropertyOptional({ example: 2, description: 'Receiving sub-branch ID (if different)' })
+  @ApiPropertyOptional({ example: 1, description: 'Defaults to the authenticated user\'s branch' })
   @IsInt()
   @IsOptional()
-  receiveBranchID?: number;
+  branchId?: number;
+
+  @ApiProperty({ type: [ReceiveStockLineDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ReceiveStockLineDto)
+  items: ReceiveStockLineDto[];
 }

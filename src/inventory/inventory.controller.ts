@@ -84,8 +84,12 @@ export class InventoryController {
   @Post('receive')
   @ApiOperation({ summary: 'Receive stock (goods inward)' })
   @ApiResponse({ status: 201, description: 'Stock received successfully' })
-  receiveStock(@Body() dto: ReceiveStockDto, @CurrentUser('userName') userName: string) {
-    return this.inventoryService.receiveStock(dto, userName);
+  receiveStock(
+    @Body() dto: ReceiveStockDto,
+    @CurrentUser('userName') userName: string,
+    @CurrentUser('branchId') branchId: number,
+  ) {
+    return this.inventoryService.receiveStock(dto, userName, branchId);
   }
 
   @Post('issue')
