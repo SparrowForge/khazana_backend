@@ -4,6 +4,7 @@ import { InventoryService } from './inventory.service';
 import { ReceiveStockDto } from './dto/receive-stock.dto';
 import { IssueStockDto } from './dto/issue-stock.dto';
 import { CreateItemDto, UpdateItemDto } from './dto/create-item.dto';
+import { ItemQueryDto } from './dto/item-query.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CurrentUser } from '../common/decorators';
 import { PaginationQueryDto, BranchPaginationQueryDto } from '../common/dto';
@@ -27,7 +28,7 @@ export class InventoryController {
   @Get('items')
   @ApiOperation({ summary: 'Get all items' })
   @ApiResponse({ status: 200, description: 'Paginated list of all items' })
-  async findAllItems(@Query() query: PaginationQueryDto) {
+  async findAllItems(@Query() query: ItemQueryDto) {
     const { items, meta } = await this.inventoryService.findAllItems(query);
     return paginatedResponse(items, meta, 'Item');
   }

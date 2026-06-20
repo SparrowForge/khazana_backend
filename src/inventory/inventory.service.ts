@@ -2,7 +2,8 @@ import { Injectable, NotFoundException, BadRequestException, ConflictException }
 import { PrismaService } from '../database/prisma.service';
 import { ReceiveStockDto } from './dto/receive-stock.dto';
 import { IssueStockDto } from './dto/issue-stock.dto';
-import { PaginationQueryDto, BranchPaginationQueryDto } from '../common/dto';
+import { BranchPaginationQueryDto } from '../common/dto';
+import { ItemQueryDto } from './dto/item-query.dto';
 import { buildPaginationMeta } from '../common/helpers';
 
 @Injectable()
@@ -40,11 +41,12 @@ export class InventoryService {
 
   // ── Items ─────────────────────────────────────────────────────
 
-  async findAllItems(query: PaginationQueryDto) {
-    const { page, limit } = query;
+  async findAllItems(query: ItemQueryDto) {
+    const { page, limit, isActive } = query;
+    const where = isActive ? { isActive } : undefined;
     const [items, total] = await Promise.all([
-      this.prisma.item_Information.findMany({ include: { inventory: true }, orderBy: { itmName: 'asc' }, skip: (page - 1) * limit, take: limit }),
-      this.prisma.item_Information.count(),
+      this.prisma.item_Information.findMany({ where, include: { inventory: true }, orderBy: { itmName: 'asc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.item_Information.count({ where }),
     ]);
     return { items, meta: buildPaginationMeta(total, page, limit) };
   }
