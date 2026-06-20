@@ -8,7 +8,7 @@ import { PrismaService } from './database/prisma.service';
 const parseOrigins = (value?: string): string[] =>
   value
     ?.split(',')
-    .map((origin) => origin.trim())
+    .map((origin) => origin.trim().replace(/\/+$/, ''))
     .filter(Boolean) ?? [];
 
 const getAllowedOrigins = (): string[] => {
