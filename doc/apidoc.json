@@ -2545,7 +2545,40 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "code",
+                  "name"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "CUST-001",
+                    "description": "Unique customer code"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Acme Corp",
+                    "description": "Customer name"
+                  },
+                  "mobile": {
+                    "type": "string",
+                    "example": "+880-1700-000000"
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": "123 Main St"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "acme@example.com"
+                  },
+                  "joiningDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-01-15"
+                  }
+                }
               }
             }
           }
@@ -2619,7 +2652,30 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Acme Corp Updated"
+                  },
+                  "mobile": {
+                    "type": "string",
+                    "example": "+880-1700-000001"
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": "456 New St"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "new@example.com"
+                  },
+                  "joiningDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-01-15"
+                  }
+                }
               }
             }
           }
@@ -2752,7 +2808,46 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "clientCode",
+                  "paymentDate",
+                  "paymentAmount"
+                ],
+                "properties": {
+                  "clientCode": {
+                    "type": "string",
+                    "example": "CUST-001",
+                    "description": "Customer code"
+                  },
+                  "paymentDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-01"
+                  },
+                  "paymentAmount": {
+                    "type": "number",
+                    "example": 5000,
+                    "description": "Payment amount"
+                  },
+                  "tType": {
+                    "type": "string",
+                    "example": "cash",
+                    "description": "Transaction type: cash | bank | card"
+                  },
+                  "moneyReceptNo": {
+                    "type": "string",
+                    "example": "REC-001"
+                  },
+                  "bankName": {
+                    "type": "string",
+                    "example": "ABC Bank"
+                  },
+                  "bankNo": {
+                    "type": "string",
+                    "example": "12345678"
+                  }
+                }
               }
             }
           }
@@ -2852,7 +2947,45 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "paymentDate",
+                  "paymentAmount"
+                ],
+                "properties": {
+                  "clientCode": {
+                    "type": "string",
+                    "example": "CUST-001",
+                    "description": "Customer code"
+                  },
+                  "paymentDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-01"
+                  },
+                  "paymentAmount": {
+                    "type": "number",
+                    "example": 5000,
+                    "description": "Payment amount"
+                  },
+                  "tType": {
+                    "type": "string",
+                    "example": "cash",
+                    "description": "Transaction type: cash | bank | card"
+                  },
+                  "moneyReceptNo": {
+                    "type": "string",
+                    "example": "REC-001"
+                  },
+                  "bankName": {
+                    "type": "string",
+                    "example": "ABC Bank"
+                  },
+                  "bankNo": {
+                    "type": "string",
+                    "example": "12345678"
+                  }
+                }
               }
             }
           }
@@ -2982,7 +3115,21 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Manager",
+                    "description": "Unique role name"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Can manage users and branches"
+                  }
+                }
               }
             }
           }
@@ -3058,7 +3205,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Senior Manager"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Updated description"
+                  }
+                }
               }
             }
           }
@@ -3189,7 +3346,46 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "menuName",
+                  "controlName"
+                ],
+                "properties": {
+                  "menuName": {
+                    "type": "string",
+                    "example": "Reports",
+                    "description": "Display name shown in the sidebar"
+                  },
+                  "controlName": {
+                    "type": "string",
+                    "example": "Reports",
+                    "description": "Unique identifier used for permission checks"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Access to report pages"
+                  },
+                  "icon": {
+                    "type": "string",
+                    "example": "BarChart2",
+                    "description": "Lucide icon name"
+                  },
+                  "order": {
+                    "type": "number",
+                    "example": 5,
+                    "description": "Sidebar sort order"
+                  },
+                  "parentMenu": {
+                    "type": "string",
+                    "example": "Admin",
+                    "description": "controlName of parent (null for top-level)"
+                  },
+                  "isActive": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
               }
             }
           }
@@ -3262,7 +3458,37 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "menuName": {
+                    "type": "string",
+                    "example": "Reports Updated"
+                  },
+                  "controlName": {
+                    "type": "string",
+                    "example": "ReportsV2"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Updated description"
+                  },
+                  "icon": {
+                    "type": "string",
+                    "example": "PieChart"
+                  },
+                  "order": {
+                    "type": "number",
+                    "example": 6
+                  },
+                  "parentMenu": {
+                    "type": "string",
+                    "example": "Admin"
+                  },
+                  "isActive": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
               }
             }
           }
@@ -3351,7 +3577,43 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "roleId",
+                  "menuId"
+                ],
+                "properties": {
+                  "roleId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "Role UUID"
+                  },
+                  "menuId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "Menu UUID"
+                  },
+                  "isEnable": {
+                    "type": "boolean",
+                    "example": true,
+                    "description": "Allow access to this menu at all"
+                  },
+                  "canCreate": {
+                    "type": "boolean",
+                    "example": true,
+                    "description": "Allow creating records"
+                  },
+                  "canEdit": {
+                    "type": "boolean",
+                    "example": true,
+                    "description": "Allow editing records"
+                  },
+                  "canDelete": {
+                    "type": "boolean",
+                    "example": false,
+                    "description": "Allow deleting records"
+                  }
+                }
               }
             }
           }
@@ -3511,7 +3773,94 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "clientCode",
+                  "items"
+                ],
+                "properties": {
+                  "clientCode": {
+                    "type": "string",
+                    "example": "CUST-001",
+                    "description": "Customer code"
+                  },
+                  "serialNo": {
+                    "type": "string",
+                    "example": "ORD-001"
+                  },
+                  "advance": {
+                    "type": "number",
+                    "example": 500,
+                    "description": "Advance payment"
+                  },
+                  "orderDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-01"
+                  },
+                  "totalPrice": {
+                    "type": "number",
+                    "example": 3000
+                  },
+                  "discount": {
+                    "type": "number",
+                    "example": 100
+                  },
+                  "deliveryDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-05"
+                  },
+                  "deliveryAddress": {
+                    "type": "string",
+                    "example": "123 Delivery St"
+                  },
+                  "cType": {
+                    "type": "string",
+                    "example": "delivery",
+                    "description": "cash | delivery | pickup"
+                  },
+                  "branchId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "deliveryTime": {
+                    "type": "string",
+                    "example": "2025-06-05T14:00:00Z"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "itemCode",
+                        "qty"
+                      ],
+                      "properties": {
+                        "itemCode": {
+                          "type": "string",
+                          "example": "ITM-001"
+                        },
+                        "qty": {
+                          "type": "number",
+                          "example": 2
+                        },
+                        "unitPrice": {
+                          "type": "number",
+                          "example": 150
+                        },
+                        "vatPrice": {
+                          "type": "number",
+                          "example": 7.5
+                        },
+                        "amount": {
+                          "type": "number",
+                          "example": 300
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -3584,7 +3933,90 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "clientCode": {
+                    "type": "string",
+                    "example": "CUST-001",
+                    "description": "Customer code"
+                  },
+                  "serialNo": {
+                    "type": "string",
+                    "example": "ORD-001"
+                  },
+                  "advance": {
+                    "type": "number",
+                    "example": 500,
+                    "description": "Advance payment"
+                  },
+                  "orderDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-01"
+                  },
+                  "totalPrice": {
+                    "type": "number",
+                    "example": 3000
+                  },
+                  "discount": {
+                    "type": "number",
+                    "example": 100
+                  },
+                  "deliveryDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-05"
+                  },
+                  "deliveryAddress": {
+                    "type": "string",
+                    "example": "123 Delivery St"
+                  },
+                  "cType": {
+                    "type": "string",
+                    "example": "delivery",
+                    "description": "cash | delivery | pickup"
+                  },
+                  "branchId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "deliveryTime": {
+                    "type": "string",
+                    "example": "2025-06-05T14:00:00Z"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "itemCode",
+                        "qty"
+                      ],
+                      "properties": {
+                        "itemCode": {
+                          "type": "string",
+                          "example": "ITM-001"
+                        },
+                        "qty": {
+                          "type": "number",
+                          "example": 2
+                        },
+                        "unitPrice": {
+                          "type": "number",
+                          "example": 150
+                        },
+                        "vatPrice": {
+                          "type": "number",
+                          "example": 7.5
+                        },
+                        "amount": {
+                          "type": "number",
+                          "example": 300
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -3697,7 +4129,86 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "clientCode",
+                  "items"
+                ],
+                "properties": {
+                  "clientCode": {
+                    "type": "string",
+                    "example": "CUST-001",
+                    "description": "Customer code"
+                  },
+                  "serialNo": {
+                    "type": "string",
+                    "example": "ORD-001"
+                  },
+                  "advance": {
+                    "type": "number",
+                    "example": 500,
+                    "description": "Advance payment"
+                  },
+                  "orderDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-01"
+                  },
+                  "deliveryDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-05"
+                  },
+                  "deliveryAddress": {
+                    "type": "string",
+                    "example": "123 Delivery St"
+                  },
+                  "cType": {
+                    "type": "string",
+                    "example": "delivery",
+                    "description": "cash | delivery | pickup"
+                  },
+                  "branchId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "deliveryTime": {
+                    "type": "string",
+                    "example": "2025-06-05T14:00:00Z"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "itemCode",
+                        "qty"
+                      ],
+                      "properties": {
+                        "itemCode": {
+                          "type": "string",
+                          "example": "ITM-001"
+                        },
+                        "qty": {
+                          "type": "number",
+                          "example": 2
+                        },
+                        "unitPrice": {
+                          "type": "number",
+                          "example": 150
+                        },
+                        "vatPrice": {
+                          "type": "number",
+                          "example": 7.5
+                        },
+                        "amount": {
+                          "type": "number",
+                          "example": 300
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -3808,7 +4319,51 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "priceItemOId"
+                ],
+                "properties": {
+                  "priceItemOId": {
+                    "type": "string",
+                    "example": "ITM-001",
+                    "description": "Item code"
+                  },
+                  "priceFromDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-01-01"
+                  },
+                  "priceToDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-12-31"
+                  },
+                  "priceListPrice": {
+                    "type": "number",
+                    "example": 150,
+                    "description": "Selling price"
+                  },
+                  "priceVatPercent": {
+                    "type": "number",
+                    "example": 5,
+                    "description": "VAT percentage"
+                  },
+                  "priceVatPrice": {
+                    "type": "number",
+                    "example": 7.5
+                  },
+                  "priceDiscPrice": {
+                    "type": "number",
+                    "example": 140,
+                    "description": "Discounted price"
+                  },
+                  "priceIsActive": {
+                    "type": "number",
+                    "example": 1,
+                    "description": "1 = active, 0 = inactive"
+                  }
+                }
               }
             }
           }
@@ -3849,7 +4404,48 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "priceItemOId": {
+                    "type": "string",
+                    "example": "ITM-001",
+                    "description": "Item code"
+                  },
+                  "priceFromDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-01-01"
+                  },
+                  "priceToDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-12-31"
+                  },
+                  "priceListPrice": {
+                    "type": "number",
+                    "example": 150,
+                    "description": "Selling price"
+                  },
+                  "priceVatPercent": {
+                    "type": "number",
+                    "example": 5,
+                    "description": "VAT percentage"
+                  },
+                  "priceVatPrice": {
+                    "type": "number",
+                    "example": 7.5
+                  },
+                  "priceDiscPrice": {
+                    "type": "number",
+                    "example": 140,
+                    "description": "Discounted price"
+                  },
+                  "priceIsActive": {
+                    "type": "number",
+                    "example": 1,
+                    "description": "1 = active, 0 = inactive"
+                  }
+                }
               }
             }
           }
@@ -4003,7 +4599,51 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "priceItemOId"
+                ],
+                "properties": {
+                  "priceItemOId": {
+                    "type": "string",
+                    "example": "ITM-001",
+                    "description": "Item code"
+                  },
+                  "priceFromDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-01-01"
+                  },
+                  "priceToDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-12-31"
+                  },
+                  "priceListPrice": {
+                    "type": "number",
+                    "example": 150,
+                    "description": "Selling price"
+                  },
+                  "priceVatPercent": {
+                    "type": "number",
+                    "example": 5,
+                    "description": "VAT percentage"
+                  },
+                  "priceVatPrice": {
+                    "type": "number",
+                    "example": 7.5
+                  },
+                  "priceDiscPrice": {
+                    "type": "number",
+                    "example": 140,
+                    "description": "Discounted price"
+                  },
+                  "priceIsActive": {
+                    "type": "number",
+                    "example": 1,
+                    "description": "1 = active, 0 = inactive"
+                  }
+                }
               }
             }
           }
@@ -4044,7 +4684,48 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "priceItemOId": {
+                    "type": "string",
+                    "example": "ITM-001",
+                    "description": "Item code"
+                  },
+                  "priceFromDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-01-01"
+                  },
+                  "priceToDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-12-31"
+                  },
+                  "priceListPrice": {
+                    "type": "number",
+                    "example": 150,
+                    "description": "Selling price"
+                  },
+                  "priceVatPercent": {
+                    "type": "number",
+                    "example": 5,
+                    "description": "VAT percentage"
+                  },
+                  "priceVatPrice": {
+                    "type": "number",
+                    "example": 7.5
+                  },
+                  "priceDiscPrice": {
+                    "type": "number",
+                    "example": 140,
+                    "description": "Discounted price"
+                  },
+                  "priceIsActive": {
+                    "type": "number",
+                    "example": 1,
+                    "description": "1 = active, 0 = inactive"
+                  }
+                }
               }
             }
           }
@@ -4149,7 +4830,41 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "receiptNo",
+                  "receiptDate",
+                  "customerCode",
+                  "amount"
+                ],
+                "properties": {
+                  "receiptNo": {
+                    "type": "string",
+                    "example": "REC-2025-001"
+                  },
+                  "receiptDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-01"
+                  },
+                  "customerCode": {
+                    "type": "string",
+                    "example": "CUST-001"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "example": 5000
+                  },
+                  "paymentMethod": {
+                    "type": "string",
+                    "example": "cash",
+                    "description": "cash | bank | card"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "June payment"
+                  }
+                }
               }
             }
           }
@@ -4251,7 +4966,35 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "voucherNo",
+                  "voucherDate",
+                  "amount"
+                ],
+                "properties": {
+                  "voucherNo": {
+                    "type": "string",
+                    "example": "PUR-2025-001"
+                  },
+                  "voucherDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-01"
+                  },
+                  "supplier": {
+                    "type": "string",
+                    "example": "ABC Supplier"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "example": 25000
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Raw material purchase"
+                  }
+                }
               }
             }
           }
@@ -4353,7 +5096,38 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "code"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "PKT-001",
+                    "description": "Unique packet code"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "500g Box"
+                  },
+                  "uom": {
+                    "type": "string",
+                    "example": "Pcs"
+                  },
+                  "weight": {
+                    "type": "number",
+                    "example": 0.5,
+                    "description": "Weight in kg"
+                  },
+                  "rate": {
+                    "type": "number",
+                    "example": 25
+                  },
+                  "remarks": {
+                    "type": "string",
+                    "example": "Standard packaging"
+                  }
+                }
               }
             }
           }
@@ -4454,7 +5228,29 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "500g Box Updated"
+                  },
+                  "uom": {
+                    "type": "string",
+                    "example": "Pcs"
+                  },
+                  "weight": {
+                    "type": "number",
+                    "example": 0.5
+                  },
+                  "rate": {
+                    "type": "number",
+                    "example": 27
+                  },
+                  "remarks": {
+                    "type": "string",
+                    "example": "Updated remarks"
+                  }
+                }
               }
             }
           }
@@ -4514,7 +5310,40 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "code",
+                  "qty",
+                  "receiveDate",
+                  "branchId"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "PKT-001"
+                  },
+                  "qty": {
+                    "type": "number",
+                    "example": 100
+                  },
+                  "receiveDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-01"
+                  },
+                  "branchId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "serialNo": {
+                    "type": "string",
+                    "example": "SN-001"
+                  },
+                  "voucharNo": {
+                    "type": "string",
+                    "example": "VCH-001"
+                  }
+                }
               }
             }
           }
@@ -4543,7 +5372,41 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "code",
+                  "qty",
+                  "issueDate",
+                  "branchId"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "PKT-001"
+                  },
+                  "qty": {
+                    "type": "number",
+                    "example": 50
+                  },
+                  "issueDate": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-02"
+                  },
+                  "branchId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "issueType": {
+                    "type": "string",
+                    "example": "sale",
+                    "description": "sale | transfer | adjust"
+                  },
+                  "invoiceNo": {
+                    "type": "string",
+                    "example": "INV-001"
+                  }
+                }
               }
             }
           }
@@ -4654,7 +5517,87 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "date",
+                  "items"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "NC-001"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-01"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Customer Name"
+                  },
+                  "contactNo": {
+                    "type": "string",
+                    "example": "+880-1700-000000"
+                  },
+                  "reference": {
+                    "type": "string",
+                    "example": "REF-001"
+                  },
+                  "branchId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "itemId",
+                        "qty"
+                      ],
+                      "properties": {
+                        "itemId": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Item_Information.id UUID"
+                        },
+                        "qty": {
+                          "type": "number",
+                          "example": 5
+                        },
+                        "uom": {
+                          "type": "string",
+                          "example": "KG"
+                        },
+                        "price": {
+                          "type": "number",
+                          "example": 150
+                        },
+                        "amount": {
+                          "type": "number",
+                          "example": 750
+                        },
+                        "vatValue": {
+                          "type": "number",
+                          "example": 5
+                        },
+                        "vatAmount": {
+                          "type": "number",
+                          "example": 37.5
+                        },
+                        "discount": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "netAmount": {
+                          "type": "number",
+                          "example": 787.5
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -4799,7 +5742,104 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "date",
+                  "items"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "ASST-001"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-01"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "sale",
+                    "description": "sale | vat"
+                  },
+                  "branchId": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "totalAmt": {
+                    "type": "number",
+                    "example": 3000
+                  },
+                  "discAmt": {
+                    "type": "number",
+                    "example": 100
+                  },
+                  "netAmt": {
+                    "type": "number",
+                    "example": 2900
+                  },
+                  "customerpay": {
+                    "type": "number",
+                    "example": 3000
+                  },
+                  "change": {
+                    "type": "number",
+                    "example": 100
+                  },
+                  "discountRemarks": {
+                    "type": "string",
+                    "example": "Special discount"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "itemOID",
+                        "qty"
+                      ],
+                      "properties": {
+                        "itemOID": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Item_Information.id UUID"
+                        },
+                        "qty": {
+                          "type": "number",
+                          "example": 5
+                        },
+                        "uom": {
+                          "type": "string",
+                          "example": "Pcs"
+                        },
+                        "price": {
+                          "type": "number",
+                          "example": 150
+                        },
+                        "amount": {
+                          "type": "number",
+                          "example": 750
+                        },
+                        "vatValue": {
+                          "type": "number",
+                          "example": 5
+                        },
+                        "vatAmount": {
+                          "type": "number",
+                          "example": 37.5
+                        },
+                        "discount": {
+                          "type": "number",
+                          "example": 0
+                        },
+                        "netAmount": {
+                          "type": "number",
+                          "example": 787.5
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -5181,7 +6221,34 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": [
+                  "branchCode",
+                  "branchName"
+                ],
+                "properties": {
+                  "branchCode": {
+                    "type": "string",
+                    "example": "BR-001",
+                    "description": "Unique branch code"
+                  },
+                  "branchName": {
+                    "type": "string",
+                    "example": "Main Branch"
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": "123 Main St, Dhaka"
+                  },
+                  "vatNo": {
+                    "type": "string",
+                    "example": "VAT-123456"
+                  },
+                  "mobileNo": {
+                    "type": "string",
+                    "example": "+880-2-000-0000"
+                  }
+                }
               }
             }
           }
@@ -5222,7 +6289,29 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "branchCode": {
+                    "type": "string",
+                    "example": "BR-001"
+                  },
+                  "branchName": {
+                    "type": "string",
+                    "example": "Main Branch Updated"
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": "456 New St"
+                  },
+                  "vatNo": {
+                    "type": "string",
+                    "example": "VAT-654321"
+                  },
+                  "mobileNo": {
+                    "type": "string",
+                    "example": "+880-2-111-1111"
+                  }
+                }
               }
             }
           }
@@ -5268,7 +6357,26 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "companyName": {
+                    "type": "string",
+                    "example": "KhazanaPOS Bakery",
+                    "description": "Company display name"
+                  },
+                  "companyAddress": {
+                    "type": "string",
+                    "example": "123 Main St, Dhaka 1000"
+                  },
+                  "companyUtility": {
+                    "type": "string",
+                    "example": "Utility info"
+                  },
+                  "reportFooter": {
+                    "type": "string",
+                    "example": "Thank you for your business!"
+                  }
+                }
               }
             }
           }
@@ -5608,7 +6716,22 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "example": "CAT-001",
+                    "description": "Unique category code"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "Sweets Updated"
+                  },
+                  "remarks": {
+                    "type": "string",
+                    "example": "Premium sweets category"
+                  }
+                }
               }
             }
           }
