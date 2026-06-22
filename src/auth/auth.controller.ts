@@ -1,5 +1,5 @@
-import { Controller, Post, Get, Body, UseGuards, Request, Patch } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Post, Get, Body, UseGuards, Request, Patch, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiQuery, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
@@ -16,6 +16,14 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   // ── Core Auth ─────────────────────────────────────────────────
+
+  @Get('user-branches')
+  @ApiOperation({ summary: 'Get branches assigned to a user — called before login to populate the branch selector' })
+  @ApiQuery({ name: 'userName', description: 'Username or email address', example: 'admin' })
+  @ApiResponse({ status: 200, description: 'List of branches the user is assigned to (empty array if user not found)' })
+  getUserBranches(@Query('userName') userName: string) {
+    return this.authService.getUserBranches(userName ?? '');
+  }
 
   @Post('login')
   @ApiOperation({ summary: 'Login and receive JWT token' })

@@ -12,13 +12,13 @@ datasource db {
 // ==================== BRANCH & SYSTEM ====================
 
 model Branch {
-  id         String  @id @default(dbgenerated("gen_random_uuid()")) @map("Id") @db.Uuid
-  branchCode String? @unique @map("BranchCode")
-  branchName String? @map("BranchName")
-  address    String? @map("Address")
-  vatNo      String? @map("VatNo")
-  mobileNo   String? @map("MobileNo")
-  users      User[]
+  id           String              @id @default(dbgenerated("gen_random_uuid()")) @map("Id") @db.Uuid
+  branchCode   String?             @unique @map("BranchCode")
+  branchName   String?             @map("BranchName")
+  address      String?             @map("Address")
+  vatNo        String?             @map("VatNo")
+  mobileNo     String?             @map("MobileNo")
+  userMappings UserBranchMapping[]
 
   @@map("Branch")
 }
@@ -46,33 +46,45 @@ model Setup_System {
 // ==================== AUTHENTICATION & USERS ====================
 
 model User {
-  id                         String       @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  name                       String?      @map("Name")
-  userName                   String       @unique @map("UserName")
-  password                   String?      @map("Password")
-  branchId                   String       @map("BranchId") @db.Uuid
-  validUntil                 DateTime?    @map("ValidUntil")
-  isActive                   String?      @map("IsActive")
-  creator                    String?      @map("Creator")
-  creationDate               DateTime?    @map("CreationDate")
-  lastUpdateBy               String?      @map("LastUpdateBy")
-  lastUpdateDate             DateTime?    @map("LastUpdateDate")
-  isDeleted                  String?      @map("IsDeleted")
-  deletedBy                  String?      @map("DeletedBy")
-  deletionDate               DateTime?    @map("DeletionDate")
-  remarks                    String?      @map("Remarks")
-  email                      String?      @unique @map("Email")
-  isVerified                 Boolean      @default(false) @map("IsVerified")
-  verificationToken          String?      @map("VerificationToken")
-  refreshTokenHash           String?      @map("RefreshTokenHash")
-  refreshTokenExpiredAt      DateTime?    @map("RefreshTokenExpiredAt")
-  passwordResetCode          String?      @map("PasswordResetCode")
-  passwordResetCodeExpiredAt DateTime?    @map("PasswordResetCodeExpiredAt")
-  passwordResetVerifiedAt    DateTime?    @map("PasswordResetVerifiedAt")
-  branch                     Branch       @relation(fields: [branchId], references: [id])
+  id                         String              @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  name                       String?             @map("Name")
+  userName                   String              @unique @map("UserName")
+  password                   String?             @map("Password")
+  validUntil                 DateTime?           @map("ValidUntil")
+  isActive                   String?             @map("IsActive")
+  creator                    String?             @map("Creator")
+  creationDate               DateTime?           @map("CreationDate")
+  lastUpdateBy               String?             @map("LastUpdateBy")
+  lastUpdateDate             DateTime?           @map("LastUpdateDate")
+  isDeleted                  String?             @map("IsDeleted")
+  deletedBy                  String?             @map("DeletedBy")
+  deletionDate               DateTime?           @map("DeletionDate")
+  remarks                    String?             @map("Remarks")
+  email                      String?             @unique @map("Email")
+  isVerified                 Boolean             @default(false) @map("IsVerified")
+  verificationToken          String?             @map("VerificationToken")
+  refreshTokenHash           String?             @map("RefreshTokenHash")
+  refreshTokenExpiredAt      DateTime?           @map("RefreshTokenExpiredAt")
+  passwordResetCode          String?             @map("PasswordResetCode")
+  passwordResetCodeExpiredAt DateTime?           @map("PasswordResetCodeExpiredAt")
+  passwordResetVerifiedAt    DateTime?           @map("PasswordResetVerifiedAt")
   userRoles                  t_UserRole[]
+  branchMappings             UserBranchMapping[]
 
   @@map("t_User")
+}
+
+model UserBranchMapping {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  branchId  String   @map("branch_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  branch    Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, branchId])
+  @@map("user_to_branch_mapping")
 }
 
 model t_UserRole {

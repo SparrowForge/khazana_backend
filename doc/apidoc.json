@@ -8,7 +8,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000/api/v1",
+      "url": "http://localhost:3001/api/v1",
       "description": "Local development server"
     }
   ],
@@ -41,13 +41,21 @@
       },
       "CreateUserDto": {
         "type": "object",
-        "required": ["userName", "password", "email", "branchId"],
+        "required": ["userName", "password", "email", "branchIds"],
         "properties": {
           "userName": { "type": "string", "example": "john_doe" },
-          "password": { "type": "string", "example": "password123" },
+          "password": { "type": "string", "minLength": 6, "example": "password123" },
           "name": { "type": "string", "example": "John Doe" },
           "email": { "type": "string", "format": "email", "example": "john@example.com" },
-          "branchId": { "type": "string", "format": "uuid", "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890" }
+          "branchIds": {
+            "type": "array",
+            "minItems": 1,
+            "description": "UUIDs of branches the user can access (at least one required)",
+            "items": { "type": "string", "format": "uuid" },
+            "example": ["a1b2c3d4-e5f6-7890-abcd-ef1234567890"]
+          },
+          "validUntil": { "type": "string", "format": "date", "example": "2025-12-31", "description": "Account expiry date (ISO 8601)" },
+          "remarks": { "type": "string", "example": "Sales team member" }
         }
       },
       "SaleItemDto": {
@@ -295,6 +303,49 @@
     }
   },
   "paths": {
+    "/auth/user-branches": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get branches assigned to a user",
+        "description": "Public endpoint — no authentication required. Called on the login page after the user enters their username/email to populate the branch selector. Returns an empty array if the user is not found or inactive.",
+        "operationId": "AuthController_getUserBranches",
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Username or email address",
+            "example": "admin"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of branches assigned to the user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "branches": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string", "format": "uuid" },
+                          "branchCode": { "type": "string", "nullable": true, "example": "HQ" },
+                          "branchName": { "type": "string", "nullable": true, "example": "Head Quarter" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/login": {
       "post": {
         "tags": ["Auth"],
@@ -323,7 +374,7 @@
               }
             }
           },
-          "401": { "description": "Invalid credentials or user not assigned to the given branch" }
+          "401": { "description": "Invalid credentials, branch not mapped to user, or email not verified" }
         }
       }
     },
@@ -602,14 +653,43 @@
         }
       }
     },
-    "/users/{id}/roles": {
+    "/users/{id}/reset-password": {
+      "patch": {
+        "tags": ["Users"],
+        "summary": "Admin reset of a user's password",
+        "operationId": "UsersController_resetPassword",
+        "security": [{ "access-token": [] }],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "format": "uuid" }, "description": "User UUID" }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["password"],
+                "properties": {
+                  "password": { "type": "string", "minLength": 6, "example": "NewPass123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Password reset successfully" },
+          "404": { "description": "User not found" }
+        }
+      }
+    },
+    "/users/{userName}/roles": {
       "post": {
         "tags": ["Users"],
-        "summary": "Set roles for a user",
+        "summary": "Set roles (menu permissions) for a user",
         "operationId": "UsersController_setRoles",
         "security": [{ "access-token": [] }],
         "parameters": [
-          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" }, "description": "User UUID" }
+          { "name": "userName", "in": "path", "required": true, "schema": { "type": "string" }, "description": "Username (not UUID)" }
         ],
         "requestBody": {
           "required": true,
@@ -623,8 +703,11 @@
                     "items": {
                       "type": "object",
                       "properties": {
-                        "roleId": { "type": "string", "format": "uuid" },
-                        "branchId": { "type": "integer" }
+                        "controlName": { "type": "string", "example": "Sales" },
+                        "isEnable": { "type": "string", "example": "Y" },
+                        "addAccess": { "type": "string", "example": "Y" },
+                        "editAccess": { "type": "string", "example": "Y" },
+                        "deleteAccess": { "type": "string", "example": "N" }
                       }
                     }
                   }
@@ -2225,7 +2308,7 @@
       "get": {
         "tags": ["Admin"],
         "summary": "Get all branches",
-        "description": "Public endpoint — no authentication required. Used by the login page to populate the branch dropdown.",
+        "description": "Public endpoint — no authentication required. Returns all branches for admin use. The login page uses GET /auth/user-branches instead (which returns only the branches assigned to the given user).",
         "operationId": "AdminController_findAllBranches",
         "parameters": [
           { "name": "page", "in": "query", "required": false, "schema": { "type": "integer", "default": 1, "minimum": 1 }, "description": "Page number" },

@@ -1,4 +1,14 @@
-import { IsString, IsNotEmpty, IsOptional, IsDateString, MinLength, IsEmail } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsDateString,
+  MinLength,
+  IsEmail,
+  IsArray,
+  IsUUID,
+  ArrayMinSize,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -23,9 +33,15 @@ export class CreateUserDto {
   @IsOptional()
   name?: string;
 
-  @ApiProperty({ example: 'uuid-branch-id', description: 'Branch UUID the user belongs to' })
-  @IsString()
-  branchId: string;
+  @ApiProperty({
+    example: ['3fa85f64-5717-4562-b3fc-2c963f66afa6'],
+    description: 'UUIDs of branches the user can access (at least one required)',
+    type: [String],
+  })
+  @IsArray()
+  @ArrayMinSize(1)
+  @IsUUID('4', { each: true })
+  branchIds: string[];
 
   @ApiPropertyOptional({ example: '2025-12-31', description: 'Account expiry date (ISO 8601)' })
   @IsDateString()

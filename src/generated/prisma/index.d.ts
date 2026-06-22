@@ -34,6 +34,11 @@ export type Setup_System = $Result.DefaultSelection<Prisma.$Setup_SystemPayload>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model UserBranchMapping
+ * 
+ */
+export type UserBranchMapping = $Result.DefaultSelection<Prisma.$UserBranchMappingPayload>
+/**
  * Model t_UserRole
  * 
  */
@@ -396,6 +401,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userBranchMapping`: Exposes CRUD operations for the **UserBranchMapping** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserBranchMappings
+    * const userBranchMappings = await prisma.userBranchMapping.findMany()
+    * ```
+    */
+  get userBranchMapping(): Prisma.UserBranchMappingDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.t_UserRole`: Exposes CRUD operations for the **t_UserRole** model.
@@ -1251,6 +1266,7 @@ export namespace Prisma {
     Bank: 'Bank',
     Setup_System: 'Setup_System',
     User: 'User',
+    UserBranchMapping: 'UserBranchMapping',
     t_UserRole: 't_UserRole',
     AuditLog: 'AuditLog',
     AuditLogs: 'AuditLogs',
@@ -1310,7 +1326,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "branch" | "bank" | "setup_System" | "user" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "client_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "moneyReceive" | "cashPurchase" | "temp_table"
+      modelProps: "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "client_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "moneyReceive" | "cashPurchase" | "temp_table"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1607,6 +1623,80 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserBranchMapping: {
+        payload: Prisma.$UserBranchMappingPayload<ExtArgs>
+        fields: Prisma.UserBranchMappingFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserBranchMappingFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBranchMappingPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserBranchMappingFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBranchMappingPayload>
+          }
+          findFirst: {
+            args: Prisma.UserBranchMappingFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBranchMappingPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserBranchMappingFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBranchMappingPayload>
+          }
+          findMany: {
+            args: Prisma.UserBranchMappingFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBranchMappingPayload>[]
+          }
+          create: {
+            args: Prisma.UserBranchMappingCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBranchMappingPayload>
+          }
+          createMany: {
+            args: Prisma.UserBranchMappingCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserBranchMappingCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBranchMappingPayload>[]
+          }
+          delete: {
+            args: Prisma.UserBranchMappingDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBranchMappingPayload>
+          }
+          update: {
+            args: Prisma.UserBranchMappingUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBranchMappingPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserBranchMappingDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserBranchMappingUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserBranchMappingUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBranchMappingPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserBranchMappingUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBranchMappingPayload>
+          }
+          aggregate: {
+            args: Prisma.UserBranchMappingAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserBranchMapping>
+          }
+          groupBy: {
+            args: Prisma.UserBranchMappingGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserBranchMappingGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserBranchMappingCountArgs<ExtArgs>
+            result: $Utils.Optional<UserBranchMappingCountAggregateOutputType> | number
           }
         }
       }
@@ -4744,6 +4834,7 @@ export namespace Prisma {
     bank?: BankOmit
     setup_System?: Setup_SystemOmit
     user?: UserOmit
+    userBranchMapping?: UserBranchMappingOmit
     t_UserRole?: t_UserRoleOmit
     auditLog?: AuditLogOmit
     auditLogs?: AuditLogsOmit
@@ -4865,11 +4956,11 @@ export namespace Prisma {
    */
 
   export type BranchCountOutputType = {
-    users: number
+    userMappings: number
   }
 
   export type BranchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    users?: boolean | BranchCountOutputTypeCountUsersArgs
+    userMappings?: boolean | BranchCountOutputTypeCountUserMappingsArgs
   }
 
   // Custom InputTypes
@@ -4886,8 +4977,8 @@ export namespace Prisma {
   /**
    * BranchCountOutputType without action
    */
-  export type BranchCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserWhereInput
+  export type BranchCountOutputTypeCountUserMappingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserBranchMappingWhereInput
   }
 
 
@@ -4928,10 +5019,12 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     userRoles: number
+    branchMappings: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userRoles?: boolean | UserCountOutputTypeCountUserRolesArgs
+    branchMappings?: boolean | UserCountOutputTypeCountBranchMappingsArgs
   }
 
   // Custom InputTypes
@@ -4950,6 +5043,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountUserRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: t_UserRoleWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountBranchMappingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserBranchMappingWhereInput
   }
 
 
@@ -5640,7 +5740,7 @@ export namespace Prisma {
     address?: boolean
     vatNo?: boolean
     mobileNo?: boolean
-    users?: boolean | Branch$usersArgs<ExtArgs>
+    userMappings?: boolean | Branch$userMappingsArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["branch"]>
 
@@ -5673,7 +5773,7 @@ export namespace Prisma {
 
   export type BranchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "branchCode" | "branchName" | "address" | "vatNo" | "mobileNo", ExtArgs["result"]["branch"]>
   export type BranchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    users?: boolean | Branch$usersArgs<ExtArgs>
+    userMappings?: boolean | Branch$userMappingsArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BranchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5682,7 +5782,7 @@ export namespace Prisma {
   export type $BranchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Branch"
     objects: {
-      users: Prisma.$UserPayload<ExtArgs>[]
+      userMappings: Prisma.$UserBranchMappingPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6085,7 +6185,7 @@ export namespace Prisma {
    */
   export interface Prisma__BranchClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    users<T extends Branch$usersArgs<ExtArgs> = {}>(args?: Subset<T, Branch$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    userMappings<T extends Branch$userMappingsArgs<ExtArgs> = {}>(args?: Subset<T, Branch$userMappingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBranchMappingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6509,27 +6609,27 @@ export namespace Prisma {
   }
 
   /**
-   * Branch.users
+   * Branch.userMappings
    */
-  export type Branch$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Branch$userMappingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the User
+     * Select specific fields to fetch from the UserBranchMapping
      */
-    select?: UserSelect<ExtArgs> | null
+    select?: UserBranchMappingSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the User
+     * Omit specific fields from the UserBranchMapping
      */
-    omit?: UserOmit<ExtArgs> | null
+    omit?: UserBranchMappingOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
-    cursor?: UserWhereUniqueInput
+    include?: UserBranchMappingInclude<ExtArgs> | null
+    where?: UserBranchMappingWhereInput
+    orderBy?: UserBranchMappingOrderByWithRelationInput | UserBranchMappingOrderByWithRelationInput[]
+    cursor?: UserBranchMappingWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+    distinct?: UserBranchMappingScalarFieldEnum | UserBranchMappingScalarFieldEnum[]
   }
 
   /**
@@ -8618,7 +8718,6 @@ export namespace Prisma {
     name: string | null
     userName: string | null
     password: string | null
-    branchId: string | null
     validUntil: Date | null
     isActive: string | null
     creator: string | null
@@ -8644,7 +8743,6 @@ export namespace Prisma {
     name: string | null
     userName: string | null
     password: string | null
-    branchId: string | null
     validUntil: Date | null
     isActive: string | null
     creator: string | null
@@ -8670,7 +8768,6 @@ export namespace Prisma {
     name: number
     userName: number
     password: number
-    branchId: number
     validUntil: number
     isActive: number
     creator: number
@@ -8698,7 +8795,6 @@ export namespace Prisma {
     name?: true
     userName?: true
     password?: true
-    branchId?: true
     validUntil?: true
     isActive?: true
     creator?: true
@@ -8724,7 +8820,6 @@ export namespace Prisma {
     name?: true
     userName?: true
     password?: true
-    branchId?: true
     validUntil?: true
     isActive?: true
     creator?: true
@@ -8750,7 +8845,6 @@ export namespace Prisma {
     name?: true
     userName?: true
     password?: true
-    branchId?: true
     validUntil?: true
     isActive?: true
     creator?: true
@@ -8849,7 +8943,6 @@ export namespace Prisma {
     name: string | null
     userName: string
     password: string | null
-    branchId: string
     validUntil: Date | null
     isActive: string | null
     creator: string | null
@@ -8892,7 +8985,6 @@ export namespace Prisma {
     name?: boolean
     userName?: boolean
     password?: boolean
-    branchId?: boolean
     validUntil?: boolean
     isActive?: boolean
     creator?: boolean
@@ -8911,8 +9003,8 @@ export namespace Prisma {
     passwordResetCode?: boolean
     passwordResetCodeExpiredAt?: boolean
     passwordResetVerifiedAt?: boolean
-    branch?: boolean | BranchDefaultArgs<ExtArgs>
     userRoles?: boolean | User$userRolesArgs<ExtArgs>
+    branchMappings?: boolean | User$branchMappingsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -8921,7 +9013,6 @@ export namespace Prisma {
     name?: boolean
     userName?: boolean
     password?: boolean
-    branchId?: boolean
     validUntil?: boolean
     isActive?: boolean
     creator?: boolean
@@ -8940,7 +9031,6 @@ export namespace Prisma {
     passwordResetCode?: boolean
     passwordResetCodeExpiredAt?: boolean
     passwordResetVerifiedAt?: boolean
-    branch?: boolean | BranchDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8948,7 +9038,6 @@ export namespace Prisma {
     name?: boolean
     userName?: boolean
     password?: boolean
-    branchId?: boolean
     validUntil?: boolean
     isActive?: boolean
     creator?: boolean
@@ -8967,7 +9056,6 @@ export namespace Prisma {
     passwordResetCode?: boolean
     passwordResetCodeExpiredAt?: boolean
     passwordResetVerifiedAt?: boolean
-    branch?: boolean | BranchDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -8975,7 +9063,6 @@ export namespace Prisma {
     name?: boolean
     userName?: boolean
     password?: boolean
-    branchId?: boolean
     validUntil?: boolean
     isActive?: boolean
     creator?: boolean
@@ -8996,31 +9083,26 @@ export namespace Prisma {
     passwordResetVerifiedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userName" | "password" | "branchId" | "validUntil" | "isActive" | "creator" | "creationDate" | "lastUpdateBy" | "lastUpdateDate" | "isDeleted" | "deletedBy" | "deletionDate" | "remarks" | "email" | "isVerified" | "verificationToken" | "refreshTokenHash" | "refreshTokenExpiredAt" | "passwordResetCode" | "passwordResetCodeExpiredAt" | "passwordResetVerifiedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userName" | "password" | "validUntil" | "isActive" | "creator" | "creationDate" | "lastUpdateBy" | "lastUpdateDate" | "isDeleted" | "deletedBy" | "deletionDate" | "remarks" | "email" | "isVerified" | "verificationToken" | "refreshTokenHash" | "refreshTokenExpiredAt" | "passwordResetCode" | "passwordResetCodeExpiredAt" | "passwordResetVerifiedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    branch?: boolean | BranchDefaultArgs<ExtArgs>
     userRoles?: boolean | User$userRolesArgs<ExtArgs>
+    branchMappings?: boolean | User$branchMappingsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    branch?: boolean | BranchDefaultArgs<ExtArgs>
-  }
-  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    branch?: boolean | BranchDefaultArgs<ExtArgs>
-  }
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      branch: Prisma.$BranchPayload<ExtArgs>
       userRoles: Prisma.$t_UserRolePayload<ExtArgs>[]
+      branchMappings: Prisma.$UserBranchMappingPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string | null
       userName: string
       password: string | null
-      branchId: string
       validUntil: Date | null
       isActive: string | null
       creator: string | null
@@ -9433,8 +9515,8 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    branch<T extends BranchDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BranchDefaultArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     userRoles<T extends User$userRolesArgs<ExtArgs> = {}>(args?: Subset<T, User$userRolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    branchMappings<T extends User$branchMappingsArgs<ExtArgs> = {}>(args?: Subset<T, User$branchMappingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBranchMappingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9468,7 +9550,6 @@ export namespace Prisma {
     readonly name: FieldRef<"User", 'String'>
     readonly userName: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
-    readonly branchId: FieldRef<"User", 'String'>
     readonly validUntil: FieldRef<"User", 'DateTime'>
     readonly isActive: FieldRef<"User", 'String'>
     readonly creator: FieldRef<"User", 'String'>
@@ -9736,10 +9817,6 @@ export namespace Prisma {
      */
     data: UserCreateManyInput | UserCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -9810,10 +9887,6 @@ export namespace Prisma {
      * Limit how many Users to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -9907,6 +9980,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.branchMappings
+   */
+  export type User$branchMappingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBranchMapping
+     */
+    select?: UserBranchMappingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBranchMapping
+     */
+    omit?: UserBranchMappingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBranchMappingInclude<ExtArgs> | null
+    where?: UserBranchMappingWhereInput
+    orderBy?: UserBranchMappingOrderByWithRelationInput | UserBranchMappingOrderByWithRelationInput[]
+    cursor?: UserBranchMappingWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserBranchMappingScalarFieldEnum | UserBranchMappingScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9922,6 +10019,1072 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserBranchMapping
+   */
+
+  export type AggregateUserBranchMapping = {
+    _count: UserBranchMappingCountAggregateOutputType | null
+    _min: UserBranchMappingMinAggregateOutputType | null
+    _max: UserBranchMappingMaxAggregateOutputType | null
+  }
+
+  export type UserBranchMappingMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    branchId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserBranchMappingMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    branchId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type UserBranchMappingCountAggregateOutputType = {
+    id: number
+    userId: number
+    branchId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type UserBranchMappingMinAggregateInputType = {
+    id?: true
+    userId?: true
+    branchId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserBranchMappingMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    branchId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type UserBranchMappingCountAggregateInputType = {
+    id?: true
+    userId?: true
+    branchId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type UserBranchMappingAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserBranchMapping to aggregate.
+     */
+    where?: UserBranchMappingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBranchMappings to fetch.
+     */
+    orderBy?: UserBranchMappingOrderByWithRelationInput | UserBranchMappingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserBranchMappingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBranchMappings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBranchMappings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserBranchMappings
+    **/
+    _count?: true | UserBranchMappingCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserBranchMappingMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserBranchMappingMaxAggregateInputType
+  }
+
+  export type GetUserBranchMappingAggregateType<T extends UserBranchMappingAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserBranchMapping]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserBranchMapping[P]>
+      : GetScalarType<T[P], AggregateUserBranchMapping[P]>
+  }
+
+
+
+
+  export type UserBranchMappingGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserBranchMappingWhereInput
+    orderBy?: UserBranchMappingOrderByWithAggregationInput | UserBranchMappingOrderByWithAggregationInput[]
+    by: UserBranchMappingScalarFieldEnum[] | UserBranchMappingScalarFieldEnum
+    having?: UserBranchMappingScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserBranchMappingCountAggregateInputType | true
+    _min?: UserBranchMappingMinAggregateInputType
+    _max?: UserBranchMappingMaxAggregateInputType
+  }
+
+  export type UserBranchMappingGroupByOutputType = {
+    id: string
+    userId: string
+    branchId: string
+    createdAt: Date
+    updatedAt: Date
+    _count: UserBranchMappingCountAggregateOutputType | null
+    _min: UserBranchMappingMinAggregateOutputType | null
+    _max: UserBranchMappingMaxAggregateOutputType | null
+  }
+
+  type GetUserBranchMappingGroupByPayload<T extends UserBranchMappingGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserBranchMappingGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserBranchMappingGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserBranchMappingGroupByOutputType[P]>
+            : GetScalarType<T[P], UserBranchMappingGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserBranchMappingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    branchId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userBranchMapping"]>
+
+  export type UserBranchMappingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    branchId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userBranchMapping"]>
+
+  export type UserBranchMappingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    branchId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userBranchMapping"]>
+
+  export type UserBranchMappingSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    branchId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type UserBranchMappingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "branchId" | "createdAt" | "updatedAt", ExtArgs["result"]["userBranchMapping"]>
+  export type UserBranchMappingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }
+  export type UserBranchMappingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }
+  export type UserBranchMappingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    branch?: boolean | BranchDefaultArgs<ExtArgs>
+  }
+
+  export type $UserBranchMappingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserBranchMapping"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      branch: Prisma.$BranchPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      branchId: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["userBranchMapping"]>
+    composites: {}
+  }
+
+  type UserBranchMappingGetPayload<S extends boolean | null | undefined | UserBranchMappingDefaultArgs> = $Result.GetResult<Prisma.$UserBranchMappingPayload, S>
+
+  type UserBranchMappingCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserBranchMappingFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserBranchMappingCountAggregateInputType | true
+    }
+
+  export interface UserBranchMappingDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserBranchMapping'], meta: { name: 'UserBranchMapping' } }
+    /**
+     * Find zero or one UserBranchMapping that matches the filter.
+     * @param {UserBranchMappingFindUniqueArgs} args - Arguments to find a UserBranchMapping
+     * @example
+     * // Get one UserBranchMapping
+     * const userBranchMapping = await prisma.userBranchMapping.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserBranchMappingFindUniqueArgs>(args: SelectSubset<T, UserBranchMappingFindUniqueArgs<ExtArgs>>): Prisma__UserBranchMappingClient<$Result.GetResult<Prisma.$UserBranchMappingPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserBranchMapping that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserBranchMappingFindUniqueOrThrowArgs} args - Arguments to find a UserBranchMapping
+     * @example
+     * // Get one UserBranchMapping
+     * const userBranchMapping = await prisma.userBranchMapping.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserBranchMappingFindUniqueOrThrowArgs>(args: SelectSubset<T, UserBranchMappingFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserBranchMappingClient<$Result.GetResult<Prisma.$UserBranchMappingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserBranchMapping that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBranchMappingFindFirstArgs} args - Arguments to find a UserBranchMapping
+     * @example
+     * // Get one UserBranchMapping
+     * const userBranchMapping = await prisma.userBranchMapping.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserBranchMappingFindFirstArgs>(args?: SelectSubset<T, UserBranchMappingFindFirstArgs<ExtArgs>>): Prisma__UserBranchMappingClient<$Result.GetResult<Prisma.$UserBranchMappingPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserBranchMapping that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBranchMappingFindFirstOrThrowArgs} args - Arguments to find a UserBranchMapping
+     * @example
+     * // Get one UserBranchMapping
+     * const userBranchMapping = await prisma.userBranchMapping.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserBranchMappingFindFirstOrThrowArgs>(args?: SelectSubset<T, UserBranchMappingFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserBranchMappingClient<$Result.GetResult<Prisma.$UserBranchMappingPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserBranchMappings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBranchMappingFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserBranchMappings
+     * const userBranchMappings = await prisma.userBranchMapping.findMany()
+     * 
+     * // Get first 10 UserBranchMappings
+     * const userBranchMappings = await prisma.userBranchMapping.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userBranchMappingWithIdOnly = await prisma.userBranchMapping.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserBranchMappingFindManyArgs>(args?: SelectSubset<T, UserBranchMappingFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBranchMappingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserBranchMapping.
+     * @param {UserBranchMappingCreateArgs} args - Arguments to create a UserBranchMapping.
+     * @example
+     * // Create one UserBranchMapping
+     * const UserBranchMapping = await prisma.userBranchMapping.create({
+     *   data: {
+     *     // ... data to create a UserBranchMapping
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserBranchMappingCreateArgs>(args: SelectSubset<T, UserBranchMappingCreateArgs<ExtArgs>>): Prisma__UserBranchMappingClient<$Result.GetResult<Prisma.$UserBranchMappingPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserBranchMappings.
+     * @param {UserBranchMappingCreateManyArgs} args - Arguments to create many UserBranchMappings.
+     * @example
+     * // Create many UserBranchMappings
+     * const userBranchMapping = await prisma.userBranchMapping.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserBranchMappingCreateManyArgs>(args?: SelectSubset<T, UserBranchMappingCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserBranchMappings and returns the data saved in the database.
+     * @param {UserBranchMappingCreateManyAndReturnArgs} args - Arguments to create many UserBranchMappings.
+     * @example
+     * // Create many UserBranchMappings
+     * const userBranchMapping = await prisma.userBranchMapping.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserBranchMappings and only return the `id`
+     * const userBranchMappingWithIdOnly = await prisma.userBranchMapping.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserBranchMappingCreateManyAndReturnArgs>(args?: SelectSubset<T, UserBranchMappingCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBranchMappingPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserBranchMapping.
+     * @param {UserBranchMappingDeleteArgs} args - Arguments to delete one UserBranchMapping.
+     * @example
+     * // Delete one UserBranchMapping
+     * const UserBranchMapping = await prisma.userBranchMapping.delete({
+     *   where: {
+     *     // ... filter to delete one UserBranchMapping
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserBranchMappingDeleteArgs>(args: SelectSubset<T, UserBranchMappingDeleteArgs<ExtArgs>>): Prisma__UserBranchMappingClient<$Result.GetResult<Prisma.$UserBranchMappingPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserBranchMapping.
+     * @param {UserBranchMappingUpdateArgs} args - Arguments to update one UserBranchMapping.
+     * @example
+     * // Update one UserBranchMapping
+     * const userBranchMapping = await prisma.userBranchMapping.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserBranchMappingUpdateArgs>(args: SelectSubset<T, UserBranchMappingUpdateArgs<ExtArgs>>): Prisma__UserBranchMappingClient<$Result.GetResult<Prisma.$UserBranchMappingPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserBranchMappings.
+     * @param {UserBranchMappingDeleteManyArgs} args - Arguments to filter UserBranchMappings to delete.
+     * @example
+     * // Delete a few UserBranchMappings
+     * const { count } = await prisma.userBranchMapping.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserBranchMappingDeleteManyArgs>(args?: SelectSubset<T, UserBranchMappingDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserBranchMappings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBranchMappingUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserBranchMappings
+     * const userBranchMapping = await prisma.userBranchMapping.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserBranchMappingUpdateManyArgs>(args: SelectSubset<T, UserBranchMappingUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserBranchMappings and returns the data updated in the database.
+     * @param {UserBranchMappingUpdateManyAndReturnArgs} args - Arguments to update many UserBranchMappings.
+     * @example
+     * // Update many UserBranchMappings
+     * const userBranchMapping = await prisma.userBranchMapping.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserBranchMappings and only return the `id`
+     * const userBranchMappingWithIdOnly = await prisma.userBranchMapping.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserBranchMappingUpdateManyAndReturnArgs>(args: SelectSubset<T, UserBranchMappingUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBranchMappingPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserBranchMapping.
+     * @param {UserBranchMappingUpsertArgs} args - Arguments to update or create a UserBranchMapping.
+     * @example
+     * // Update or create a UserBranchMapping
+     * const userBranchMapping = await prisma.userBranchMapping.upsert({
+     *   create: {
+     *     // ... data to create a UserBranchMapping
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserBranchMapping we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserBranchMappingUpsertArgs>(args: SelectSubset<T, UserBranchMappingUpsertArgs<ExtArgs>>): Prisma__UserBranchMappingClient<$Result.GetResult<Prisma.$UserBranchMappingPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserBranchMappings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBranchMappingCountArgs} args - Arguments to filter UserBranchMappings to count.
+     * @example
+     * // Count the number of UserBranchMappings
+     * const count = await prisma.userBranchMapping.count({
+     *   where: {
+     *     // ... the filter for the UserBranchMappings we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserBranchMappingCountArgs>(
+      args?: Subset<T, UserBranchMappingCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserBranchMappingCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserBranchMapping.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBranchMappingAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserBranchMappingAggregateArgs>(args: Subset<T, UserBranchMappingAggregateArgs>): Prisma.PrismaPromise<GetUserBranchMappingAggregateType<T>>
+
+    /**
+     * Group by UserBranchMapping.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBranchMappingGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserBranchMappingGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserBranchMappingGroupByArgs['orderBy'] }
+        : { orderBy?: UserBranchMappingGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserBranchMappingGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserBranchMappingGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserBranchMapping model
+   */
+  readonly fields: UserBranchMappingFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserBranchMapping.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserBranchMappingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    branch<T extends BranchDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BranchDefaultArgs<ExtArgs>>): Prisma__BranchClient<$Result.GetResult<Prisma.$BranchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserBranchMapping model
+   */
+  interface UserBranchMappingFieldRefs {
+    readonly id: FieldRef<"UserBranchMapping", 'String'>
+    readonly userId: FieldRef<"UserBranchMapping", 'String'>
+    readonly branchId: FieldRef<"UserBranchMapping", 'String'>
+    readonly createdAt: FieldRef<"UserBranchMapping", 'DateTime'>
+    readonly updatedAt: FieldRef<"UserBranchMapping", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserBranchMapping findUnique
+   */
+  export type UserBranchMappingFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBranchMapping
+     */
+    select?: UserBranchMappingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBranchMapping
+     */
+    omit?: UserBranchMappingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBranchMappingInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBranchMapping to fetch.
+     */
+    where: UserBranchMappingWhereUniqueInput
+  }
+
+  /**
+   * UserBranchMapping findUniqueOrThrow
+   */
+  export type UserBranchMappingFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBranchMapping
+     */
+    select?: UserBranchMappingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBranchMapping
+     */
+    omit?: UserBranchMappingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBranchMappingInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBranchMapping to fetch.
+     */
+    where: UserBranchMappingWhereUniqueInput
+  }
+
+  /**
+   * UserBranchMapping findFirst
+   */
+  export type UserBranchMappingFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBranchMapping
+     */
+    select?: UserBranchMappingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBranchMapping
+     */
+    omit?: UserBranchMappingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBranchMappingInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBranchMapping to fetch.
+     */
+    where?: UserBranchMappingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBranchMappings to fetch.
+     */
+    orderBy?: UserBranchMappingOrderByWithRelationInput | UserBranchMappingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserBranchMappings.
+     */
+    cursor?: UserBranchMappingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBranchMappings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBranchMappings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserBranchMappings.
+     */
+    distinct?: UserBranchMappingScalarFieldEnum | UserBranchMappingScalarFieldEnum[]
+  }
+
+  /**
+   * UserBranchMapping findFirstOrThrow
+   */
+  export type UserBranchMappingFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBranchMapping
+     */
+    select?: UserBranchMappingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBranchMapping
+     */
+    omit?: UserBranchMappingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBranchMappingInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBranchMapping to fetch.
+     */
+    where?: UserBranchMappingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBranchMappings to fetch.
+     */
+    orderBy?: UserBranchMappingOrderByWithRelationInput | UserBranchMappingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserBranchMappings.
+     */
+    cursor?: UserBranchMappingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBranchMappings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBranchMappings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserBranchMappings.
+     */
+    distinct?: UserBranchMappingScalarFieldEnum | UserBranchMappingScalarFieldEnum[]
+  }
+
+  /**
+   * UserBranchMapping findMany
+   */
+  export type UserBranchMappingFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBranchMapping
+     */
+    select?: UserBranchMappingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBranchMapping
+     */
+    omit?: UserBranchMappingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBranchMappingInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBranchMappings to fetch.
+     */
+    where?: UserBranchMappingWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBranchMappings to fetch.
+     */
+    orderBy?: UserBranchMappingOrderByWithRelationInput | UserBranchMappingOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserBranchMappings.
+     */
+    cursor?: UserBranchMappingWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBranchMappings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBranchMappings.
+     */
+    skip?: number
+    distinct?: UserBranchMappingScalarFieldEnum | UserBranchMappingScalarFieldEnum[]
+  }
+
+  /**
+   * UserBranchMapping create
+   */
+  export type UserBranchMappingCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBranchMapping
+     */
+    select?: UserBranchMappingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBranchMapping
+     */
+    omit?: UserBranchMappingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBranchMappingInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserBranchMapping.
+     */
+    data: XOR<UserBranchMappingCreateInput, UserBranchMappingUncheckedCreateInput>
+  }
+
+  /**
+   * UserBranchMapping createMany
+   */
+  export type UserBranchMappingCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserBranchMappings.
+     */
+    data: UserBranchMappingCreateManyInput | UserBranchMappingCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserBranchMapping createManyAndReturn
+   */
+  export type UserBranchMappingCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBranchMapping
+     */
+    select?: UserBranchMappingSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBranchMapping
+     */
+    omit?: UserBranchMappingOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserBranchMappings.
+     */
+    data: UserBranchMappingCreateManyInput | UserBranchMappingCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBranchMappingIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserBranchMapping update
+   */
+  export type UserBranchMappingUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBranchMapping
+     */
+    select?: UserBranchMappingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBranchMapping
+     */
+    omit?: UserBranchMappingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBranchMappingInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserBranchMapping.
+     */
+    data: XOR<UserBranchMappingUpdateInput, UserBranchMappingUncheckedUpdateInput>
+    /**
+     * Choose, which UserBranchMapping to update.
+     */
+    where: UserBranchMappingWhereUniqueInput
+  }
+
+  /**
+   * UserBranchMapping updateMany
+   */
+  export type UserBranchMappingUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserBranchMappings.
+     */
+    data: XOR<UserBranchMappingUpdateManyMutationInput, UserBranchMappingUncheckedUpdateManyInput>
+    /**
+     * Filter which UserBranchMappings to update
+     */
+    where?: UserBranchMappingWhereInput
+    /**
+     * Limit how many UserBranchMappings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserBranchMapping updateManyAndReturn
+   */
+  export type UserBranchMappingUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBranchMapping
+     */
+    select?: UserBranchMappingSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBranchMapping
+     */
+    omit?: UserBranchMappingOmit<ExtArgs> | null
+    /**
+     * The data used to update UserBranchMappings.
+     */
+    data: XOR<UserBranchMappingUpdateManyMutationInput, UserBranchMappingUncheckedUpdateManyInput>
+    /**
+     * Filter which UserBranchMappings to update
+     */
+    where?: UserBranchMappingWhereInput
+    /**
+     * Limit how many UserBranchMappings to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBranchMappingIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserBranchMapping upsert
+   */
+  export type UserBranchMappingUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBranchMapping
+     */
+    select?: UserBranchMappingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBranchMapping
+     */
+    omit?: UserBranchMappingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBranchMappingInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserBranchMapping to update in case it exists.
+     */
+    where: UserBranchMappingWhereUniqueInput
+    /**
+     * In case the UserBranchMapping found by the `where` argument doesn't exist, create a new UserBranchMapping with this data.
+     */
+    create: XOR<UserBranchMappingCreateInput, UserBranchMappingUncheckedCreateInput>
+    /**
+     * In case the UserBranchMapping was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserBranchMappingUpdateInput, UserBranchMappingUncheckedUpdateInput>
+  }
+
+  /**
+   * UserBranchMapping delete
+   */
+  export type UserBranchMappingDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBranchMapping
+     */
+    select?: UserBranchMappingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBranchMapping
+     */
+    omit?: UserBranchMappingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBranchMappingInclude<ExtArgs> | null
+    /**
+     * Filter which UserBranchMapping to delete.
+     */
+    where: UserBranchMappingWhereUniqueInput
+  }
+
+  /**
+   * UserBranchMapping deleteMany
+   */
+  export type UserBranchMappingDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserBranchMappings to delete
+     */
+    where?: UserBranchMappingWhereInput
+    /**
+     * Limit how many UserBranchMappings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserBranchMapping without action
+   */
+  export type UserBranchMappingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBranchMapping
+     */
+    select?: UserBranchMappingSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBranchMapping
+     */
+    omit?: UserBranchMappingOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBranchMappingInclude<ExtArgs> | null
   }
 
 
@@ -58960,7 +60123,6 @@ export namespace Prisma {
     name: 'name',
     userName: 'userName',
     password: 'password',
-    branchId: 'branchId',
     validUntil: 'validUntil',
     isActive: 'isActive',
     creator: 'creator',
@@ -58982,6 +60144,17 @@ export namespace Prisma {
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const UserBranchMappingScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    branchId: 'branchId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type UserBranchMappingScalarFieldEnum = (typeof UserBranchMappingScalarFieldEnum)[keyof typeof UserBranchMappingScalarFieldEnum]
 
 
   export const T_UserRoleScalarFieldEnum: {
@@ -59846,7 +61019,7 @@ export namespace Prisma {
     address?: StringNullableFilter<"Branch"> | string | null
     vatNo?: StringNullableFilter<"Branch"> | string | null
     mobileNo?: StringNullableFilter<"Branch"> | string | null
-    users?: UserListRelationFilter
+    userMappings?: UserBranchMappingListRelationFilter
   }
 
   export type BranchOrderByWithRelationInput = {
@@ -59856,7 +61029,7 @@ export namespace Prisma {
     address?: SortOrderInput | SortOrder
     vatNo?: SortOrderInput | SortOrder
     mobileNo?: SortOrderInput | SortOrder
-    users?: UserOrderByRelationAggregateInput
+    userMappings?: UserBranchMappingOrderByRelationAggregateInput
   }
 
   export type BranchWhereUniqueInput = Prisma.AtLeast<{
@@ -59869,7 +61042,7 @@ export namespace Prisma {
     address?: StringNullableFilter<"Branch"> | string | null
     vatNo?: StringNullableFilter<"Branch"> | string | null
     mobileNo?: StringNullableFilter<"Branch"> | string | null
-    users?: UserListRelationFilter
+    userMappings?: UserBranchMappingListRelationFilter
   }, "id" | "branchCode">
 
   export type BranchOrderByWithAggregationInput = {
@@ -60006,7 +61179,6 @@ export namespace Prisma {
     name?: StringNullableFilter<"User"> | string | null
     userName?: StringFilter<"User"> | string
     password?: StringNullableFilter<"User"> | string | null
-    branchId?: UuidFilter<"User"> | string
     validUntil?: DateTimeNullableFilter<"User"> | Date | string | null
     isActive?: StringNullableFilter<"User"> | string | null
     creator?: StringNullableFilter<"User"> | string | null
@@ -60025,8 +61197,8 @@ export namespace Prisma {
     passwordResetCode?: StringNullableFilter<"User"> | string | null
     passwordResetCodeExpiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
     passwordResetVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
-    branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
     userRoles?: T_UserRoleListRelationFilter
+    branchMappings?: UserBranchMappingListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -60034,7 +61206,6 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     userName?: SortOrder
     password?: SortOrderInput | SortOrder
-    branchId?: SortOrder
     validUntil?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
     creator?: SortOrderInput | SortOrder
@@ -60053,8 +61224,8 @@ export namespace Prisma {
     passwordResetCode?: SortOrderInput | SortOrder
     passwordResetCodeExpiredAt?: SortOrderInput | SortOrder
     passwordResetVerifiedAt?: SortOrderInput | SortOrder
-    branch?: BranchOrderByWithRelationInput
     userRoles?: t_UserRoleOrderByRelationAggregateInput
+    branchMappings?: UserBranchMappingOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -60066,7 +61237,6 @@ export namespace Prisma {
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringNullableFilter<"User"> | string | null
     password?: StringNullableFilter<"User"> | string | null
-    branchId?: UuidFilter<"User"> | string
     validUntil?: DateTimeNullableFilter<"User"> | Date | string | null
     isActive?: StringNullableFilter<"User"> | string | null
     creator?: StringNullableFilter<"User"> | string | null
@@ -60084,8 +61254,8 @@ export namespace Prisma {
     passwordResetCode?: StringNullableFilter<"User"> | string | null
     passwordResetCodeExpiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
     passwordResetVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
-    branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
     userRoles?: T_UserRoleListRelationFilter
+    branchMappings?: UserBranchMappingListRelationFilter
   }, "id" | "userName" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -60093,7 +61263,6 @@ export namespace Prisma {
     name?: SortOrderInput | SortOrder
     userName?: SortOrder
     password?: SortOrderInput | SortOrder
-    branchId?: SortOrder
     validUntil?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
     creator?: SortOrderInput | SortOrder
@@ -60125,7 +61294,6 @@ export namespace Prisma {
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
     userName?: StringWithAggregatesFilter<"User"> | string
     password?: StringNullableWithAggregatesFilter<"User"> | string | null
-    branchId?: UuidWithAggregatesFilter<"User"> | string
     validUntil?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     isActive?: StringNullableWithAggregatesFilter<"User"> | string | null
     creator?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -60144,6 +61312,65 @@ export namespace Prisma {
     passwordResetCode?: StringNullableWithAggregatesFilter<"User"> | string | null
     passwordResetCodeExpiredAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     passwordResetVerifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  }
+
+  export type UserBranchMappingWhereInput = {
+    AND?: UserBranchMappingWhereInput | UserBranchMappingWhereInput[]
+    OR?: UserBranchMappingWhereInput[]
+    NOT?: UserBranchMappingWhereInput | UserBranchMappingWhereInput[]
+    id?: UuidFilter<"UserBranchMapping"> | string
+    userId?: UuidFilter<"UserBranchMapping"> | string
+    branchId?: UuidFilter<"UserBranchMapping"> | string
+    createdAt?: DateTimeFilter<"UserBranchMapping"> | Date | string
+    updatedAt?: DateTimeFilter<"UserBranchMapping"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
+  }
+
+  export type UserBranchMappingOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    branchId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    branch?: BranchOrderByWithRelationInput
+  }
+
+  export type UserBranchMappingWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_branchId?: UserBranchMappingUserIdBranchIdCompoundUniqueInput
+    AND?: UserBranchMappingWhereInput | UserBranchMappingWhereInput[]
+    OR?: UserBranchMappingWhereInput[]
+    NOT?: UserBranchMappingWhereInput | UserBranchMappingWhereInput[]
+    userId?: UuidFilter<"UserBranchMapping"> | string
+    branchId?: UuidFilter<"UserBranchMapping"> | string
+    createdAt?: DateTimeFilter<"UserBranchMapping"> | Date | string
+    updatedAt?: DateTimeFilter<"UserBranchMapping"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    branch?: XOR<BranchScalarRelationFilter, BranchWhereInput>
+  }, "id" | "userId_branchId">
+
+  export type UserBranchMappingOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    branchId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: UserBranchMappingCountOrderByAggregateInput
+    _max?: UserBranchMappingMaxOrderByAggregateInput
+    _min?: UserBranchMappingMinOrderByAggregateInput
+  }
+
+  export type UserBranchMappingScalarWhereWithAggregatesInput = {
+    AND?: UserBranchMappingScalarWhereWithAggregatesInput | UserBranchMappingScalarWhereWithAggregatesInput[]
+    OR?: UserBranchMappingScalarWhereWithAggregatesInput[]
+    NOT?: UserBranchMappingScalarWhereWithAggregatesInput | UserBranchMappingScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"UserBranchMapping"> | string
+    userId?: UuidWithAggregatesFilter<"UserBranchMapping"> | string
+    branchId?: UuidWithAggregatesFilter<"UserBranchMapping"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"UserBranchMapping"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"UserBranchMapping"> | Date | string
   }
 
   export type t_UserRoleWhereInput = {
@@ -63820,7 +65047,7 @@ export namespace Prisma {
     address?: string | null
     vatNo?: string | null
     mobileNo?: string | null
-    users?: UserCreateNestedManyWithoutBranchInput
+    userMappings?: UserBranchMappingCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUncheckedCreateInput = {
@@ -63830,7 +65057,7 @@ export namespace Prisma {
     address?: string | null
     vatNo?: string | null
     mobileNo?: string | null
-    users?: UserUncheckedCreateNestedManyWithoutBranchInput
+    userMappings?: UserBranchMappingUncheckedCreateNestedManyWithoutBranchInput
   }
 
   export type BranchUpdateInput = {
@@ -63840,7 +65067,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     vatNo?: NullableStringFieldUpdateOperationsInput | string | null
     mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
-    users?: UserUpdateManyWithoutBranchNestedInput
+    userMappings?: UserBranchMappingUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchUncheckedUpdateInput = {
@@ -63850,7 +65077,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     vatNo?: NullableStringFieldUpdateOperationsInput | string | null
     mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
-    users?: UserUncheckedUpdateManyWithoutBranchNestedInput
+    userMappings?: UserBranchMappingUncheckedUpdateManyWithoutBranchNestedInput
   }
 
   export type BranchCreateManyInput = {
@@ -64012,8 +65239,8 @@ export namespace Prisma {
     passwordResetCode?: string | null
     passwordResetCodeExpiredAt?: Date | string | null
     passwordResetVerifiedAt?: Date | string | null
-    branch: BranchCreateNestedOneWithoutUsersInput
     userRoles?: t_UserRoleCreateNestedManyWithoutUserInput
+    branchMappings?: UserBranchMappingCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -64021,7 +65248,6 @@ export namespace Prisma {
     name?: string | null
     userName: string
     password?: string | null
-    branchId: string
     validUntil?: Date | string | null
     isActive?: string | null
     creator?: string | null
@@ -64041,6 +65267,7 @@ export namespace Prisma {
     passwordResetCodeExpiredAt?: Date | string | null
     passwordResetVerifiedAt?: Date | string | null
     userRoles?: t_UserRoleUncheckedCreateNestedManyWithoutUserInput
+    branchMappings?: UserBranchMappingUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -64066,8 +65293,8 @@ export namespace Prisma {
     passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
     passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branch?: BranchUpdateOneRequiredWithoutUsersNestedInput
     userRoles?: t_UserRoleUpdateManyWithoutUserNestedInput
+    branchMappings?: UserBranchMappingUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -64075,7 +65302,6 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: StringFieldUpdateOperationsInput | string
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     creator?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64095,6 +65321,7 @@ export namespace Prisma {
     passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     userRoles?: t_UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    branchMappings?: UserBranchMappingUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -64102,7 +65329,6 @@ export namespace Prisma {
     name?: string | null
     userName: string
     password?: string | null
-    branchId: string
     validUntil?: Date | string | null
     isActive?: string | null
     creator?: string | null
@@ -64153,7 +65379,6 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: StringFieldUpdateOperationsInput | string
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     creator?: NullableStringFieldUpdateOperationsInput | string | null
@@ -64172,6 +65397,60 @@ export namespace Prisma {
     passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
     passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserBranchMappingCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutBranchMappingsInput
+    branch: BranchCreateNestedOneWithoutUserMappingsInput
+  }
+
+  export type UserBranchMappingUncheckedCreateInput = {
+    id?: string
+    userId: string
+    branchId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserBranchMappingUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutBranchMappingsNestedInput
+    branch?: BranchUpdateOneRequiredWithoutUserMappingsNestedInput
+  }
+
+  export type UserBranchMappingUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    branchId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserBranchMappingCreateManyInput = {
+    id?: string
+    userId: string
+    branchId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type UserBranchMappingUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserBranchMappingUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    branchId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type t_UserRoleCreateInput = {
@@ -68400,10 +69679,10 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type UserListRelationFilter = {
-    every?: UserWhereInput
-    some?: UserWhereInput
-    none?: UserWhereInput
+  export type UserBranchMappingListRelationFilter = {
+    every?: UserBranchMappingWhereInput
+    some?: UserBranchMappingWhereInput
+    none?: UserBranchMappingWhereInput
   }
 
   export type SortOrderInput = {
@@ -68411,7 +69690,7 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type UserOrderByRelationAggregateInput = {
+  export type UserBranchMappingOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -68593,11 +69872,6 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
-  export type BranchScalarRelationFilter = {
-    is?: BranchWhereInput
-    isNot?: BranchWhereInput
-  }
-
   export type T_UserRoleListRelationFilter = {
     every?: t_UserRoleWhereInput
     some?: t_UserRoleWhereInput
@@ -68613,7 +69887,6 @@ export namespace Prisma {
     name?: SortOrder
     userName?: SortOrder
     password?: SortOrder
-    branchId?: SortOrder
     validUntil?: SortOrder
     isActive?: SortOrder
     creator?: SortOrder
@@ -68639,7 +69912,6 @@ export namespace Prisma {
     name?: SortOrder
     userName?: SortOrder
     password?: SortOrder
-    branchId?: SortOrder
     validUntil?: SortOrder
     isActive?: SortOrder
     creator?: SortOrder
@@ -68665,7 +69937,6 @@ export namespace Prisma {
     name?: SortOrder
     userName?: SortOrder
     password?: SortOrder
-    branchId?: SortOrder
     validUntil?: SortOrder
     isActive?: SortOrder
     creator?: SortOrder
@@ -68694,9 +69965,68 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
+  }
+
+  export type BranchScalarRelationFilter = {
+    is?: BranchWhereInput
+    isNot?: BranchWhereInput
+  }
+
+  export type UserBranchMappingUserIdBranchIdCompoundUniqueInput = {
+    userId: string
+    branchId: string
+  }
+
+  export type UserBranchMappingCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    branchId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserBranchMappingMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    branchId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type UserBranchMappingMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    branchId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type t_UserRoleUserIdControlNameCompoundUniqueInput = {
@@ -68799,17 +70129,6 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
   export type AuditLogsCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -68884,20 +70203,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedJsonNullableFilter<$PrismaModel>
     _max?: NestedJsonNullableFilter<$PrismaModel>
-  }
-
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -71543,18 +72848,18 @@ export namespace Prisma {
     vat?: SortOrder
   }
 
-  export type UserCreateNestedManyWithoutBranchInput = {
-    create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
-    createMany?: UserCreateManyBranchInputEnvelope
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  export type UserBranchMappingCreateNestedManyWithoutBranchInput = {
+    create?: XOR<UserBranchMappingCreateWithoutBranchInput, UserBranchMappingUncheckedCreateWithoutBranchInput> | UserBranchMappingCreateWithoutBranchInput[] | UserBranchMappingUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: UserBranchMappingCreateOrConnectWithoutBranchInput | UserBranchMappingCreateOrConnectWithoutBranchInput[]
+    createMany?: UserBranchMappingCreateManyBranchInputEnvelope
+    connect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
   }
 
-  export type UserUncheckedCreateNestedManyWithoutBranchInput = {
-    create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
-    createMany?: UserCreateManyBranchInputEnvelope
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  export type UserBranchMappingUncheckedCreateNestedManyWithoutBranchInput = {
+    create?: XOR<UserBranchMappingCreateWithoutBranchInput, UserBranchMappingUncheckedCreateWithoutBranchInput> | UserBranchMappingCreateWithoutBranchInput[] | UserBranchMappingUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: UserBranchMappingCreateOrConnectWithoutBranchInput | UserBranchMappingCreateOrConnectWithoutBranchInput[]
+    createMany?: UserBranchMappingCreateManyBranchInputEnvelope
+    connect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -71565,32 +72870,32 @@ export namespace Prisma {
     set?: string | null
   }
 
-  export type UserUpdateManyWithoutBranchNestedInput = {
-    create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
-    upsert?: UserUpsertWithWhereUniqueWithoutBranchInput | UserUpsertWithWhereUniqueWithoutBranchInput[]
-    createMany?: UserCreateManyBranchInputEnvelope
-    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    update?: UserUpdateWithWhereUniqueWithoutBranchInput | UserUpdateWithWhereUniqueWithoutBranchInput[]
-    updateMany?: UserUpdateManyWithWhereWithoutBranchInput | UserUpdateManyWithWhereWithoutBranchInput[]
-    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  export type UserBranchMappingUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<UserBranchMappingCreateWithoutBranchInput, UserBranchMappingUncheckedCreateWithoutBranchInput> | UserBranchMappingCreateWithoutBranchInput[] | UserBranchMappingUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: UserBranchMappingCreateOrConnectWithoutBranchInput | UserBranchMappingCreateOrConnectWithoutBranchInput[]
+    upsert?: UserBranchMappingUpsertWithWhereUniqueWithoutBranchInput | UserBranchMappingUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: UserBranchMappingCreateManyBranchInputEnvelope
+    set?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    disconnect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    delete?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    connect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    update?: UserBranchMappingUpdateWithWhereUniqueWithoutBranchInput | UserBranchMappingUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: UserBranchMappingUpdateManyWithWhereWithoutBranchInput | UserBranchMappingUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: UserBranchMappingScalarWhereInput | UserBranchMappingScalarWhereInput[]
   }
 
-  export type UserUncheckedUpdateManyWithoutBranchNestedInput = {
-    create?: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput> | UserCreateWithoutBranchInput[] | UserUncheckedCreateWithoutBranchInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutBranchInput | UserCreateOrConnectWithoutBranchInput[]
-    upsert?: UserUpsertWithWhereUniqueWithoutBranchInput | UserUpsertWithWhereUniqueWithoutBranchInput[]
-    createMany?: UserCreateManyBranchInputEnvelope
-    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    update?: UserUpdateWithWhereUniqueWithoutBranchInput | UserUpdateWithWhereUniqueWithoutBranchInput[]
-    updateMany?: UserUpdateManyWithWhereWithoutBranchInput | UserUpdateManyWithWhereWithoutBranchInput[]
-    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  export type UserBranchMappingUncheckedUpdateManyWithoutBranchNestedInput = {
+    create?: XOR<UserBranchMappingCreateWithoutBranchInput, UserBranchMappingUncheckedCreateWithoutBranchInput> | UserBranchMappingCreateWithoutBranchInput[] | UserBranchMappingUncheckedCreateWithoutBranchInput[]
+    connectOrCreate?: UserBranchMappingCreateOrConnectWithoutBranchInput | UserBranchMappingCreateOrConnectWithoutBranchInput[]
+    upsert?: UserBranchMappingUpsertWithWhereUniqueWithoutBranchInput | UserBranchMappingUpsertWithWhereUniqueWithoutBranchInput[]
+    createMany?: UserBranchMappingCreateManyBranchInputEnvelope
+    set?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    disconnect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    delete?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    connect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    update?: UserBranchMappingUpdateWithWhereUniqueWithoutBranchInput | UserBranchMappingUpdateWithWhereUniqueWithoutBranchInput[]
+    updateMany?: UserBranchMappingUpdateManyWithWhereWithoutBranchInput | UserBranchMappingUpdateManyWithWhereWithoutBranchInput[]
+    deleteMany?: UserBranchMappingScalarWhereInput | UserBranchMappingScalarWhereInput[]
   }
 
   export type t_SOMstrCreateNestedManyWithoutBankInput = {
@@ -71639,17 +72944,18 @@ export namespace Prisma {
     deleteMany?: t_SOMstrScalarWhereInput | t_SOMstrScalarWhereInput[]
   }
 
-  export type BranchCreateNestedOneWithoutUsersInput = {
-    create?: XOR<BranchCreateWithoutUsersInput, BranchUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: BranchCreateOrConnectWithoutUsersInput
-    connect?: BranchWhereUniqueInput
-  }
-
   export type t_UserRoleCreateNestedManyWithoutUserInput = {
     create?: XOR<t_UserRoleCreateWithoutUserInput, t_UserRoleUncheckedCreateWithoutUserInput> | t_UserRoleCreateWithoutUserInput[] | t_UserRoleUncheckedCreateWithoutUserInput[]
     connectOrCreate?: t_UserRoleCreateOrConnectWithoutUserInput | t_UserRoleCreateOrConnectWithoutUserInput[]
     createMany?: t_UserRoleCreateManyUserInputEnvelope
     connect?: t_UserRoleWhereUniqueInput | t_UserRoleWhereUniqueInput[]
+  }
+
+  export type UserBranchMappingCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserBranchMappingCreateWithoutUserInput, UserBranchMappingUncheckedCreateWithoutUserInput> | UserBranchMappingCreateWithoutUserInput[] | UserBranchMappingUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserBranchMappingCreateOrConnectWithoutUserInput | UserBranchMappingCreateOrConnectWithoutUserInput[]
+    createMany?: UserBranchMappingCreateManyUserInputEnvelope
+    connect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
   }
 
   export type t_UserRoleUncheckedCreateNestedManyWithoutUserInput = {
@@ -71659,16 +72965,15 @@ export namespace Prisma {
     connect?: t_UserRoleWhereUniqueInput | t_UserRoleWhereUniqueInput[]
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
+  export type UserBranchMappingUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserBranchMappingCreateWithoutUserInput, UserBranchMappingUncheckedCreateWithoutUserInput> | UserBranchMappingCreateWithoutUserInput[] | UserBranchMappingUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserBranchMappingCreateOrConnectWithoutUserInput | UserBranchMappingCreateOrConnectWithoutUserInput[]
+    createMany?: UserBranchMappingCreateManyUserInputEnvelope
+    connect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
   }
 
-  export type BranchUpdateOneRequiredWithoutUsersNestedInput = {
-    create?: XOR<BranchCreateWithoutUsersInput, BranchUncheckedCreateWithoutUsersInput>
-    connectOrCreate?: BranchCreateOrConnectWithoutUsersInput
-    upsert?: BranchUpsertWithoutUsersInput
-    connect?: BranchWhereUniqueInput
-    update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutUsersInput, BranchUpdateWithoutUsersInput>, BranchUncheckedUpdateWithoutUsersInput>
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type t_UserRoleUpdateManyWithoutUserNestedInput = {
@@ -71685,6 +72990,20 @@ export namespace Prisma {
     deleteMany?: t_UserRoleScalarWhereInput | t_UserRoleScalarWhereInput[]
   }
 
+  export type UserBranchMappingUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserBranchMappingCreateWithoutUserInput, UserBranchMappingUncheckedCreateWithoutUserInput> | UserBranchMappingCreateWithoutUserInput[] | UserBranchMappingUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserBranchMappingCreateOrConnectWithoutUserInput | UserBranchMappingCreateOrConnectWithoutUserInput[]
+    upsert?: UserBranchMappingUpsertWithWhereUniqueWithoutUserInput | UserBranchMappingUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserBranchMappingCreateManyUserInputEnvelope
+    set?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    disconnect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    delete?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    connect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    update?: UserBranchMappingUpdateWithWhereUniqueWithoutUserInput | UserBranchMappingUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserBranchMappingUpdateManyWithWhereWithoutUserInput | UserBranchMappingUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserBranchMappingScalarWhereInput | UserBranchMappingScalarWhereInput[]
+  }
+
   export type t_UserRoleUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<t_UserRoleCreateWithoutUserInput, t_UserRoleUncheckedCreateWithoutUserInput> | t_UserRoleCreateWithoutUserInput[] | t_UserRoleUncheckedCreateWithoutUserInput[]
     connectOrCreate?: t_UserRoleCreateOrConnectWithoutUserInput | t_UserRoleCreateOrConnectWithoutUserInput[]
@@ -71699,6 +73018,52 @@ export namespace Prisma {
     deleteMany?: t_UserRoleScalarWhereInput | t_UserRoleScalarWhereInput[]
   }
 
+  export type UserBranchMappingUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserBranchMappingCreateWithoutUserInput, UserBranchMappingUncheckedCreateWithoutUserInput> | UserBranchMappingCreateWithoutUserInput[] | UserBranchMappingUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserBranchMappingCreateOrConnectWithoutUserInput | UserBranchMappingCreateOrConnectWithoutUserInput[]
+    upsert?: UserBranchMappingUpsertWithWhereUniqueWithoutUserInput | UserBranchMappingUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserBranchMappingCreateManyUserInputEnvelope
+    set?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    disconnect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    delete?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    connect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
+    update?: UserBranchMappingUpdateWithWhereUniqueWithoutUserInput | UserBranchMappingUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserBranchMappingUpdateManyWithWhereWithoutUserInput | UserBranchMappingUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserBranchMappingScalarWhereInput | UserBranchMappingScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutBranchMappingsInput = {
+    create?: XOR<UserCreateWithoutBranchMappingsInput, UserUncheckedCreateWithoutBranchMappingsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBranchMappingsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type BranchCreateNestedOneWithoutUserMappingsInput = {
+    create?: XOR<BranchCreateWithoutUserMappingsInput, BranchUncheckedCreateWithoutUserMappingsInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutUserMappingsInput
+    connect?: BranchWhereUniqueInput
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
+  export type UserUpdateOneRequiredWithoutBranchMappingsNestedInput = {
+    create?: XOR<UserCreateWithoutBranchMappingsInput, UserUncheckedCreateWithoutBranchMappingsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBranchMappingsInput
+    upsert?: UserUpsertWithoutBranchMappingsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBranchMappingsInput, UserUpdateWithoutBranchMappingsInput>, UserUncheckedUpdateWithoutBranchMappingsInput>
+  }
+
+  export type BranchUpdateOneRequiredWithoutUserMappingsNestedInput = {
+    create?: XOR<BranchCreateWithoutUserMappingsInput, BranchUncheckedCreateWithoutUserMappingsInput>
+    connectOrCreate?: BranchCreateOrConnectWithoutUserMappingsInput
+    upsert?: BranchUpsertWithoutUserMappingsInput
+    connect?: BranchWhereUniqueInput
+    update?: XOR<XOR<BranchUpdateToOneWithWhereWithoutUserMappingsInput, BranchUpdateWithoutUserMappingsInput>, BranchUncheckedUpdateWithoutUserMappingsInput>
+  }
+
   export type UserCreateNestedOneWithoutUserRolesInput = {
     create?: XOR<UserCreateWithoutUserRolesInput, UserUncheckedCreateWithoutUserRolesInput>
     connectOrCreate?: UserCreateOrConnectWithoutUserRolesInput
@@ -71711,10 +73076,6 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutUserRolesInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserRolesInput, UserUpdateWithoutUserRolesInput>, UserUncheckedUpdateWithoutUserRolesInput>
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
   }
 
   export type PermissionCreateNestedManyWithoutMenuInput = {
@@ -73414,17 +74775,6 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type NestedUuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
-
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -73434,6 +74784,31 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedUuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -73471,20 +74846,6 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedBoolNullableFilter<$PrismaModel = never> = {
@@ -73624,111 +74985,55 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type UserCreateWithoutBranchInput = {
+  export type UserBranchMappingCreateWithoutBranchInput = {
     id?: string
-    name?: string | null
-    userName: string
-    password?: string | null
-    validUntil?: Date | string | null
-    isActive?: string | null
-    creator?: string | null
-    creationDate?: Date | string | null
-    lastUpdateBy?: string | null
-    lastUpdateDate?: Date | string | null
-    isDeleted?: string | null
-    deletedBy?: string | null
-    deletionDate?: Date | string | null
-    remarks?: string | null
-    email?: string | null
-    isVerified?: boolean
-    verificationToken?: string | null
-    refreshTokenHash?: string | null
-    refreshTokenExpiredAt?: Date | string | null
-    passwordResetCode?: string | null
-    passwordResetCodeExpiredAt?: Date | string | null
-    passwordResetVerifiedAt?: Date | string | null
-    userRoles?: t_UserRoleCreateNestedManyWithoutUserInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutBranchMappingsInput
   }
 
-  export type UserUncheckedCreateWithoutBranchInput = {
+  export type UserBranchMappingUncheckedCreateWithoutBranchInput = {
     id?: string
-    name?: string | null
-    userName: string
-    password?: string | null
-    validUntil?: Date | string | null
-    isActive?: string | null
-    creator?: string | null
-    creationDate?: Date | string | null
-    lastUpdateBy?: string | null
-    lastUpdateDate?: Date | string | null
-    isDeleted?: string | null
-    deletedBy?: string | null
-    deletionDate?: Date | string | null
-    remarks?: string | null
-    email?: string | null
-    isVerified?: boolean
-    verificationToken?: string | null
-    refreshTokenHash?: string | null
-    refreshTokenExpiredAt?: Date | string | null
-    passwordResetCode?: string | null
-    passwordResetCodeExpiredAt?: Date | string | null
-    passwordResetVerifiedAt?: Date | string | null
-    userRoles?: t_UserRoleUncheckedCreateNestedManyWithoutUserInput
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type UserCreateOrConnectWithoutBranchInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput>
+  export type UserBranchMappingCreateOrConnectWithoutBranchInput = {
+    where: UserBranchMappingWhereUniqueInput
+    create: XOR<UserBranchMappingCreateWithoutBranchInput, UserBranchMappingUncheckedCreateWithoutBranchInput>
   }
 
-  export type UserCreateManyBranchInputEnvelope = {
-    data: UserCreateManyBranchInput | UserCreateManyBranchInput[]
+  export type UserBranchMappingCreateManyBranchInputEnvelope = {
+    data: UserBranchMappingCreateManyBranchInput | UserBranchMappingCreateManyBranchInput[]
     skipDuplicates?: boolean
   }
 
-  export type UserUpsertWithWhereUniqueWithoutBranchInput = {
-    where: UserWhereUniqueInput
-    update: XOR<UserUpdateWithoutBranchInput, UserUncheckedUpdateWithoutBranchInput>
-    create: XOR<UserCreateWithoutBranchInput, UserUncheckedCreateWithoutBranchInput>
+  export type UserBranchMappingUpsertWithWhereUniqueWithoutBranchInput = {
+    where: UserBranchMappingWhereUniqueInput
+    update: XOR<UserBranchMappingUpdateWithoutBranchInput, UserBranchMappingUncheckedUpdateWithoutBranchInput>
+    create: XOR<UserBranchMappingCreateWithoutBranchInput, UserBranchMappingUncheckedCreateWithoutBranchInput>
   }
 
-  export type UserUpdateWithWhereUniqueWithoutBranchInput = {
-    where: UserWhereUniqueInput
-    data: XOR<UserUpdateWithoutBranchInput, UserUncheckedUpdateWithoutBranchInput>
+  export type UserBranchMappingUpdateWithWhereUniqueWithoutBranchInput = {
+    where: UserBranchMappingWhereUniqueInput
+    data: XOR<UserBranchMappingUpdateWithoutBranchInput, UserBranchMappingUncheckedUpdateWithoutBranchInput>
   }
 
-  export type UserUpdateManyWithWhereWithoutBranchInput = {
-    where: UserScalarWhereInput
-    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutBranchInput>
+  export type UserBranchMappingUpdateManyWithWhereWithoutBranchInput = {
+    where: UserBranchMappingScalarWhereInput
+    data: XOR<UserBranchMappingUpdateManyMutationInput, UserBranchMappingUncheckedUpdateManyWithoutBranchInput>
   }
 
-  export type UserScalarWhereInput = {
-    AND?: UserScalarWhereInput | UserScalarWhereInput[]
-    OR?: UserScalarWhereInput[]
-    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
-    id?: UuidFilter<"User"> | string
-    name?: StringNullableFilter<"User"> | string | null
-    userName?: StringFilter<"User"> | string
-    password?: StringNullableFilter<"User"> | string | null
-    branchId?: UuidFilter<"User"> | string
-    validUntil?: DateTimeNullableFilter<"User"> | Date | string | null
-    isActive?: StringNullableFilter<"User"> | string | null
-    creator?: StringNullableFilter<"User"> | string | null
-    creationDate?: DateTimeNullableFilter<"User"> | Date | string | null
-    lastUpdateBy?: StringNullableFilter<"User"> | string | null
-    lastUpdateDate?: DateTimeNullableFilter<"User"> | Date | string | null
-    isDeleted?: StringNullableFilter<"User"> | string | null
-    deletedBy?: StringNullableFilter<"User"> | string | null
-    deletionDate?: DateTimeNullableFilter<"User"> | Date | string | null
-    remarks?: StringNullableFilter<"User"> | string | null
-    email?: StringNullableFilter<"User"> | string | null
-    isVerified?: BoolFilter<"User"> | boolean
-    verificationToken?: StringNullableFilter<"User"> | string | null
-    refreshTokenHash?: StringNullableFilter<"User"> | string | null
-    refreshTokenExpiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
-    passwordResetCode?: StringNullableFilter<"User"> | string | null
-    passwordResetCodeExpiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
-    passwordResetVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+  export type UserBranchMappingScalarWhereInput = {
+    AND?: UserBranchMappingScalarWhereInput | UserBranchMappingScalarWhereInput[]
+    OR?: UserBranchMappingScalarWhereInput[]
+    NOT?: UserBranchMappingScalarWhereInput | UserBranchMappingScalarWhereInput[]
+    id?: UuidFilter<"UserBranchMapping"> | string
+    userId?: UuidFilter<"UserBranchMapping"> | string
+    branchId?: UuidFilter<"UserBranchMapping"> | string
+    createdAt?: DateTimeFilter<"UserBranchMapping"> | Date | string
+    updatedAt?: DateTimeFilter<"UserBranchMapping"> | Date | string
   }
 
   export type t_SOMstrCreateWithoutBankInput = {
@@ -73835,29 +75140,6 @@ export namespace Prisma {
     soMstrMBank?: UuidNullableFilter<"t_SOMstr"> | string | null
   }
 
-  export type BranchCreateWithoutUsersInput = {
-    id?: string
-    branchCode?: string | null
-    branchName?: string | null
-    address?: string | null
-    vatNo?: string | null
-    mobileNo?: string | null
-  }
-
-  export type BranchUncheckedCreateWithoutUsersInput = {
-    id?: string
-    branchCode?: string | null
-    branchName?: string | null
-    address?: string | null
-    vatNo?: string | null
-    mobileNo?: string | null
-  }
-
-  export type BranchCreateOrConnectWithoutUsersInput = {
-    where: BranchWhereUniqueInput
-    create: XOR<BranchCreateWithoutUsersInput, BranchUncheckedCreateWithoutUsersInput>
-  }
-
   export type t_UserRoleCreateWithoutUserInput = {
     controlName: string
     isEnable?: string | null
@@ -73884,33 +75166,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type BranchUpsertWithoutUsersInput = {
-    update: XOR<BranchUpdateWithoutUsersInput, BranchUncheckedUpdateWithoutUsersInput>
-    create: XOR<BranchCreateWithoutUsersInput, BranchUncheckedCreateWithoutUsersInput>
-    where?: BranchWhereInput
+  export type UserBranchMappingCreateWithoutUserInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    branch: BranchCreateNestedOneWithoutUserMappingsInput
   }
 
-  export type BranchUpdateToOneWithWhereWithoutUsersInput = {
-    where?: BranchWhereInput
-    data: XOR<BranchUpdateWithoutUsersInput, BranchUncheckedUpdateWithoutUsersInput>
+  export type UserBranchMappingUncheckedCreateWithoutUserInput = {
+    id?: string
+    branchId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type BranchUpdateWithoutUsersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    branchCode?: NullableStringFieldUpdateOperationsInput | string | null
-    branchName?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    vatNo?: NullableStringFieldUpdateOperationsInput | string | null
-    mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
+  export type UserBranchMappingCreateOrConnectWithoutUserInput = {
+    where: UserBranchMappingWhereUniqueInput
+    create: XOR<UserBranchMappingCreateWithoutUserInput, UserBranchMappingUncheckedCreateWithoutUserInput>
   }
 
-  export type BranchUncheckedUpdateWithoutUsersInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    branchCode?: NullableStringFieldUpdateOperationsInput | string | null
-    branchName?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    vatNo?: NullableStringFieldUpdateOperationsInput | string | null
-    mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
+  export type UserBranchMappingCreateManyUserInputEnvelope = {
+    data: UserBranchMappingCreateManyUserInput | UserBranchMappingCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
   export type t_UserRoleUpsertWithWhereUniqueWithoutUserInput = {
@@ -73941,6 +75218,194 @@ export namespace Prisma {
     deleteAccess?: StringNullableFilter<"t_UserRole"> | string | null
   }
 
+  export type UserBranchMappingUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserBranchMappingWhereUniqueInput
+    update: XOR<UserBranchMappingUpdateWithoutUserInput, UserBranchMappingUncheckedUpdateWithoutUserInput>
+    create: XOR<UserBranchMappingCreateWithoutUserInput, UserBranchMappingUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserBranchMappingUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserBranchMappingWhereUniqueInput
+    data: XOR<UserBranchMappingUpdateWithoutUserInput, UserBranchMappingUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserBranchMappingUpdateManyWithWhereWithoutUserInput = {
+    where: UserBranchMappingScalarWhereInput
+    data: XOR<UserBranchMappingUpdateManyMutationInput, UserBranchMappingUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserCreateWithoutBranchMappingsInput = {
+    id?: string
+    name?: string | null
+    userName: string
+    password?: string | null
+    validUntil?: Date | string | null
+    isActive?: string | null
+    creator?: string | null
+    creationDate?: Date | string | null
+    lastUpdateBy?: string | null
+    lastUpdateDate?: Date | string | null
+    isDeleted?: string | null
+    deletedBy?: string | null
+    deletionDate?: Date | string | null
+    remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
+    userRoles?: t_UserRoleCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutBranchMappingsInput = {
+    id?: string
+    name?: string | null
+    userName: string
+    password?: string | null
+    validUntil?: Date | string | null
+    isActive?: string | null
+    creator?: string | null
+    creationDate?: Date | string | null
+    lastUpdateBy?: string | null
+    lastUpdateDate?: Date | string | null
+    isDeleted?: string | null
+    deletedBy?: string | null
+    deletionDate?: Date | string | null
+    remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
+    userRoles?: t_UserRoleUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutBranchMappingsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBranchMappingsInput, UserUncheckedCreateWithoutBranchMappingsInput>
+  }
+
+  export type BranchCreateWithoutUserMappingsInput = {
+    id?: string
+    branchCode?: string | null
+    branchName?: string | null
+    address?: string | null
+    vatNo?: string | null
+    mobileNo?: string | null
+  }
+
+  export type BranchUncheckedCreateWithoutUserMappingsInput = {
+    id?: string
+    branchCode?: string | null
+    branchName?: string | null
+    address?: string | null
+    vatNo?: string | null
+    mobileNo?: string | null
+  }
+
+  export type BranchCreateOrConnectWithoutUserMappingsInput = {
+    where: BranchWhereUniqueInput
+    create: XOR<BranchCreateWithoutUserMappingsInput, BranchUncheckedCreateWithoutUserMappingsInput>
+  }
+
+  export type UserUpsertWithoutBranchMappingsInput = {
+    update: XOR<UserUpdateWithoutBranchMappingsInput, UserUncheckedUpdateWithoutBranchMappingsInput>
+    create: XOR<UserCreateWithoutBranchMappingsInput, UserUncheckedCreateWithoutBranchMappingsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBranchMappingsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBranchMappingsInput, UserUncheckedUpdateWithoutBranchMappingsInput>
+  }
+
+  export type UserUpdateWithoutBranchMappingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    userName?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    creator?: NullableStringFieldUpdateOperationsInput | string | null
+    creationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDeleted?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userRoles?: t_UserRoleUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBranchMappingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    userName?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    creator?: NullableStringFieldUpdateOperationsInput | string | null
+    creationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDeleted?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userRoles?: t_UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type BranchUpsertWithoutUserMappingsInput = {
+    update: XOR<BranchUpdateWithoutUserMappingsInput, BranchUncheckedUpdateWithoutUserMappingsInput>
+    create: XOR<BranchCreateWithoutUserMappingsInput, BranchUncheckedCreateWithoutUserMappingsInput>
+    where?: BranchWhereInput
+  }
+
+  export type BranchUpdateToOneWithWhereWithoutUserMappingsInput = {
+    where?: BranchWhereInput
+    data: XOR<BranchUpdateWithoutUserMappingsInput, BranchUncheckedUpdateWithoutUserMappingsInput>
+  }
+
+  export type BranchUpdateWithoutUserMappingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    branchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    branchName?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    vatNo?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type BranchUncheckedUpdateWithoutUserMappingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    branchCode?: NullableStringFieldUpdateOperationsInput | string | null
+    branchName?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    vatNo?: NullableStringFieldUpdateOperationsInput | string | null
+    mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type UserCreateWithoutUserRolesInput = {
     id?: string
     name?: string | null
@@ -73964,7 +75429,7 @@ export namespace Prisma {
     passwordResetCode?: string | null
     passwordResetCodeExpiredAt?: Date | string | null
     passwordResetVerifiedAt?: Date | string | null
-    branch: BranchCreateNestedOneWithoutUsersInput
+    branchMappings?: UserBranchMappingCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserRolesInput = {
@@ -73972,7 +75437,6 @@ export namespace Prisma {
     name?: string | null
     userName: string
     password?: string | null
-    branchId: string
     validUntil?: Date | string | null
     isActive?: string | null
     creator?: string | null
@@ -73991,6 +75455,7 @@ export namespace Prisma {
     passwordResetCode?: string | null
     passwordResetCodeExpiredAt?: Date | string | null
     passwordResetVerifiedAt?: Date | string | null
+    branchMappings?: UserBranchMappingUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserRolesInput = {
@@ -74032,7 +75497,7 @@ export namespace Prisma {
     passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
     passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branch?: BranchUpdateOneRequiredWithoutUsersNestedInput
+    branchMappings?: UserBranchMappingUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserRolesInput = {
@@ -74040,7 +75505,6 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
     password?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: StringFieldUpdateOperationsInput | string
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     creator?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74059,6 +75523,7 @@ export namespace Prisma {
     passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
     passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branchMappings?: UserBranchMappingUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PermissionCreateWithoutMenuInput = {
@@ -78147,106 +79612,32 @@ export namespace Prisma {
     clientTransactions?: Client_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
-  export type UserCreateManyBranchInput = {
+  export type UserBranchMappingCreateManyBranchInput = {
     id?: string
-    name?: string | null
-    userName: string
-    password?: string | null
-    validUntil?: Date | string | null
-    isActive?: string | null
-    creator?: string | null
-    creationDate?: Date | string | null
-    lastUpdateBy?: string | null
-    lastUpdateDate?: Date | string | null
-    isDeleted?: string | null
-    deletedBy?: string | null
-    deletionDate?: Date | string | null
-    remarks?: string | null
-    email?: string | null
-    isVerified?: boolean
-    verificationToken?: string | null
-    refreshTokenHash?: string | null
-    refreshTokenExpiredAt?: Date | string | null
-    passwordResetCode?: string | null
-    passwordResetCodeExpiredAt?: Date | string | null
-    passwordResetVerifiedAt?: Date | string | null
+    userId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type UserUpdateWithoutBranchInput = {
+  export type UserBranchMappingUpdateWithoutBranchInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    userName?: StringFieldUpdateOperationsInput | string
-    password?: NullableStringFieldUpdateOperationsInput | string | null
-    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isActive?: NullableStringFieldUpdateOperationsInput | string | null
-    creator?: NullableStringFieldUpdateOperationsInput | string | null
-    creationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    lastUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
-    lastUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDeleted?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
-    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
-    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
-    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    userRoles?: t_UserRoleUpdateManyWithoutUserNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutBranchMappingsNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutBranchInput = {
+  export type UserBranchMappingUncheckedUpdateWithoutBranchInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    userName?: StringFieldUpdateOperationsInput | string
-    password?: NullableStringFieldUpdateOperationsInput | string | null
-    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isActive?: NullableStringFieldUpdateOperationsInput | string | null
-    creator?: NullableStringFieldUpdateOperationsInput | string | null
-    creationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    lastUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
-    lastUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDeleted?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
-    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
-    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
-    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    userRoles?: t_UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type UserUncheckedUpdateManyWithoutBranchInput = {
+  export type UserBranchMappingUncheckedUpdateManyWithoutBranchInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    userName?: StringFieldUpdateOperationsInput | string
-    password?: NullableStringFieldUpdateOperationsInput | string | null
-    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isActive?: NullableStringFieldUpdateOperationsInput | string | null
-    creator?: NullableStringFieldUpdateOperationsInput | string | null
-    creationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    lastUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
-    lastUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isDeleted?: NullableStringFieldUpdateOperationsInput | string | null
-    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
-    deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    remarks?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    isVerified?: BoolFieldUpdateOperationsInput | boolean
-    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
-    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
-    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
-    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type t_SOMstrCreateManyBankInput = {
@@ -78355,6 +79746,13 @@ export namespace Prisma {
     deleteAccess?: string | null
   }
 
+  export type UserBranchMappingCreateManyUserInput = {
+    id?: string
+    branchId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type t_UserRoleUpdateWithoutUserInput = {
     controlName?: StringFieldUpdateOperationsInput | string
     isEnable?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78377,6 +79775,27 @@ export namespace Prisma {
     addAccess?: NullableStringFieldUpdateOperationsInput | string | null
     editAccess?: NullableStringFieldUpdateOperationsInput | string | null
     deleteAccess?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserBranchMappingUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    branch?: BranchUpdateOneRequiredWithoutUserMappingsNestedInput
+  }
+
+  export type UserBranchMappingUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    branchId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserBranchMappingUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    branchId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PermissionCreateManyMenuInput = {

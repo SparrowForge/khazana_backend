@@ -34,18 +34,20 @@ export class AuthService {
     const user = isEmail
       ? await this.prisma.user.findFirst({
           where: { email: dto.userName },
-          include: { userRoles: true, branch: true },
+          include: { userRoles: true, branchMappings: { include: { branch: true } } },
         })
       : await this.prisma.user.findUnique({
           where: { userName: dto.userName },
-          include: { userRoles: true, branch: true },
+          include: { userRoles: true, branchMappings: { include: { branch: true } } },
         });
 
     if (!user || user.isActive !== 'Y') {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    if (user.branchId !== dto.branchId) {
+    // Verify the selected branch is among the user's assigned branches
+    const branchMapping = user.branchMappings.find((m) => m.branchId === dto.branchId);
+    if (!branchMapping) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -74,11 +76,7 @@ export class AuthService {
       },
     });
 
-    const payload = {
-      sub: user.id,
-      userName: user.userName,
-      branchId: user.branchId,
-    };
+    const payload = { sub: user.id, userName: user.userName, branchId: dto.branchId };
 
     return {
       accessToken: this.jwtService.sign(payload),
@@ -88,10 +86,39 @@ export class AuthService {
         name: user.name,
         email: user.email,
         isVerified: user.isVerified,
-        branchId: user.branchId,
-        branchName: user.branch?.branchName,
+        branchId: dto.branchId,
+        branchName: branchMapping.branch.branchName,
         permissions: user.userRoles,
       },
+    };
+  }
+
+  // ── Get User Branches (pre-login branch selector) ──────────────
+
+  async getUserBranches(userName: string) {
+    if (!userName) return { branches: [] };
+
+    const isEmail = userName.includes('@');
+    const user = isEmail
+      ? await this.prisma.user.findFirst({
+          where: { email: userName },
+          include: { branchMappings: { include: { branch: true } } },
+        })
+      : await this.prisma.user.findUnique({
+          where: { userName },
+          include: { branchMappings: { include: { branch: true } } },
+        });
+
+    if (!user || user.isActive !== 'Y') {
+      return { branches: [] };
+    }
+
+    return {
+      branches: user.branchMappings.map((m) => ({
+        id: m.branch.id,
+        branchCode: m.branch.branchCode,
+        branchName: m.branch.branchName,
+      })),
     };
   }
 
@@ -118,7 +145,7 @@ export class AuthService {
   async getProfile(userName: string) {
     const user = await this.prisma.user.findUnique({
       where: { userName },
-      include: { userRoles: true, branch: true },
+      include: { userRoles: true, branchMappings: { include: { branch: true } } },
     });
     if (!user) return null;
     const { password, verificationToken, passwordResetCode, refreshTokenHash, ...safeUser } = user;

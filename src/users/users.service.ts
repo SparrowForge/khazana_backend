@@ -9,10 +9,20 @@ import { SetUserRolesDto } from './dto/set-user-roles.dto';
 import { PaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
 
-function stripPassword<T extends { password?: string | null; verificationToken?: string | null; passwordResetCode?: string | null; refreshTokenHash?: string | null }>(user: T) {
+function stripPassword<T extends {
+  password?: string | null;
+  verificationToken?: string | null;
+  passwordResetCode?: string | null;
+  refreshTokenHash?: string | null;
+}>(user: T) {
   const { password, verificationToken, passwordResetCode, refreshTokenHash, ...safe } = user;
   return safe;
 }
+
+const USER_INCLUDE = {
+  branchMappings: { include: { branch: true } },
+  userRoles: true,
+} as const;
 
 @Injectable()
 export class UsersService {
@@ -28,7 +38,7 @@ export class UsersService {
     const [users, total] = await Promise.all([
       this.prisma.user.findMany({
         where,
-        include: { branch: true, userRoles: true },
+        include: USER_INCLUDE,
         skip: (page - 1) * limit,
         take: limit,
         orderBy: { creationDate: 'desc' },
@@ -45,7 +55,7 @@ export class UsersService {
   async findOne(id: string) {
     const user = await this.prisma.user.findUnique({
       where: { id },
-      include: { branch: true, userRoles: true },
+      include: USER_INCLUDE,
     });
     if (!user) throw new NotFoundException('User not found');
     return stripPassword(user);
@@ -65,21 +75,25 @@ export class UsersService {
       Promise.resolve(crypto.randomBytes(32).toString('hex')),
     ]);
 
+    // Separate branchIds from user fields before spreading
+    const { branchIds, password: _pw, ...userFields } = dto;
+
     const user = await this.prisma.user.create({
       data: {
-        ...dto,
+        ...userFields,
         password: hashed,
-        email: dto.email,
         verificationToken,
         isVerified: false,
         isActive: 'Y',
         creator: createdBy,
         creationDate: new Date(),
         validUntil: dto.validUntil ? new Date(dto.validUntil) : undefined,
+        branchMappings: {
+          create: branchIds.map((branchId) => ({ branchId })),
+        },
       },
     });
 
-    // Send verification email (fire-and-forget — don't block user creation on mail failure)
     if (dto.email) {
       this.mailService
         .sendVerificationEmail(dto.email, verificationToken, dto.name)
@@ -91,10 +105,25 @@ export class UsersService {
 
   async update(id: string, dto: UpdateUserDto, updatedBy: string) {
     await this.findOne(id);
-    const user = await this.prisma.user.update({
-      where: { id },
-      data: { ...dto, lastUpdateBy: updatedBy, lastUpdateDate: new Date() },
+
+    // Separate branchIds from user fields — branchIds is not a User column
+    const { branchIds, ...userFields } = dto;
+
+    const user = await this.prisma.$transaction(async (tx) => {
+      if (branchIds && branchIds.length > 0) {
+        // Replace all existing branch assignments atomically
+        await tx.userBranchMapping.deleteMany({ where: { userId: id } });
+        await tx.userBranchMapping.createMany({
+          data: branchIds.map((branchId) => ({ userId: id, branchId })),
+        });
+      }
+
+      return tx.user.update({
+        where: { id },
+        data: { ...userFields, lastUpdateBy: updatedBy, lastUpdateDate: new Date() },
+      });
     });
+
     return stripPassword(user);
   }
 

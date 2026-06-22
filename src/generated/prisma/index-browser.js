@@ -150,7 +150,6 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   userName: 'userName',
   password: 'password',
-  branchId: 'branchId',
   validUntil: 'validUntil',
   isActive: 'isActive',
   creator: 'creator',
@@ -169,6 +168,14 @@ exports.Prisma.UserScalarFieldEnum = {
   passwordResetCode: 'passwordResetCode',
   passwordResetCodeExpiredAt: 'passwordResetCodeExpiredAt',
   passwordResetVerifiedAt: 'passwordResetVerifiedAt'
+};
+
+exports.Prisma.UserBranchMappingScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  branchId: 'branchId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.T_UserRoleScalarFieldEnum = {
@@ -792,6 +799,7 @@ exports.Prisma.ModelName = {
   Bank: 'Bank',
   Setup_System: 'Setup_System',
   User: 'User',
+  UserBranchMapping: 'UserBranchMapping',
   t_UserRole: 't_UserRole',
   AuditLog: 'AuditLog',
   AuditLogs: 'AuditLogs',
