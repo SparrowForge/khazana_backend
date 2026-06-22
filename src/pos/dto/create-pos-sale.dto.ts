@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import {
-  IsString, IsNumber, IsArray, ValidateNested, IsPositive, Min, IsOptional,
+  IsString, IsNumber, IsArray, ValidateNested, IsPositive, Min, IsOptional, IsIn,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -41,4 +41,15 @@ export class CreatePosSaleDto {
   @IsNumber()
   @IsOptional()
   branchId?: number;
+
+  @ApiPropertyOptional({ example: 'fixed', description: 'Discount type: fixed | percentage' })
+  @IsIn(['fixed', 'percentage'])
+  @IsOptional()
+  discountType?: 'fixed' | 'percentage';
+
+  @ApiPropertyOptional({ example: 50, description: 'Discount value — flat amount or percentage (0–100)' })
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  discountValue?: number;
 }

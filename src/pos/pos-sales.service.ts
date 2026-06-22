@@ -36,6 +36,7 @@ export class PosSalesService {
       dateTime: (sale.somstrDate ?? sale.somstrCreationDate ?? new Date()).toISOString(),
       salesType: sale.mtype ?? 'Cash',
       totalAmount: Number(sale.somstrTotalAmt ?? 0),
+      discountAmount: Number(sale.somstrDiscAmt ?? 0),
       vatAmount: this.r2(vatAmount),
       payableAmount: Number(sale.somstrNetAmt ?? 0),
       paidAmount: Number(sale.somstrCustomerpay ?? 0),
@@ -119,7 +120,31 @@ export class PosSalesService {
 
     const totalAmount = this.r2(lines.reduce((s, l) => s + l.sodetAmount, 0));
     const vatTotal = this.r2(lines.reduce((s, l) => s + l.sodetVATAmount, 0));
-    const netAmount = this.r2(totalAmount + vatTotal);
+    const grossAmount = this.r2(totalAmount + vatTotal);
+
+    // ── Discount validation & server-side recalculation ────────────────────
+    const discType = dto.discountType ?? 'fixed';
+    const discValue = dto.discountValue ?? 0;
+
+    if (discValue < 0) {
+      throw new BadRequestException('Discount value cannot be negative');
+    }
+    if (discType === 'percentage' && discValue > 100) {
+      throw new BadRequestException('Percentage discount cannot exceed 100%');
+    }
+
+    const discountAmount =
+      discType === 'percentage'
+        ? this.r2(grossAmount * discValue / 100)
+        : this.r2(discValue);
+
+    if (discountAmount > grossAmount) {
+      throw new BadRequestException(
+        `Discount (৳${discountAmount}) cannot exceed the total (৳${grossAmount})`,
+      );
+    }
+
+    const netAmount = this.r2(grossAmount - discountAmount);
     const changeAmount = this.r2(dto.paidAmount - netAmount);
 
     if (dto.paidAmount < netAmount) {
@@ -135,7 +160,7 @@ export class PosSalesService {
         somstrCode: invoiceNo,
         somstrDate: new Date(),
         somstrTotalAmt: totalAmount,
-        somstrDiscAmt: 0,
+        somstrDiscAmt: discountAmount,
         somstrNetAmt: netAmount,
         somstrCustomerpay: this.r2(dto.paidAmount),
         somstrChange: changeAmount,
@@ -163,7 +188,6 @@ export class PosSalesService {
       include: { details: { include: { item: true } } },
     });
 
-    // Deduct inventory (same pattern as SalesService)
     await this.deductStock(lines.map((l) => ({ itemId: l.itemId, qty: l.sodetQTY })));
 
     return this.toResponse(sale as SaleWithDetails);
