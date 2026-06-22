@@ -31,6 +31,11 @@ export class CreateItemDto {
   @IsString()
   @IsOptional()
   itmRemarks?: string;
+
+   @ApiPropertyOptional({ example: 'Y', description: 'Y = active, N = inactive' })
+  @IsString()
+  @IsOptional()
+  isActive?: string;
 }
 
 export class UpdateItemDto {

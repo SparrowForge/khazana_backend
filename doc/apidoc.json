@@ -914,12 +914,24 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "type": "object" }
+              "schema": {
+                "type": "object",
+                "required": ["itmCode"],
+                "properties": {
+                  "itmCode":     { "type": "string", "example": "ITM-001",         "description": "Unique item code" },
+                  "itmName":     { "type": "string", "example": "Kaju Barfi",      "description": "Item name" },
+                  "itmCategory": { "type": "string", "example": "Sweets",          "description": "Category name" },
+                  "itmType":     { "type": "string", "example": "Mithai",          "description": "Item type" },
+                  "itmUOM":      { "type": "string", "example": "Pcs",             "description": "Unit of measure" },
+                  "itmRemarks":  { "type": "string", "example": "Premium quality", "description": "Remarks" }
+                }
+              }
             }
           }
         },
         "responses": {
-          "201": { "description": "Item created successfully" }
+          "201": { "description": "Item created successfully" },
+          "400": { "description": "Validation error — itmCode missing or unknown field sent" }
         }
       }
     },
@@ -948,11 +960,23 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": { "schema": { "type": "object" } }
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "itmName":     { "type": "string", "example": "Kaju Barfi Updated" },
+                  "itmCategory": { "type": "string", "example": "Sweets" },
+                  "itmType":     { "type": "string", "example": "Mithai" },
+                  "itmUOM":      { "type": "string", "example": "Pcs" },
+                  "isActive":    { "type": "string", "enum": ["Y", "N"], "example": "Y", "description": "Y = active, N = inactive" }
+                }
+              }
+            }
           }
         },
         "responses": {
-          "200": { "description": "Item updated successfully" }
+          "200": { "description": "Item updated successfully" },
+          "400": { "description": "Validation error — unknown field sent" }
         }
       },
       "delete": {
