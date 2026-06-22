@@ -9,6 +9,7 @@ import {
   IsUUID,
   ArrayMinSize,
 } from 'class-validator';
+
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -52,4 +53,12 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   remarks?: string;
+
+  @ApiPropertyOptional({
+    example: '73ac7e7f-56c3-465d-8165-78de5f9931c2',
+    description: 'UUID of the media_files record to use as the user profile image',
+  })
+  @IsUUID('4')
+  @IsOptional()
+  mediaFileId?: string;
 }

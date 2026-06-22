@@ -14,6 +14,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
+ * Model MediaFile
+ * 
+ */
+export type MediaFile = $Result.DefaultSelection<Prisma.$MediaFilePayload>
+/**
  * Model Branch
  * 
  */
@@ -251,8 +256,8 @@ export type temp_table = $Result.DefaultSelection<Prisma.$temp_tablePayload>
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Branches
- * const branches = await prisma.branch.findMany()
+ * // Fetch zero or more MediaFiles
+ * const mediaFiles = await prisma.mediaFile.findMany()
  * ```
  *
  *
@@ -272,8 +277,8 @@ export class PrismaClient<
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Branches
-   * const branches = await prisma.branch.findMany()
+   * // Fetch zero or more MediaFiles
+   * const mediaFiles = await prisma.mediaFile.findMany()
    * ```
    *
    *
@@ -363,6 +368,16 @@ export class PrismaClient<
   }>>
 
       /**
+   * `prisma.mediaFile`: Exposes CRUD operations for the **MediaFile** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MediaFiles
+    * const mediaFiles = await prisma.mediaFile.findMany()
+    * ```
+    */
+  get mediaFile(): Prisma.MediaFileDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.branch`: Exposes CRUD operations for the **Branch** model.
     * Example usage:
     * ```ts
@@ -1262,6 +1277,7 @@ export namespace Prisma {
 
 
   export const ModelName: {
+    MediaFile: 'MediaFile',
     Branch: 'Branch',
     Bank: 'Bank',
     Setup_System: 'Setup_System',
@@ -1326,10 +1342,84 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "client_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "moneyReceive" | "cashPurchase" | "temp_table"
+      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "client_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "moneyReceive" | "cashPurchase" | "temp_table"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
+      MediaFile: {
+        payload: Prisma.$MediaFilePayload<ExtArgs>
+        fields: Prisma.MediaFileFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MediaFileFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MediaFileFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
+          }
+          findFirst: {
+            args: Prisma.MediaFileFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MediaFileFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
+          }
+          findMany: {
+            args: Prisma.MediaFileFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>[]
+          }
+          create: {
+            args: Prisma.MediaFileCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
+          }
+          createMany: {
+            args: Prisma.MediaFileCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MediaFileCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>[]
+          }
+          delete: {
+            args: Prisma.MediaFileDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
+          }
+          update: {
+            args: Prisma.MediaFileUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
+          }
+          deleteMany: {
+            args: Prisma.MediaFileDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MediaFileUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MediaFileUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>[]
+          }
+          upsert: {
+            args: Prisma.MediaFileUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MediaFilePayload>
+          }
+          aggregate: {
+            args: Prisma.MediaFileAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMediaFile>
+          }
+          groupBy: {
+            args: Prisma.MediaFileGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MediaFileGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MediaFileCountArgs<ExtArgs>
+            result: $Utils.Optional<MediaFileCountAggregateOutputType> | number
+          }
+        }
+      }
       Branch: {
         payload: Prisma.$BranchPayload<ExtArgs>
         fields: Prisma.BranchFieldRefs
@@ -4830,6 +4920,7 @@ export namespace Prisma {
     omit?: Prisma.GlobalOmitConfig
   }
   export type GlobalOmitConfig = {
+    mediaFile?: MediaFileOmit
     branch?: BranchOmit
     bank?: BankOmit
     setup_System?: Setup_SystemOmit
@@ -4952,6 +5043,46 @@ export namespace Prisma {
 
 
   /**
+   * Count Type MediaFileCountOutputType
+   */
+
+  export type MediaFileCountOutputType = {
+    profileUsers: number
+    items: number
+  }
+
+  export type MediaFileCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    profileUsers?: boolean | MediaFileCountOutputTypeCountProfileUsersArgs
+    items?: boolean | MediaFileCountOutputTypeCountItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MediaFileCountOutputType without action
+   */
+  export type MediaFileCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFileCountOutputType
+     */
+    select?: MediaFileCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MediaFileCountOutputType without action
+   */
+  export type MediaFileCountOutputTypeCountProfileUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
+  }
+
+  /**
+   * MediaFileCountOutputType without action
+   */
+  export type MediaFileCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: Item_InformationWhereInput
+  }
+
+
+  /**
    * Count Type BranchCountOutputType
    */
 
@@ -5020,11 +5151,13 @@ export namespace Prisma {
   export type UserCountOutputType = {
     userRoles: number
     branchMappings: number
+    mediaFiles: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userRoles?: boolean | UserCountOutputTypeCountUserRolesArgs
     branchMappings?: boolean | UserCountOutputTypeCountBranchMappingsArgs
+    mediaFiles?: boolean | UserCountOutputTypeCountMediaFilesArgs
   }
 
   // Custom InputTypes
@@ -5050,6 +5183,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountBranchMappingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserBranchMappingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMediaFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MediaFileWhereInput
   }
 
 
@@ -5567,6 +5707,1266 @@ export namespace Prisma {
   /**
    * Models
    */
+
+  /**
+   * Model MediaFile
+   */
+
+  export type AggregateMediaFile = {
+    _count: MediaFileCountAggregateOutputType | null
+    _avg: MediaFileAvgAggregateOutputType | null
+    _sum: MediaFileSumAggregateOutputType | null
+    _min: MediaFileMinAggregateOutputType | null
+    _max: MediaFileMaxAggregateOutputType | null
+  }
+
+  export type MediaFileAvgAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type MediaFileSumAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type MediaFileMinAggregateOutputType = {
+    id: string | null
+    fileName: string | null
+    fileUrl: string | null
+    fileType: string | null
+    mimeType: string | null
+    fileSize: number | null
+    altText: string | null
+    uploadedById: string | null
+    cloudinaryPublicId: string | null
+    isDelete: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MediaFileMaxAggregateOutputType = {
+    id: string | null
+    fileName: string | null
+    fileUrl: string | null
+    fileType: string | null
+    mimeType: string | null
+    fileSize: number | null
+    altText: string | null
+    uploadedById: string | null
+    cloudinaryPublicId: string | null
+    isDelete: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MediaFileCountAggregateOutputType = {
+    id: number
+    fileName: number
+    fileUrl: number
+    fileType: number
+    mimeType: number
+    fileSize: number
+    altText: number
+    uploadedById: number
+    cloudinaryPublicId: number
+    isDelete: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type MediaFileAvgAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type MediaFileSumAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type MediaFileMinAggregateInputType = {
+    id?: true
+    fileName?: true
+    fileUrl?: true
+    fileType?: true
+    mimeType?: true
+    fileSize?: true
+    altText?: true
+    uploadedById?: true
+    cloudinaryPublicId?: true
+    isDelete?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MediaFileMaxAggregateInputType = {
+    id?: true
+    fileName?: true
+    fileUrl?: true
+    fileType?: true
+    mimeType?: true
+    fileSize?: true
+    altText?: true
+    uploadedById?: true
+    cloudinaryPublicId?: true
+    isDelete?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MediaFileCountAggregateInputType = {
+    id?: true
+    fileName?: true
+    fileUrl?: true
+    fileType?: true
+    mimeType?: true
+    fileSize?: true
+    altText?: true
+    uploadedById?: true
+    cloudinaryPublicId?: true
+    isDelete?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type MediaFileAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MediaFile to aggregate.
+     */
+    where?: MediaFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MediaFiles to fetch.
+     */
+    orderBy?: MediaFileOrderByWithRelationInput | MediaFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MediaFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MediaFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MediaFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MediaFiles
+    **/
+    _count?: true | MediaFileCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MediaFileAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MediaFileSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MediaFileMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MediaFileMaxAggregateInputType
+  }
+
+  export type GetMediaFileAggregateType<T extends MediaFileAggregateArgs> = {
+        [P in keyof T & keyof AggregateMediaFile]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMediaFile[P]>
+      : GetScalarType<T[P], AggregateMediaFile[P]>
+  }
+
+
+
+
+  export type MediaFileGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MediaFileWhereInput
+    orderBy?: MediaFileOrderByWithAggregationInput | MediaFileOrderByWithAggregationInput[]
+    by: MediaFileScalarFieldEnum[] | MediaFileScalarFieldEnum
+    having?: MediaFileScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MediaFileCountAggregateInputType | true
+    _avg?: MediaFileAvgAggregateInputType
+    _sum?: MediaFileSumAggregateInputType
+    _min?: MediaFileMinAggregateInputType
+    _max?: MediaFileMaxAggregateInputType
+  }
+
+  export type MediaFileGroupByOutputType = {
+    id: string
+    fileName: string
+    fileUrl: string
+    fileType: string
+    mimeType: string
+    fileSize: number
+    altText: string | null
+    uploadedById: string | null
+    cloudinaryPublicId: string
+    isDelete: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: MediaFileCountAggregateOutputType | null
+    _avg: MediaFileAvgAggregateOutputType | null
+    _sum: MediaFileSumAggregateOutputType | null
+    _min: MediaFileMinAggregateOutputType | null
+    _max: MediaFileMaxAggregateOutputType | null
+  }
+
+  type GetMediaFileGroupByPayload<T extends MediaFileGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MediaFileGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MediaFileGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MediaFileGroupByOutputType[P]>
+            : GetScalarType<T[P], MediaFileGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MediaFileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fileName?: boolean
+    fileUrl?: boolean
+    fileType?: boolean
+    mimeType?: boolean
+    fileSize?: boolean
+    altText?: boolean
+    uploadedById?: boolean
+    cloudinaryPublicId?: boolean
+    isDelete?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    uploadedBy?: boolean | MediaFile$uploadedByArgs<ExtArgs>
+    profileUsers?: boolean | MediaFile$profileUsersArgs<ExtArgs>
+    items?: boolean | MediaFile$itemsArgs<ExtArgs>
+    _count?: boolean | MediaFileCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["mediaFile"]>
+
+  export type MediaFileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fileName?: boolean
+    fileUrl?: boolean
+    fileType?: boolean
+    mimeType?: boolean
+    fileSize?: boolean
+    altText?: boolean
+    uploadedById?: boolean
+    cloudinaryPublicId?: boolean
+    isDelete?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    uploadedBy?: boolean | MediaFile$uploadedByArgs<ExtArgs>
+  }, ExtArgs["result"]["mediaFile"]>
+
+  export type MediaFileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    fileName?: boolean
+    fileUrl?: boolean
+    fileType?: boolean
+    mimeType?: boolean
+    fileSize?: boolean
+    altText?: boolean
+    uploadedById?: boolean
+    cloudinaryPublicId?: boolean
+    isDelete?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    uploadedBy?: boolean | MediaFile$uploadedByArgs<ExtArgs>
+  }, ExtArgs["result"]["mediaFile"]>
+
+  export type MediaFileSelectScalar = {
+    id?: boolean
+    fileName?: boolean
+    fileUrl?: boolean
+    fileType?: boolean
+    mimeType?: boolean
+    fileSize?: boolean
+    altText?: boolean
+    uploadedById?: boolean
+    cloudinaryPublicId?: boolean
+    isDelete?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type MediaFileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fileName" | "fileUrl" | "fileType" | "mimeType" | "fileSize" | "altText" | "uploadedById" | "cloudinaryPublicId" | "isDelete" | "createdAt" | "updatedAt", ExtArgs["result"]["mediaFile"]>
+  export type MediaFileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    uploadedBy?: boolean | MediaFile$uploadedByArgs<ExtArgs>
+    profileUsers?: boolean | MediaFile$profileUsersArgs<ExtArgs>
+    items?: boolean | MediaFile$itemsArgs<ExtArgs>
+    _count?: boolean | MediaFileCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type MediaFileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    uploadedBy?: boolean | MediaFile$uploadedByArgs<ExtArgs>
+  }
+  export type MediaFileIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    uploadedBy?: boolean | MediaFile$uploadedByArgs<ExtArgs>
+  }
+
+  export type $MediaFilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MediaFile"
+    objects: {
+      uploadedBy: Prisma.$UserPayload<ExtArgs> | null
+      profileUsers: Prisma.$UserPayload<ExtArgs>[]
+      items: Prisma.$Item_InformationPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      fileName: string
+      fileUrl: string
+      fileType: string
+      mimeType: string
+      fileSize: number
+      altText: string | null
+      uploadedById: string | null
+      cloudinaryPublicId: string
+      isDelete: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["mediaFile"]>
+    composites: {}
+  }
+
+  type MediaFileGetPayload<S extends boolean | null | undefined | MediaFileDefaultArgs> = $Result.GetResult<Prisma.$MediaFilePayload, S>
+
+  type MediaFileCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MediaFileFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MediaFileCountAggregateInputType | true
+    }
+
+  export interface MediaFileDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MediaFile'], meta: { name: 'MediaFile' } }
+    /**
+     * Find zero or one MediaFile that matches the filter.
+     * @param {MediaFileFindUniqueArgs} args - Arguments to find a MediaFile
+     * @example
+     * // Get one MediaFile
+     * const mediaFile = await prisma.mediaFile.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MediaFileFindUniqueArgs>(args: SelectSubset<T, MediaFileFindUniqueArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MediaFile that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MediaFileFindUniqueOrThrowArgs} args - Arguments to find a MediaFile
+     * @example
+     * // Get one MediaFile
+     * const mediaFile = await prisma.mediaFile.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MediaFileFindUniqueOrThrowArgs>(args: SelectSubset<T, MediaFileFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MediaFile that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaFileFindFirstArgs} args - Arguments to find a MediaFile
+     * @example
+     * // Get one MediaFile
+     * const mediaFile = await prisma.mediaFile.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MediaFileFindFirstArgs>(args?: SelectSubset<T, MediaFileFindFirstArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MediaFile that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaFileFindFirstOrThrowArgs} args - Arguments to find a MediaFile
+     * @example
+     * // Get one MediaFile
+     * const mediaFile = await prisma.mediaFile.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MediaFileFindFirstOrThrowArgs>(args?: SelectSubset<T, MediaFileFindFirstOrThrowArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MediaFiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaFileFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MediaFiles
+     * const mediaFiles = await prisma.mediaFile.findMany()
+     * 
+     * // Get first 10 MediaFiles
+     * const mediaFiles = await prisma.mediaFile.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const mediaFileWithIdOnly = await prisma.mediaFile.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MediaFileFindManyArgs>(args?: SelectSubset<T, MediaFileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MediaFile.
+     * @param {MediaFileCreateArgs} args - Arguments to create a MediaFile.
+     * @example
+     * // Create one MediaFile
+     * const MediaFile = await prisma.mediaFile.create({
+     *   data: {
+     *     // ... data to create a MediaFile
+     *   }
+     * })
+     * 
+     */
+    create<T extends MediaFileCreateArgs>(args: SelectSubset<T, MediaFileCreateArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MediaFiles.
+     * @param {MediaFileCreateManyArgs} args - Arguments to create many MediaFiles.
+     * @example
+     * // Create many MediaFiles
+     * const mediaFile = await prisma.mediaFile.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MediaFileCreateManyArgs>(args?: SelectSubset<T, MediaFileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MediaFiles and returns the data saved in the database.
+     * @param {MediaFileCreateManyAndReturnArgs} args - Arguments to create many MediaFiles.
+     * @example
+     * // Create many MediaFiles
+     * const mediaFile = await prisma.mediaFile.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MediaFiles and only return the `id`
+     * const mediaFileWithIdOnly = await prisma.mediaFile.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MediaFileCreateManyAndReturnArgs>(args?: SelectSubset<T, MediaFileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MediaFile.
+     * @param {MediaFileDeleteArgs} args - Arguments to delete one MediaFile.
+     * @example
+     * // Delete one MediaFile
+     * const MediaFile = await prisma.mediaFile.delete({
+     *   where: {
+     *     // ... filter to delete one MediaFile
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MediaFileDeleteArgs>(args: SelectSubset<T, MediaFileDeleteArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MediaFile.
+     * @param {MediaFileUpdateArgs} args - Arguments to update one MediaFile.
+     * @example
+     * // Update one MediaFile
+     * const mediaFile = await prisma.mediaFile.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MediaFileUpdateArgs>(args: SelectSubset<T, MediaFileUpdateArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MediaFiles.
+     * @param {MediaFileDeleteManyArgs} args - Arguments to filter MediaFiles to delete.
+     * @example
+     * // Delete a few MediaFiles
+     * const { count } = await prisma.mediaFile.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MediaFileDeleteManyArgs>(args?: SelectSubset<T, MediaFileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MediaFiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaFileUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MediaFiles
+     * const mediaFile = await prisma.mediaFile.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MediaFileUpdateManyArgs>(args: SelectSubset<T, MediaFileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MediaFiles and returns the data updated in the database.
+     * @param {MediaFileUpdateManyAndReturnArgs} args - Arguments to update many MediaFiles.
+     * @example
+     * // Update many MediaFiles
+     * const mediaFile = await prisma.mediaFile.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MediaFiles and only return the `id`
+     * const mediaFileWithIdOnly = await prisma.mediaFile.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MediaFileUpdateManyAndReturnArgs>(args: SelectSubset<T, MediaFileUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MediaFile.
+     * @param {MediaFileUpsertArgs} args - Arguments to update or create a MediaFile.
+     * @example
+     * // Update or create a MediaFile
+     * const mediaFile = await prisma.mediaFile.upsert({
+     *   create: {
+     *     // ... data to create a MediaFile
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MediaFile we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MediaFileUpsertArgs>(args: SelectSubset<T, MediaFileUpsertArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MediaFiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaFileCountArgs} args - Arguments to filter MediaFiles to count.
+     * @example
+     * // Count the number of MediaFiles
+     * const count = await prisma.mediaFile.count({
+     *   where: {
+     *     // ... the filter for the MediaFiles we want to count
+     *   }
+     * })
+    **/
+    count<T extends MediaFileCountArgs>(
+      args?: Subset<T, MediaFileCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MediaFileCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MediaFile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaFileAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MediaFileAggregateArgs>(args: Subset<T, MediaFileAggregateArgs>): Prisma.PrismaPromise<GetMediaFileAggregateType<T>>
+
+    /**
+     * Group by MediaFile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MediaFileGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MediaFileGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MediaFileGroupByArgs['orderBy'] }
+        : { orderBy?: MediaFileGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MediaFileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMediaFileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MediaFile model
+   */
+  readonly fields: MediaFileFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MediaFile.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MediaFileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    uploadedBy<T extends MediaFile$uploadedByArgs<ExtArgs> = {}>(args?: Subset<T, MediaFile$uploadedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    profileUsers<T extends MediaFile$profileUsersArgs<ExtArgs> = {}>(args?: Subset<T, MediaFile$profileUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    items<T extends MediaFile$itemsArgs<ExtArgs> = {}>(args?: Subset<T, MediaFile$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Item_InformationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MediaFile model
+   */
+  interface MediaFileFieldRefs {
+    readonly id: FieldRef<"MediaFile", 'String'>
+    readonly fileName: FieldRef<"MediaFile", 'String'>
+    readonly fileUrl: FieldRef<"MediaFile", 'String'>
+    readonly fileType: FieldRef<"MediaFile", 'String'>
+    readonly mimeType: FieldRef<"MediaFile", 'String'>
+    readonly fileSize: FieldRef<"MediaFile", 'Int'>
+    readonly altText: FieldRef<"MediaFile", 'String'>
+    readonly uploadedById: FieldRef<"MediaFile", 'String'>
+    readonly cloudinaryPublicId: FieldRef<"MediaFile", 'String'>
+    readonly isDelete: FieldRef<"MediaFile", 'Boolean'>
+    readonly createdAt: FieldRef<"MediaFile", 'DateTime'>
+    readonly updatedAt: FieldRef<"MediaFile", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MediaFile findUnique
+   */
+  export type MediaFileFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaFile to fetch.
+     */
+    where: MediaFileWhereUniqueInput
+  }
+
+  /**
+   * MediaFile findUniqueOrThrow
+   */
+  export type MediaFileFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaFile to fetch.
+     */
+    where: MediaFileWhereUniqueInput
+  }
+
+  /**
+   * MediaFile findFirst
+   */
+  export type MediaFileFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaFile to fetch.
+     */
+    where?: MediaFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MediaFiles to fetch.
+     */
+    orderBy?: MediaFileOrderByWithRelationInput | MediaFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MediaFiles.
+     */
+    cursor?: MediaFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MediaFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MediaFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MediaFiles.
+     */
+    distinct?: MediaFileScalarFieldEnum | MediaFileScalarFieldEnum[]
+  }
+
+  /**
+   * MediaFile findFirstOrThrow
+   */
+  export type MediaFileFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaFile to fetch.
+     */
+    where?: MediaFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MediaFiles to fetch.
+     */
+    orderBy?: MediaFileOrderByWithRelationInput | MediaFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MediaFiles.
+     */
+    cursor?: MediaFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MediaFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MediaFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MediaFiles.
+     */
+    distinct?: MediaFileScalarFieldEnum | MediaFileScalarFieldEnum[]
+  }
+
+  /**
+   * MediaFile findMany
+   */
+  export type MediaFileFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * Filter, which MediaFiles to fetch.
+     */
+    where?: MediaFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MediaFiles to fetch.
+     */
+    orderBy?: MediaFileOrderByWithRelationInput | MediaFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MediaFiles.
+     */
+    cursor?: MediaFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MediaFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MediaFiles.
+     */
+    skip?: number
+    distinct?: MediaFileScalarFieldEnum | MediaFileScalarFieldEnum[]
+  }
+
+  /**
+   * MediaFile create
+   */
+  export type MediaFileCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MediaFile.
+     */
+    data: XOR<MediaFileCreateInput, MediaFileUncheckedCreateInput>
+  }
+
+  /**
+   * MediaFile createMany
+   */
+  export type MediaFileCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MediaFiles.
+     */
+    data: MediaFileCreateManyInput | MediaFileCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MediaFile createManyAndReturn
+   */
+  export type MediaFileCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * The data used to create many MediaFiles.
+     */
+    data: MediaFileCreateManyInput | MediaFileCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MediaFile update
+   */
+  export type MediaFileUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MediaFile.
+     */
+    data: XOR<MediaFileUpdateInput, MediaFileUncheckedUpdateInput>
+    /**
+     * Choose, which MediaFile to update.
+     */
+    where: MediaFileWhereUniqueInput
+  }
+
+  /**
+   * MediaFile updateMany
+   */
+  export type MediaFileUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MediaFiles.
+     */
+    data: XOR<MediaFileUpdateManyMutationInput, MediaFileUncheckedUpdateManyInput>
+    /**
+     * Filter which MediaFiles to update
+     */
+    where?: MediaFileWhereInput
+    /**
+     * Limit how many MediaFiles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MediaFile updateManyAndReturn
+   */
+  export type MediaFileUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * The data used to update MediaFiles.
+     */
+    data: XOR<MediaFileUpdateManyMutationInput, MediaFileUncheckedUpdateManyInput>
+    /**
+     * Filter which MediaFiles to update
+     */
+    where?: MediaFileWhereInput
+    /**
+     * Limit how many MediaFiles to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MediaFile upsert
+   */
+  export type MediaFileUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MediaFile to update in case it exists.
+     */
+    where: MediaFileWhereUniqueInput
+    /**
+     * In case the MediaFile found by the `where` argument doesn't exist, create a new MediaFile with this data.
+     */
+    create: XOR<MediaFileCreateInput, MediaFileUncheckedCreateInput>
+    /**
+     * In case the MediaFile was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MediaFileUpdateInput, MediaFileUncheckedUpdateInput>
+  }
+
+  /**
+   * MediaFile delete
+   */
+  export type MediaFileDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    /**
+     * Filter which MediaFile to delete.
+     */
+    where: MediaFileWhereUniqueInput
+  }
+
+  /**
+   * MediaFile deleteMany
+   */
+  export type MediaFileDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MediaFiles to delete
+     */
+    where?: MediaFileWhereInput
+    /**
+     * Limit how many MediaFiles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MediaFile.uploadedBy
+   */
+  export type MediaFile$uploadedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * MediaFile.profileUsers
+   */
+  export type MediaFile$profileUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * MediaFile.items
+   */
+  export type MediaFile$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_Information
+     */
+    select?: Item_InformationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_Information
+     */
+    omit?: Item_InformationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Item_InformationInclude<ExtArgs> | null
+    where?: Item_InformationWhereInput
+    orderBy?: Item_InformationOrderByWithRelationInput | Item_InformationOrderByWithRelationInput[]
+    cursor?: Item_InformationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Item_InformationScalarFieldEnum | Item_InformationScalarFieldEnum[]
+  }
+
+  /**
+   * MediaFile without action
+   */
+  export type MediaFileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+  }
+
 
   /**
    * Model Branch
@@ -8736,6 +10136,7 @@ export namespace Prisma {
     passwordResetCode: string | null
     passwordResetCodeExpiredAt: Date | null
     passwordResetVerifiedAt: Date | null
+    mediaFileId: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -8761,6 +10162,7 @@ export namespace Prisma {
     passwordResetCode: string | null
     passwordResetCodeExpiredAt: Date | null
     passwordResetVerifiedAt: Date | null
+    mediaFileId: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -8786,6 +10188,7 @@ export namespace Prisma {
     passwordResetCode: number
     passwordResetCodeExpiredAt: number
     passwordResetVerifiedAt: number
+    mediaFileId: number
     _all: number
   }
 
@@ -8813,6 +10216,7 @@ export namespace Prisma {
     passwordResetCode?: true
     passwordResetCodeExpiredAt?: true
     passwordResetVerifiedAt?: true
+    mediaFileId?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -8838,6 +10242,7 @@ export namespace Prisma {
     passwordResetCode?: true
     passwordResetCodeExpiredAt?: true
     passwordResetVerifiedAt?: true
+    mediaFileId?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -8863,6 +10268,7 @@ export namespace Prisma {
     passwordResetCode?: true
     passwordResetCodeExpiredAt?: true
     passwordResetVerifiedAt?: true
+    mediaFileId?: true
     _all?: true
   }
 
@@ -8961,6 +10367,7 @@ export namespace Prisma {
     passwordResetCode: string | null
     passwordResetCodeExpiredAt: Date | null
     passwordResetVerifiedAt: Date | null
+    mediaFileId: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -9003,8 +10410,11 @@ export namespace Prisma {
     passwordResetCode?: boolean
     passwordResetCodeExpiredAt?: boolean
     passwordResetVerifiedAt?: boolean
+    mediaFileId?: boolean
     userRoles?: boolean | User$userRolesArgs<ExtArgs>
     branchMappings?: boolean | User$branchMappingsArgs<ExtArgs>
+    mediaFiles?: boolean | User$mediaFilesArgs<ExtArgs>
+    profileImage?: boolean | User$profileImageArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -9031,6 +10441,8 @@ export namespace Prisma {
     passwordResetCode?: boolean
     passwordResetCodeExpiredAt?: boolean
     passwordResetVerifiedAt?: boolean
+    mediaFileId?: boolean
+    profileImage?: boolean | User$profileImageArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -9056,6 +10468,8 @@ export namespace Prisma {
     passwordResetCode?: boolean
     passwordResetCodeExpiredAt?: boolean
     passwordResetVerifiedAt?: boolean
+    mediaFileId?: boolean
+    profileImage?: boolean | User$profileImageArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -9081,22 +10495,31 @@ export namespace Prisma {
     passwordResetCode?: boolean
     passwordResetCodeExpiredAt?: boolean
     passwordResetVerifiedAt?: boolean
+    mediaFileId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userName" | "password" | "validUntil" | "isActive" | "creator" | "creationDate" | "lastUpdateBy" | "lastUpdateDate" | "isDeleted" | "deletedBy" | "deletionDate" | "remarks" | "email" | "isVerified" | "verificationToken" | "refreshTokenHash" | "refreshTokenExpiredAt" | "passwordResetCode" | "passwordResetCodeExpiredAt" | "passwordResetVerifiedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userName" | "password" | "validUntil" | "isActive" | "creator" | "creationDate" | "lastUpdateBy" | "lastUpdateDate" | "isDeleted" | "deletedBy" | "deletionDate" | "remarks" | "email" | "isVerified" | "verificationToken" | "refreshTokenHash" | "refreshTokenExpiredAt" | "passwordResetCode" | "passwordResetCodeExpiredAt" | "passwordResetVerifiedAt" | "mediaFileId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userRoles?: boolean | User$userRolesArgs<ExtArgs>
     branchMappings?: boolean | User$branchMappingsArgs<ExtArgs>
+    mediaFiles?: boolean | User$mediaFilesArgs<ExtArgs>
+    profileImage?: boolean | User$profileImageArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    profileImage?: boolean | User$profileImageArgs<ExtArgs>
+  }
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    profileImage?: boolean | User$profileImageArgs<ExtArgs>
+  }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
       userRoles: Prisma.$t_UserRolePayload<ExtArgs>[]
       branchMappings: Prisma.$UserBranchMappingPayload<ExtArgs>[]
+      mediaFiles: Prisma.$MediaFilePayload<ExtArgs>[]
+      profileImage: Prisma.$MediaFilePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9121,6 +10544,7 @@ export namespace Prisma {
       passwordResetCode: string | null
       passwordResetCodeExpiredAt: Date | null
       passwordResetVerifiedAt: Date | null
+      mediaFileId: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -9517,6 +10941,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     userRoles<T extends User$userRolesArgs<ExtArgs> = {}>(args?: Subset<T, User$userRolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     branchMappings<T extends User$branchMappingsArgs<ExtArgs> = {}>(args?: Subset<T, User$branchMappingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBranchMappingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    mediaFiles<T extends User$mediaFilesArgs<ExtArgs> = {}>(args?: Subset<T, User$mediaFilesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    profileImage<T extends User$profileImageArgs<ExtArgs> = {}>(args?: Subset<T, User$profileImageArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9568,6 +10994,7 @@ export namespace Prisma {
     readonly passwordResetCode: FieldRef<"User", 'String'>
     readonly passwordResetCodeExpiredAt: FieldRef<"User", 'DateTime'>
     readonly passwordResetVerifiedAt: FieldRef<"User", 'DateTime'>
+    readonly mediaFileId: FieldRef<"User", 'String'>
   }
     
 
@@ -9817,6 +11244,10 @@ export namespace Prisma {
      */
     data: UserCreateManyInput | UserCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -9887,6 +11318,10 @@ export namespace Prisma {
      * Limit how many Users to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -10001,6 +11436,49 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserBranchMappingScalarFieldEnum | UserBranchMappingScalarFieldEnum[]
+  }
+
+  /**
+   * User.mediaFiles
+   */
+  export type User$mediaFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    where?: MediaFileWhereInput
+    orderBy?: MediaFileOrderByWithRelationInput | MediaFileOrderByWithRelationInput[]
+    cursor?: MediaFileWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MediaFileScalarFieldEnum | MediaFileScalarFieldEnum[]
+  }
+
+  /**
+   * User.profileImage
+   */
+  export type User$profileImageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    where?: MediaFileWhereInput
   }
 
   /**
@@ -20955,6 +22433,7 @@ export namespace Prisma {
     itmType: string | null
     itmUOM: string | null
     itmRemarks: string | null
+    imageId: string | null
     itmOrderLevel: Decimal | null
     orderLevelUOM: string | null
     isActive: string | null
@@ -20968,6 +22447,7 @@ export namespace Prisma {
     itmType: string | null
     itmUOM: string | null
     itmRemarks: string | null
+    imageId: string | null
     itmOrderLevel: Decimal | null
     orderLevelUOM: string | null
     isActive: string | null
@@ -20981,6 +22461,7 @@ export namespace Prisma {
     itmType: number
     itmUOM: number
     itmRemarks: number
+    imageId: number
     itmOrderLevel: number
     orderLevelUOM: number
     isActive: number
@@ -21004,6 +22485,7 @@ export namespace Prisma {
     itmType?: true
     itmUOM?: true
     itmRemarks?: true
+    imageId?: true
     itmOrderLevel?: true
     orderLevelUOM?: true
     isActive?: true
@@ -21017,6 +22499,7 @@ export namespace Prisma {
     itmType?: true
     itmUOM?: true
     itmRemarks?: true
+    imageId?: true
     itmOrderLevel?: true
     orderLevelUOM?: true
     isActive?: true
@@ -21030,6 +22513,7 @@ export namespace Prisma {
     itmType?: true
     itmUOM?: true
     itmRemarks?: true
+    imageId?: true
     itmOrderLevel?: true
     orderLevelUOM?: true
     isActive?: true
@@ -21130,6 +22614,7 @@ export namespace Prisma {
     itmType: string | null
     itmUOM: string | null
     itmRemarks: string | null
+    imageId: string | null
     itmOrderLevel: Decimal | null
     orderLevelUOM: string | null
     isActive: string | null
@@ -21162,9 +22647,11 @@ export namespace Prisma {
     itmType?: boolean
     itmUOM?: boolean
     itmRemarks?: boolean
+    imageId?: boolean
     itmOrderLevel?: boolean
     orderLevelUOM?: boolean
     isActive?: boolean
+    image?: boolean | Item_Information$imageArgs<ExtArgs>
     runningSaleDetails?: boolean | Item_Information$runningSaleDetailsArgs<ExtArgs>
     runningSaleVatDetails?: boolean | Item_Information$runningSaleVatDetailsArgs<ExtArgs>
     ncDetails?: boolean | Item_Information$ncDetailsArgs<ExtArgs>
@@ -21186,9 +22673,11 @@ export namespace Prisma {
     itmType?: boolean
     itmUOM?: boolean
     itmRemarks?: boolean
+    imageId?: boolean
     itmOrderLevel?: boolean
     orderLevelUOM?: boolean
     isActive?: boolean
+    image?: boolean | Item_Information$imageArgs<ExtArgs>
   }, ExtArgs["result"]["item_Information"]>
 
   export type Item_InformationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -21199,9 +22688,11 @@ export namespace Prisma {
     itmType?: boolean
     itmUOM?: boolean
     itmRemarks?: boolean
+    imageId?: boolean
     itmOrderLevel?: boolean
     orderLevelUOM?: boolean
     isActive?: boolean
+    image?: boolean | Item_Information$imageArgs<ExtArgs>
   }, ExtArgs["result"]["item_Information"]>
 
   export type Item_InformationSelectScalar = {
@@ -21212,13 +22703,15 @@ export namespace Prisma {
     itmType?: boolean
     itmUOM?: boolean
     itmRemarks?: boolean
+    imageId?: boolean
     itmOrderLevel?: boolean
     orderLevelUOM?: boolean
     isActive?: boolean
   }
 
-  export type Item_InformationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itmCode" | "itmName" | "itmCategory" | "itmType" | "itmUOM" | "itmRemarks" | "itmOrderLevel" | "orderLevelUOM" | "isActive", ExtArgs["result"]["item_Information"]>
+  export type Item_InformationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itmCode" | "itmName" | "itmCategory" | "itmType" | "itmUOM" | "itmRemarks" | "imageId" | "itmOrderLevel" | "orderLevelUOM" | "isActive", ExtArgs["result"]["item_Information"]>
   export type Item_InformationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    image?: boolean | Item_Information$imageArgs<ExtArgs>
     runningSaleDetails?: boolean | Item_Information$runningSaleDetailsArgs<ExtArgs>
     runningSaleVatDetails?: boolean | Item_Information$runningSaleVatDetailsArgs<ExtArgs>
     ncDetails?: boolean | Item_Information$ncDetailsArgs<ExtArgs>
@@ -21231,12 +22724,17 @@ export namespace Prisma {
     costPrices?: boolean | Item_Information$costPricesArgs<ExtArgs>
     _count?: boolean | Item_InformationCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type Item_InformationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type Item_InformationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type Item_InformationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    image?: boolean | Item_Information$imageArgs<ExtArgs>
+  }
+  export type Item_InformationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    image?: boolean | Item_Information$imageArgs<ExtArgs>
+  }
 
   export type $Item_InformationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Item_Information"
     objects: {
+      image: Prisma.$MediaFilePayload<ExtArgs> | null
       runningSaleDetails: Prisma.$t_SODetPayload<ExtArgs>[]
       runningSaleVatDetails: Prisma.$t_SODeVPayload<ExtArgs>[]
       ncDetails: Prisma.$t_NCDetPayload<ExtArgs>[]
@@ -21256,6 +22754,7 @@ export namespace Prisma {
       itmType: string | null
       itmUOM: string | null
       itmRemarks: string | null
+      imageId: string | null
       itmOrderLevel: Prisma.Decimal | null
       orderLevelUOM: string | null
       isActive: string | null
@@ -21653,6 +23152,7 @@ export namespace Prisma {
    */
   export interface Prisma__Item_InformationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    image<T extends Item_Information$imageArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$imageArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     runningSaleDetails<T extends Item_Information$runningSaleDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$runningSaleDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_SODetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     runningSaleVatDetails<T extends Item_Information$runningSaleVatDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$runningSaleVatDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_SODeVPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ncDetails<T extends Item_Information$ncDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$ncDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_NCDetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -21699,6 +23199,7 @@ export namespace Prisma {
     readonly itmType: FieldRef<"Item_Information", 'String'>
     readonly itmUOM: FieldRef<"Item_Information", 'String'>
     readonly itmRemarks: FieldRef<"Item_Information", 'String'>
+    readonly imageId: FieldRef<"Item_Information", 'String'>
     readonly itmOrderLevel: FieldRef<"Item_Information", 'Decimal'>
     readonly orderLevelUOM: FieldRef<"Item_Information", 'String'>
     readonly isActive: FieldRef<"Item_Information", 'String'>
@@ -21951,6 +23452,10 @@ export namespace Prisma {
      */
     data: Item_InformationCreateManyInput | Item_InformationCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Item_InformationIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -22021,6 +23526,10 @@ export namespace Prisma {
      * Limit how many Item_Informations to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Item_InformationIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -22087,6 +23596,25 @@ export namespace Prisma {
      * Limit how many Item_Informations to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Item_Information.image
+   */
+  export type Item_Information$imageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MediaFile
+     */
+    select?: MediaFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MediaFile
+     */
+    omit?: MediaFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MediaFileInclude<ExtArgs> | null
+    where?: MediaFileWhereInput
   }
 
   /**
@@ -60085,6 +61613,24 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+  export const MediaFileScalarFieldEnum: {
+    id: 'id',
+    fileName: 'fileName',
+    fileUrl: 'fileUrl',
+    fileType: 'fileType',
+    mimeType: 'mimeType',
+    fileSize: 'fileSize',
+    altText: 'altText',
+    uploadedById: 'uploadedById',
+    cloudinaryPublicId: 'cloudinaryPublicId',
+    isDelete: 'isDelete',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type MediaFileScalarFieldEnum = (typeof MediaFileScalarFieldEnum)[keyof typeof MediaFileScalarFieldEnum]
+
+
   export const BranchScalarFieldEnum: {
     id: 'id',
     branchCode: 'branchCode',
@@ -60140,7 +61686,8 @@ export namespace Prisma {
     refreshTokenExpiredAt: 'refreshTokenExpiredAt',
     passwordResetCode: 'passwordResetCode',
     passwordResetCodeExpiredAt: 'passwordResetCodeExpiredAt',
-    passwordResetVerifiedAt: 'passwordResetVerifiedAt'
+    passwordResetVerifiedAt: 'passwordResetVerifiedAt',
+    mediaFileId: 'mediaFileId'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -60287,6 +61834,7 @@ export namespace Prisma {
     itmType: 'itmType',
     itmUOM: 'itmUOM',
     itmRemarks: 'itmRemarks',
+    imageId: 'imageId',
     itmOrderLevel: 'itmOrderLevel',
     orderLevelUOM: 'orderLevelUOM',
     isActive: 'isActive'
@@ -60930,6 +62478,27 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -60944,13 +62513,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -60961,20 +62523,6 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int[]'
-   */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -61008,6 +62556,104 @@ export namespace Prisma {
    * Deep Input Types
    */
 
+
+  export type MediaFileWhereInput = {
+    AND?: MediaFileWhereInput | MediaFileWhereInput[]
+    OR?: MediaFileWhereInput[]
+    NOT?: MediaFileWhereInput | MediaFileWhereInput[]
+    id?: UuidFilter<"MediaFile"> | string
+    fileName?: StringFilter<"MediaFile"> | string
+    fileUrl?: StringFilter<"MediaFile"> | string
+    fileType?: StringFilter<"MediaFile"> | string
+    mimeType?: StringFilter<"MediaFile"> | string
+    fileSize?: IntFilter<"MediaFile"> | number
+    altText?: StringNullableFilter<"MediaFile"> | string | null
+    uploadedById?: UuidNullableFilter<"MediaFile"> | string | null
+    cloudinaryPublicId?: StringFilter<"MediaFile"> | string
+    isDelete?: BoolFilter<"MediaFile"> | boolean
+    createdAt?: DateTimeFilter<"MediaFile"> | Date | string
+    updatedAt?: DateTimeFilter<"MediaFile"> | Date | string
+    uploadedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    profileUsers?: UserListRelationFilter
+    items?: Item_InformationListRelationFilter
+  }
+
+  export type MediaFileOrderByWithRelationInput = {
+    id?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    fileType?: SortOrder
+    mimeType?: SortOrder
+    fileSize?: SortOrder
+    altText?: SortOrderInput | SortOrder
+    uploadedById?: SortOrderInput | SortOrder
+    cloudinaryPublicId?: SortOrder
+    isDelete?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    uploadedBy?: UserOrderByWithRelationInput
+    profileUsers?: UserOrderByRelationAggregateInput
+    items?: Item_InformationOrderByRelationAggregateInput
+  }
+
+  export type MediaFileWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MediaFileWhereInput | MediaFileWhereInput[]
+    OR?: MediaFileWhereInput[]
+    NOT?: MediaFileWhereInput | MediaFileWhereInput[]
+    fileName?: StringFilter<"MediaFile"> | string
+    fileUrl?: StringFilter<"MediaFile"> | string
+    fileType?: StringFilter<"MediaFile"> | string
+    mimeType?: StringFilter<"MediaFile"> | string
+    fileSize?: IntFilter<"MediaFile"> | number
+    altText?: StringNullableFilter<"MediaFile"> | string | null
+    uploadedById?: UuidNullableFilter<"MediaFile"> | string | null
+    cloudinaryPublicId?: StringFilter<"MediaFile"> | string
+    isDelete?: BoolFilter<"MediaFile"> | boolean
+    createdAt?: DateTimeFilter<"MediaFile"> | Date | string
+    updatedAt?: DateTimeFilter<"MediaFile"> | Date | string
+    uploadedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    profileUsers?: UserListRelationFilter
+    items?: Item_InformationListRelationFilter
+  }, "id">
+
+  export type MediaFileOrderByWithAggregationInput = {
+    id?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    fileType?: SortOrder
+    mimeType?: SortOrder
+    fileSize?: SortOrder
+    altText?: SortOrderInput | SortOrder
+    uploadedById?: SortOrderInput | SortOrder
+    cloudinaryPublicId?: SortOrder
+    isDelete?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: MediaFileCountOrderByAggregateInput
+    _avg?: MediaFileAvgOrderByAggregateInput
+    _max?: MediaFileMaxOrderByAggregateInput
+    _min?: MediaFileMinOrderByAggregateInput
+    _sum?: MediaFileSumOrderByAggregateInput
+  }
+
+  export type MediaFileScalarWhereWithAggregatesInput = {
+    AND?: MediaFileScalarWhereWithAggregatesInput | MediaFileScalarWhereWithAggregatesInput[]
+    OR?: MediaFileScalarWhereWithAggregatesInput[]
+    NOT?: MediaFileScalarWhereWithAggregatesInput | MediaFileScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"MediaFile"> | string
+    fileName?: StringWithAggregatesFilter<"MediaFile"> | string
+    fileUrl?: StringWithAggregatesFilter<"MediaFile"> | string
+    fileType?: StringWithAggregatesFilter<"MediaFile"> | string
+    mimeType?: StringWithAggregatesFilter<"MediaFile"> | string
+    fileSize?: IntWithAggregatesFilter<"MediaFile"> | number
+    altText?: StringNullableWithAggregatesFilter<"MediaFile"> | string | null
+    uploadedById?: UuidNullableWithAggregatesFilter<"MediaFile"> | string | null
+    cloudinaryPublicId?: StringWithAggregatesFilter<"MediaFile"> | string
+    isDelete?: BoolWithAggregatesFilter<"MediaFile"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"MediaFile"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"MediaFile"> | Date | string
+  }
 
   export type BranchWhereInput = {
     AND?: BranchWhereInput | BranchWhereInput[]
@@ -61197,8 +62843,11 @@ export namespace Prisma {
     passwordResetCode?: StringNullableFilter<"User"> | string | null
     passwordResetCodeExpiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
     passwordResetVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    mediaFileId?: UuidNullableFilter<"User"> | string | null
     userRoles?: T_UserRoleListRelationFilter
     branchMappings?: UserBranchMappingListRelationFilter
+    mediaFiles?: MediaFileListRelationFilter
+    profileImage?: XOR<MediaFileNullableScalarRelationFilter, MediaFileWhereInput> | null
   }
 
   export type UserOrderByWithRelationInput = {
@@ -61224,8 +62873,11 @@ export namespace Prisma {
     passwordResetCode?: SortOrderInput | SortOrder
     passwordResetCodeExpiredAt?: SortOrderInput | SortOrder
     passwordResetVerifiedAt?: SortOrderInput | SortOrder
+    mediaFileId?: SortOrderInput | SortOrder
     userRoles?: t_UserRoleOrderByRelationAggregateInput
     branchMappings?: UserBranchMappingOrderByRelationAggregateInput
+    mediaFiles?: MediaFileOrderByRelationAggregateInput
+    profileImage?: MediaFileOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -61254,8 +62906,11 @@ export namespace Prisma {
     passwordResetCode?: StringNullableFilter<"User"> | string | null
     passwordResetCodeExpiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
     passwordResetVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    mediaFileId?: UuidNullableFilter<"User"> | string | null
     userRoles?: T_UserRoleListRelationFilter
     branchMappings?: UserBranchMappingListRelationFilter
+    mediaFiles?: MediaFileListRelationFilter
+    profileImage?: XOR<MediaFileNullableScalarRelationFilter, MediaFileWhereInput> | null
   }, "id" | "userName" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -61281,6 +62936,7 @@ export namespace Prisma {
     passwordResetCode?: SortOrderInput | SortOrder
     passwordResetCodeExpiredAt?: SortOrderInput | SortOrder
     passwordResetVerifiedAt?: SortOrderInput | SortOrder
+    mediaFileId?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -61312,6 +62968,7 @@ export namespace Prisma {
     passwordResetCode?: StringNullableWithAggregatesFilter<"User"> | string | null
     passwordResetCodeExpiredAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     passwordResetVerifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    mediaFileId?: UuidNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type UserBranchMappingWhereInput = {
@@ -62003,9 +63660,11 @@ export namespace Prisma {
     itmType?: StringNullableFilter<"Item_Information"> | string | null
     itmUOM?: StringNullableFilter<"Item_Information"> | string | null
     itmRemarks?: StringNullableFilter<"Item_Information"> | string | null
+    imageId?: UuidNullableFilter<"Item_Information"> | string | null
     itmOrderLevel?: DecimalNullableFilter<"Item_Information"> | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: StringNullableFilter<"Item_Information"> | string | null
     isActive?: StringNullableFilter<"Item_Information"> | string | null
+    image?: XOR<MediaFileNullableScalarRelationFilter, MediaFileWhereInput> | null
     runningSaleDetails?: T_SODetListRelationFilter
     runningSaleVatDetails?: T_SODeVListRelationFilter
     ncDetails?: T_NCDetListRelationFilter
@@ -62026,9 +63685,11 @@ export namespace Prisma {
     itmType?: SortOrderInput | SortOrder
     itmUOM?: SortOrderInput | SortOrder
     itmRemarks?: SortOrderInput | SortOrder
+    imageId?: SortOrderInput | SortOrder
     itmOrderLevel?: SortOrderInput | SortOrder
     orderLevelUOM?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
+    image?: MediaFileOrderByWithRelationInput
     runningSaleDetails?: t_SODetOrderByRelationAggregateInput
     runningSaleVatDetails?: t_SODeVOrderByRelationAggregateInput
     ncDetails?: t_NCDetOrderByRelationAggregateInput
@@ -62052,9 +63713,11 @@ export namespace Prisma {
     itmType?: StringNullableFilter<"Item_Information"> | string | null
     itmUOM?: StringNullableFilter<"Item_Information"> | string | null
     itmRemarks?: StringNullableFilter<"Item_Information"> | string | null
+    imageId?: UuidNullableFilter<"Item_Information"> | string | null
     itmOrderLevel?: DecimalNullableFilter<"Item_Information"> | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: StringNullableFilter<"Item_Information"> | string | null
     isActive?: StringNullableFilter<"Item_Information"> | string | null
+    image?: XOR<MediaFileNullableScalarRelationFilter, MediaFileWhereInput> | null
     runningSaleDetails?: T_SODetListRelationFilter
     runningSaleVatDetails?: T_SODeVListRelationFilter
     ncDetails?: T_NCDetListRelationFilter
@@ -62075,6 +63738,7 @@ export namespace Prisma {
     itmType?: SortOrderInput | SortOrder
     itmUOM?: SortOrderInput | SortOrder
     itmRemarks?: SortOrderInput | SortOrder
+    imageId?: SortOrderInput | SortOrder
     itmOrderLevel?: SortOrderInput | SortOrder
     orderLevelUOM?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
@@ -62096,6 +63760,7 @@ export namespace Prisma {
     itmType?: StringNullableWithAggregatesFilter<"Item_Information"> | string | null
     itmUOM?: StringNullableWithAggregatesFilter<"Item_Information"> | string | null
     itmRemarks?: StringNullableWithAggregatesFilter<"Item_Information"> | string | null
+    imageId?: UuidNullableWithAggregatesFilter<"Item_Information"> | string | null
     itmOrderLevel?: DecimalNullableWithAggregatesFilter<"Item_Information"> | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: StringNullableWithAggregatesFilter<"Item_Information"> | string | null
     isActive?: StringNullableWithAggregatesFilter<"Item_Information"> | string | null
@@ -65040,6 +66705,118 @@ export namespace Prisma {
     vat?: DecimalNullableWithAggregatesFilter<"temp_table"> | Decimal | DecimalJsLike | number | string | null
   }
 
+  export type MediaFileCreateInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    fileType: string
+    mimeType: string
+    fileSize: number
+    altText?: string | null
+    cloudinaryPublicId: string
+    isDelete?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    uploadedBy?: UserCreateNestedOneWithoutMediaFilesInput
+    profileUsers?: UserCreateNestedManyWithoutProfileImageInput
+    items?: Item_InformationCreateNestedManyWithoutImageInput
+  }
+
+  export type MediaFileUncheckedCreateInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    fileType: string
+    mimeType: string
+    fileSize: number
+    altText?: string | null
+    uploadedById?: string | null
+    cloudinaryPublicId: string
+    isDelete?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    profileUsers?: UserUncheckedCreateNestedManyWithoutProfileImageInput
+    items?: Item_InformationUncheckedCreateNestedManyWithoutImageInput
+  }
+
+  export type MediaFileUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    altText?: NullableStringFieldUpdateOperationsInput | string | null
+    cloudinaryPublicId?: StringFieldUpdateOperationsInput | string
+    isDelete?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    uploadedBy?: UserUpdateOneWithoutMediaFilesNestedInput
+    profileUsers?: UserUpdateManyWithoutProfileImageNestedInput
+    items?: Item_InformationUpdateManyWithoutImageNestedInput
+  }
+
+  export type MediaFileUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    altText?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    cloudinaryPublicId?: StringFieldUpdateOperationsInput | string
+    isDelete?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profileUsers?: UserUncheckedUpdateManyWithoutProfileImageNestedInput
+    items?: Item_InformationUncheckedUpdateManyWithoutImageNestedInput
+  }
+
+  export type MediaFileCreateManyInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    fileType: string
+    mimeType: string
+    fileSize: number
+    altText?: string | null
+    uploadedById?: string | null
+    cloudinaryPublicId: string
+    isDelete?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MediaFileUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    altText?: NullableStringFieldUpdateOperationsInput | string | null
+    cloudinaryPublicId?: StringFieldUpdateOperationsInput | string
+    isDelete?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MediaFileUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    altText?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    cloudinaryPublicId?: StringFieldUpdateOperationsInput | string
+    isDelete?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type BranchCreateInput = {
     id?: string
     branchCode?: string | null
@@ -65241,6 +67018,8 @@ export namespace Prisma {
     passwordResetVerifiedAt?: Date | string | null
     userRoles?: t_UserRoleCreateNestedManyWithoutUserInput
     branchMappings?: UserBranchMappingCreateNestedManyWithoutUserInput
+    mediaFiles?: MediaFileCreateNestedManyWithoutUploadedByInput
+    profileImage?: MediaFileCreateNestedOneWithoutProfileUsersInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -65266,8 +67045,10 @@ export namespace Prisma {
     passwordResetCode?: string | null
     passwordResetCodeExpiredAt?: Date | string | null
     passwordResetVerifiedAt?: Date | string | null
+    mediaFileId?: string | null
     userRoles?: t_UserRoleUncheckedCreateNestedManyWithoutUserInput
     branchMappings?: UserBranchMappingUncheckedCreateNestedManyWithoutUserInput
+    mediaFiles?: MediaFileUncheckedCreateNestedManyWithoutUploadedByInput
   }
 
   export type UserUpdateInput = {
@@ -65295,6 +67076,8 @@ export namespace Prisma {
     passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     userRoles?: t_UserRoleUpdateManyWithoutUserNestedInput
     branchMappings?: UserBranchMappingUpdateManyWithoutUserNestedInput
+    mediaFiles?: MediaFileUpdateManyWithoutUploadedByNestedInput
+    profileImage?: MediaFileUpdateOneWithoutProfileUsersNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -65320,8 +67103,10 @@ export namespace Prisma {
     passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
     passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mediaFileId?: NullableStringFieldUpdateOperationsInput | string | null
     userRoles?: t_UserRoleUncheckedUpdateManyWithoutUserNestedInput
     branchMappings?: UserBranchMappingUncheckedUpdateManyWithoutUserNestedInput
+    mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -65347,6 +67132,7 @@ export namespace Prisma {
     passwordResetCode?: string | null
     passwordResetCodeExpiredAt?: Date | string | null
     passwordResetVerifiedAt?: Date | string | null
+    mediaFileId?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -65397,6 +67183,7 @@ export namespace Prisma {
     passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
     passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mediaFileId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserBranchMappingCreateInput = {
@@ -66149,6 +67936,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
@@ -66169,6 +67957,7 @@ export namespace Prisma {
     itmType?: string | null
     itmUOM?: string | null
     itmRemarks?: string | null
+    imageId?: string | null
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
@@ -66195,6 +67984,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
@@ -66215,6 +68005,7 @@ export namespace Prisma {
     itmType?: NullableStringFieldUpdateOperationsInput | string | null
     itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
     itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66238,6 +68029,7 @@ export namespace Prisma {
     itmType?: string | null
     itmUOM?: string | null
     itmRemarks?: string | null
+    imageId?: string | null
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
@@ -66264,6 +68056,7 @@ export namespace Prisma {
     itmType?: NullableStringFieldUpdateOperationsInput | string | null
     itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
     itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69664,6 +71457,32 @@ export namespace Prisma {
     not?: NestedUuidFilter<$PrismaModel> | string
   }
 
+  export type StringFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringFilter<$PrismaModel> | string
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -69679,15 +71498,225 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type UserBranchMappingListRelationFilter = {
-    every?: UserBranchMappingWhereInput
-    some?: UserBranchMappingWhereInput
-    none?: UserBranchMappingWhereInput
+  export type UuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
+  }
+
+  export type Item_InformationListRelationFilter = {
+    every?: Item_InformationWhereInput
+    some?: Item_InformationWhereInput
+    none?: Item_InformationWhereInput
   }
 
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
+  }
+
+  export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type Item_InformationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MediaFileCountOrderByAggregateInput = {
+    id?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    fileType?: SortOrder
+    mimeType?: SortOrder
+    fileSize?: SortOrder
+    altText?: SortOrder
+    uploadedById?: SortOrder
+    cloudinaryPublicId?: SortOrder
+    isDelete?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MediaFileAvgOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
+  export type MediaFileMaxOrderByAggregateInput = {
+    id?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    fileType?: SortOrder
+    mimeType?: SortOrder
+    fileSize?: SortOrder
+    altText?: SortOrder
+    uploadedById?: SortOrder
+    cloudinaryPublicId?: SortOrder
+    isDelete?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MediaFileMinOrderByAggregateInput = {
+    id?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    fileType?: SortOrder
+    mimeType?: SortOrder
+    fileSize?: SortOrder
+    altText?: SortOrder
+    uploadedById?: SortOrder
+    cloudinaryPublicId?: SortOrder
+    isDelete?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MediaFileSumOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
+  export type UuidWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type StringWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type UserBranchMappingListRelationFilter = {
+    every?: UserBranchMappingWhereInput
+    some?: UserBranchMappingWhereInput
+    none?: UserBranchMappingWhereInput
   }
 
   export type UserBranchMappingOrderByRelationAggregateInput = {
@@ -69719,39 +71748,6 @@ export namespace Prisma {
     address?: SortOrder
     vatNo?: SortOrder
     mobileNo?: SortOrder
-  }
-
-  export type UuidWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -69810,21 +71806,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type StringFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringFilter<$PrismaModel> | string
-  }
-
   export type Setup_SystemCountOrderByAggregateInput = {
     id?: SortOrder
     companyName?: SortOrder
@@ -69849,36 +71830,28 @@ export namespace Prisma {
     reportFooter?: SortOrder
   }
 
-  export type StringWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type T_UserRoleListRelationFilter = {
     every?: t_UserRoleWhereInput
     some?: t_UserRoleWhereInput
     none?: t_UserRoleWhereInput
   }
 
+  export type MediaFileListRelationFilter = {
+    every?: MediaFileWhereInput
+    some?: MediaFileWhereInput
+    none?: MediaFileWhereInput
+  }
+
+  export type MediaFileNullableScalarRelationFilter = {
+    is?: MediaFileWhereInput | null
+    isNot?: MediaFileWhereInput | null
+  }
+
   export type t_UserRoleOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MediaFileOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -69905,6 +71878,7 @@ export namespace Prisma {
     passwordResetCode?: SortOrder
     passwordResetCodeExpiredAt?: SortOrder
     passwordResetVerifiedAt?: SortOrder
+    mediaFileId?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -69930,6 +71904,7 @@ export namespace Prisma {
     passwordResetCode?: SortOrder
     passwordResetCodeExpiredAt?: SortOrder
     passwordResetVerifiedAt?: SortOrder
+    mediaFileId?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -69955,25 +71930,7 @@ export namespace Prisma {
     passwordResetCode?: SortOrder
     passwordResetCodeExpiredAt?: SortOrder
     passwordResetVerifiedAt?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+    mediaFileId?: SortOrder
   }
 
   export type UserScalarRelationFilter = {
@@ -70013,20 +71970,6 @@ export namespace Prisma {
     branchId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type t_UserRoleUserIdControlNameCompoundUniqueInput = {
@@ -70093,18 +72036,6 @@ export namespace Prisma {
     ipAddress?: SortOrder
     userAgent?: SortOrder
   }
-
-  export type UuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
   export type JsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -70162,21 +72093,6 @@ export namespace Prisma {
     ipAddress?: SortOrder
     userAgent?: SortOrder
     createdAt?: SortOrder
-  }
-
-  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
   export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -70647,6 +72563,7 @@ export namespace Prisma {
     itmType?: SortOrder
     itmUOM?: SortOrder
     itmRemarks?: SortOrder
+    imageId?: SortOrder
     itmOrderLevel?: SortOrder
     orderLevelUOM?: SortOrder
     isActive?: SortOrder
@@ -70664,6 +72581,7 @@ export namespace Prisma {
     itmType?: SortOrder
     itmUOM?: SortOrder
     itmRemarks?: SortOrder
+    imageId?: SortOrder
     itmOrderLevel?: SortOrder
     orderLevelUOM?: SortOrder
     isActive?: SortOrder
@@ -70677,6 +72595,7 @@ export namespace Prisma {
     itmType?: SortOrder
     itmUOM?: SortOrder
     itmRemarks?: SortOrder
+    imageId?: SortOrder
     itmOrderLevel?: SortOrder
     orderLevelUOM?: SortOrder
     isActive?: SortOrder
@@ -71879,17 +73798,6 @@ export namespace Prisma {
     branchId?: SortOrder
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type Item_ReceiveCountOrderByAggregateInput = {
     id?: SortOrder
     serialNo?: SortOrder
@@ -71953,22 +73861,6 @@ export namespace Prisma {
     isActive?: SortOrder
     branchId?: SortOrder
     receiveBranchID?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type Item_IssueCountOrderByAggregateInput = {
@@ -72848,6 +74740,130 @@ export namespace Prisma {
     vat?: SortOrder
   }
 
+  export type UserCreateNestedOneWithoutMediaFilesInput = {
+    create?: XOR<UserCreateWithoutMediaFilesInput, UserUncheckedCreateWithoutMediaFilesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMediaFilesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedManyWithoutProfileImageInput = {
+    create?: XOR<UserCreateWithoutProfileImageInput, UserUncheckedCreateWithoutProfileImageInput> | UserCreateWithoutProfileImageInput[] | UserUncheckedCreateWithoutProfileImageInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutProfileImageInput | UserCreateOrConnectWithoutProfileImageInput[]
+    createMany?: UserCreateManyProfileImageInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type Item_InformationCreateNestedManyWithoutImageInput = {
+    create?: XOR<Item_InformationCreateWithoutImageInput, Item_InformationUncheckedCreateWithoutImageInput> | Item_InformationCreateWithoutImageInput[] | Item_InformationUncheckedCreateWithoutImageInput[]
+    connectOrCreate?: Item_InformationCreateOrConnectWithoutImageInput | Item_InformationCreateOrConnectWithoutImageInput[]
+    createMany?: Item_InformationCreateManyImageInputEnvelope
+    connect?: Item_InformationWhereUniqueInput | Item_InformationWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutProfileImageInput = {
+    create?: XOR<UserCreateWithoutProfileImageInput, UserUncheckedCreateWithoutProfileImageInput> | UserCreateWithoutProfileImageInput[] | UserUncheckedCreateWithoutProfileImageInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutProfileImageInput | UserCreateOrConnectWithoutProfileImageInput[]
+    createMany?: UserCreateManyProfileImageInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type Item_InformationUncheckedCreateNestedManyWithoutImageInput = {
+    create?: XOR<Item_InformationCreateWithoutImageInput, Item_InformationUncheckedCreateWithoutImageInput> | Item_InformationCreateWithoutImageInput[] | Item_InformationUncheckedCreateWithoutImageInput[]
+    connectOrCreate?: Item_InformationCreateOrConnectWithoutImageInput | Item_InformationCreateOrConnectWithoutImageInput[]
+    createMany?: Item_InformationCreateManyImageInputEnvelope
+    connect?: Item_InformationWhereUniqueInput | Item_InformationWhereUniqueInput[]
+  }
+
+  export type StringFieldUpdateOperationsInput = {
+    set?: string
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
+  export type UserUpdateOneWithoutMediaFilesNestedInput = {
+    create?: XOR<UserCreateWithoutMediaFilesInput, UserUncheckedCreateWithoutMediaFilesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMediaFilesInput
+    upsert?: UserUpsertWithoutMediaFilesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMediaFilesInput, UserUpdateWithoutMediaFilesInput>, UserUncheckedUpdateWithoutMediaFilesInput>
+  }
+
+  export type UserUpdateManyWithoutProfileImageNestedInput = {
+    create?: XOR<UserCreateWithoutProfileImageInput, UserUncheckedCreateWithoutProfileImageInput> | UserCreateWithoutProfileImageInput[] | UserUncheckedCreateWithoutProfileImageInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutProfileImageInput | UserCreateOrConnectWithoutProfileImageInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutProfileImageInput | UserUpsertWithWhereUniqueWithoutProfileImageInput[]
+    createMany?: UserCreateManyProfileImageInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutProfileImageInput | UserUpdateWithWhereUniqueWithoutProfileImageInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutProfileImageInput | UserUpdateManyWithWhereWithoutProfileImageInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type Item_InformationUpdateManyWithoutImageNestedInput = {
+    create?: XOR<Item_InformationCreateWithoutImageInput, Item_InformationUncheckedCreateWithoutImageInput> | Item_InformationCreateWithoutImageInput[] | Item_InformationUncheckedCreateWithoutImageInput[]
+    connectOrCreate?: Item_InformationCreateOrConnectWithoutImageInput | Item_InformationCreateOrConnectWithoutImageInput[]
+    upsert?: Item_InformationUpsertWithWhereUniqueWithoutImageInput | Item_InformationUpsertWithWhereUniqueWithoutImageInput[]
+    createMany?: Item_InformationCreateManyImageInputEnvelope
+    set?: Item_InformationWhereUniqueInput | Item_InformationWhereUniqueInput[]
+    disconnect?: Item_InformationWhereUniqueInput | Item_InformationWhereUniqueInput[]
+    delete?: Item_InformationWhereUniqueInput | Item_InformationWhereUniqueInput[]
+    connect?: Item_InformationWhereUniqueInput | Item_InformationWhereUniqueInput[]
+    update?: Item_InformationUpdateWithWhereUniqueWithoutImageInput | Item_InformationUpdateWithWhereUniqueWithoutImageInput[]
+    updateMany?: Item_InformationUpdateManyWithWhereWithoutImageInput | Item_InformationUpdateManyWithWhereWithoutImageInput[]
+    deleteMany?: Item_InformationScalarWhereInput | Item_InformationScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutProfileImageNestedInput = {
+    create?: XOR<UserCreateWithoutProfileImageInput, UserUncheckedCreateWithoutProfileImageInput> | UserCreateWithoutProfileImageInput[] | UserUncheckedCreateWithoutProfileImageInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutProfileImageInput | UserCreateOrConnectWithoutProfileImageInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutProfileImageInput | UserUpsertWithWhereUniqueWithoutProfileImageInput[]
+    createMany?: UserCreateManyProfileImageInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutProfileImageInput | UserUpdateWithWhereUniqueWithoutProfileImageInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutProfileImageInput | UserUpdateManyWithWhereWithoutProfileImageInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type Item_InformationUncheckedUpdateManyWithoutImageNestedInput = {
+    create?: XOR<Item_InformationCreateWithoutImageInput, Item_InformationUncheckedCreateWithoutImageInput> | Item_InformationCreateWithoutImageInput[] | Item_InformationUncheckedCreateWithoutImageInput[]
+    connectOrCreate?: Item_InformationCreateOrConnectWithoutImageInput | Item_InformationCreateOrConnectWithoutImageInput[]
+    upsert?: Item_InformationUpsertWithWhereUniqueWithoutImageInput | Item_InformationUpsertWithWhereUniqueWithoutImageInput[]
+    createMany?: Item_InformationCreateManyImageInputEnvelope
+    set?: Item_InformationWhereUniqueInput | Item_InformationWhereUniqueInput[]
+    disconnect?: Item_InformationWhereUniqueInput | Item_InformationWhereUniqueInput[]
+    delete?: Item_InformationWhereUniqueInput | Item_InformationWhereUniqueInput[]
+    connect?: Item_InformationWhereUniqueInput | Item_InformationWhereUniqueInput[]
+    update?: Item_InformationUpdateWithWhereUniqueWithoutImageInput | Item_InformationUpdateWithWhereUniqueWithoutImageInput[]
+    updateMany?: Item_InformationUpdateManyWithWhereWithoutImageInput | Item_InformationUpdateManyWithWhereWithoutImageInput[]
+    deleteMany?: Item_InformationScalarWhereInput | Item_InformationScalarWhereInput[]
+  }
+
   export type UserBranchMappingCreateNestedManyWithoutBranchInput = {
     create?: XOR<UserBranchMappingCreateWithoutBranchInput, UserBranchMappingUncheckedCreateWithoutBranchInput> | UserBranchMappingCreateWithoutBranchInput[] | UserBranchMappingUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: UserBranchMappingCreateOrConnectWithoutBranchInput | UserBranchMappingCreateOrConnectWithoutBranchInput[]
@@ -72860,14 +74876,6 @@ export namespace Prisma {
     connectOrCreate?: UserBranchMappingCreateOrConnectWithoutBranchInput | UserBranchMappingCreateOrConnectWithoutBranchInput[]
     createMany?: UserBranchMappingCreateManyBranchInputEnvelope
     connect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
-  }
-
-  export type StringFieldUpdateOperationsInput = {
-    set?: string
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type UserBranchMappingUpdateManyWithoutBranchNestedInput = {
@@ -72958,6 +74966,19 @@ export namespace Prisma {
     connect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
   }
 
+  export type MediaFileCreateNestedManyWithoutUploadedByInput = {
+    create?: XOR<MediaFileCreateWithoutUploadedByInput, MediaFileUncheckedCreateWithoutUploadedByInput> | MediaFileCreateWithoutUploadedByInput[] | MediaFileUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: MediaFileCreateOrConnectWithoutUploadedByInput | MediaFileCreateOrConnectWithoutUploadedByInput[]
+    createMany?: MediaFileCreateManyUploadedByInputEnvelope
+    connect?: MediaFileWhereUniqueInput | MediaFileWhereUniqueInput[]
+  }
+
+  export type MediaFileCreateNestedOneWithoutProfileUsersInput = {
+    create?: XOR<MediaFileCreateWithoutProfileUsersInput, MediaFileUncheckedCreateWithoutProfileUsersInput>
+    connectOrCreate?: MediaFileCreateOrConnectWithoutProfileUsersInput
+    connect?: MediaFileWhereUniqueInput
+  }
+
   export type t_UserRoleUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<t_UserRoleCreateWithoutUserInput, t_UserRoleUncheckedCreateWithoutUserInput> | t_UserRoleCreateWithoutUserInput[] | t_UserRoleUncheckedCreateWithoutUserInput[]
     connectOrCreate?: t_UserRoleCreateOrConnectWithoutUserInput | t_UserRoleCreateOrConnectWithoutUserInput[]
@@ -72972,8 +74993,11 @@ export namespace Prisma {
     connect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
+  export type MediaFileUncheckedCreateNestedManyWithoutUploadedByInput = {
+    create?: XOR<MediaFileCreateWithoutUploadedByInput, MediaFileUncheckedCreateWithoutUploadedByInput> | MediaFileCreateWithoutUploadedByInput[] | MediaFileUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: MediaFileCreateOrConnectWithoutUploadedByInput | MediaFileCreateOrConnectWithoutUploadedByInput[]
+    createMany?: MediaFileCreateManyUploadedByInputEnvelope
+    connect?: MediaFileWhereUniqueInput | MediaFileWhereUniqueInput[]
   }
 
   export type t_UserRoleUpdateManyWithoutUserNestedInput = {
@@ -73004,6 +75028,30 @@ export namespace Prisma {
     deleteMany?: UserBranchMappingScalarWhereInput | UserBranchMappingScalarWhereInput[]
   }
 
+  export type MediaFileUpdateManyWithoutUploadedByNestedInput = {
+    create?: XOR<MediaFileCreateWithoutUploadedByInput, MediaFileUncheckedCreateWithoutUploadedByInput> | MediaFileCreateWithoutUploadedByInput[] | MediaFileUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: MediaFileCreateOrConnectWithoutUploadedByInput | MediaFileCreateOrConnectWithoutUploadedByInput[]
+    upsert?: MediaFileUpsertWithWhereUniqueWithoutUploadedByInput | MediaFileUpsertWithWhereUniqueWithoutUploadedByInput[]
+    createMany?: MediaFileCreateManyUploadedByInputEnvelope
+    set?: MediaFileWhereUniqueInput | MediaFileWhereUniqueInput[]
+    disconnect?: MediaFileWhereUniqueInput | MediaFileWhereUniqueInput[]
+    delete?: MediaFileWhereUniqueInput | MediaFileWhereUniqueInput[]
+    connect?: MediaFileWhereUniqueInput | MediaFileWhereUniqueInput[]
+    update?: MediaFileUpdateWithWhereUniqueWithoutUploadedByInput | MediaFileUpdateWithWhereUniqueWithoutUploadedByInput[]
+    updateMany?: MediaFileUpdateManyWithWhereWithoutUploadedByInput | MediaFileUpdateManyWithWhereWithoutUploadedByInput[]
+    deleteMany?: MediaFileScalarWhereInput | MediaFileScalarWhereInput[]
+  }
+
+  export type MediaFileUpdateOneWithoutProfileUsersNestedInput = {
+    create?: XOR<MediaFileCreateWithoutProfileUsersInput, MediaFileUncheckedCreateWithoutProfileUsersInput>
+    connectOrCreate?: MediaFileCreateOrConnectWithoutProfileUsersInput
+    upsert?: MediaFileUpsertWithoutProfileUsersInput
+    disconnect?: MediaFileWhereInput | boolean
+    delete?: MediaFileWhereInput | boolean
+    connect?: MediaFileWhereUniqueInput
+    update?: XOR<XOR<MediaFileUpdateToOneWithWhereWithoutProfileUsersInput, MediaFileUpdateWithoutProfileUsersInput>, MediaFileUncheckedUpdateWithoutProfileUsersInput>
+  }
+
   export type t_UserRoleUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<t_UserRoleCreateWithoutUserInput, t_UserRoleUncheckedCreateWithoutUserInput> | t_UserRoleCreateWithoutUserInput[] | t_UserRoleUncheckedCreateWithoutUserInput[]
     connectOrCreate?: t_UserRoleCreateOrConnectWithoutUserInput | t_UserRoleCreateOrConnectWithoutUserInput[]
@@ -73032,6 +75080,20 @@ export namespace Prisma {
     deleteMany?: UserBranchMappingScalarWhereInput | UserBranchMappingScalarWhereInput[]
   }
 
+  export type MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput = {
+    create?: XOR<MediaFileCreateWithoutUploadedByInput, MediaFileUncheckedCreateWithoutUploadedByInput> | MediaFileCreateWithoutUploadedByInput[] | MediaFileUncheckedCreateWithoutUploadedByInput[]
+    connectOrCreate?: MediaFileCreateOrConnectWithoutUploadedByInput | MediaFileCreateOrConnectWithoutUploadedByInput[]
+    upsert?: MediaFileUpsertWithWhereUniqueWithoutUploadedByInput | MediaFileUpsertWithWhereUniqueWithoutUploadedByInput[]
+    createMany?: MediaFileCreateManyUploadedByInputEnvelope
+    set?: MediaFileWhereUniqueInput | MediaFileWhereUniqueInput[]
+    disconnect?: MediaFileWhereUniqueInput | MediaFileWhereUniqueInput[]
+    delete?: MediaFileWhereUniqueInput | MediaFileWhereUniqueInput[]
+    connect?: MediaFileWhereUniqueInput | MediaFileWhereUniqueInput[]
+    update?: MediaFileUpdateWithWhereUniqueWithoutUploadedByInput | MediaFileUpdateWithWhereUniqueWithoutUploadedByInput[]
+    updateMany?: MediaFileUpdateManyWithWhereWithoutUploadedByInput | MediaFileUpdateManyWithWhereWithoutUploadedByInput[]
+    deleteMany?: MediaFileScalarWhereInput | MediaFileScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutBranchMappingsInput = {
     create?: XOR<UserCreateWithoutBranchMappingsInput, UserUncheckedCreateWithoutBranchMappingsInput>
     connectOrCreate?: UserCreateOrConnectWithoutBranchMappingsInput
@@ -73042,10 +75104,6 @@ export namespace Prisma {
     create?: XOR<BranchCreateWithoutUserMappingsInput, BranchUncheckedCreateWithoutUserMappingsInput>
     connectOrCreate?: BranchCreateOrConnectWithoutUserMappingsInput
     connect?: BranchWhereUniqueInput
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
   }
 
   export type UserUpdateOneRequiredWithoutBranchMappingsNestedInput = {
@@ -73394,6 +75452,12 @@ export namespace Prisma {
     update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutClientTransactionsInput, CustomerUpdateWithoutClientTransactionsInput>, CustomerUncheckedUpdateWithoutClientTransactionsInput>
   }
 
+  export type MediaFileCreateNestedOneWithoutItemsInput = {
+    create?: XOR<MediaFileCreateWithoutItemsInput, MediaFileUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: MediaFileCreateOrConnectWithoutItemsInput
+    connect?: MediaFileWhereUniqueInput
+  }
+
   export type t_SODetCreateNestedManyWithoutItemInput = {
     create?: XOR<t_SODetCreateWithoutItemInput, t_SODetUncheckedCreateWithoutItemInput> | t_SODetCreateWithoutItemInput[] | t_SODetUncheckedCreateWithoutItemInput[]
     connectOrCreate?: t_SODetCreateOrConnectWithoutItemInput | t_SODetCreateOrConnectWithoutItemInput[]
@@ -73530,6 +75594,16 @@ export namespace Prisma {
     connectOrCreate?: t_CostPrCreateOrConnectWithoutItemInput | t_CostPrCreateOrConnectWithoutItemInput[]
     createMany?: t_CostPrCreateManyItemInputEnvelope
     connect?: t_CostPrWhereUniqueInput | t_CostPrWhereUniqueInput[]
+  }
+
+  export type MediaFileUpdateOneWithoutItemsNestedInput = {
+    create?: XOR<MediaFileCreateWithoutItemsInput, MediaFileUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: MediaFileCreateOrConnectWithoutItemsInput
+    upsert?: MediaFileUpsertWithoutItemsInput
+    disconnect?: MediaFileWhereInput | boolean
+    delete?: MediaFileWhereInput | boolean
+    connect?: MediaFileWhereUniqueInput
+    update?: XOR<XOR<MediaFileUpdateToOneWithWhereWithoutItemsInput, MediaFileUpdateWithoutItemsInput>, MediaFileUncheckedUpdateWithoutItemsInput>
   }
 
   export type t_SODetUpdateManyWithoutItemNestedInput = {
@@ -74330,14 +76404,6 @@ export namespace Prisma {
     connect?: Item_InformationWhereUniqueInput
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type Item_InformationUpdateOneWithoutItemReceivesNestedInput = {
     create?: XOR<Item_InformationCreateWithoutItemReceivesInput, Item_InformationUncheckedCreateWithoutItemReceivesInput>
     connectOrCreate?: Item_InformationCreateOrConnectWithoutItemReceivesInput
@@ -74639,6 +76705,31 @@ export namespace Prisma {
     not?: NestedUuidFilter<$PrismaModel> | string
   }
 
+  export type NestedStringFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel>
+    in?: string[] | ListStringFieldRefInput<$PrismaModel>
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringFilter<$PrismaModel> | string
+  }
+
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -74651,6 +76742,33 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedUuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type NestedUuidWithAggregatesFilter<$PrismaModel = never> = {
@@ -74667,18 +76785,7 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
-  export type NestedStringFilter<$PrismaModel = never> = {
+  export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
     notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -74689,7 +76796,37 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringFilter<$PrismaModel> | string
+    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedStringFilter<$PrismaModel>
+    _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -74720,6 +76857,42 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -74743,86 +76916,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel>
-    in?: string[] | ListStringFieldRefInput<$PrismaModel>
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel>
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedStringFilter<$PrismaModel>
-    _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type NestedUuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -74958,31 +77051,332 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+  export type UserCreateWithoutMediaFilesInput = {
+    id?: string
+    name?: string | null
+    userName: string
+    password?: string | null
+    validUntil?: Date | string | null
+    isActive?: string | null
+    creator?: string | null
+    creationDate?: Date | string | null
+    lastUpdateBy?: string | null
+    lastUpdateDate?: Date | string | null
+    isDeleted?: string | null
+    deletedBy?: string | null
+    deletionDate?: Date | string | null
+    remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
+    userRoles?: t_UserRoleCreateNestedManyWithoutUserInput
+    branchMappings?: UserBranchMappingCreateNestedManyWithoutUserInput
+    profileImage?: MediaFileCreateNestedOneWithoutProfileUsersInput
   }
 
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
+  export type UserUncheckedCreateWithoutMediaFilesInput = {
+    id?: string
+    name?: string | null
+    userName: string
+    password?: string | null
+    validUntil?: Date | string | null
+    isActive?: string | null
+    creator?: string | null
+    creationDate?: Date | string | null
+    lastUpdateBy?: string | null
+    lastUpdateDate?: Date | string | null
+    isDeleted?: string | null
+    deletedBy?: string | null
+    deletionDate?: Date | string | null
+    remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
+    mediaFileId?: string | null
+    userRoles?: t_UserRoleUncheckedCreateNestedManyWithoutUserInput
+    branchMappings?: UserBranchMappingUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutMediaFilesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMediaFilesInput, UserUncheckedCreateWithoutMediaFilesInput>
+  }
+
+  export type UserCreateWithoutProfileImageInput = {
+    id?: string
+    name?: string | null
+    userName: string
+    password?: string | null
+    validUntil?: Date | string | null
+    isActive?: string | null
+    creator?: string | null
+    creationDate?: Date | string | null
+    lastUpdateBy?: string | null
+    lastUpdateDate?: Date | string | null
+    isDeleted?: string | null
+    deletedBy?: string | null
+    deletionDate?: Date | string | null
+    remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
+    userRoles?: t_UserRoleCreateNestedManyWithoutUserInput
+    branchMappings?: UserBranchMappingCreateNestedManyWithoutUserInput
+    mediaFiles?: MediaFileCreateNestedManyWithoutUploadedByInput
+  }
+
+  export type UserUncheckedCreateWithoutProfileImageInput = {
+    id?: string
+    name?: string | null
+    userName: string
+    password?: string | null
+    validUntil?: Date | string | null
+    isActive?: string | null
+    creator?: string | null
+    creationDate?: Date | string | null
+    lastUpdateBy?: string | null
+    lastUpdateDate?: Date | string | null
+    isDeleted?: string | null
+    deletedBy?: string | null
+    deletionDate?: Date | string | null
+    remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
+    userRoles?: t_UserRoleUncheckedCreateNestedManyWithoutUserInput
+    branchMappings?: UserBranchMappingUncheckedCreateNestedManyWithoutUserInput
+    mediaFiles?: MediaFileUncheckedCreateNestedManyWithoutUploadedByInput
+  }
+
+  export type UserCreateOrConnectWithoutProfileImageInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutProfileImageInput, UserUncheckedCreateWithoutProfileImageInput>
+  }
+
+  export type UserCreateManyProfileImageInputEnvelope = {
+    data: UserCreateManyProfileImageInput | UserCreateManyProfileImageInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type Item_InformationCreateWithoutImageInput = {
+    id?: string
+    itmCode: string
+    itmName?: string | null
+    itmCategory?: string | null
+    itmType?: string | null
+    itmUOM?: string | null
+    itmRemarks?: string | null
+    itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: string | null
+    isActive?: string | null
+    runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
+    runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
+    asstDetails?: AsstDetCreateNestedManyWithoutItemInput
+    itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
+    itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
+    itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
+    prices?: t_PriceCreateNestedManyWithoutItemInput
+    costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+  }
+
+  export type Item_InformationUncheckedCreateWithoutImageInput = {
+    id?: string
+    itmCode: string
+    itmName?: string | null
+    itmCategory?: string | null
+    itmType?: string | null
+    itmUOM?: string | null
+    itmRemarks?: string | null
+    itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: string | null
+    isActive?: string | null
+    runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
+    runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
+    asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
+    itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
+    itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
+    itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
+    prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
+    costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+  }
+
+  export type Item_InformationCreateOrConnectWithoutImageInput = {
+    where: Item_InformationWhereUniqueInput
+    create: XOR<Item_InformationCreateWithoutImageInput, Item_InformationUncheckedCreateWithoutImageInput>
+  }
+
+  export type Item_InformationCreateManyImageInputEnvelope = {
+    data: Item_InformationCreateManyImageInput | Item_InformationCreateManyImageInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutMediaFilesInput = {
+    update: XOR<UserUpdateWithoutMediaFilesInput, UserUncheckedUpdateWithoutMediaFilesInput>
+    create: XOR<UserCreateWithoutMediaFilesInput, UserUncheckedCreateWithoutMediaFilesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMediaFilesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMediaFilesInput, UserUncheckedUpdateWithoutMediaFilesInput>
+  }
+
+  export type UserUpdateWithoutMediaFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    userName?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    creator?: NullableStringFieldUpdateOperationsInput | string | null
+    creationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDeleted?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userRoles?: t_UserRoleUpdateManyWithoutUserNestedInput
+    branchMappings?: UserBranchMappingUpdateManyWithoutUserNestedInput
+    profileImage?: MediaFileUpdateOneWithoutProfileUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMediaFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    userName?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    creator?: NullableStringFieldUpdateOperationsInput | string | null
+    creationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDeleted?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mediaFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    userRoles?: t_UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    branchMappings?: UserBranchMappingUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutProfileImageInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutProfileImageInput, UserUncheckedUpdateWithoutProfileImageInput>
+    create: XOR<UserCreateWithoutProfileImageInput, UserUncheckedCreateWithoutProfileImageInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutProfileImageInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutProfileImageInput, UserUncheckedUpdateWithoutProfileImageInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutProfileImageInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutProfileImageInput>
+  }
+
+  export type UserScalarWhereInput = {
+    AND?: UserScalarWhereInput | UserScalarWhereInput[]
+    OR?: UserScalarWhereInput[]
+    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
+    id?: UuidFilter<"User"> | string
+    name?: StringNullableFilter<"User"> | string | null
+    userName?: StringFilter<"User"> | string
+    password?: StringNullableFilter<"User"> | string | null
+    validUntil?: DateTimeNullableFilter<"User"> | Date | string | null
+    isActive?: StringNullableFilter<"User"> | string | null
+    creator?: StringNullableFilter<"User"> | string | null
+    creationDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    lastUpdateBy?: StringNullableFilter<"User"> | string | null
+    lastUpdateDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    isDeleted?: StringNullableFilter<"User"> | string | null
+    deletedBy?: StringNullableFilter<"User"> | string | null
+    deletionDate?: DateTimeNullableFilter<"User"> | Date | string | null
+    remarks?: StringNullableFilter<"User"> | string | null
+    email?: StringNullableFilter<"User"> | string | null
+    isVerified?: BoolFilter<"User"> | boolean
+    verificationToken?: StringNullableFilter<"User"> | string | null
+    refreshTokenHash?: StringNullableFilter<"User"> | string | null
+    refreshTokenExpiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    passwordResetCode?: StringNullableFilter<"User"> | string | null
+    passwordResetCodeExpiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    passwordResetVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    mediaFileId?: UuidNullableFilter<"User"> | string | null
+  }
+
+  export type Item_InformationUpsertWithWhereUniqueWithoutImageInput = {
+    where: Item_InformationWhereUniqueInput
+    update: XOR<Item_InformationUpdateWithoutImageInput, Item_InformationUncheckedUpdateWithoutImageInput>
+    create: XOR<Item_InformationCreateWithoutImageInput, Item_InformationUncheckedCreateWithoutImageInput>
+  }
+
+  export type Item_InformationUpdateWithWhereUniqueWithoutImageInput = {
+    where: Item_InformationWhereUniqueInput
+    data: XOR<Item_InformationUpdateWithoutImageInput, Item_InformationUncheckedUpdateWithoutImageInput>
+  }
+
+  export type Item_InformationUpdateManyWithWhereWithoutImageInput = {
+    where: Item_InformationScalarWhereInput
+    data: XOR<Item_InformationUpdateManyMutationInput, Item_InformationUncheckedUpdateManyWithoutImageInput>
+  }
+
+  export type Item_InformationScalarWhereInput = {
+    AND?: Item_InformationScalarWhereInput | Item_InformationScalarWhereInput[]
+    OR?: Item_InformationScalarWhereInput[]
+    NOT?: Item_InformationScalarWhereInput | Item_InformationScalarWhereInput[]
+    id?: UuidFilter<"Item_Information"> | string
+    itmCode?: StringFilter<"Item_Information"> | string
+    itmName?: StringNullableFilter<"Item_Information"> | string | null
+    itmCategory?: StringNullableFilter<"Item_Information"> | string | null
+    itmType?: StringNullableFilter<"Item_Information"> | string | null
+    itmUOM?: StringNullableFilter<"Item_Information"> | string | null
+    itmRemarks?: StringNullableFilter<"Item_Information"> | string | null
+    imageId?: UuidNullableFilter<"Item_Information"> | string | null
+    itmOrderLevel?: DecimalNullableFilter<"Item_Information"> | Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: StringNullableFilter<"Item_Information"> | string | null
+    isActive?: StringNullableFilter<"Item_Information"> | string | null
   }
 
   export type UserBranchMappingCreateWithoutBranchInput = {
@@ -75190,6 +77584,85 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MediaFileCreateWithoutUploadedByInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    fileType: string
+    mimeType: string
+    fileSize: number
+    altText?: string | null
+    cloudinaryPublicId: string
+    isDelete?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    profileUsers?: UserCreateNestedManyWithoutProfileImageInput
+    items?: Item_InformationCreateNestedManyWithoutImageInput
+  }
+
+  export type MediaFileUncheckedCreateWithoutUploadedByInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    fileType: string
+    mimeType: string
+    fileSize: number
+    altText?: string | null
+    cloudinaryPublicId: string
+    isDelete?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    profileUsers?: UserUncheckedCreateNestedManyWithoutProfileImageInput
+    items?: Item_InformationUncheckedCreateNestedManyWithoutImageInput
+  }
+
+  export type MediaFileCreateOrConnectWithoutUploadedByInput = {
+    where: MediaFileWhereUniqueInput
+    create: XOR<MediaFileCreateWithoutUploadedByInput, MediaFileUncheckedCreateWithoutUploadedByInput>
+  }
+
+  export type MediaFileCreateManyUploadedByInputEnvelope = {
+    data: MediaFileCreateManyUploadedByInput | MediaFileCreateManyUploadedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MediaFileCreateWithoutProfileUsersInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    fileType: string
+    mimeType: string
+    fileSize: number
+    altText?: string | null
+    cloudinaryPublicId: string
+    isDelete?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    uploadedBy?: UserCreateNestedOneWithoutMediaFilesInput
+    items?: Item_InformationCreateNestedManyWithoutImageInput
+  }
+
+  export type MediaFileUncheckedCreateWithoutProfileUsersInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    fileType: string
+    mimeType: string
+    fileSize: number
+    altText?: string | null
+    uploadedById?: string | null
+    cloudinaryPublicId: string
+    isDelete?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: Item_InformationUncheckedCreateNestedManyWithoutImageInput
+  }
+
+  export type MediaFileCreateOrConnectWithoutProfileUsersInput = {
+    where: MediaFileWhereUniqueInput
+    create: XOR<MediaFileCreateWithoutProfileUsersInput, MediaFileUncheckedCreateWithoutProfileUsersInput>
+  }
+
   export type t_UserRoleUpsertWithWhereUniqueWithoutUserInput = {
     where: t_UserRoleWhereUniqueInput
     update: XOR<t_UserRoleUpdateWithoutUserInput, t_UserRoleUncheckedUpdateWithoutUserInput>
@@ -75234,6 +77707,83 @@ export namespace Prisma {
     data: XOR<UserBranchMappingUpdateManyMutationInput, UserBranchMappingUncheckedUpdateManyWithoutUserInput>
   }
 
+  export type MediaFileUpsertWithWhereUniqueWithoutUploadedByInput = {
+    where: MediaFileWhereUniqueInput
+    update: XOR<MediaFileUpdateWithoutUploadedByInput, MediaFileUncheckedUpdateWithoutUploadedByInput>
+    create: XOR<MediaFileCreateWithoutUploadedByInput, MediaFileUncheckedCreateWithoutUploadedByInput>
+  }
+
+  export type MediaFileUpdateWithWhereUniqueWithoutUploadedByInput = {
+    where: MediaFileWhereUniqueInput
+    data: XOR<MediaFileUpdateWithoutUploadedByInput, MediaFileUncheckedUpdateWithoutUploadedByInput>
+  }
+
+  export type MediaFileUpdateManyWithWhereWithoutUploadedByInput = {
+    where: MediaFileScalarWhereInput
+    data: XOR<MediaFileUpdateManyMutationInput, MediaFileUncheckedUpdateManyWithoutUploadedByInput>
+  }
+
+  export type MediaFileScalarWhereInput = {
+    AND?: MediaFileScalarWhereInput | MediaFileScalarWhereInput[]
+    OR?: MediaFileScalarWhereInput[]
+    NOT?: MediaFileScalarWhereInput | MediaFileScalarWhereInput[]
+    id?: UuidFilter<"MediaFile"> | string
+    fileName?: StringFilter<"MediaFile"> | string
+    fileUrl?: StringFilter<"MediaFile"> | string
+    fileType?: StringFilter<"MediaFile"> | string
+    mimeType?: StringFilter<"MediaFile"> | string
+    fileSize?: IntFilter<"MediaFile"> | number
+    altText?: StringNullableFilter<"MediaFile"> | string | null
+    uploadedById?: UuidNullableFilter<"MediaFile"> | string | null
+    cloudinaryPublicId?: StringFilter<"MediaFile"> | string
+    isDelete?: BoolFilter<"MediaFile"> | boolean
+    createdAt?: DateTimeFilter<"MediaFile"> | Date | string
+    updatedAt?: DateTimeFilter<"MediaFile"> | Date | string
+  }
+
+  export type MediaFileUpsertWithoutProfileUsersInput = {
+    update: XOR<MediaFileUpdateWithoutProfileUsersInput, MediaFileUncheckedUpdateWithoutProfileUsersInput>
+    create: XOR<MediaFileCreateWithoutProfileUsersInput, MediaFileUncheckedCreateWithoutProfileUsersInput>
+    where?: MediaFileWhereInput
+  }
+
+  export type MediaFileUpdateToOneWithWhereWithoutProfileUsersInput = {
+    where?: MediaFileWhereInput
+    data: XOR<MediaFileUpdateWithoutProfileUsersInput, MediaFileUncheckedUpdateWithoutProfileUsersInput>
+  }
+
+  export type MediaFileUpdateWithoutProfileUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    altText?: NullableStringFieldUpdateOperationsInput | string | null
+    cloudinaryPublicId?: StringFieldUpdateOperationsInput | string
+    isDelete?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    uploadedBy?: UserUpdateOneWithoutMediaFilesNestedInput
+    items?: Item_InformationUpdateManyWithoutImageNestedInput
+  }
+
+  export type MediaFileUncheckedUpdateWithoutProfileUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    altText?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    cloudinaryPublicId?: StringFieldUpdateOperationsInput | string
+    isDelete?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: Item_InformationUncheckedUpdateManyWithoutImageNestedInput
+  }
+
   export type UserCreateWithoutBranchMappingsInput = {
     id?: string
     name?: string | null
@@ -75258,6 +77808,8 @@ export namespace Prisma {
     passwordResetCodeExpiredAt?: Date | string | null
     passwordResetVerifiedAt?: Date | string | null
     userRoles?: t_UserRoleCreateNestedManyWithoutUserInput
+    mediaFiles?: MediaFileCreateNestedManyWithoutUploadedByInput
+    profileImage?: MediaFileCreateNestedOneWithoutProfileUsersInput
   }
 
   export type UserUncheckedCreateWithoutBranchMappingsInput = {
@@ -75283,7 +77835,9 @@ export namespace Prisma {
     passwordResetCode?: string | null
     passwordResetCodeExpiredAt?: Date | string | null
     passwordResetVerifiedAt?: Date | string | null
+    mediaFileId?: string | null
     userRoles?: t_UserRoleUncheckedCreateNestedManyWithoutUserInput
+    mediaFiles?: MediaFileUncheckedCreateNestedManyWithoutUploadedByInput
   }
 
   export type UserCreateOrConnectWithoutBranchMappingsInput = {
@@ -75349,6 +77903,8 @@ export namespace Prisma {
     passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     userRoles?: t_UserRoleUpdateManyWithoutUserNestedInput
+    mediaFiles?: MediaFileUpdateManyWithoutUploadedByNestedInput
+    profileImage?: MediaFileUpdateOneWithoutProfileUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBranchMappingsInput = {
@@ -75374,7 +77930,9 @@ export namespace Prisma {
     passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
     passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mediaFileId?: NullableStringFieldUpdateOperationsInput | string | null
     userRoles?: t_UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
   }
 
   export type BranchUpsertWithoutUserMappingsInput = {
@@ -75430,6 +77988,8 @@ export namespace Prisma {
     passwordResetCodeExpiredAt?: Date | string | null
     passwordResetVerifiedAt?: Date | string | null
     branchMappings?: UserBranchMappingCreateNestedManyWithoutUserInput
+    mediaFiles?: MediaFileCreateNestedManyWithoutUploadedByInput
+    profileImage?: MediaFileCreateNestedOneWithoutProfileUsersInput
   }
 
   export type UserUncheckedCreateWithoutUserRolesInput = {
@@ -75455,7 +78015,9 @@ export namespace Prisma {
     passwordResetCode?: string | null
     passwordResetCodeExpiredAt?: Date | string | null
     passwordResetVerifiedAt?: Date | string | null
+    mediaFileId?: string | null
     branchMappings?: UserBranchMappingUncheckedCreateNestedManyWithoutUserInput
+    mediaFiles?: MediaFileUncheckedCreateNestedManyWithoutUploadedByInput
   }
 
   export type UserCreateOrConnectWithoutUserRolesInput = {
@@ -75498,6 +78060,8 @@ export namespace Prisma {
     passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchMappings?: UserBranchMappingUpdateManyWithoutUserNestedInput
+    mediaFiles?: MediaFileUpdateManyWithoutUploadedByNestedInput
+    profileImage?: MediaFileUpdateOneWithoutProfileUsersNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserRolesInput = {
@@ -75523,7 +78087,9 @@ export namespace Prisma {
     passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
     passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    mediaFileId?: NullableStringFieldUpdateOperationsInput | string | null
     branchMappings?: UserBranchMappingUncheckedUpdateManyWithoutUserNestedInput
+    mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
   }
 
   export type PermissionCreateWithoutMenuInput = {
@@ -76072,6 +78638,43 @@ export namespace Prisma {
     moneyReceives?: MoneyReceiveUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
+  export type MediaFileCreateWithoutItemsInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    fileType: string
+    mimeType: string
+    fileSize: number
+    altText?: string | null
+    cloudinaryPublicId: string
+    isDelete?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    uploadedBy?: UserCreateNestedOneWithoutMediaFilesInput
+    profileUsers?: UserCreateNestedManyWithoutProfileImageInput
+  }
+
+  export type MediaFileUncheckedCreateWithoutItemsInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    fileType: string
+    mimeType: string
+    fileSize: number
+    altText?: string | null
+    uploadedById?: string | null
+    cloudinaryPublicId: string
+    isDelete?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    profileUsers?: UserUncheckedCreateNestedManyWithoutProfileImageInput
+  }
+
+  export type MediaFileCreateOrConnectWithoutItemsInput = {
+    where: MediaFileWhereUniqueInput
+    create: XOR<MediaFileCreateWithoutItemsInput, MediaFileUncheckedCreateWithoutItemsInput>
+  }
+
   export type t_SODetCreateWithoutItemInput = {
     id?: string
     sodetItemSLNum?: string | null
@@ -76457,6 +79060,49 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MediaFileUpsertWithoutItemsInput = {
+    update: XOR<MediaFileUpdateWithoutItemsInput, MediaFileUncheckedUpdateWithoutItemsInput>
+    create: XOR<MediaFileCreateWithoutItemsInput, MediaFileUncheckedCreateWithoutItemsInput>
+    where?: MediaFileWhereInput
+  }
+
+  export type MediaFileUpdateToOneWithWhereWithoutItemsInput = {
+    where?: MediaFileWhereInput
+    data: XOR<MediaFileUpdateWithoutItemsInput, MediaFileUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type MediaFileUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    altText?: NullableStringFieldUpdateOperationsInput | string | null
+    cloudinaryPublicId?: StringFieldUpdateOperationsInput | string
+    isDelete?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    uploadedBy?: UserUpdateOneWithoutMediaFilesNestedInput
+    profileUsers?: UserUpdateManyWithoutProfileImageNestedInput
+  }
+
+  export type MediaFileUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    altText?: NullableStringFieldUpdateOperationsInput | string | null
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    cloudinaryPublicId?: StringFieldUpdateOperationsInput | string
+    isDelete?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profileUsers?: UserUncheckedUpdateManyWithoutProfileImageNestedInput
+  }
+
   export type t_SODetUpsertWithWhereUniqueWithoutItemInput = {
     where: t_SODetWhereUniqueInput
     update: XOR<t_SODetUpdateWithoutItemInput, t_SODetUncheckedUpdateWithoutItemInput>
@@ -76808,6 +79454,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
@@ -76827,6 +79474,7 @@ export namespace Prisma {
     itmType?: string | null
     itmUOM?: string | null
     itmRemarks?: string | null
+    imageId?: string | null
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
@@ -76868,6 +79516,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
@@ -76887,6 +79536,7 @@ export namespace Prisma {
     itmType?: NullableStringFieldUpdateOperationsInput | string | null
     itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
     itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -76912,6 +79562,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
@@ -76931,6 +79582,7 @@ export namespace Prisma {
     itmType?: string | null
     itmUOM?: string | null
     itmRemarks?: string | null
+    imageId?: string | null
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
@@ -76972,6 +79624,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
@@ -76991,6 +79644,7 @@ export namespace Prisma {
     itmType?: NullableStringFieldUpdateOperationsInput | string | null
     itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
     itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77016,6 +79670,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
@@ -77035,6 +79690,7 @@ export namespace Prisma {
     itmType?: string | null
     itmUOM?: string | null
     itmRemarks?: string | null
+    imageId?: string | null
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
@@ -77076,6 +79732,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
@@ -77095,6 +79752,7 @@ export namespace Prisma {
     itmType?: NullableStringFieldUpdateOperationsInput | string | null
     itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
     itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77701,6 +80359,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
@@ -77720,6 +80379,7 @@ export namespace Prisma {
     itmType?: string | null
     itmUOM?: string | null
     itmRemarks?: string | null
+    imageId?: string | null
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
@@ -77822,6 +80482,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
@@ -77841,6 +80502,7 @@ export namespace Prisma {
     itmType?: NullableStringFieldUpdateOperationsInput | string | null
     itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
     itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77979,6 +80641,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
@@ -77998,6 +80661,7 @@ export namespace Prisma {
     itmType?: string | null
     itmUOM?: string | null
     itmRemarks?: string | null
+    imageId?: string | null
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
@@ -78098,6 +80762,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
@@ -78117,6 +80782,7 @@ export namespace Prisma {
     itmType?: NullableStringFieldUpdateOperationsInput | string | null
     itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
     itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78200,6 +80866,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
@@ -78219,6 +80886,7 @@ export namespace Prisma {
     itmType?: string | null
     itmUOM?: string | null
     itmRemarks?: string | null
+    imageId?: string | null
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
@@ -78309,6 +80977,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
@@ -78328,6 +80997,7 @@ export namespace Prisma {
     itmType?: NullableStringFieldUpdateOperationsInput | string | null
     itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
     itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78503,6 +81173,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
@@ -78522,6 +81193,7 @@ export namespace Prisma {
     itmType?: string | null
     itmUOM?: string | null
     itmRemarks?: string | null
+    imageId?: string | null
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
@@ -78604,6 +81276,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
@@ -78623,6 +81296,7 @@ export namespace Prisma {
     itmType?: NullableStringFieldUpdateOperationsInput | string | null
     itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
     itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78648,6 +81322,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
@@ -78667,6 +81342,7 @@ export namespace Prisma {
     itmType?: string | null
     itmUOM?: string | null
     itmRemarks?: string | null
+    imageId?: string | null
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
@@ -78708,6 +81384,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
@@ -78727,6 +81404,7 @@ export namespace Prisma {
     itmType?: NullableStringFieldUpdateOperationsInput | string | null
     itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
     itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78752,6 +81430,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
@@ -78771,6 +81450,7 @@ export namespace Prisma {
     itmType?: string | null
     itmUOM?: string | null
     itmRemarks?: string | null
+    imageId?: string | null
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
@@ -78812,6 +81492,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
@@ -78831,6 +81512,7 @@ export namespace Prisma {
     itmType?: NullableStringFieldUpdateOperationsInput | string | null
     itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
     itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78856,6 +81538,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
@@ -78875,6 +81558,7 @@ export namespace Prisma {
     itmType?: string | null
     itmUOM?: string | null
     itmRemarks?: string | null
+    imageId?: string | null
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
@@ -78916,6 +81600,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
@@ -78935,6 +81620,7 @@ export namespace Prisma {
     itmType?: NullableStringFieldUpdateOperationsInput | string | null
     itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
     itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -79612,6 +82298,184 @@ export namespace Prisma {
     clientTransactions?: Client_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
+  export type UserCreateManyProfileImageInput = {
+    id?: string
+    name?: string | null
+    userName: string
+    password?: string | null
+    validUntil?: Date | string | null
+    isActive?: string | null
+    creator?: string | null
+    creationDate?: Date | string | null
+    lastUpdateBy?: string | null
+    lastUpdateDate?: Date | string | null
+    isDeleted?: string | null
+    deletedBy?: string | null
+    deletionDate?: Date | string | null
+    remarks?: string | null
+    email?: string | null
+    isVerified?: boolean
+    verificationToken?: string | null
+    refreshTokenHash?: string | null
+    refreshTokenExpiredAt?: Date | string | null
+    passwordResetCode?: string | null
+    passwordResetCodeExpiredAt?: Date | string | null
+    passwordResetVerifiedAt?: Date | string | null
+  }
+
+  export type Item_InformationCreateManyImageInput = {
+    id?: string
+    itmCode: string
+    itmName?: string | null
+    itmCategory?: string | null
+    itmType?: string | null
+    itmUOM?: string | null
+    itmRemarks?: string | null
+    itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: string | null
+    isActive?: string | null
+  }
+
+  export type UserUpdateWithoutProfileImageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    userName?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    creator?: NullableStringFieldUpdateOperationsInput | string | null
+    creationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDeleted?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userRoles?: t_UserRoleUpdateManyWithoutUserNestedInput
+    branchMappings?: UserBranchMappingUpdateManyWithoutUserNestedInput
+    mediaFiles?: MediaFileUpdateManyWithoutUploadedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutProfileImageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    userName?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    creator?: NullableStringFieldUpdateOperationsInput | string | null
+    creationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDeleted?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    userRoles?: t_UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    branchMappings?: UserBranchMappingUncheckedUpdateManyWithoutUserNestedInput
+    mediaFiles?: MediaFileUncheckedUpdateManyWithoutUploadedByNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutProfileImageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    userName?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    creator?: NullableStringFieldUpdateOperationsInput | string | null
+    creationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    lastUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDeleted?: NullableStringFieldUpdateOperationsInput | string | null
+    deletedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    deletionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    isVerified?: BoolFieldUpdateOperationsInput | boolean
+    verificationToken?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenHash?: NullableStringFieldUpdateOperationsInput | string | null
+    refreshTokenExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetCode?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordResetCodeExpiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    passwordResetVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Item_InformationUpdateWithoutImageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itmCode?: StringFieldUpdateOperationsInput | string
+    itmName?: NullableStringFieldUpdateOperationsInput | string | null
+    itmCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    itmType?: NullableStringFieldUpdateOperationsInput | string | null
+    itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
+    runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
+    asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
+    itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
+    itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
+    itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
+    prices?: t_PriceUpdateManyWithoutItemNestedInput
+    costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+  }
+
+  export type Item_InformationUncheckedUpdateWithoutImageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itmCode?: StringFieldUpdateOperationsInput | string
+    itmName?: NullableStringFieldUpdateOperationsInput | string | null
+    itmCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    itmType?: NullableStringFieldUpdateOperationsInput | string | null
+    itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
+    runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
+    asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
+    itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
+    itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
+    itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
+    prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
+    costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+  }
+
+  export type Item_InformationUncheckedUpdateManyWithoutImageInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itmCode?: StringFieldUpdateOperationsInput | string
+    itmName?: NullableStringFieldUpdateOperationsInput | string | null
+    itmCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    itmType?: NullableStringFieldUpdateOperationsInput | string | null
+    itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type UserBranchMappingCreateManyBranchInput = {
     id?: string
     userId: string
@@ -79753,6 +82617,20 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type MediaFileCreateManyUploadedByInput = {
+    id?: string
+    fileName: string
+    fileUrl: string
+    fileType: string
+    mimeType: string
+    fileSize: number
+    altText?: string | null
+    cloudinaryPublicId: string
+    isDelete?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type t_UserRoleUpdateWithoutUserInput = {
     controlName?: StringFieldUpdateOperationsInput | string
     isEnable?: NullableStringFieldUpdateOperationsInput | string | null
@@ -79794,6 +82672,52 @@ export namespace Prisma {
   export type UserBranchMappingUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     branchId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MediaFileUpdateWithoutUploadedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    altText?: NullableStringFieldUpdateOperationsInput | string | null
+    cloudinaryPublicId?: StringFieldUpdateOperationsInput | string
+    isDelete?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profileUsers?: UserUpdateManyWithoutProfileImageNestedInput
+    items?: Item_InformationUpdateManyWithoutImageNestedInput
+  }
+
+  export type MediaFileUncheckedUpdateWithoutUploadedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    altText?: NullableStringFieldUpdateOperationsInput | string | null
+    cloudinaryPublicId?: StringFieldUpdateOperationsInput | string
+    isDelete?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    profileUsers?: UserUncheckedUpdateManyWithoutProfileImageNestedInput
+    items?: Item_InformationUncheckedUpdateManyWithoutImageNestedInput
+  }
+
+  export type MediaFileUncheckedUpdateManyWithoutUploadedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    altText?: NullableStringFieldUpdateOperationsInput | string | null
+    cloudinaryPublicId?: StringFieldUpdateOperationsInput | string
+    isDelete?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

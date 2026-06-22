@@ -121,6 +121,21 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.MediaFileScalarFieldEnum = {
+  id: 'id',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  fileType: 'fileType',
+  mimeType: 'mimeType',
+  fileSize: 'fileSize',
+  altText: 'altText',
+  uploadedById: 'uploadedById',
+  cloudinaryPublicId: 'cloudinaryPublicId',
+  isDelete: 'isDelete',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.BranchScalarFieldEnum = {
   id: 'id',
   branchCode: 'branchCode',
@@ -167,7 +182,8 @@ exports.Prisma.UserScalarFieldEnum = {
   refreshTokenExpiredAt: 'refreshTokenExpiredAt',
   passwordResetCode: 'passwordResetCode',
   passwordResetCodeExpiredAt: 'passwordResetCodeExpiredAt',
-  passwordResetVerifiedAt: 'passwordResetVerifiedAt'
+  passwordResetVerifiedAt: 'passwordResetVerifiedAt',
+  mediaFileId: 'mediaFileId'
 };
 
 exports.Prisma.UserBranchMappingScalarFieldEnum = {
@@ -281,6 +297,7 @@ exports.Prisma.Item_InformationScalarFieldEnum = {
   itmType: 'itmType',
   itmUOM: 'itmUOM',
   itmRemarks: 'itmRemarks',
+  imageId: 'imageId',
   itmOrderLevel: 'itmOrderLevel',
   orderLevelUOM: 'orderLevelUOM',
   isActive: 'isActive'
@@ -795,6 +812,7 @@ exports.Prisma.JsonNullValueFilter = {
 
 
 exports.Prisma.ModelName = {
+  MediaFile: 'MediaFile',
   Branch: 'Branch',
   Bank: 'Bank',
   Setup_System: 'Setup_System',

@@ -45,7 +45,7 @@ export class InventoryService {
     const { page, limit, isActive } = query;
     const where = isActive ? { isActive } : undefined;
     const [items, total] = await Promise.all([
-      this.prisma.item_Information.findMany({ where, include: { inventory: true }, orderBy: { itmName: 'asc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.item_Information.findMany({ where, include: { inventory: true, image: true }, orderBy: { itmName: 'asc' }, skip: (page - 1) * limit, take: limit }),
       this.prisma.item_Information.count({ where }),
     ]);
     return { items, meta: buildPaginationMeta(total, page, limit) };
@@ -54,7 +54,7 @@ export class InventoryService {
   async findItem(id: string) {
     const item = await this.prisma.item_Information.findUnique({
       where: { id },
-      include: { inventory: true, prices: true, costPrices: true },
+      include: { inventory: true, prices: true, costPrices: true, image: true },
     });
     if (!item) throw new NotFoundException('Item not found');
     return item;
@@ -67,18 +67,22 @@ export class InventoryService {
     itmType?: string;
     itmUOM?: string;
     itmRemarks?: string;
+    imageId?: string;
+    isActive?: string;
   }) {
     try {
       return await this.prisma.item_Information.create({
         data: {
-          itmCode: data.itmCode,
-          itmName: data.itmName,
+          itmCode:    data.itmCode,
+          itmName:    data.itmName,
           itmCategory: data.itmCategory,
-          itmType: data.itmType || null,
-          itmUOM: data.itmUOM,
+          itmType:    data.itmType || null,
+          itmUOM:     data.itmUOM,
           itmRemarks: data.itmRemarks,
-          isActive: 'Y',
+          imageId:    data.imageId ?? null,
+          isActive:   data.isActive ?? 'Y',
         },
+        include: { image: true },
       });
     } catch (e: any) {
       if (e?.code === 'P2002') {
@@ -88,9 +92,24 @@ export class InventoryService {
     }
   }
 
-  async updateItem(id: string, data: Partial<{ itmName: string; itmCategory: string; isActive: string }>) {
+  async updateItem(
+    id: string,
+    data: Partial<{
+      itmName: string;
+      itmCategory: string;
+      itmType: string;
+      itmUOM: string;
+      itmRemarks: string;
+      imageId: string;
+      isActive: string;
+    }>,
+  ) {
     await this.findItem(id);
-    return this.prisma.item_Information.update({ where: { id }, data });
+    return this.prisma.item_Information.update({
+      where: { id },
+      data,
+      include: { image: true },
+    });
   }
 
   async deleteItem(id: string) {

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateItemDto {
@@ -17,22 +17,30 @@ export class CreateItemDto {
   @IsOptional()
   itmCategory?: string;
 
-  @ApiPropertyOptional({ example: 'Mithai', description: 'Item type' })
+  @ApiPropertyOptional({ example: 'FG', description: 'Item type: RW | FG | SFG | P' })
   @IsString()
   @IsOptional()
   itmType?: string;
 
-  @ApiPropertyOptional({ example: 'Pcs', description: 'Unit of measure' })
+  @ApiPropertyOptional({ example: 'KG', description: 'Unit of measure: Pcs | Cup | gm | KG | LT | ml' })
   @IsString()
   @IsOptional()
   itmUOM?: string;
 
-  @ApiPropertyOptional({ example: 'Premium quality', description: 'Remarks' })
+  @ApiPropertyOptional({ example: 'Premium quality', description: 'Remarks (max 500 chars)' })
   @IsString()
   @IsOptional()
   itmRemarks?: string;
 
-   @ApiPropertyOptional({ example: 'Y', description: 'Y = active, N = inactive' })
+  @ApiPropertyOptional({
+    example: '2d642193-e643-4b35-9951-c983c39f5bb2',
+    description: 'UUID of the media_files record returned by POST /upload',
+  })
+  @IsUUID('4')
+  @IsOptional()
+  imageId?: string;
+
+  @ApiPropertyOptional({ example: 'Y', description: 'Y = active, N = inactive' })
   @IsString()
   @IsOptional()
   isActive?: string;
@@ -49,15 +57,28 @@ export class UpdateItemDto {
   @IsOptional()
   itmCategory?: string;
 
-  @ApiPropertyOptional({ example: 'Mithai' })
+  @ApiPropertyOptional({ example: 'FG' })
   @IsString()
   @IsOptional()
   itmType?: string;
 
-  @ApiPropertyOptional({ example: 'Pcs' })
+  @ApiPropertyOptional({ example: 'KG' })
   @IsString()
   @IsOptional()
   itmUOM?: string;
+
+  @ApiPropertyOptional({ example: 'Premium quality' })
+  @IsString()
+  @IsOptional()
+  itmRemarks?: string;
+
+  @ApiPropertyOptional({
+    example: '2d642193-e643-4b35-9951-c983c39f5bb2',
+    description: 'UUID of the media_files record; set to null to remove image',
+  })
+  @IsUUID('4')
+  @IsOptional()
+  imageId?: string;
 
   @ApiPropertyOptional({ example: 'Y', description: 'Y = active, N = inactive' })
   @IsString()

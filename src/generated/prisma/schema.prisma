@@ -9,6 +9,29 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+// ==================== MEDIA FILES ====================
+
+model MediaFile {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fileName           String   @map("file_name")
+  fileUrl            String   @map("file_url")
+  fileType           String   @map("file_type")
+  mimeType           String   @map("mime_type")
+  fileSize           Int      @map("file_size")
+  altText            String?  @map("alt_text")
+  uploadedById       String?  @map("uploaded_by") @db.Uuid
+  cloudinaryPublicId String   @map("cloudinary_public_id")
+  isDelete           Boolean  @default(false) @map("is_delete")
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  uploadedBy   User?              @relation(name: "UserUploads", fields: [uploadedById], references: [id], onDelete: SetNull)
+  profileUsers User[]             @relation(name: "UserProfileImage")
+  items        Item_Information[]
+
+  @@map("media_files")
+}
+
 // ==================== BRANCH & SYSTEM ====================
 
 model Branch {
@@ -68,8 +91,11 @@ model User {
   passwordResetCode          String?             @map("PasswordResetCode")
   passwordResetCodeExpiredAt DateTime?           @map("PasswordResetCodeExpiredAt")
   passwordResetVerifiedAt    DateTime?           @map("PasswordResetVerifiedAt")
+  mediaFileId                String?             @map("media_file_id") @db.Uuid
   userRoles                  t_UserRole[]
   branchMappings             UserBranchMapping[]
+  mediaFiles                 MediaFile[]         @relation(name: "UserUploads")
+  profileImage               MediaFile?          @relation(name: "UserProfileImage", fields: [mediaFileId], references: [id], onDelete: SetNull)
 
   @@map("t_User")
 }
@@ -228,7 +254,9 @@ model Item_Information {
   itmType               String?        @map("itmType")
   itmUOM                String?        @map("itmUOM")
   itmRemarks            String?        @map("itmRemarks")
+  imageId               String?        @map("image_id") @db.Uuid
   itmOrderLevel         Decimal?       @map("itmOrderLevel") @db.Decimal(9, 2)
+  image                 MediaFile?     @relation(fields: [imageId], references: [id], onDelete: SetNull)
   orderLevelUOM         String?        @map("OrderLevelUOM")
   isActive              String?        @map("IsActive")
   // Relations using Item_Information.ID (uuid)

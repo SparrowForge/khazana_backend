@@ -22,6 +22,7 @@ function stripPassword<T extends {
 const USER_INCLUDE = {
   branchMappings: { include: { branch: true } },
   userRoles: true,
+  profileImage: true,
 } as const;
 
 @Injectable()
@@ -76,7 +77,7 @@ export class UsersService {
     ]);
 
     // Separate branchIds from user fields before spreading
-    const { branchIds, password: _pw, ...userFields } = dto;
+    const { branchIds, password: _pw, mediaFileId, ...userFields } = dto;
 
     const user = await this.prisma.user.create({
       data: {
@@ -88,10 +89,12 @@ export class UsersService {
         creator: createdBy,
         creationDate: new Date(),
         validUntil: dto.validUntil ? new Date(dto.validUntil) : undefined,
+        mediaFileId: mediaFileId ?? null,
         branchMappings: {
           create: branchIds.map((branchId) => ({ branchId })),
         },
       },
+      include: { profileImage: true },
     });
 
     if (dto.email) {
@@ -121,6 +124,7 @@ export class UsersService {
       return tx.user.update({
         where: { id },
         data: { ...userFields, lastUpdateBy: updatedBy, lastUpdateDate: new Date() },
+        include: { profileImage: true },
       });
     });
 
