@@ -34,7 +34,7 @@ export class UsersService {
 
   async findAll(query: PaginationQueryDto) {
     const { page, limit } = query;
-    const where = { OR: [{ isDeleted: null }, { isDeleted: { not: 'Y' as const } }] } as const;
+    const where = { OR: [{ isDeleted: null }, { isDeleted: { not: 'Y' } }] };
 
     const [users, total] = await Promise.all([
       this.prisma.user.findMany({
