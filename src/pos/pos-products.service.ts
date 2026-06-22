@@ -14,6 +14,7 @@ export class PosProductsService {
           where: { priceIsActive: 1 },
           orderBy: { priceFromDate: 'desc' },
         },
+        image: true,
       },
       orderBy: { itmName: 'asc' },
     });
@@ -37,6 +38,7 @@ export class PosProductsService {
           uom: item.itmUOM ?? 'PCS',
           price: price.priceListPrice,
           vatPercentage: price.priceVatPercent ?? 0,
+          imageUrl: item.image?.fileUrl ?? null,
         };
       })
       .filter((x): x is NonNullable<typeof x> => x !== null);
