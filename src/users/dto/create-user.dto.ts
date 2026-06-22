@@ -9,7 +9,6 @@ import {
   IsUUID,
   ArrayMinSize,
 } from 'class-validator';
-
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateUserDto {
@@ -48,6 +47,11 @@ export class CreateUserDto {
   @IsDateString()
   @IsOptional()
   validUntil?: string;
+
+  @ApiPropertyOptional({ example: 'Y', description: 'Y = active, N = inactive' })
+  @IsString()
+  @IsOptional()
+  isActive?: string;
 
   @ApiPropertyOptional({ example: 'Sales team member', description: 'Optional remarks' })
   @IsString()

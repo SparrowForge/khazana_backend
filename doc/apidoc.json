@@ -112,16 +112,25 @@
             "example": "2025-12-31",
             "description": "Account expiry date (ISO 8601)"
           },
+          "isActive": {
+            "type": "string",
+            "enum": [
+              "Y",
+              "N"
+            ],
+            "example": "Y",
+            "description": "Y = active, N = inactive (defaults to Y on create)"
+          },
           "remarks": {
             "type": "string",
             "example": "Sales team member",
-            "description": "Optional remarks"
+            "description": "Optional notes about this user"
           },
           "mediaFileId": {
             "type": "string",
             "format": "uuid",
             "example": "73ac7e7f-56c3-465d-8165-78de5f9931c2",
-            "description": "UUID of the media_files record to use as the user profile image. Obtain this ID from POST /upload."
+            "description": "UUID of the media_files record to use as the user profile image. Obtain from POST /upload."
           }
         }
       },
@@ -1397,16 +1406,18 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "description": "All fields optional. Pass mediaFileId to set/change profile image.",
+                "description": "All fields are optional. Only the fields you include will be updated.",
                 "properties": {
                   "name": {
                     "type": "string",
-                    "example": "John Doe Updated"
+                    "example": "John Doe Updated",
+                    "description": "Display name"
                   },
                   "email": {
                     "type": "string",
                     "format": "email",
-                    "example": "john@example.com"
+                    "example": "john@example.com",
+                    "description": "Email address"
                   },
                   "branchIds": {
                     "type": "array",
@@ -1414,7 +1425,8 @@
                       "type": "string",
                       "format": "uuid"
                     },
-                    "description": "Replace all branch assignments"
+                    "minItems": 1,
+                    "description": "Replace all branch assignments (must include at least one)"
                   },
                   "isActive": {
                     "type": "string",
@@ -1422,13 +1434,25 @@
                       "Y",
                       "N"
                     ],
-                    "example": "Y"
+                    "example": "Y",
+                    "description": "Y = active, N = inactive"
+                  },
+                  "validUntil": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-12-31",
+                    "description": "Account expiry date (ISO 8601)"
+                  },
+                  "remarks": {
+                    "type": "string",
+                    "example": "Updated remarks about this user",
+                    "description": "Optional notes"
                   },
                   "mediaFileId": {
                     "type": "string",
                     "format": "uuid",
                     "example": "73ac7e7f-56c3-465d-8165-78de5f9931c2",
-                    "description": "UUID from POST /upload — links to media_files table"
+                    "description": "UUID from POST /upload — links to media_files table (profile image)"
                   }
                 }
               }
