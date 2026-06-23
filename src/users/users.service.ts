@@ -5,7 +5,7 @@ import { PrismaService } from '../database/prisma.service';
 import { MailService } from '../mail/mail.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { SetUserRolesDto } from './dto/set-user-roles.dto';
+import { SetUserRolesDto, BatchUserPermissionsDto } from './dto/set-user-roles.dto';
 import { PaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
 
@@ -182,5 +182,31 @@ export class UsersService {
       }),
     ]);
     return { message: 'User permissions updated' };
+  }
+
+  /**
+   * Apply one permission grid to many users in a single transaction — the canonical
+   * save from the User Menu Permission screen. Delete-then-insert per user so the
+   * supplied grid becomes each user's complete t_UserRole set (the runtime authority).
+   */
+  async syncPermissionsForUsers(dto: BatchUserPermissionsDto) {
+    const { userNames, permissions } = dto;
+    const found = await this.prisma.user.findMany({
+      where: { userName: { in: userNames } },
+      select: { userName: true },
+    });
+    const validNames = found.map((u) => u.userName);
+    const missing = userNames.filter((n) => !validNames.includes(n));
+    if (missing.length) {
+      throw new NotFoundException(`Unknown user(s): ${missing.join(', ')}`);
+    }
+    const rows = validNames.flatMap((userId) =>
+      permissions.map((p) => ({ userId, ...p })),
+    );
+    await this.prisma.$transaction([
+      this.prisma.t_UserRole.deleteMany({ where: { userId: { in: validNames } } }),
+      this.prisma.t_UserRole.createMany({ data: rows }),
+    ]);
+    return { message: `Permissions updated for ${validNames.length} user(s)` };
   }
 }

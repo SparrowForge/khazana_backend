@@ -235,6 +235,7 @@ exports.Prisma.MenuScalarFieldEnum = {
   icon: 'icon',
   order: 'order',
   parentMenu: 'parentMenu',
+  module: 'module',
   isActive: 'isActive'
 };
 

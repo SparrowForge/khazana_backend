@@ -15751,6 +15751,7 @@ export namespace Prisma {
     icon: string | null
     order: number | null
     parentMenu: string | null
+    module: string | null
     isActive: boolean | null
   }
 
@@ -15762,6 +15763,7 @@ export namespace Prisma {
     icon: string | null
     order: number | null
     parentMenu: string | null
+    module: string | null
     isActive: boolean | null
   }
 
@@ -15773,6 +15775,7 @@ export namespace Prisma {
     icon: number
     order: number
     parentMenu: number
+    module: number
     isActive: number
     _all: number
   }
@@ -15794,6 +15797,7 @@ export namespace Prisma {
     icon?: true
     order?: true
     parentMenu?: true
+    module?: true
     isActive?: true
   }
 
@@ -15805,6 +15809,7 @@ export namespace Prisma {
     icon?: true
     order?: true
     parentMenu?: true
+    module?: true
     isActive?: true
   }
 
@@ -15816,6 +15821,7 @@ export namespace Prisma {
     icon?: true
     order?: true
     parentMenu?: true
+    module?: true
     isActive?: true
     _all?: true
   }
@@ -15914,6 +15920,7 @@ export namespace Prisma {
     icon: string | null
     order: number | null
     parentMenu: string | null
+    module: string | null
     isActive: boolean | null
     _count: MenuCountAggregateOutputType | null
     _avg: MenuAvgAggregateOutputType | null
@@ -15944,6 +15951,7 @@ export namespace Prisma {
     icon?: boolean
     order?: boolean
     parentMenu?: boolean
+    module?: boolean
     isActive?: boolean
     permissions?: boolean | Menu$permissionsArgs<ExtArgs>
     _count?: boolean | MenuCountOutputTypeDefaultArgs<ExtArgs>
@@ -15957,6 +15965,7 @@ export namespace Prisma {
     icon?: boolean
     order?: boolean
     parentMenu?: boolean
+    module?: boolean
     isActive?: boolean
   }, ExtArgs["result"]["menu"]>
 
@@ -15968,6 +15977,7 @@ export namespace Prisma {
     icon?: boolean
     order?: boolean
     parentMenu?: boolean
+    module?: boolean
     isActive?: boolean
   }, ExtArgs["result"]["menu"]>
 
@@ -15979,10 +15989,11 @@ export namespace Prisma {
     icon?: boolean
     order?: boolean
     parentMenu?: boolean
+    module?: boolean
     isActive?: boolean
   }
 
-  export type MenuOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "menuName" | "controlName" | "description" | "icon" | "order" | "parentMenu" | "isActive", ExtArgs["result"]["menu"]>
+  export type MenuOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "menuName" | "controlName" | "description" | "icon" | "order" | "parentMenu" | "module" | "isActive", ExtArgs["result"]["menu"]>
   export type MenuInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     permissions?: boolean | Menu$permissionsArgs<ExtArgs>
     _count?: boolean | MenuCountOutputTypeDefaultArgs<ExtArgs>
@@ -16003,6 +16014,7 @@ export namespace Prisma {
       icon: string | null
       order: number | null
       parentMenu: string | null
+      module: string | null
       isActive: boolean | null
     }, ExtArgs["result"]["menu"]>
     composites: {}
@@ -16435,6 +16447,7 @@ export namespace Prisma {
     readonly icon: FieldRef<"Menu", 'String'>
     readonly order: FieldRef<"Menu", 'Int'>
     readonly parentMenu: FieldRef<"Menu", 'String'>
+    readonly module: FieldRef<"Menu", 'String'>
     readonly isActive: FieldRef<"Menu", 'Boolean'>
   }
     
@@ -61754,6 +61767,7 @@ export namespace Prisma {
     icon: 'icon',
     order: 'order',
     parentMenu: 'parentMenu',
+    module: 'module',
     isActive: 'isActive'
   };
 
@@ -63246,6 +63260,7 @@ export namespace Prisma {
     icon?: StringNullableFilter<"Menu"> | string | null
     order?: IntNullableFilter<"Menu"> | number | null
     parentMenu?: StringNullableFilter<"Menu"> | string | null
+    module?: StringNullableFilter<"Menu"> | string | null
     isActive?: BoolNullableFilter<"Menu"> | boolean | null
     permissions?: PermissionListRelationFilter
   }
@@ -63258,6 +63273,7 @@ export namespace Prisma {
     icon?: SortOrderInput | SortOrder
     order?: SortOrderInput | SortOrder
     parentMenu?: SortOrderInput | SortOrder
+    module?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
     permissions?: PermissionOrderByRelationAggregateInput
   }
@@ -63273,6 +63289,7 @@ export namespace Prisma {
     icon?: StringNullableFilter<"Menu"> | string | null
     order?: IntNullableFilter<"Menu"> | number | null
     parentMenu?: StringNullableFilter<"Menu"> | string | null
+    module?: StringNullableFilter<"Menu"> | string | null
     isActive?: BoolNullableFilter<"Menu"> | boolean | null
     permissions?: PermissionListRelationFilter
   }, "id" | "controlName">
@@ -63285,6 +63302,7 @@ export namespace Prisma {
     icon?: SortOrderInput | SortOrder
     order?: SortOrderInput | SortOrder
     parentMenu?: SortOrderInput | SortOrder
+    module?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
     _count?: MenuCountOrderByAggregateInput
     _avg?: MenuAvgOrderByAggregateInput
@@ -63304,6 +63322,7 @@ export namespace Prisma {
     icon?: StringNullableWithAggregatesFilter<"Menu"> | string | null
     order?: IntNullableWithAggregatesFilter<"Menu"> | number | null
     parentMenu?: StringNullableWithAggregatesFilter<"Menu"> | string | null
+    module?: StringNullableWithAggregatesFilter<"Menu"> | string | null
     isActive?: BoolNullableWithAggregatesFilter<"Menu"> | boolean | null
   }
 
@@ -67478,6 +67497,7 @@ export namespace Prisma {
     icon?: string | null
     order?: number | null
     parentMenu?: string | null
+    module?: string | null
     isActive?: boolean | null
     permissions?: PermissionCreateNestedManyWithoutMenuInput
   }
@@ -67490,6 +67510,7 @@ export namespace Prisma {
     icon?: string | null
     order?: number | null
     parentMenu?: string | null
+    module?: string | null
     isActive?: boolean | null
     permissions?: PermissionUncheckedCreateNestedManyWithoutMenuInput
   }
@@ -67502,6 +67523,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     order?: NullableIntFieldUpdateOperationsInput | number | null
     parentMenu?: NullableStringFieldUpdateOperationsInput | string | null
+    module?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     permissions?: PermissionUpdateManyWithoutMenuNestedInput
   }
@@ -67514,6 +67536,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     order?: NullableIntFieldUpdateOperationsInput | number | null
     parentMenu?: NullableStringFieldUpdateOperationsInput | string | null
+    module?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     permissions?: PermissionUncheckedUpdateManyWithoutMenuNestedInput
   }
@@ -67526,6 +67549,7 @@ export namespace Prisma {
     icon?: string | null
     order?: number | null
     parentMenu?: string | null
+    module?: string | null
     isActive?: boolean | null
   }
 
@@ -67537,6 +67561,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     order?: NullableIntFieldUpdateOperationsInput | number | null
     parentMenu?: NullableStringFieldUpdateOperationsInput | string | null
+    module?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
@@ -67548,6 +67573,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     order?: NullableIntFieldUpdateOperationsInput | number | null
     parentMenu?: NullableStringFieldUpdateOperationsInput | string | null
+    module?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
@@ -72155,6 +72181,7 @@ export namespace Prisma {
     icon?: SortOrder
     order?: SortOrder
     parentMenu?: SortOrder
+    module?: SortOrder
     isActive?: SortOrder
   }
 
@@ -72170,6 +72197,7 @@ export namespace Prisma {
     icon?: SortOrder
     order?: SortOrder
     parentMenu?: SortOrder
+    module?: SortOrder
     isActive?: SortOrder
   }
 
@@ -72181,6 +72209,7 @@ export namespace Prisma {
     icon?: SortOrder
     order?: SortOrder
     parentMenu?: SortOrder
+    module?: SortOrder
     isActive?: SortOrder
   }
 
@@ -78218,6 +78247,7 @@ export namespace Prisma {
     icon?: string | null
     order?: number | null
     parentMenu?: string | null
+    module?: string | null
     isActive?: boolean | null
   }
 
@@ -78229,6 +78259,7 @@ export namespace Prisma {
     icon?: string | null
     order?: number | null
     parentMenu?: string | null
+    module?: string | null
     isActive?: boolean | null
   }
 
@@ -78279,6 +78310,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     order?: NullableIntFieldUpdateOperationsInput | number | null
     parentMenu?: NullableStringFieldUpdateOperationsInput | string | null
+    module?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 
@@ -78290,6 +78322,7 @@ export namespace Prisma {
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     order?: NullableIntFieldUpdateOperationsInput | number | null
     parentMenu?: NullableStringFieldUpdateOperationsInput | string | null
+    module?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
   }
 

@@ -14,7 +14,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@ne
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { SetUserRolesDto } from './dto/set-user-roles.dto';
+import { SetUserRolesDto, BatchUserPermissionsDto } from './dto/set-user-roles.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { CurrentUser } from '../common/decorators';
 import { PaginationQueryDto } from '../common/dto';
@@ -94,6 +94,13 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'User permissions updated' })
   setUserPermissions(@Param('userName') userName: string, @Body() dto: SetUserRolesDto) {
     return this.usersService.setUserPermissions(userName, dto);
+  }
+
+  @Put('permissions/batch')
+  @ApiOperation({ summary: 'Apply one permission grid to many users (sync/overwrite — delete-then-insert)' })
+  @ApiResponse({ status: 200, description: 'Permissions updated for all target users' })
+  syncBatch(@Body() dto: BatchUserPermissionsDto) {
+    return this.usersService.syncPermissionsForUsers(dto);
   }
 
   @Patch(':id/reset-password')

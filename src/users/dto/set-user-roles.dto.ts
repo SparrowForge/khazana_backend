@@ -1,4 +1,4 @@
-import { IsArray, ValidateNested } from 'class-validator';
+import { IsArray, ValidateNested, ArrayNotEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
 import { IsString, IsOptional } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
@@ -35,4 +35,19 @@ export class SetUserRolesDto {
   @ValidateNested({ each: true })
   @Type(() => UserRoleDto)
   roles: UserRoleDto[];
+}
+
+/** Apply one permission grid to many users at once (User Menu Permission screen). */
+export class BatchUserPermissionsDto {
+  @ApiProperty({ type: [String], example: ['admin', 'cashier1'], description: 'Target usernames' })
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsString({ each: true })
+  userNames: string[];
+
+  @ApiProperty({ type: [UserRoleDto], description: 'Permission grid applied to every target user' })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => UserRoleDto)
+  permissions: UserRoleDto[];
 }

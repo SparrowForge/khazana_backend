@@ -10,6 +10,7 @@ export class CreateMenuDto {
   icon?: string;
   order?: number;
   parentMenu?: string;
+  module?: string; // 'Sale' | 'Purchase' | 'Inventory'
   isActive?: boolean;
 }
 

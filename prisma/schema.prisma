@@ -164,6 +164,7 @@ model Menu {
   icon        String?      @map("Icon")
   order       Int?         @map("Order")
   parentMenu  String?      @map("ParentMenu")
+  module      String?      @map("Module") // 'Sale' | 'Purchase' | 'Inventory'
   isActive    Boolean?     @map("IsActive")
   permissions Permission[]
 
