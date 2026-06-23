@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Patch,
   Delete,
   Body,
@@ -77,6 +78,22 @@ export class UsersController {
   @ApiResponse({ status: 201, description: 'Roles assigned successfully' })
   setRoles(@Param('userName') userName: string, @Body() dto: SetUserRolesDto) {
     return this.usersService.setUserRoles(userName, dto);
+  }
+
+  @Get(':userName/permissions')
+  @ApiOperation({ summary: "Get a user's explicit menu permissions" })
+  @ApiParam({ name: 'userName', description: 'Username' })
+  @ApiResponse({ status: 200, description: 'User and their t_UserRole permission rows' })
+  getUserPermissions(@Param('userName') userName: string) {
+    return this.usersService.getUserPermissions(userName);
+  }
+
+  @Put(':userName/permissions')
+  @ApiOperation({ summary: 'Save menu permissions for a user (sync/overwrite — delete-then-insert)' })
+  @ApiParam({ name: 'userName', description: 'Username' })
+  @ApiResponse({ status: 200, description: 'User permissions updated' })
+  setUserPermissions(@Param('userName') userName: string, @Body() dto: SetUserRolesDto) {
+    return this.usersService.setUserPermissions(userName, dto);
   }
 
   @Patch(':id/reset-password')

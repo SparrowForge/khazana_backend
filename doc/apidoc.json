@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Khazana POS API",
-    "description": "## Khazana POS Backend API\n\nAvailable modules:\n- **Auth** – Login, profile, change password\n- **Users** – User management and role assignment\n- **POS Products** – Active items with live prices for the POS terminal (from Item_Information + t_Price)\n- **POS Sales** – Quick cash billing: create invoice, list, print (writes t_SOMstr + t_SODet, deducts inventory)\n- **Sales** – Cash, credit, VAT cash, VAT credit sales\n- **Inventory** – Items, stock receive / issue / adjust\n- **Customers** – Customer management, ledger, payments\n- **Roles** – Role management\n- **Menus** – Menu items\n- **Permissions** – Role-based permissions\n- **Orders** – Sales orders (regular and VAT)\n- **Pricing** – Sale prices and cost prices\n- **Finance** – Money receive and cash purchases\n- **Packets** – Packet stock management\n- **NC Adjustment** – Non-conformance adjustments\n- **Assortment** – Assortment records\n- **Reports** – Sales, stock, item-wise, customer statements\n- **Admin** – Branches, settings, banks, audit log\n- **Dashboard** – Summary statistics\n- **Categories** – Item category management",
+    "description": "## Khazana POS Backend API\n\nAvailable modules:\n- **Auth** – Login, profile, change password\n- **Users** – User management and role assignment\n- **POS Products** – Active items with live prices for the POS terminal (from Item_Information + t_Price)\n- **POS Sales** – Quick cash billing: create invoice, list, print (writes t_SOMstr + t_SODet, deducts inventory)\n- **Sales** – Cash, credit, VAT cash, VAT credit sales\n- **Inventory** – Items, stock receive / issue / adjust\n- **Customers** – Customer management, ledger, payments\n- **Roles** – Role management\n- **Menus** – Menu items\n- **Permissions** – Role-based permissions\n- **Orders** – Sales orders (regular and VAT)\n- **Pricing** – Sale prices and cost prices\n- **Finance** – Money receive and cash purchases\n- **Packets** – Packet stock management\n- **NC Adjustment** – Non-conformance adjustments\n- **Assortment** – Assortment records\n- **Reports** – Sales, stock, item-wise, customer statements\n- **Admin** – Branches, settings, banks, audit log\n- **Dashboard** – Summary statistics\n- **Categories** – Item category management\n- **User Permissions** – Assign roles & explicit menu permissions directly to users (new User Role Permission page)\n\n_RBAC update: every application route is registered in the Menu table; permission save uses delete-then-insert sync/overwrite per role; users can be granted roles and explicit permissions directly._",
     "version": "1.0",
     "contact": {}
   },
@@ -1652,6 +1652,114 @@
         "responses": {
           "201": {
             "description": "Roles assigned successfully"
+          }
+        }
+      }
+    },
+    "/users/{userName}/permissions": {
+      "get": {
+        "tags": [
+          "User Permissions"
+        ],
+        "summary": "Get a user's assigned roles and explicit menu permissions",
+        "description": "Backs the new User Role Permission admin page. Returns the user's role assignments together with the per-menu access flags (t_UserRole rows) granted directly to the user.",
+        "operationId": "UsersController_getUserPermissions",
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username (not UUID)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User role + permission assignment"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User Permissions"
+        ],
+        "summary": "Assign roles and explicit permissions to a user — SYNC / OVERWRITE",
+        "description": "Admin assigns specific roles and explicit per-menu permissions directly to a user. Replaces the user's existing t_UserRole rows (delete-then-insert) in a single transaction.",
+        "operationId": "UsersController_setUserPermissions",
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username (not UUID)"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "roleIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "description": "Roles to assign to the user"
+                  },
+                  "permissions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "controlName": {
+                          "type": "string",
+                          "example": "UserRolePermission"
+                        },
+                        "isEnable": {
+                          "type": "string",
+                          "example": "Y"
+                        },
+                        "addAccess": {
+                          "type": "string",
+                          "example": "Y"
+                        },
+                        "editAccess": {
+                          "type": "string",
+                          "example": "Y"
+                        },
+                        "deleteAccess": {
+                          "type": "string",
+                          "example": "N"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User roles and permissions updated"
           }
         }
       }
@@ -3596,6 +3704,112 @@
             "description": "List of permissions for the role"
           }
         }
+      },
+      "put": {
+        "tags": [
+          "Permissions"
+        ],
+        "summary": "Save (sync) all permissions for a role — SYNC / OVERWRITE",
+        "description": "Core save action for the admin/permissions screen. In a single transaction the server DELETES all existing Permission rows for the role, then batch-inserts the submitted set (delete-then-insert overwrite). This is the canonical replacement for POST /permissions/role/{roleId}/bulk.",
+        "operationId": "PermissionsController_syncByRole",
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Role UUID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "permissions"
+                ],
+                "properties": {
+                  "permissions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "menuId"
+                      ],
+                      "properties": {
+                        "menuId": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Menu UUID"
+                        },
+                        "isEnable": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "canCreate": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "canEdit": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "canDelete": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Role permissions replaced successfully"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Permissions"
+        ],
+        "summary": "Delete all permissions for a role",
+        "operationId": "PermissionsController_removeByRole",
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Role UUID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All permissions for the role deleted"
+          }
+        }
       }
     },
     "/permissions": {
@@ -3658,7 +3872,55 @@
         },
         "responses": {
           "201": {
-            "description": "Permission upserted successfully"
+            "description": "Permission created/updated successfully"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Permissions"
+        ],
+        "summary": "List all permissions (admin)",
+        "operationId": "PermissionsController_findAll",
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All permission rows"
+          }
+        }
+      }
+    },
+    "/permissions/{id}": {
+      "delete": {
+        "tags": [
+          "Permissions"
+        ],
+        "summary": "Delete a single permission by ID",
+        "operationId": "PermissionsController_remove",
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Permission UUID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Permission deleted successfully"
           }
         }
       }
@@ -3668,7 +3930,8 @@
         "tags": [
           "Permissions"
         ],
-        "summary": "Bulk create/update permissions for a role",
+        "summary": "[DEPRECATED — use PUT /permissions/role/{roleId}] Bulk upsert permissions for a role",
+        "deprecated": true,
         "operationId": "PermissionsController_bulkUpsert",
         "security": [
           {
@@ -7074,11 +7337,15 @@
     },
     {
       "name": "Menus",
-      "description": "UI menu items"
+      "description": "UI menu items — every application route (incl. admin/permissions and the new User Role Permission page) is registered here"
     },
     {
       "name": "Permissions",
-      "description": "Role-based access control"
+      "description": "Role-based access control — full CRUD; the save action deletes all existing rows for a role then batch-inserts the new set (sync/overwrite)"
+    },
+    {
+      "name": "User Permissions",
+      "description": "Assign roles and explicit per-menu permissions directly to individual users (User Role Permission admin page)"
     },
     {
       "name": "Orders",

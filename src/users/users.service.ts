@@ -154,4 +154,33 @@ export class UsersService {
     });
     return { message: 'Roles updated' };
   }
+
+  async getUserPermissions(userName: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { userName },
+      select: { id: true, userName: true, name: true },
+    });
+    if (!user) throw new NotFoundException('User not found');
+    const permissions = await this.prisma.t_UserRole.findMany({
+      where: { userId: userName },
+      orderBy: { controlName: 'asc' },
+    });
+    return { user, permissions };
+  }
+
+  /** Sync/overwrite a user's explicit menu permissions (delete-then-insert). */
+  async setUserPermissions(userName: string, dto: SetUserRolesDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { userName },
+      select: { id: true },
+    });
+    if (!user) throw new NotFoundException('User not found');
+    await this.prisma.$transaction([
+      this.prisma.t_UserRole.deleteMany({ where: { userId: userName } }),
+      this.prisma.t_UserRole.createMany({
+        data: dto.roles.map((r) => ({ userId: userName, ...r })),
+      }),
+    ]);
+    return { message: 'User permissions updated' };
+  }
 }

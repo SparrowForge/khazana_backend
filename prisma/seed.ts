@@ -47,7 +47,8 @@ async function main() {
     { menuName: 'Stock Receive', controlName: 'StockReceive', order: 3, parentMenu: 'Inventory' },
     { menuName: 'Stock Issue', controlName: 'StockIssue', order: 4, parentMenu: 'Inventory' },
     { menuName: 'Stock Transfer', controlName: 'StockTransfer', order: 5, parentMenu: 'Inventory' },
-    { menuName: 'Packets', controlName: 'Packets', order: 6, parentMenu: null },
+    { menuName: 'Stock Adjustment', controlName: 'StockAdjustment', order: 6, parentMenu: 'Inventory' },
+    { menuName: 'Packets', controlName: 'Packets', order: 7, parentMenu: null },
     { menuName: 'Customers', controlName: 'Customers', order: 7, parentMenu: null },
     { menuName: 'Orders', controlName: 'Orders', order: 8, parentMenu: null },
     { menuName: 'Pricing', controlName: 'Pricing', order: 9, parentMenu: null },
@@ -56,6 +57,7 @@ async function main() {
     { menuName: 'Administration', controlName: 'Admin', order: 12, parentMenu: null },
     { menuName: 'Users', controlName: 'Users', order: 1, parentMenu: 'Admin' },
     { menuName: 'Roles & Permissions', controlName: 'RolesPermissions', order: 2, parentMenu: 'Admin' },
+    { menuName: 'User Role Permission', controlName: 'UserRolePermission', order: 3, parentMenu: 'Admin' },
   ];
 
   for (const menu of menus) {
