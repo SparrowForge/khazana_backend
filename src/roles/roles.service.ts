@@ -1,10 +1,16 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { PaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
 
 export class CreateRoleDto {
+  @IsString()
+  @IsNotEmpty()
   name: string;
+
+  @IsString()
+  @IsOptional()
   description?: string;
 }
 

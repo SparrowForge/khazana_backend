@@ -1,20 +1,46 @@
 import { Injectable } from '@nestjs/common';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { PaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
 
 export class CreateBranchDto {
+  @IsString()
+  @IsNotEmpty()
   branchCode: string;
+
+  @IsString()
+  @IsNotEmpty()
   branchName: string;
+
+  @IsString()
+  @IsOptional()
   address?: string;
+
+  @IsString()
+  @IsOptional()
   vatNo?: string;
+
+  @IsString()
+  @IsOptional()
   mobileNo?: string;
 }
 
 export class UpdateSystemDto {
+  @IsString()
+  @IsOptional()
   companyName?: string;
+
+  @IsString()
+  @IsOptional()
   companyAddress?: string;
+
+  @IsString()
+  @IsOptional()
   companyUtility?: string;
+
+  @IsString()
+  @IsOptional()
   reportFooter?: string;
 }
 

@@ -1,26 +1,76 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Type } from 'class-transformer';
+import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray, ValidateNested } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { BranchPaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
 
+export class NcAdjustmentItemDto {
+  @IsString()
+  @IsNotEmpty()
+  itemId: string;
+
+  @IsNumber()
+  qty: number;
+
+  @IsString()
+  @IsOptional()
+  uom?: string;
+
+  @IsNumber()
+  @IsOptional()
+  price?: number;
+
+  @IsNumber()
+  @IsOptional()
+  amount?: number;
+
+  @IsNumber()
+  @IsOptional()
+  vatValue?: number;
+
+  @IsNumber()
+  @IsOptional()
+  vatAmount?: number;
+
+  @IsNumber()
+  @IsOptional()
+  discount?: number;
+
+  @IsNumber()
+  @IsOptional()
+  netAmount?: number;
+}
+
 export class CreateNcAdjustmentDto {
+  @IsString()
+  @IsOptional()
   code?: string;
+
+  @IsString()
+  @IsNotEmpty()
   date: string;
+
+  @IsString()
+  @IsOptional()
   name?: string;
+
+  @IsString()
+  @IsOptional()
   contactNo?: string;
+
+  @IsString()
+  @IsOptional()
   reference?: string;
+
+  @IsNumber()
+  @IsOptional()
   branchId?: number;
-  items: {
-    itemId: string;
-    qty: number;
-    uom?: string;
-    price?: number;
-    amount?: number;
-    vatValue?: number;
-    vatAmount?: number;
-    discount?: number;
-    netAmount?: number;
-  }[];
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => NcAdjustmentItemDto)
+  items: NcAdjustmentItemDto[];
 }
 
 @Injectable()

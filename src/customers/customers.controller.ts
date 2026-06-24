@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
-import { CustomersService, CreateCustomerDto } from './customers.service';
+import { CustomersService, CreateCustomerDto, UpdateCustomerDto } from './customers.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PaginationQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
@@ -51,7 +51,7 @@ export class CustomersController {
   @ApiOperation({ summary: 'Update customer by code' })
   @ApiParam({ name: 'code', description: 'Customer code' })
   @ApiResponse({ status: 200, description: 'Customer updated successfully' })
-  update(@Param('code') code: string, @Body() dto: Partial<CreateCustomerDto>) {
+  update(@Param('code') code: string, @Body() dto: UpdateCustomerDto) {
     return this.customersService.update(code, dto);
   }
 

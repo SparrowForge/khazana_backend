@@ -1,21 +1,80 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Type } from 'class-transformer';
+import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray, ValidateNested } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { BranchPaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
 
+export class OrderItemDto {
+  @IsString()
+  @IsNotEmpty()
+  itemCode: string;
+
+  @IsNumber()
+  qty: number;
+
+  @IsNumber()
+  @IsOptional()
+  unitPrice?: number;
+
+  @IsNumber()
+  @IsOptional()
+  vatPrice?: number;
+
+  @IsNumber()
+  @IsOptional()
+  amount?: number;
+}
+
 export class CreateOrderDto {
+  @IsString()
+  @IsNotEmpty()
   clientCode: string;
+
+  @IsString()
+  @IsOptional()
   serialNo?: string;
+
+  @IsNumber()
+  @IsOptional()
   advance?: number;
+
+  @IsString()
+  @IsOptional()
   orderDate?: string;
+
+  @IsNumber()
+  @IsOptional()
   totalPrice?: number;
+
+  @IsNumber()
+  @IsOptional()
   discount?: number;
+
+  @IsString()
+  @IsOptional()
   deliveryDate?: string;
+
+  @IsString()
+  @IsOptional()
   deliveryAddress?: string;
+
+  @IsString()
+  @IsOptional()
   cType?: string;
+
+  @IsNumber()
+  @IsOptional()
   branchId?: number;
+
+  @IsString()
+  @IsOptional()
   deliveryTime?: string;
-  items: { itemCode: string; qty: number; unitPrice?: number; vatPrice?: number; amount?: number }[];
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => OrderItemDto)
+  items: OrderItemDto[];
 }
 
 @Injectable()

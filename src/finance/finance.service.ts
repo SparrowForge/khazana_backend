@@ -1,22 +1,52 @@
 import { Injectable } from '@nestjs/common';
+import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { PaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
 
 export class CreateMoneyReceiveDto {
+  @IsString()
+  @IsNotEmpty()
   receiptNo: string;
+
+  @IsString()
+  @IsNotEmpty()
   receiptDate: string;
+
+  @IsString()
+  @IsNotEmpty()
   customerCode: string;
+
+  @IsNumber()
   amount: number;
+
+  @IsString()
+  @IsOptional()
   paymentMethod?: string;
+
+  @IsString()
+  @IsOptional()
   description?: string;
 }
 
 export class CreateCashPurchaseDto {
+  @IsString()
+  @IsNotEmpty()
   voucherNo: string;
+
+  @IsString()
+  @IsNotEmpty()
   voucherDate: string;
+
+  @IsString()
+  @IsOptional()
   supplier?: string;
+
+  @IsNumber()
   amount: number;
+
+  @IsString()
+  @IsOptional()
   description?: string;
 }
 

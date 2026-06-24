@@ -1,30 +1,92 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Type } from 'class-transformer';
+import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray, ValidateNested } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { BranchPaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
 
+export class AssortmentItemDto {
+  @IsString()
+  @IsNotEmpty()
+  itemOID: string;
+
+  @IsNumber()
+  qty: number;
+
+  @IsString()
+  @IsOptional()
+  uom?: string;
+
+  @IsNumber()
+  @IsOptional()
+  price?: number;
+
+  @IsNumber()
+  @IsOptional()
+  amount?: number;
+
+  @IsNumber()
+  @IsOptional()
+  vatValue?: number;
+
+  @IsNumber()
+  @IsOptional()
+  vatAmount?: number;
+
+  @IsNumber()
+  @IsOptional()
+  discount?: number;
+
+  @IsNumber()
+  @IsOptional()
+  netAmount?: number;
+}
+
 export class CreateAssortmentDto {
+  @IsString()
+  @IsOptional()
   code?: string;
+
+  @IsString()
+  @IsNotEmpty()
   date: string;
+
+  @IsString()
+  @IsOptional()
   type?: string;
+
+  @IsNumber()
+  @IsOptional()
   branchId?: number;
+
+  @IsNumber()
+  @IsOptional()
   totalAmt?: number;
+
+  @IsNumber()
+  @IsOptional()
   discAmt?: number;
+
+  @IsNumber()
+  @IsOptional()
   netAmt?: number;
+
+  @IsNumber()
+  @IsOptional()
   customerpay?: number;
+
+  @IsNumber()
+  @IsOptional()
   change?: number;
+
+  @IsString()
+  @IsOptional()
   discountRemarks?: string;
-  items: {
-    itemOID: string;
-    qty: number;
-    uom?: string;
-    price?: number;
-    amount?: number;
-    vatValue?: number;
-    vatAmount?: number;
-    discount?: number;
-    netAmount?: number;
-  }[];
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => AssortmentItemDto)
+  items: AssortmentItemDto[];
 }
 
 @Injectable()

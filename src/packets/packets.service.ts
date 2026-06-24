@@ -1,14 +1,32 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { PaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
 
 export class CreatePacketDto {
+  @IsString()
+  @IsNotEmpty()
   code: string;
+
+  @IsString()
+  @IsOptional()
   name?: string;
+
+  @IsString()
+  @IsOptional()
   uom?: string;
+
+  @IsNumber()
+  @IsOptional()
   weight?: number;
+
+  @IsNumber()
+  @IsOptional()
   rate?: number;
+
+  @IsString()
+  @IsOptional()
   remarks?: string;
 }
 

@@ -1,15 +1,35 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { IsString, IsNotEmpty, IsOptional, IsNumber } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { PriceQueryDto } from './dto/price-query.dto';
 import { buildPaginationMeta } from '../common/helpers';
 
 export class CreatePriceDto {
+  @IsString()
+  @IsNotEmpty()
   itemCode: string;
+
+  @IsString()
+  @IsNotEmpty()
   fromDate: string;
+
+  @IsString()
+  @IsOptional()
   toDate?: string;
+
+  @IsNumber()
   listPrice: number;
+
+  @IsNumber()
+  @IsOptional()
   vatPercent?: number;
+
+  @IsNumber()
+  @IsOptional()
   vatPrice?: number;
+
+  @IsNumber()
+  @IsOptional()
   discPrice?: number;
 }
 

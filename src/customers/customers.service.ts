@@ -1,14 +1,66 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PrismaService } from '../database/prisma.service';
 import { PaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
 
 export class CreateCustomerDto {
+  @ApiProperty({ example: '001', description: 'Unique customer code' })
+  @IsString()
+  @IsNotEmpty()
   code: string;
+
+  @ApiProperty({ example: 'Fazlu', description: 'Customer name' })
+  @IsString()
+  @IsNotEmpty()
   name: string;
+
+  @ApiPropertyOptional({ example: '01700000000' })
+  @IsString()
+  @IsOptional()
   mobile?: string;
+
+  @ApiPropertyOptional({ example: 'Dhaka' })
+  @IsString()
+  @IsOptional()
   address?: string;
+
+  @ApiPropertyOptional({ example: 'customer@example.com' })
+  @IsString()
+  @IsOptional()
   email?: string;
+
+  @ApiPropertyOptional({ example: '2026-06-24' })
+  @IsString()
+  @IsOptional()
+  joiningDate?: string;
+}
+
+export class UpdateCustomerDto {
+  @ApiPropertyOptional({ example: 'Fazlu' })
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @ApiPropertyOptional({ example: '01700000000' })
+  @IsString()
+  @IsOptional()
+  mobile?: string;
+
+  @ApiPropertyOptional({ example: 'Dhaka' })
+  @IsString()
+  @IsOptional()
+  address?: string;
+
+  @ApiPropertyOptional({ example: 'customer@example.com' })
+  @IsString()
+  @IsOptional()
+  email?: string;
+
+  @ApiPropertyOptional({ example: '2026-06-24' })
+  @IsString()
+  @IsOptional()
   joiningDate?: string;
 }
 
@@ -39,7 +91,7 @@ export class CustomersService {
     });
   }
 
-  async update(code: string, dto: Partial<CreateCustomerDto>) {
+  async update(code: string, dto: UpdateCustomerDto) {
     await this.findOne(code);
     return this.prisma.customer.update({ where: { code }, data: dto });
   }

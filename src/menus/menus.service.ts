@@ -1,16 +1,40 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { IsString, IsNotEmpty, IsOptional, IsNumber, IsBoolean } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { PaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
 
 export class CreateMenuDto {
+  @IsString()
+  @IsNotEmpty()
   menuName: string;
+
+  @IsString()
+  @IsNotEmpty()
   controlName: string;
+
+  @IsString()
+  @IsOptional()
   description?: string;
+
+  @IsString()
+  @IsOptional()
   icon?: string;
+
+  @IsNumber()
+  @IsOptional()
   order?: number;
+
+  @IsString()
+  @IsOptional()
   parentMenu?: string;
+
+  @IsString()
+  @IsOptional()
   module?: string; // 'Sale' | 'Purchase' | 'Inventory'
+
+  @IsBoolean()
+  @IsOptional()
   isActive?: boolean;
 }
 
