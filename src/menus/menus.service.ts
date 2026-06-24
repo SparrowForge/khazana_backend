@@ -51,6 +51,14 @@ export class MenusService {
     return { items: menus, meta: buildPaginationMeta(total, page, limit) };
   }
 
+  /** Full, non-paginated, ordered menu list for building the navigation tree. */
+  findNav() {
+    return this.prisma.menu.findMany({
+      where: { OR: [{ isActive: true }, { isActive: null }] },
+      orderBy: [{ parentMenu: 'asc' }, { order: 'asc' }],
+    });
+  }
+
   async findOne(id: string) {
     const menu = await this.prisma.menu.findUnique({ where: { id } });
     if (!menu) throw new NotFoundException('Menu not found');

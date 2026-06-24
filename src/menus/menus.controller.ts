@@ -20,6 +20,12 @@ export class MenusController {
     return paginatedResponse(items, meta, 'Menu');
   }
 
+  // NOTE: static 'nav' route must precede ':id' so it is matched first
+  @Get('nav')
+  @ApiOperation({ summary: 'Get full ordered menu list for navigation tree' })
+  @ApiResponse({ status: 200, description: 'All active menus (non-paginated)' })
+  nav() { return this.menusService.findNav(); }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get menu by ID' })
   @ApiParam({ name: 'id', description: 'Menu UUID' })

@@ -6,29 +6,35 @@ const prisma = new PrismaClient();
 async function main() {
   // Default branch
   const branch = await prisma.branch.upsert({
-    where: { branchCode: 'HQ' },
+    where: { branchCode: 'Factory' },
     update: {},
     create: {
-      branchCode: 'HQ',
-      branchName: 'Head Quarter',
+      branchCode: 'Factory',
+      branchName: 'Factory',
       address: 'Dhaka, Bangladesh',
     },
   });
 
   // Admin user
   const hashedPassword = await bcrypt.hash('admin123', 10);
-  await prisma.user.upsert({
+  const adminUser = await prisma.user.upsert({
     where: { userName: 'admin' },
     update: {},
     create: {
       userName: 'admin',
       name: 'System Administrator',
       password: hashedPassword,
-      branchId: branch.id,
       isActive: 'Y',
       creator: 'system',
       creationDate: new Date(),
     },
+  });
+
+  // Branch association is via UserBranchMapping (User has no branchId scalar)
+  await prisma.userBranchMapping.upsert({
+    where: { userId_branchId: { userId: adminUser.id, branchId: branch.id } },
+    update: {},
+    create: { userId: adminUser.id, branchId: branch.id },
   });
 
   // Default menus. `module` groups menus into the 3 business modules shown on the
@@ -36,7 +42,10 @@ async function main() {
   // (Dashboard, Finance, Reports, Admin) are left null and appear under "All".
   const menus = [
     { menuName: 'Dashboard', controlName: 'Dashboard', order: 1, parentMenu: null, module: null },
-    { menuName: 'Sales', controlName: 'Sales', order: 2, parentMenu: null, module: 'Sale' },
+    { menuName: 'POS Billing', controlName: 'POS', order: 2, parentMenu: null, module: 'Sale' },
+    { menuName: 'POS Terminal', controlName: 'POSTerminal', order: 1, parentMenu: 'POS', module: 'Sale' },
+    { menuName: 'POS Sales', controlName: 'POSSales', order: 2, parentMenu: 'POS', module: 'Sale' },
+    { menuName: 'Sales', controlName: 'Sales', order: 3, parentMenu: null, module: 'Sale' },
     { menuName: 'Cash Sales', controlName: 'CashSales', order: 1, parentMenu: 'Sales', module: 'Sale' },
     { menuName: 'Credit Sales', controlName: 'CreditSales', order: 2, parentMenu: 'Sales', module: 'Sale' },
     { menuName: 'VAT Cash Sales', controlName: 'VatCashSales', order: 3, parentMenu: 'Sales', module: 'Sale' },
