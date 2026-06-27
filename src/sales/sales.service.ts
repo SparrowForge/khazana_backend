@@ -66,12 +66,16 @@ export class SalesService {
   // ── Credit Sale (Non-VAT) ─────────────────────────────────────
 
   async createCreditSale(dto: CreateCreditSaleDto, userName: string) {
-    const existing = await this.prisma.cSMaster.findUnique({ where: { invNo: dto.invNo } });
+    // Auto-generate the invoice number when the UI leaves it blank (credit has
+    // no central sequence otherwise, so blanks would collide on the 2nd sale).
+    const invNo = dto.invNo || (await this.generateCreditInvoiceNo());
+
+    const existing = await this.prisma.cSMaster.findUnique({ where: { invNo } });
     if (existing) throw new BadRequestException('Invoice number already exists');
 
     const sale = await this.prisma.cSMaster.create({
       data: {
-        invNo: dto.invNo,
+        invNo,
         invDate: new Date(dto.invDate),
         clientCode: dto.clientCode,
         poNo: dto.poNo,
@@ -147,12 +151,14 @@ export class SalesService {
   // ── VAT Credit Sale ───────────────────────────────────────────
 
   async createVatCreditSale(dto: CreateVatCreditSaleDto, userName: string) {
-    const existing = await this.prisma.cSVMaster.findUnique({ where: { invNo: dto.invNo } });
+    const invNo = dto.invNo || (await this.generateVatCreditInvoiceNo());
+
+    const existing = await this.prisma.cSVMaster.findUnique({ where: { invNo } });
     if (existing) throw new BadRequestException('Invoice number already exists');
 
     const sale = await this.prisma.cSVMaster.create({
       data: {
-        invNo: dto.invNo,
+        invNo,
         invDate: new Date(dto.invDate),
         clientCode: dto.clientCode,
         poNo: dto.poNo,
@@ -246,6 +252,20 @@ export class SalesService {
     if (typeof value === 'number') return Number.isFinite(value) ? value : null;
     if (typeof value === 'string' && /^\d+$/.test(value.trim())) return parseInt(value, 10);
     return null;
+  }
+
+  private async generateCreditInvoiceNo(): Promise<string> {
+    const d = new Date();
+    const yyyymm = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}`;
+    const count = await this.prisma.cSMaster.count();
+    return `CR-${yyyymm}-${String(count + 1).padStart(5, '0')}`;
+  }
+
+  private async generateVatCreditInvoiceNo(): Promise<string> {
+    const d = new Date();
+    const yyyymm = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}`;
+    const count = await this.prisma.cSVMaster.count();
+    return `CRV-${yyyymm}-${String(count + 1).padStart(5, '0')}`;
   }
 
   private async generateInvoiceNo(prefix: string): Promise<string> {

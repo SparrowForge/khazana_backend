@@ -40,9 +40,10 @@ export class VatCreditItemDto {
 }
 
 export class CreateVatCreditSaleDto {
-  @ApiProperty({ example: 'CSV-2024-001', description: 'Invoice number' })
+  @ApiPropertyOptional({ example: 'CSV-2024-001', description: 'Invoice number (auto-generated if omitted)' })
   @IsString()
-  invNo: string;
+  @IsOptional()
+  invNo?: string;
 
   @ApiProperty({ example: '2024-01-15', description: 'Invoice date (ISO 8601)' })
   @IsDateString()

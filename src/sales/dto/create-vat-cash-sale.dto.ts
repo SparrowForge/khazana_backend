@@ -50,9 +50,10 @@ export class CreateVatCashSaleDto {
   @IsDateString()
   invoiceDate: string;
 
-  @ApiProperty({ example: 1, description: 'Branch ID' })
+  @ApiPropertyOptional({ example: 1, description: 'Branch ID (legacy Int column; omit for UUID sessions)' })
   @IsNumber()
-  branchId: number;
+  @IsOptional()
+  branchId?: number;
 
   @ApiPropertyOptional({ example: 'VAT-CLN-001', description: 'VAT client number' })
   @IsString()
