@@ -15,6 +15,7 @@ export class PosProductsService {
           orderBy: { priceFromDate: 'desc' },
         },
         image: true,
+        inventory: true,
       },
       orderBy: { itmName: 'asc' },
     });
@@ -31,6 +32,10 @@ export class PosProductsService {
 
         if (!price?.priceListPrice) return null;
 
+        // On-hand stock (0 if no inventory row on file). Sent so the terminal
+        // can cache it and show live counts while offline.
+        const stock = Number(item.inventory?.quantity ?? 0);
+
         return {
           id: item.id,
           itmCode: item.itmCode,
@@ -38,6 +43,7 @@ export class PosProductsService {
           uom: item.itmUOM ?? 'PCS',
           price: price.priceListPrice,
           vatPercentage: price.priceVatPercent ?? 0,
+          stock,
           imageUrl: item.image?.fileUrl ?? null,
         };
       })

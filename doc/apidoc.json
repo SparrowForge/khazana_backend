@@ -628,6 +628,11 @@
             "nullable": true,
             "description": "Cloudinary URL from media_files.fileUrl — null if no image uploaded",
             "example": "https://res.cloudinary.com/demo/image/upload/gulab-jamun.jpg"
+          },
+          "stock": {
+            "type": "number",
+            "example": 42,
+            "description": "On-hand quantity (summed Inventory rows)"
           }
         }
       },
@@ -883,6 +888,146 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "OfflineSaleDto": {
+        "type": "object",
+        "required": [
+          "invoiceNo",
+          "items",
+          "paidAmount",
+          "clientSavedAt"
+        ],
+        "properties": {
+          "invoiceNo": {
+            "type": "string",
+            "example": "MZ01-1782560700-001",
+            "description": "Client-generated invoice: [UserPrefix]-[UnixTimestamp]-[OfflineSeq]"
+          },
+          "items": {
+            "type": "array",
+            "description": "Cart items",
+            "items": {
+              "$ref": "#/components/schemas/PosCartItemDto"
+            }
+          },
+          "paidAmount": {
+            "type": "number",
+            "example": 500,
+            "description": "Amount tendered by the customer"
+          },
+          "clientSavedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-06-27T05:45:00.000Z",
+            "description": "When the sale was originally saved offline (historical timestamp)"
+          },
+          "servedBy": {
+            "type": "string",
+            "example": "Ahmed",
+            "description": "Staff name — defaults to the syncing user"
+          },
+          "salesType": {
+            "type": "string",
+            "example": "Cash",
+            "description": "Cash | Card"
+          },
+          "branchId": {
+            "type": "number",
+            "example": 1,
+            "description": "Branch ID (integer)"
+          },
+          "discountType": {
+            "type": "string",
+            "enum": [
+              "fixed",
+              "percentage"
+            ],
+            "example": "fixed"
+          },
+          "discountValue": {
+            "type": "number",
+            "minimum": 0,
+            "example": 50,
+            "description": "Flat ৳ amount or percentage (0–100)"
+          }
+        }
+      },
+      "SyncOfflineDto": {
+        "type": "object",
+        "required": [
+          "userId",
+          "userName",
+          "orders"
+        ],
+        "properties": {
+          "userId": {
+            "type": "string",
+            "example": "df8a8ad7-fdac-45fd-a4ef-3689adc19cca",
+            "description": "User ID owning these offline orders (must match the authenticated user)"
+          },
+          "userName": {
+            "type": "string",
+            "example": "admin",
+            "description": "Username owning these offline orders (must match the authenticated user)"
+          },
+          "orders": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Offline transactions to replay",
+            "items": {
+              "$ref": "#/components/schemas/OfflineSaleDto"
+            }
+          }
+        }
+      },
+      "SyncOrderResult": {
+        "type": "object",
+        "properties": {
+          "invoiceNo": {
+            "type": "string",
+            "example": "MZ01-1782560700-001"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "synced",
+              "skipped",
+              "failed"
+            ]
+          },
+          "saleId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Present when synced/skipped"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Present when skipped/failed"
+          }
+        }
+      },
+      "SyncOfflineResult": {
+        "type": "object",
+        "properties": {
+          "syncedCount": {
+            "type": "number",
+            "example": 3
+          },
+          "skippedCount": {
+            "type": "number",
+            "example": 1
+          },
+          "failedCount": {
+            "type": "number",
+            "example": 0
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SyncOrderResult"
+            }
           }
         }
       }
@@ -7297,6 +7442,45 @@
           },
           "413": {
             "description": "File exceeds 10 MB limit"
+          }
+        }
+      }
+    },
+    "/pos/sync-offline": {
+      "post": {
+        "tags": [
+          "POS Sales"
+        ],
+        "summary": "Batch-replay offline POS sales onto the central DB",
+        "description": "Uploaded by a cashier session on reconnect. Idempotent (skips invoice numbers that already exist), per-order isolated, and preserves each sale s original offline timestamp. The payload userId/userName must match the authenticated user.",
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SyncOfflineDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Per-order sync results (synced / skipped / failed)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncOfflineResult"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Batch owner does not match the authenticated user"
           }
         }
       }

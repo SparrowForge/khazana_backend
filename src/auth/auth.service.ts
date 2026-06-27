@@ -83,6 +83,7 @@ export class AuthService {
       user: {
         id: user.id,
         userName: user.userName,
+        userPrefix: user.userPrefix,
         name: user.name,
         email: user.email,
         isVerified: user.isVerified,

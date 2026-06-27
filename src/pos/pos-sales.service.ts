@@ -57,8 +57,47 @@ export class PosSalesService {
   async create(dto: CreatePosSaleDto, userName: string) {
     if (!dto.items.length) throw new BadRequestException('Cart is empty');
 
-    const today = new Date();
-    const itemIds = dto.items.map((i) => i.itemId);
+    const invoiceNo = await this.generateInvoiceNo();
+    return this.persistSale({
+      invoiceNo,
+      saleDate: new Date(),
+      items: dto.items,
+      paidAmount: dto.paidAmount,
+      servedBy: dto.servedBy,
+      salesType: dto.salesType,
+      branchId: dto.branchId ?? null,
+      discountType: dto.discountType,
+      discountValue: dto.discountValue,
+      createdBy: userName,
+    });
+  }
+
+  /**
+   * Core sale writer shared by the online terminal (`create`) and the offline
+   * sync engine (`PosSyncService`). Recomputes line totals/VAT from t_Price,
+   * validates discount + payment, writes t_SOMstr + t_SODet, deducts stock, and
+   * returns the receipt response. The caller supplies the invoice number and the
+   * sale date — online passes a freshly generated number + `now`; offline passes
+   * the client-generated prefixed number + the historical save timestamp.
+   */
+  async persistSale(p: {
+    invoiceNo: string;
+    saleDate: Date;
+    items: { itemId: string; qty: number }[];
+    paidAmount: number;
+    servedBy?: string;
+    salesType?: string;
+    branchId?: number | null;
+    discountType?: 'fixed' | 'percentage';
+    discountValue?: number;
+    createdBy: string;
+  }) {
+    if (!p.items.length) throw new BadRequestException('Cart is empty');
+
+    // Price the lines as-of the sale date: `now` for online, the historical
+    // save timestamp for synced offline orders.
+    const asOf = p.saleDate;
+    const itemIds = p.items.map((i) => i.itemId);
 
     // Load items with their active prices
     const dbItems = await this.prisma.item_Information.findMany({
@@ -80,14 +119,14 @@ export class PosSalesService {
     const itemMap = new Map(dbItems.map((i) => [i.id, i]));
 
     // Compute per-line totals
-    const lines = dto.items.map((cartItem) => {
+    const lines = p.items.map((cartItem) => {
       const item = itemMap.get(cartItem.itemId)!;
 
       const price =
-        item.prices.find((p) => {
-          const from = p.priceFromDate;
-          const to = p.priceToDate;
-          return (!from || from <= today) && (!to || to >= today);
+        item.prices.find((pr) => {
+          const from = pr.priceFromDate;
+          const to = pr.priceToDate;
+          return (!from || from <= asOf) && (!to || to >= asOf);
         }) ?? item.prices[0];
 
       if (!price?.priceListPrice) {
@@ -114,7 +153,7 @@ export class PosSalesService {
         sodetVATAmount: vatAmount,
         sodetDiscount: 0,
         sodetNetAmount: netAmount,
-        branchId: dto.branchId ?? null,
+        branchId: p.branchId ?? null,
       };
     });
 
@@ -123,8 +162,8 @@ export class PosSalesService {
     const grossAmount = this.r2(totalAmount + vatTotal);
 
     // ── Discount validation & server-side recalculation ────────────────────
-    const discType = dto.discountType ?? 'fixed';
-    const discValue = dto.discountValue ?? 0;
+    const discType = p.discountType ?? 'fixed';
+    const discValue = p.discountValue ?? 0;
 
     if (discValue < 0) {
       throw new BadRequestException('Discount value cannot be negative');
@@ -145,30 +184,28 @@ export class PosSalesService {
     }
 
     const netAmount = this.r2(grossAmount - discountAmount);
-    const changeAmount = this.r2(dto.paidAmount - netAmount);
+    const changeAmount = this.r2(p.paidAmount - netAmount);
 
-    if (dto.paidAmount < netAmount) {
+    if (p.paidAmount < netAmount) {
       throw new BadRequestException(
-        `Insufficient payment — payable: ৳${netAmount}, paid: ৳${dto.paidAmount}`,
+        `Insufficient payment — payable: ৳${netAmount}, paid: ৳${p.paidAmount}`,
       );
     }
 
-    const invoiceNo = await this.generateInvoiceNo();
-
     const sale = await this.prisma.t_SOMstr.create({
       data: {
-        somstrCode: invoiceNo,
-        somstrDate: new Date(),
+        somstrCode: p.invoiceNo,
+        somstrDate: p.saleDate,
         somstrTotalAmt: totalAmount,
         somstrDiscAmt: discountAmount,
         somstrNetAmt: netAmount,
-        somstrCustomerpay: this.r2(dto.paidAmount),
+        somstrCustomerpay: this.r2(p.paidAmount),
         somstrChange: changeAmount,
-        mtype: dto.salesType ?? 'Cash',
-        somstrCreator: dto.servedBy || userName,
+        mtype: p.salesType ?? 'Cash',
+        somstrCreator: p.servedBy || p.createdBy,
         somstrCreationDate: new Date(),
         somstrIsActive: true,
-        branchId: dto.branchId ?? null,
+        branchId: p.branchId ?? null,
         details: {
           create: lines.map((l, idx) => ({
             sodetItemSLNum: String(idx + 1),

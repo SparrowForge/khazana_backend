@@ -10117,6 +10117,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     userName: string | null
+    userPrefix: string | null
     password: string | null
     validUntil: Date | null
     isActive: string | null
@@ -10143,6 +10144,7 @@ export namespace Prisma {
     id: string | null
     name: string | null
     userName: string | null
+    userPrefix: string | null
     password: string | null
     validUntil: Date | null
     isActive: string | null
@@ -10169,6 +10171,7 @@ export namespace Prisma {
     id: number
     name: number
     userName: number
+    userPrefix: number
     password: number
     validUntil: number
     isActive: number
@@ -10197,6 +10200,7 @@ export namespace Prisma {
     id?: true
     name?: true
     userName?: true
+    userPrefix?: true
     password?: true
     validUntil?: true
     isActive?: true
@@ -10223,6 +10227,7 @@ export namespace Prisma {
     id?: true
     name?: true
     userName?: true
+    userPrefix?: true
     password?: true
     validUntil?: true
     isActive?: true
@@ -10249,6 +10254,7 @@ export namespace Prisma {
     id?: true
     name?: true
     userName?: true
+    userPrefix?: true
     password?: true
     validUntil?: true
     isActive?: true
@@ -10348,6 +10354,7 @@ export namespace Prisma {
     id: string
     name: string | null
     userName: string
+    userPrefix: string | null
     password: string | null
     validUntil: Date | null
     isActive: string | null
@@ -10391,6 +10398,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     userName?: boolean
+    userPrefix?: boolean
     password?: boolean
     validUntil?: boolean
     isActive?: boolean
@@ -10422,6 +10430,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     userName?: boolean
+    userPrefix?: boolean
     password?: boolean
     validUntil?: boolean
     isActive?: boolean
@@ -10449,6 +10458,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     userName?: boolean
+    userPrefix?: boolean
     password?: boolean
     validUntil?: boolean
     isActive?: boolean
@@ -10476,6 +10486,7 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     userName?: boolean
+    userPrefix?: boolean
     password?: boolean
     validUntil?: boolean
     isActive?: boolean
@@ -10498,7 +10509,7 @@ export namespace Prisma {
     mediaFileId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userName" | "password" | "validUntil" | "isActive" | "creator" | "creationDate" | "lastUpdateBy" | "lastUpdateDate" | "isDeleted" | "deletedBy" | "deletionDate" | "remarks" | "email" | "isVerified" | "verificationToken" | "refreshTokenHash" | "refreshTokenExpiredAt" | "passwordResetCode" | "passwordResetCodeExpiredAt" | "passwordResetVerifiedAt" | "mediaFileId", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userName" | "userPrefix" | "password" | "validUntil" | "isActive" | "creator" | "creationDate" | "lastUpdateBy" | "lastUpdateDate" | "isDeleted" | "deletedBy" | "deletionDate" | "remarks" | "email" | "isVerified" | "verificationToken" | "refreshTokenHash" | "refreshTokenExpiredAt" | "passwordResetCode" | "passwordResetCodeExpiredAt" | "passwordResetVerifiedAt" | "mediaFileId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userRoles?: boolean | User$userRolesArgs<ExtArgs>
     branchMappings?: boolean | User$branchMappingsArgs<ExtArgs>
@@ -10525,6 +10536,7 @@ export namespace Prisma {
       id: string
       name: string | null
       userName: string
+      userPrefix: string | null
       password: string | null
       validUntil: Date | null
       isActive: string | null
@@ -10975,6 +10987,7 @@ export namespace Prisma {
     readonly id: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
     readonly userName: FieldRef<"User", 'String'>
+    readonly userPrefix: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
     readonly validUntil: FieldRef<"User", 'DateTime'>
     readonly isActive: FieldRef<"User", 'String'>
@@ -61681,6 +61694,7 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     userName: 'userName',
+    userPrefix: 'userPrefix',
     password: 'password',
     validUntil: 'validUntil',
     isActive: 'isActive',
@@ -62838,6 +62852,7 @@ export namespace Prisma {
     id?: UuidFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
     userName?: StringFilter<"User"> | string
+    userPrefix?: StringNullableFilter<"User"> | string | null
     password?: StringNullableFilter<"User"> | string | null
     validUntil?: DateTimeNullableFilter<"User"> | Date | string | null
     isActive?: StringNullableFilter<"User"> | string | null
@@ -62868,6 +62883,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrderInput | SortOrder
     userName?: SortOrder
+    userPrefix?: SortOrderInput | SortOrder
     password?: SortOrderInput | SortOrder
     validUntil?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
@@ -62897,6 +62913,7 @@ export namespace Prisma {
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     userName?: string
+    userPrefix?: string
     email?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
@@ -62925,12 +62942,13 @@ export namespace Prisma {
     branchMappings?: UserBranchMappingListRelationFilter
     mediaFiles?: MediaFileListRelationFilter
     profileImage?: XOR<MediaFileNullableScalarRelationFilter, MediaFileWhereInput> | null
-  }, "id" | "userName" | "email">
+  }, "id" | "userName" | "userPrefix" | "email">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrderInput | SortOrder
     userName?: SortOrder
+    userPrefix?: SortOrderInput | SortOrder
     password?: SortOrderInput | SortOrder
     validUntil?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
@@ -62963,6 +62981,7 @@ export namespace Prisma {
     id?: UuidWithAggregatesFilter<"User"> | string
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
     userName?: StringWithAggregatesFilter<"User"> | string
+    userPrefix?: StringNullableWithAggregatesFilter<"User"> | string | null
     password?: StringNullableWithAggregatesFilter<"User"> | string | null
     validUntil?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     isActive?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -67016,6 +67035,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     userName: string
+    userPrefix?: string | null
     password?: string | null
     validUntil?: Date | string | null
     isActive?: string | null
@@ -67045,6 +67065,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     userName: string
+    userPrefix?: string | null
     password?: string | null
     validUntil?: Date | string | null
     isActive?: string | null
@@ -67074,6 +67095,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
+    userPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67103,6 +67125,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
+    userPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67132,6 +67155,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     userName: string
+    userPrefix?: string | null
     password?: string | null
     validUntil?: Date | string | null
     isActive?: string | null
@@ -67158,6 +67182,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
+    userPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67183,6 +67208,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
+    userPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71885,6 +71911,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     userName?: SortOrder
+    userPrefix?: SortOrder
     password?: SortOrder
     validUntil?: SortOrder
     isActive?: SortOrder
@@ -71911,6 +71938,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     userName?: SortOrder
+    userPrefix?: SortOrder
     password?: SortOrder
     validUntil?: SortOrder
     isActive?: SortOrder
@@ -71937,6 +71965,7 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     userName?: SortOrder
+    userPrefix?: SortOrder
     password?: SortOrder
     validUntil?: SortOrder
     isActive?: SortOrder
@@ -77084,6 +77113,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     userName: string
+    userPrefix?: string | null
     password?: string | null
     validUntil?: Date | string | null
     isActive?: string | null
@@ -77112,6 +77142,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     userName: string
+    userPrefix?: string | null
     password?: string | null
     validUntil?: Date | string | null
     isActive?: string | null
@@ -77145,6 +77176,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     userName: string
+    userPrefix?: string | null
     password?: string | null
     validUntil?: Date | string | null
     isActive?: string | null
@@ -77173,6 +77205,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     userName: string
+    userPrefix?: string | null
     password?: string | null
     validUntil?: Date | string | null
     isActive?: string | null
@@ -77278,6 +77311,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
+    userPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77306,6 +77340,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
+    userPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77353,6 +77388,7 @@ export namespace Prisma {
     id?: UuidFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
     userName?: StringFilter<"User"> | string
+    userPrefix?: StringNullableFilter<"User"> | string | null
     password?: StringNullableFilter<"User"> | string | null
     validUntil?: DateTimeNullableFilter<"User"> | Date | string | null
     isActive?: StringNullableFilter<"User"> | string | null
@@ -77817,6 +77853,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     userName: string
+    userPrefix?: string | null
     password?: string | null
     validUntil?: Date | string | null
     isActive?: string | null
@@ -77845,6 +77882,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     userName: string
+    userPrefix?: string | null
     password?: string | null
     validUntil?: Date | string | null
     isActive?: string | null
@@ -77912,6 +77950,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
+    userPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77940,6 +77979,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
+    userPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77997,6 +78037,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     userName: string
+    userPrefix?: string | null
     password?: string | null
     validUntil?: Date | string | null
     isActive?: string | null
@@ -78025,6 +78066,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     userName: string
+    userPrefix?: string | null
     password?: string | null
     validUntil?: Date | string | null
     isActive?: string | null
@@ -78069,6 +78111,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
+    userPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78097,6 +78140,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
+    userPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -82335,6 +82379,7 @@ export namespace Prisma {
     id?: string
     name?: string | null
     userName: string
+    userPrefix?: string | null
     password?: string | null
     validUntil?: Date | string | null
     isActive?: string | null
@@ -82373,6 +82418,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
+    userPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -82401,6 +82447,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
+    userPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
@@ -82429,6 +82476,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     userName?: StringFieldUpdateOperationsInput | string
+    userPrefix?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     validUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
