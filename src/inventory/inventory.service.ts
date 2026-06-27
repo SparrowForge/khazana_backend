@@ -6,6 +6,15 @@ import { BranchPaginationQueryDto } from '../common/dto';
 import { ItemQueryDto } from './dto/item-query.dto';
 import { buildPaginationMeta } from '../common/helpers';
 
+/** Coerce a branch identifier to the legacy Int branch column. The session
+ *  branch is a UUID with no Int mapping, so non-numeric values use the fallback
+ *  (these columns are NOT NULL, so a value is always required). */
+function toLegacyBranchInt(value?: number | string | null, fallback = 1): number {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : fallback;
+  if (typeof value === 'string' && /^\d+$/.test(value.trim())) return parseInt(value, 10);
+  return fallback;
+}
+
 @Injectable()
 export class InventoryService {
   constructor(private prisma: PrismaService) {}
@@ -180,9 +189,14 @@ export class InventoryService {
 
   // ── Receive ───────────────────────────────────────────────────
 
-  async receiveStock(dto: ReceiveStockDto, createdBy: string, userBranchId: number) {
-    const branchId = dto.branchId ?? userBranchId;
+  async receiveStock(dto: ReceiveStockDto, createdBy: string, userBranchId: number | string) {
     const purDate = new Date(dto.purDate);
+    // Item_Receive.branchId is a legacy NON-NULL Int, but the session branch is a
+    // UUID — coerce numeric values, else fall back to 1, so the insert succeeds
+    // (this was the "error to save"). receiveBranchID = login branch; branchId
+    // holds the source ("from") branch.
+    const receiveBranchId = toLegacyBranchInt(dto.branchId ?? userBranchId);
+    const fromBranchId = toLegacyBranchInt(dto.fromBranchId, receiveBranchId);
 
     const results = await this.prisma.$transaction(async (tx) => {
       const receives = [];
@@ -193,8 +207,8 @@ export class InventoryService {
             itemName: line.itemName,
             qty: line.qty,
             purDate,
-            branchId,
-            receiveBranchID: branchId,
+            branchId: fromBranchId,
+            receiveBranchID: receiveBranchId,
             serialNo: dto.serialNo,
             voucharNo: dto.voucherNo,
             isActive: 1,

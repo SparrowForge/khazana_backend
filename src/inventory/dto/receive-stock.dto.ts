@@ -33,10 +33,15 @@ export class ReceiveStockDto {
   @IsDateString()
   purDate: string;
 
-  @ApiPropertyOptional({ example: 1, description: 'Defaults to the authenticated user\'s branch' })
+  @ApiPropertyOptional({ example: 1, description: 'Receiving branch — defaults to the authenticated user\'s (login) branch' })
   @IsInt()
   @IsOptional()
   branchId?: number;
+
+  @ApiPropertyOptional({ description: 'Source branch the stock is received FROM (branch id/code)' })
+  @IsString()
+  @IsOptional()
+  fromBranchId?: string;
 
   @ApiProperty({ type: [ReceiveStockLineDto] })
   @IsArray()

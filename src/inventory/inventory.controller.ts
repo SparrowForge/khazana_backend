@@ -88,7 +88,7 @@ export class InventoryController {
   receiveStock(
     @Body() dto: ReceiveStockDto,
     @CurrentUser('userName') userName: string,
-    @CurrentUser('branchId') branchId: number,
+    @CurrentUser('branchId') branchId: string,
   ) {
     return this.inventoryService.receiveStock(dto, userName, branchId);
   }
