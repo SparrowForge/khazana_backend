@@ -14,9 +14,17 @@ export class SalesService {
 
   // ── Cash Sale (Non-VAT) ──────────────────────────────────────
 
-  async createCashSale(dto: CreateCashSaleDto, userName: string, userBranchId?: number) {
-    const invoiceNo = dto.invoiceNo ?? await this.generateInvoiceNo('CS');
-    const branchId = dto.branchId ?? userBranchId;
+  async createCashSale(
+    dto: CreateCashSaleDto,
+    userName: string,
+    userBranchId?: number | string,
+  ) {
+    // Treat a blank invoiceNo as "auto-generate" (the UI sends "" to mean that).
+    const invoiceNo = dto.invoiceNo || (await this.generateInvoiceNo('CS'));
+    // The session/JWT branch is a UUID, but the legacy t_SOMstr/t_SODet.branchId
+    // columns are Int with no relation to Branch — coerce to an Int only when the
+    // value is genuinely numeric, otherwise store null (matches the POS module).
+    const branchId = this.toLegacyBranchId(dto.branchId ?? userBranchId);
 
     const sale = await this.prisma.t_SOMstr.create({
       data: {
@@ -230,6 +238,14 @@ export class SalesService {
       }),
     );
     await this.prisma.$transaction(ops);
+  }
+
+  /** Coerce a branch identifier to the legacy Int column, or null. The session
+   *  branchId is a UUID (no Int mapping), so non-numeric values become null. */
+  private toLegacyBranchId(value?: number | string | null): number | null {
+    if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+    if (typeof value === 'string' && /^\d+$/.test(value.trim())) return parseInt(value, 10);
+    return null;
   }
 
   private async generateInvoiceNo(prefix: string): Promise<string> {

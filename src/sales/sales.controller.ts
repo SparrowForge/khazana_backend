@@ -34,7 +34,7 @@ export class SalesController {
   createCashSale(
     @Body() dto: CreateCashSaleDto,
     @CurrentUser('userName') userName: string,
-    @CurrentUser('branchId') branchId: number,
+    @CurrentUser('branchId') branchId: string,
   ) {
     return this.salesService.createCashSale(dto, userName, branchId);
   }
