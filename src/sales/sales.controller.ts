@@ -31,8 +31,12 @@ export class SalesController {
   @ApiOperation({ summary: 'Create a cash sale' })
   @ApiResponse({ status: 201, description: 'Cash sale created successfully' })
   @ApiResponse({ status: 400, description: 'Invalid sale data' })
-  createCashSale(@Body() dto: CreateCashSaleDto, @CurrentUser('userName') userName: string) {
-    return this.salesService.createCashSale(dto, userName);
+  createCashSale(
+    @Body() dto: CreateCashSaleDto,
+    @CurrentUser('userName') userName: string,
+    @CurrentUser('branchId') branchId: number,
+  ) {
+    return this.salesService.createCashSale(dto, userName, branchId);
   }
 
   @Post('credit')

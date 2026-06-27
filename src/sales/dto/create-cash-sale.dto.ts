@@ -10,6 +10,16 @@ export class SaleItemDto {
   @IsString()
   itemId: string;
 
+  @ApiPropertyOptional({ example: 'ITM-002', description: 'Item code (display only)' })
+  @IsString()
+  @IsOptional()
+  itemCode?: string;
+
+  @ApiPropertyOptional({ example: 'Cham Cham', description: 'Item name (display only)' })
+  @IsString()
+  @IsOptional()
+  itemName?: string;
+
   @ApiProperty({ example: 2, description: 'Quantity sold (must be > 0)' })
   @IsNumber()
   @IsPositive()
@@ -47,9 +57,10 @@ export class CreateCashSaleDto {
   @IsDateString()
   invoiceDate: string;
 
-  @ApiProperty({ example: 1, description: 'Branch ID' })
+  @ApiPropertyOptional({ example: 1, description: 'Branch ID (defaults to the authenticated user’s branch)' })
   @IsNumber()
-  branchId: number;
+  @IsOptional()
+  branchId?: number;
 
   @ApiProperty({ example: 500.00, description: 'Gross total before discount/VAT' })
   @IsNumber()

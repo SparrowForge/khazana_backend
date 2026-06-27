@@ -14,8 +14,9 @@ export class SalesService {
 
   // ── Cash Sale (Non-VAT) ──────────────────────────────────────
 
-  async createCashSale(dto: CreateCashSaleDto, userName: string) {
+  async createCashSale(dto: CreateCashSaleDto, userName: string, userBranchId?: number) {
     const invoiceNo = dto.invoiceNo ?? await this.generateInvoiceNo('CS');
+    const branchId = dto.branchId ?? userBranchId;
 
     const sale = await this.prisma.t_SOMstr.create({
       data: {
@@ -26,7 +27,7 @@ export class SalesService {
         somstrNetAmt: dto.netAmount,
         somstrCustomerpay: dto.paidAmount,
         somstrChange: dto.changeAmount,
-        branchId: dto.branchId,
+        branchId,
         mtype: dto.paymentMethod,
         soMstrMBank: dto.bankId,
         soMstrDiscountRemarks: dto.discountRemarks,
@@ -43,7 +44,7 @@ export class SalesService {
             sodetDiscount: item.discount ?? 0,
             sodetVATValue: item.vat ?? 0,
             sodetNetAmount: item.total,
-            branchId: dto.branchId,
+            branchId,
           })),
         },
       },
