@@ -88,47 +88,125 @@ export class ReportsService {
     nextDay.setDate(nextDay.getDate() + 1);
     const branchFilter = branchId ? { branchId } : {};
 
-    const [cash, credit, vatCash, vatCredit] = await this.prisma.$transaction([
+    const [cash, nc] = await this.prisma.$transaction([
       this.prisma.t_SOMstr.findMany({
         where: { somstrDate: { gte: day, lt: nextDay }, somstrIsActive: true, ...branchFilter },
         orderBy: { somstrDate: 'asc' },
       }),
-      this.prisma.cSMaster.findMany({
-        where: { invDate: { gte: day, lt: nextDay }, isActive: 1, ...branchFilter },
-        orderBy: { invDate: 'asc' },
-      }),
-      this.prisma.t_SOMstV.findMany({
-        where: { somstrDate: { gte: day, lt: nextDay }, somstrIsActive: true, ...branchFilter },
-        orderBy: { somstrDate: 'asc' },
-      }),
-      this.prisma.cSVMaster.findMany({
-        where: { invDate: { gte: day, lt: nextDay }, ...branchFilter },
-        orderBy: { invDate: 'asc' },
+      this.prisma.t_NCMstr.findMany({
+        where: { ncmstrDate: { gte: day, lt: nextDay }, ncmstrIsActive: true, ...branchFilter },
+        include: { details: { select: { ncdetNetAmount: true } } },
+        orderBy: { ncmstrDate: 'asc' },
       }),
     ]);
 
     const sum = (arr: { net: number }[]) => arr.reduce((s, r) => s + r.net, 0);
     const cashRows = cash.map((s) => ({ id: s.id, invNo: s.somstrCode, type: 'Cash', netAmount: num(s.somstrNetAmt), net: num(s.somstrNetAmt) }));
-    const creditRows = credit.map((s) => ({ id: s.id, invNo: s.invNo, type: 'Credit', netAmount: num(s.totalAmount) - num(s.totalDiscount), net: num(s.totalAmount) - num(s.totalDiscount) }));
-    const vatCashRows = vatCash.map((s) => ({ id: s.id, invNo: s.somstrCode, type: 'Cash (VAT)', netAmount: num(s.somstrNetAmt), net: num(s.somstrNetAmt) }));
-    const vatCreditRows = vatCredit.map((s) => ({ id: s.id, invNo: s.invNo, type: 'Credit (VAT)', netAmount: num(s.totalAmount) - num(s.totalDiscount), net: num(s.totalAmount) - num(s.totalDiscount) }));
+
+    // ── Credit sales netted against ALL-TIME outstanding order advances ──────
+    // Each customer's order advances are consumed FIFO by their credit sales in
+    // chronological order. We replay the full history (up to the report day) so
+    // an advance is applied to exactly one credit sale and never double-counted
+    // across days — stateless, so re-running the report is idempotent.
+    const { creditRows, orderCollection } = await this.netCreditAgainstAdvances(day, nextDay, branchFilter);
+
+    const ncRows = nc.map((s) => {
+      const net = s.details.reduce((t, d) => t + num(d.ncdetNetAmount), 0);
+      return { id: s.id, invNo: s.ncmstrCode, type: 'NC', netAmount: net, net };
+    });
 
     const cashSales = sum(cashRows);
-    const creditSales = sum(creditRows);
-    const vatCashSales = sum(vatCashRows);
-    const vatCreditSales = sum(vatCreditRows);
+    const creditSales = sum(creditRows); // already net of advances
+    const ncSales = sum(ncRows);
 
-    const details = [...cashRows, ...creditRows, ...vatCashRows, ...vatCreditRows].map(({ net, ...r }) => r);
+    const details = [...cashRows, ...creditRows, ...ncRows].map(({ net, ...r }) => r);
 
     return {
       date,
       summary: {
-        cashSales, creditSales, vatCashSales, vatCreditSales,
+        cashSales, creditSales, ncSales, orderCollection,
         totalSales: details.length,
-        totalRevenue: cashSales + creditSales + vatCashSales + vatCreditSales,
+        // orderCollection + (net) creditSales == gross credit, so the total is balanced.
+        totalRevenue: cashSales + creditSales + ncSales + orderCollection,
       },
       details,
     };
+  }
+
+  /**
+   * Net each credit sale dated on the report day against the customer's
+   * outstanding order-receive advances. Advances are consumed FIFO by the
+   * customer's credit sales in chronological order across the full history (up
+   * to the report day), so each advance is applied exactly once and never
+   * double-deducted on later days. Returns only the report day's credit rows
+   * (already net) plus the advance applied to them (Order Collection).
+   */
+  private async netCreditAgainstAdvances(
+    day: Date,
+    nextDay: Date,
+    branchFilter: { branchId?: number },
+  ): Promise<{
+    creditRows: { id: string; invNo: string; type: string; netAmount: number; net: number }[];
+    orderCollection: number;
+  }> {
+    const todayCredit = await this.prisma.cSMaster.findMany({
+      where: { invDate: { gte: day, lt: nextDay }, isActive: 1, ...branchFilter },
+      select: { clientCode: true },
+    });
+    const custCodes = [...new Set(todayCredit.map((c) => c.clientCode).filter((x): x is string => !!x))];
+    if (!custCodes.length) return { creditRows: [], orderCollection: 0 };
+
+    const [advances, allCredits] = await this.prisma.$transaction([
+      this.prisma.orderReceive_Master.findMany({
+        where: { clientCode: { in: custCodes }, isActive: 1, advance: { gt: 0 }, orderDate: { lt: nextDay }, ...branchFilter },
+        select: { clientCode: true, advance: true, orderDate: true },
+      }),
+      this.prisma.cSMaster.findMany({
+        where: { clientCode: { in: custCodes }, isActive: 1, invDate: { lt: nextDay }, ...branchFilter },
+        select: { id: true, invNo: true, clientCode: true, totalAmount: true, totalDiscount: true, invDate: true },
+      }),
+    ]);
+
+    type Ev =
+      | { t: number; kind: 'adv'; amount: number }
+      | { t: number; kind: 'cr'; amount: number; id: string; invNo: string; today: boolean };
+    const byCust = new Map<string, Ev[]>();
+    const push = (code: string, ev: Ev) => {
+      const arr = byCust.get(code) ?? [];
+      arr.push(ev);
+      byCust.set(code, arr);
+    };
+    for (const a of advances) {
+      if (!a.orderDate) continue;
+      push(a.clientCode, { t: a.orderDate.getTime(), kind: 'adv', amount: num(a.advance) });
+    }
+    for (const c of allCredits) {
+      if (!c.invDate || !c.clientCode) continue;
+      const today = c.invDate >= day && c.invDate < nextDay;
+      push(c.clientCode, { t: c.invDate.getTime(), kind: 'cr', amount: num(c.totalAmount) - num(c.totalDiscount), id: c.id, invNo: c.invNo, today });
+    }
+
+    const creditRows: { id: string; invNo: string; type: string; netAmount: number; net: number }[] = [];
+    let orderCollection = 0;
+
+    for (const evs of byCust.values()) {
+      // chronological; on a tie, advances settle before credits so a same-day
+      // advance can still offset a same-day credit.
+      evs.sort((x, y) => x.t - y.t || (x.kind === 'adv' ? 0 : 1) - (y.kind === 'adv' ? 0 : 1));
+      let balance = 0;
+      for (const e of evs) {
+        if (e.kind === 'adv') { balance += e.amount; continue; }
+        const applied = Math.min(e.amount, balance);
+        balance -= applied;
+        if (e.today) {
+          orderCollection += applied;
+          const net = e.amount - applied;
+          creditRows.push({ id: e.id, invNo: e.invNo, type: 'Credit', netAmount: net, net });
+        }
+      }
+    }
+
+    return { creditRows, orderCollection };
   }
 
   // ── Stock Report ──────────────────────────────────────────────

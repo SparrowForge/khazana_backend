@@ -8,6 +8,16 @@ import { SalesQueryDto } from './dto/sales-query.dto';
 import { buildPaginationMeta } from '../common/helpers';
 import type { PaginationMeta } from '../common/helpers';
 
+/** Normalized row for the unified sales report (all sale types in one shape). */
+interface UnifiedSale {
+  id: string;
+  invoiceNo: string;
+  date: Date | null;
+  type: 'Cash' | 'VAT Cash' | 'Credit' | 'VAT Credit' | 'NC Adjustment';
+  netAmount: number;
+  customerName: string | null;
+}
+
 @Injectable()
 export class SalesService {
   constructor(private prisma: PrismaService) {}
@@ -188,39 +198,71 @@ export class SalesService {
 
   // ── List / Get ────────────────────────────────────────────────
 
+  /**
+   * Unified sales report. Returns a single normalized list across all sale
+   * sources — cash (t_SOMstr), VAT cash (t_SOMstV), credit (cSMaster), VAT
+   * credit (cSVMaster) and NC adjustments (t_NCMstr) — each mapped to a common
+   * shape so the frontend reads one set of fields. `type` filters to a single
+   * source; the default ('all') merges them. Sorted by date desc and paginated
+   * in-memory (fine for POS-scale volumes).
+   */
   async findAll(query: SalesQueryDto): Promise<{ items: object[]; meta: PaginationMeta }> {
     const { page, limit, type, branchId } = query;
-    const skip = (page - 1) * limit;
+    const all = !type || type === 'all';
+    const num = (v: unknown): number => (v == null ? 0 : Number(v));
 
-    if (type === 'cash') {
-      const where = { somstrIsActive: true, ...(branchId && { branchId }) };
-      const [items, total] = await Promise.all([
-        this.prisma.t_SOMstr.findMany({ where, orderBy: { somstrDate: 'desc' }, skip, take: limit }),
-        this.prisma.t_SOMstr.count({ where }),
-      ]);
-      return { items, meta: buildPaginationMeta(total, page, limit) };
+    const rows: UnifiedSale[] = [];
+
+    if (all || type === 'cash') {
+      const cash = await this.prisma.t_SOMstr.findMany({
+        where: { somstrIsActive: true, ...(branchId && { branchId }) },
+        select: { id: true, somstrCode: true, somstrDate: true, somstrNetAmt: true },
+      });
+      for (const r of cash)
+        rows.push({ id: r.id, invoiceNo: r.somstrCode ?? '', date: r.somstrDate, type: 'Cash', netAmount: num(r.somstrNetAmt), customerName: null });
     }
-    if (type === 'credit') {
-      const where = { isActive: 1, ...(branchId && { branchId }) };
-      const [items, total] = await Promise.all([
-        this.prisma.cSMaster.findMany({ where, include: { customer: true }, orderBy: { invDate: 'desc' }, skip, take: limit }),
-        this.prisma.cSMaster.count({ where }),
-      ]);
-      return { items, meta: buildPaginationMeta(total, page, limit) };
+
+    if (all || type === 'vat-cash') {
+      const vcash = await this.prisma.t_SOMstV.findMany({
+        where: { somstrIsActive: true, ...(branchId && { branchId }) },
+        select: { id: true, somstrCode: true, somstrDate: true, somstrNetAmt: true },
+      });
+      for (const r of vcash)
+        rows.push({ id: r.id, invoiceNo: r.somstrCode ?? '', date: r.somstrDate, type: 'VAT Cash', netAmount: num(r.somstrNetAmt), customerName: null });
     }
-    if (type === 'vat-cash') {
-      const where = { somstrIsActive: true, ...(branchId && { branchId }) };
-      const [items, total] = await Promise.all([
-        this.prisma.t_SOMstV.findMany({ where, orderBy: { somstrDate: 'desc' }, skip, take: limit }),
-        this.prisma.t_SOMstV.count({ where }),
-      ]);
-      return { items, meta: buildPaginationMeta(total, page, limit) };
+
+    if (all || type === 'credit') {
+      const credit = await this.prisma.cSMaster.findMany({
+        where: { isActive: 1, ...(branchId && { branchId }) },
+        select: { id: true, invNo: true, invDate: true, totalAmount: true, totalVat: true, totalDiscount: true, customer: { select: { name: true } } },
+      });
+      for (const r of credit)
+        rows.push({ id: r.id, invoiceNo: r.invNo, date: r.invDate, type: 'Credit', netAmount: num(r.totalAmount) + num(r.totalVat) - num(r.totalDiscount), customerName: r.customer?.name ?? null });
     }
-    const where = branchId ? { branchId } : {};
-    const [items, total] = await Promise.all([
-      this.prisma.cSVMaster.findMany({ where, include: { customer: true }, orderBy: { invDate: 'desc' }, skip, take: limit }),
-      this.prisma.cSVMaster.count({ where }),
-    ]);
+
+    if (all || type === 'vat-credit') {
+      const vcredit = await this.prisma.cSVMaster.findMany({
+        where: { ...(branchId && { branchId }) },
+        select: { id: true, invNo: true, invDate: true, totalAmount: true, totalVat: true, totalDiscount: true, customer: { select: { name: true } } },
+      });
+      for (const r of vcredit)
+        rows.push({ id: r.id, invoiceNo: r.invNo, date: r.invDate, type: 'VAT Credit', netAmount: num(r.totalAmount) + num(r.totalVat) - num(r.totalDiscount), customerName: r.customer?.name ?? null });
+    }
+
+    if (all || type === 'nc') {
+      const nc = await this.prisma.t_NCMstr.findMany({
+        where: { ncmstrIsActive: true, ...(branchId && { branchId }) },
+        select: { id: true, ncmstrCode: true, ncmstrDate: true, details: { select: { ncdetNetAmount: true } } },
+      });
+      for (const r of nc)
+        rows.push({ id: r.id, invoiceNo: r.ncmstrCode ?? '', date: r.ncmstrDate, type: 'NC Adjustment', netAmount: r.details.reduce((s, d) => s + num(d.ncdetNetAmount), 0), customerName: null });
+    }
+
+    rows.sort((a, b) => (b.date?.getTime() ?? 0) - (a.date?.getTime() ?? 0));
+
+    const total = rows.length;
+    const skip = (page - 1) * limit;
+    const items = rows.slice(skip, skip + limit);
     return { items, meta: buildPaginationMeta(total, page, limit) };
   }
 
