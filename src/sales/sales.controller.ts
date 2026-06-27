@@ -42,15 +42,23 @@ export class SalesController {
   @Post('credit')
   @ApiOperation({ summary: 'Create a credit sale' })
   @ApiResponse({ status: 201, description: 'Credit sale created successfully' })
-  createCreditSale(@Body() dto: CreateCreditSaleDto, @CurrentUser('userName') userName: string) {
-    return this.salesService.createCreditSale(dto, userName);
+  createCreditSale(
+    @Body() dto: CreateCreditSaleDto,
+    @CurrentUser('userName') userName: string,
+    @CurrentUser('branchId') branchId: string,
+  ) {
+    return this.salesService.createCreditSale(dto, userName, branchId);
   }
 
   @Post('vat/cash')
   @ApiOperation({ summary: 'Create a VAT cash sale' })
   @ApiResponse({ status: 201, description: 'VAT cash sale created successfully' })
-  createVatCashSale(@Body() dto: CreateVatCashSaleDto, @CurrentUser('userName') userName: string) {
-    return this.salesService.createVatCashSale(dto, userName);
+  createVatCashSale(
+    @Body() dto: CreateVatCashSaleDto,
+    @CurrentUser('userName') userName: string,
+    @CurrentUser('branchId') branchId: string,
+  ) {
+    return this.salesService.createVatCashSale(dto, userName, branchId);
   }
 
   @Post('vat/credit')
@@ -59,7 +67,8 @@ export class SalesController {
   createVatCreditSale(
     @Body() dto: CreateVatCreditSaleDto,
     @CurrentUser('userName') userName: string,
+    @CurrentUser('branchId') branchId: string,
   ) {
-    return this.salesService.createVatCreditSale(dto, userName);
+    return this.salesService.createVatCreditSale(dto, userName, branchId);
   }
 }

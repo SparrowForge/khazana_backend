@@ -14,8 +14,12 @@ export class PosSalesController {
 
   @Post()
   @ApiOperation({ summary: 'Create POS sale — calculates VAT from t_Price, writes t_SOMstr + t_SODet' })
-  create(@Body() dto: CreatePosSaleDto, @CurrentUser('userName') userName: string) {
-    return this.service.create(dto, userName);
+  create(
+    @Body() dto: CreatePosSaleDto,
+    @CurrentUser('userName') userName: string,
+    @CurrentUser('branchId') branchId: string,
+  ) {
+    return this.service.create(dto, userName, branchId);
   }
 
   @Get()

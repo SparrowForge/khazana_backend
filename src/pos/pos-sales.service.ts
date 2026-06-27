@@ -15,13 +15,26 @@ export class PosSalesService {
     return Math.round(n * 100) / 100;
   }
 
-  private async generateInvoiceNo(): Promise<string> {
+  /** Resolve the session branch (Branch UUID) to its sanitized code, or '' when
+   *  it can't be resolved (number simply omits the branch segment). */
+  private async resolveBranchCode(branchId?: number | string | null): Promise<string> {
+    if (branchId == null) return '';
+    const id = String(branchId);
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return '';
+    const branch = await this.prisma.branch
+      .findUnique({ where: { id }, select: { branchCode: true } })
+      .catch(() => null);
+    return (branch?.branchCode ?? '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+  }
+
+  private async generateInvoiceNo(branchId?: number | string | null): Promise<string> {
     const date = new Date();
     const yyyymm = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}`;
+    const code = await this.resolveBranchCode(branchId);
     const count = await this.prisma.t_SOMstr.count({
       where: { somstrCode: { startsWith: 'DS-' } },
     });
-    return `DS-${yyyymm}-${String(count + 1).padStart(5, '0')}`;
+    return ['DS', code, yyyymm, String(count + 1).padStart(5, '0')].filter(Boolean).join('-');
   }
 
   private toResponse(sale: SaleWithDetails) {
@@ -54,10 +67,10 @@ export class PosSalesService {
     };
   }
 
-  async create(dto: CreatePosSaleDto, userName: string) {
+  async create(dto: CreatePosSaleDto, userName: string, userBranchId?: number | string) {
     if (!dto.items.length) throw new BadRequestException('Cart is empty');
 
-    const invoiceNo = await this.generateInvoiceNo();
+    const invoiceNo = await this.generateInvoiceNo(dto.branchId ?? userBranchId);
     return this.persistSale({
       invoiceNo,
       saleDate: new Date(),

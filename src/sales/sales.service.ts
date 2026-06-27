@@ -30,7 +30,7 @@ export class SalesService {
     userBranchId?: number | string,
   ) {
     // Treat a blank invoiceNo as "auto-generate" (the UI sends "" to mean that).
-    const invoiceNo = dto.invoiceNo || (await this.generateInvoiceNo('CS'));
+    const invoiceNo = dto.invoiceNo || (await this.generateInvoiceNo('CS', dto.branchId ?? userBranchId));
     // The session/JWT branch is a UUID, but the legacy t_SOMstr/t_SODet.branchId
     // columns are Int with no relation to Branch — coerce to an Int only when the
     // value is genuinely numeric, otherwise store null (matches the POS module).
@@ -75,10 +75,10 @@ export class SalesService {
 
   // ── Credit Sale (Non-VAT) ─────────────────────────────────────
 
-  async createCreditSale(dto: CreateCreditSaleDto, userName: string) {
+  async createCreditSale(dto: CreateCreditSaleDto, userName: string, userBranchId?: number | string) {
     // Auto-generate the invoice number when the UI leaves it blank (credit has
     // no central sequence otherwise, so blanks would collide on the 2nd sale).
-    const invNo = dto.invNo || (await this.generateCreditInvoiceNo());
+    const invNo = dto.invNo || (await this.generateCreditInvoiceNo(dto.branchId ?? userBranchId));
 
     const existing = await this.prisma.cSMaster.findUnique({ where: { invNo } });
     if (existing) throw new BadRequestException('Invoice number already exists');
@@ -118,8 +118,8 @@ export class SalesService {
 
   // ── VAT Cash Sale ─────────────────────────────────────────────
 
-  async createVatCashSale(dto: CreateVatCashSaleDto, userName: string) {
-    const invoiceNo = dto.invoiceNo ?? await this.generateInvoiceNo('VCS');
+  async createVatCashSale(dto: CreateVatCashSaleDto, userName: string, userBranchId?: number | string) {
+    const invoiceNo = dto.invoiceNo ?? await this.generateInvoiceNo('VCS', dto.branchId ?? userBranchId);
 
     const sale = await this.prisma.t_SOMstV.create({
       data: {
@@ -160,8 +160,8 @@ export class SalesService {
 
   // ── VAT Credit Sale ───────────────────────────────────────────
 
-  async createVatCreditSale(dto: CreateVatCreditSaleDto, userName: string) {
-    const invNo = dto.invNo || (await this.generateVatCreditInvoiceNo());
+  async createVatCreditSale(dto: CreateVatCreditSaleDto, userName: string, userBranchId?: number | string) {
+    const invNo = dto.invNo || (await this.generateVatCreditInvoiceNo(dto.branchId ?? userBranchId));
 
     const existing = await this.prisma.cSVMaster.findUnique({ where: { invNo } });
     if (existing) throw new BadRequestException('Invoice number already exists');
@@ -296,24 +296,39 @@ export class SalesService {
     return null;
   }
 
-  private async generateCreditInvoiceNo(): Promise<string> {
-    const d = new Date();
-    const yyyymm = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}`;
+  /** Resolve the session branch (a Branch UUID) to its sanitized branch code for
+   *  embedding in invoice numbers. Returns '' when the branch can't be resolved
+   *  (e.g. legacy numeric id / no branch), so the number simply omits the code. */
+  private async resolveBranchCode(branchId?: number | string | null): Promise<string> {
+    if (branchId == null) return '';
+    const id = String(branchId);
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+    if (!isUuid) return '';
+    const branch = await this.prisma.branch
+      .findUnique({ where: { id }, select: { branchCode: true } })
+      .catch(() => null);
+    return (branch?.branchCode ?? '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+  }
+
+  private yyyymm(d = new Date()): string {
+    return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  private async generateCreditInvoiceNo(branchId?: number | string | null): Promise<string> {
+    const code = await this.resolveBranchCode(branchId);
     const count = await this.prisma.cSMaster.count();
-    return `CR-${yyyymm}-${String(count + 1).padStart(5, '0')}`;
+    return ['CR', code, this.yyyymm(), String(count + 1).padStart(5, '0')].filter(Boolean).join('-');
   }
 
-  private async generateVatCreditInvoiceNo(): Promise<string> {
-    const d = new Date();
-    const yyyymm = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}`;
+  private async generateVatCreditInvoiceNo(branchId?: number | string | null): Promise<string> {
+    const code = await this.resolveBranchCode(branchId);
     const count = await this.prisma.cSVMaster.count();
-    return `CRV-${yyyymm}-${String(count + 1).padStart(5, '0')}`;
+    return ['CRV', code, this.yyyymm(), String(count + 1).padStart(5, '0')].filter(Boolean).join('-');
   }
 
-  private async generateInvoiceNo(prefix: string): Promise<string> {
-    const date = new Date();
-    const yyyymm = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}`;
+  private async generateInvoiceNo(prefix: string, branchId?: number | string | null): Promise<string> {
+    const code = await this.resolveBranchCode(branchId);
     const count = await this.prisma.t_SOMstr.count();
-    return `${prefix}-${yyyymm}-${String(count + 1).padStart(5, '0')}`;
+    return [prefix, code, this.yyyymm(), String(count + 1).padStart(5, '0')].filter(Boolean).join('-');
   }
 }
