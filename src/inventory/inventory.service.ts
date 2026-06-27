@@ -44,10 +44,21 @@ export class InventoryService {
   async findAllItems(query: ItemQueryDto) {
     const { page, limit, isActive } = query;
     const where = isActive ? { isActive } : undefined;
-    const [items, total] = await Promise.all([
-      this.prisma.item_Information.findMany({ where, include: { inventory: true, image: true }, orderBy: { itmName: 'asc' }, skip: (page - 1) * limit, take: limit }),
+    const [rows, total] = await Promise.all([
+      this.prisma.item_Information.findMany({
+        where,
+        include: {
+          inventory: true,
+          image: true,
+          prices: { where: { priceIsActive: 1 }, orderBy: { priceFromDate: 'desc' }, take: 1 },
+        },
+        orderBy: { itmName: 'asc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
       this.prisma.item_Information.count({ where }),
     ]);
+    const items = rows.map((row) => ({ ...row, price: Number(row.prices?.[0]?.priceListPrice ?? 0) }));
     return { items, meta: buildPaginationMeta(total, page, limit) };
   }
 
