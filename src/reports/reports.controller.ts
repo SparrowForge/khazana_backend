@@ -32,7 +32,7 @@ export class ReportsController {
   ) {
     return this.reportsService.getSalesReport({
       ...this.range(from, fromDate, to, toDate),
-      branchId: branchId ? +branchId : undefined,
+      branchId: branchId || undefined,
     });
   }
 
@@ -42,7 +42,7 @@ export class ReportsController {
   @ApiQuery({ name: 'branchId', required: false, description: 'Filter by branch ID' })
   @ApiResponse({ status: 200, description: 'Daily summary data' })
   getDailySummary(@Query('date') date: string, @Query('branchId') branchId?: string) {
-    return this.reportsService.getDailySummary(date, branchId ? +branchId : undefined);
+    return this.reportsService.getDailySummary(date, branchId || undefined);
   }
 
   @Get('stock')
@@ -65,7 +65,7 @@ export class ReportsController {
   ) {
     return this.reportsService.getItemSalesReport({
       ...this.range(from, fromDate, to, toDate),
-      branchId: branchId ? +branchId : undefined,
+      branchId: branchId || undefined,
     });
   }
 

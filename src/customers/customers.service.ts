@@ -3,7 +3,7 @@ import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PrismaService } from '../database/prisma.service';
 import { PaginationQueryDto } from '../common/dto';
-import { buildPaginationMeta } from '../common/helpers';
+import { buildPaginationMeta, toBranchUuid } from '../common/helpers';
 
 export class CreateCustomerDto {
   @ApiProperty({ example: '001', description: 'Unique customer code' })
@@ -141,6 +141,7 @@ export class CustomersService {
     moneyReceptNo?: string;
     bankName?: string;
     bankNo?: string;
+    branchId?: string;
   }) {
     return this.prisma.client_Transaction.create({
       data: {
@@ -151,6 +152,7 @@ export class CustomersService {
         moneyReceptNo: dto.moneyReceptNo,
         bankName: dto.bankName,
         bankNo: dto.bankNo,
+        branchId: toBranchUuid(dto.branchId),
       },
     });
   }

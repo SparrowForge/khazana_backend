@@ -2,6 +2,7 @@ import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } f
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { CustomersService, CreateCustomerDto, UpdateCustomerDto } from './customers.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { CurrentUser } from '../common/decorators';
 import { PaginationQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
@@ -32,7 +33,9 @@ export class CustomersController {
   @Post('payments')
   @ApiOperation({ summary: 'Record a payment (client code in body)' })
   @ApiResponse({ status: 201, description: 'Payment recorded successfully' })
-  createPayment(@Body() body: any) { return this.customersService.addPayment(body); }
+  createPayment(@Body() body: any, @CurrentUser('branchId') branchId: string) {
+    return this.customersService.addPayment({ ...body, branchId });
+  }
 
   @Get(':code')
   @ApiOperation({ summary: 'Get customer by code' })
@@ -71,8 +74,8 @@ export class CustomersController {
   @ApiOperation({ summary: 'Record a payment from customer' })
   @ApiParam({ name: 'code', description: 'Customer code' })
   @ApiResponse({ status: 201, description: 'Payment recorded successfully' })
-  addPayment(@Param('code') code: string, @Body() body: any) {
-    return this.customersService.addPayment({ ...body, clientCode: code });
+  addPayment(@Param('code') code: string, @Body() body: any, @CurrentUser('branchId') branchId: string) {
+    return this.customersService.addPayment({ ...body, clientCode: code, branchId });
   }
 
   @Get(':code/payments')

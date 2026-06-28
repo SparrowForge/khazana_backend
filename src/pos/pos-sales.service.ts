@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { CreatePosSaleDto } from './dto/create-pos-sale.dto';
+import { toBranchUuid } from '../common/helpers';
 import type { t_SOMstr, t_SODet, Item_Information } from '../generated/prisma';
 
 type SaleWithDetails = t_SOMstr & {
@@ -16,8 +17,8 @@ export class PosSalesService {
   }
 
   /** Resolve the session branch (Branch UUID) to its sanitized code, or '' when
-   *  it can't be resolved (number simply omits the branch segment). */
-  private async resolveBranchCode(branchId?: number | string | null): Promise<string> {
+   *  it can't be resolved. */
+  private async resolveBranchCode(branchId?: string | null): Promise<string> {
     if (branchId == null) return '';
     const id = String(branchId);
     if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return '';
@@ -27,7 +28,7 @@ export class PosSalesService {
     return (branch?.branchCode ?? '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
   }
 
-  private async generateInvoiceNo(branchId?: number | string | null): Promise<string> {
+  private async generateInvoiceNo(branchId?: string | null): Promise<string> {
     const date = new Date();
     const yyyymm = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}`;
     const code = await this.resolveBranchCode(branchId);
@@ -67,10 +68,14 @@ export class PosSalesService {
     };
   }
 
-  async create(dto: CreatePosSaleDto, userName: string, userBranchId?: number | string) {
+  async create(dto: CreatePosSaleDto, userName: string, userBranchId?: string) {
     if (!dto.items.length) throw new BadRequestException('Cart is empty');
 
-    const invoiceNo = await this.generateInvoiceNo(dto.branchId ?? userBranchId);
+    // Branch comes from the request body when supplied, otherwise the
+    // authenticated session branch — persistSale resolves it to a Branch UUID so
+    // t_SOMstr.branchId / t_SODet.branchId are always populated.
+    const branchId = dto.branchId ?? userBranchId ?? null;
+    const invoiceNo = await this.generateInvoiceNo(branchId);
     return this.persistSale({
       invoiceNo,
       saleDate: new Date(),
@@ -78,7 +83,7 @@ export class PosSalesService {
       paidAmount: dto.paidAmount,
       servedBy: dto.servedBy,
       salesType: dto.salesType,
-      branchId: dto.branchId ?? null,
+      branchId,
       discountType: dto.discountType,
       discountValue: dto.discountValue,
       createdBy: userName,
@@ -100,12 +105,18 @@ export class PosSalesService {
     paidAmount: number;
     servedBy?: string;
     salesType?: string;
-    branchId?: number | null;
+    branchId?: string | null;
     discountType?: 'fixed' | 'percentage';
     discountValue?: number;
     createdBy: string;
   }) {
     if (!p.items.length) throw new BadRequestException('Cart is empty');
+
+    // Resolve the branch for the legacy Int columns once, here at the single
+    // write chokepoint shared by online (`create`) and offline (`PosSyncService`)
+    // sales. A UUID session branch has no Int mapping, so it falls back — but the
+    // value is never null, which is what kept t_SOMstr/t_SODet.branchId empty.
+    const branchId = toBranchUuid(p.branchId);
 
     // Price the lines as-of the sale date: `now` for online, the historical
     // save timestamp for synced offline orders.
@@ -166,7 +177,7 @@ export class PosSalesService {
         sodetVATAmount: vatAmount,
         sodetDiscount: 0,
         sodetNetAmount: netAmount,
-        branchId: p.branchId ?? null,
+        branchId,
       };
     });
 
@@ -218,7 +229,7 @@ export class PosSalesService {
         somstrCreator: p.servedBy || p.createdBy,
         somstrCreationDate: new Date(),
         somstrIsActive: true,
-        branchId: p.branchId ?? null,
+        branchId,
         details: {
           create: lines.map((l, idx) => ({
             sodetItemSLNum: String(idx + 1),

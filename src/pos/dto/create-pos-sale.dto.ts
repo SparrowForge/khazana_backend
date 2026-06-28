@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import {
-  IsString, IsNumber, IsArray, ValidateNested, IsPositive, Min, IsOptional, IsIn,
+  IsString, IsNumber, IsArray, ValidateNested, IsPositive, Min, IsOptional, IsIn, IsUUID,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -37,10 +37,13 @@ export class CreatePosSaleDto {
   @IsOptional()
   salesType?: string;
 
-  @ApiPropertyOptional({ example: 1, description: 'Branch ID (integer)' })
-  @IsNumber()
+  @ApiPropertyOptional({
+    description: 'Branch UUID for this sale. Optional — defaults to the authenticated session branch.',
+    format: 'uuid',
+  })
   @IsOptional()
-  branchId?: number;
+  @IsUUID()
+  branchId?: string;
 
   @ApiPropertyOptional({ example: 'fixed', description: 'Discount type: fixed | percentage' })
   @IsIn(['fixed', 'percentage'])

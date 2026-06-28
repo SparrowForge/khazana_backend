@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsString, IsOptional, IsNumber, IsArray, ValidateNested,
-  IsDateString, IsPositive, Min,
+  IsDateString, IsPositive, Min, IsUUID,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -57,10 +57,10 @@ export class CreateCashSaleDto {
   @IsDateString()
   invoiceDate: string;
 
-  @ApiPropertyOptional({ example: 1, description: 'Branch ID (defaults to the authenticated user’s branch)' })
-  @IsNumber()
+  @ApiPropertyOptional({ format: 'uuid', description: 'Branch UUID (defaults to the authenticated user’s branch)' })
+  @IsUUID()
   @IsOptional()
-  branchId?: number;
+  branchId?: string;
 
   @ApiProperty({ example: 500.00, description: 'Gross total before discount/VAT' })
   @IsNumber()

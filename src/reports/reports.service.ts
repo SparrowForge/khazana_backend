@@ -4,7 +4,7 @@ import { PrismaService } from '../database/prisma.service';
 export interface DateRangeQuery {
   fromDate?: string;
   toDate?: string;
-  branchId?: number;
+  branchId?: string;
 }
 
 const num = (d: unknown): number => (d == null ? 0 : Number(d));
@@ -81,7 +81,7 @@ export class ReportsService {
 
   // ── Daily Summary (totals + per-invoice details) ─────────────────────
 
-  async getDailySummary(date: string, branchId?: number) {
+  async getDailySummary(date: string, branchId?: string) {
     const day = new Date(date);
     if (isNaN(day.getTime())) throw new BadRequestException('Valid `date` is required');
     const nextDay = new Date(day);
@@ -144,7 +144,7 @@ export class ReportsService {
   private async netCreditAgainstAdvances(
     day: Date,
     nextDay: Date,
-    branchFilter: { branchId?: number },
+    branchFilter: { branchId?: string },
   ): Promise<{
     creditRows: { id: string; invNo: string; type: string; netAmount: number; net: number }[];
     orderCollection: number;

@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import {
-  IsString, IsNotEmpty, IsNumber, IsArray, ValidateNested, IsPositive,
-  IsOptional, IsIn, Min, IsDateString, ArrayMinSize,
+  IsString, IsNotEmpty, IsNumber, IsArray, ValidateNested,
+  IsOptional, IsIn, Min, IsDateString, ArrayMinSize, IsUUID,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PosCartItemDto } from './create-pos-sale.dto';
@@ -39,10 +39,13 @@ export class OfflineSaleDto {
   @IsOptional()
   salesType?: string;
 
-  @ApiPropertyOptional({ example: 1, description: 'Branch ID (integer)' })
-  @IsNumber()
+  @ApiPropertyOptional({
+    description: 'Originating branch UUID captured at sale time.',
+    format: 'uuid',
+  })
   @IsOptional()
-  branchId?: number;
+  @IsUUID()
+  branchId?: string;
 
   @ApiPropertyOptional({ enum: ['fixed', 'percentage'], example: 'fixed' })
   @IsIn(['fixed', 'percentage'])

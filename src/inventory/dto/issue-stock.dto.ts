@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsPositive, IsOptional, IsDateString, IsInt } from 'class-validator';
+import { IsString, IsNumber, IsPositive, IsOptional, IsDateString, IsUUID } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class IssueStockDto {
@@ -30,11 +30,11 @@ export class IssueStockDto {
   @IsDateString()
   issueDate: string;
 
-  @ApiProperty({ example: 1, description: 'Branch issuing the stock' })
-  @IsInt()
-  issueBranchId: number;
+  @ApiProperty({ format: 'uuid', description: 'Branch UUID issuing the stock' })
+  @IsUUID()
+  issueBranchId: string;
 
-  @ApiProperty({ example: 2, description: 'Branch receiving the issued stock' })
-  @IsInt()
-  receiveBranchId: number;
+  @ApiProperty({ format: 'uuid', description: 'Branch UUID receiving the issued stock' })
+  @IsUUID()
+  receiveBranchId: string;
 }

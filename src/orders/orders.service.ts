@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Type } from 'class-transformer';
-import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray, ValidateNested } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray, ValidateNested, IsUUID } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { BranchPaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
@@ -63,9 +63,9 @@ export class CreateOrderDto {
   @IsOptional()
   cType?: string;
 
-  @IsNumber()
+  @IsUUID()
   @IsOptional()
-  branchId?: number;
+  branchId?: string;
 
   @IsString()
   @IsOptional()

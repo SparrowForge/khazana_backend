@@ -275,7 +275,8 @@ exports.Prisma.Client_TransactionScalarFieldEnum = {
   serialNo: 'serialNo',
   moneyReceptNo: 'moneyReceptNo',
   bankName: 'bankName',
-  bankNo: 'bankNo'
+  bankNo: 'bankNo',
+  branchId: 'branchId'
 };
 
 exports.Prisma.EmployeeScalarFieldEnum = {
@@ -725,17 +726,6 @@ exports.Prisma.T_SaleAmountPostScalarFieldEnum = {
   branchId: 'branchId'
 };
 
-exports.Prisma.MoneyReceiveScalarFieldEnum = {
-  id: 'id',
-  receiptNo: 'receiptNo',
-  receiptDate: 'receiptDate',
-  customerCode: 'customerCode',
-  amount: 'amount',
-  paymentMethod: 'paymentMethod',
-  description: 'description',
-  createdBy: 'createdBy'
-};
-
 exports.Prisma.CashPurchaseScalarFieldEnum = {
   id: 'id',
   voucherNo: 'voucherNo',
@@ -858,7 +848,6 @@ exports.Prisma.ModelName = {
   VOrderReceive_Master: 'VOrderReceive_Master',
   VOrderReceive_Detail: 'VOrderReceive_Detail',
   t_SaleAmountPost: 't_SaleAmountPost',
-  MoneyReceive: 'MoneyReceive',
   CashPurchase: 'CashPurchase',
   temp_table: 'temp_table'
 };

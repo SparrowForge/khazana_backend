@@ -112,7 +112,7 @@ export class InventoryController {
   @ApiQuery({ name: 'branchId', required: false, description: 'Filter by branch ID' })
   @ApiResponse({ status: 200, description: 'Receive history' })
   receiveHistory(@Query('branchId') branchId?: string) {
-    return this.inventoryService.findReceiveHistory(branchId ? +branchId : undefined);
+    return this.inventoryService.findReceiveHistory(branchId || undefined);
   }
 
   @Get('issue/history')
@@ -120,6 +120,6 @@ export class InventoryController {
   @ApiQuery({ name: 'branchId', required: false, description: 'Filter by branch ID' })
   @ApiResponse({ status: 200, description: 'Issue history' })
   issueHistory(@Query('branchId') branchId?: string) {
-    return this.inventoryService.findIssueHistory(branchId ? +branchId : undefined);
+    return this.inventoryService.findIssueHistory(branchId || undefined);
   }
 }

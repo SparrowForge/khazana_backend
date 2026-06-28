@@ -12,22 +12,22 @@ datasource db {
 // ==================== MEDIA FILES ====================
 
 model MediaFile {
-  id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  fileName           String             @map("file_name")
-  fileUrl            String             @map("file_url")
-  fileType           String             @map("file_type")
-  mimeType           String             @map("mime_type")
-  fileSize           Int                @map("file_size")
-  altText            String?            @map("alt_text")
-  uploadedById       String?            @db.Uuid @map("uploaded_by")
-  cloudinaryPublicId String             @map("cloudinary_public_id")
-  isDelete           Boolean            @default(false) @map("is_delete")
-  createdAt          DateTime           @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt          DateTime           @updatedAt @map("updated_at") @db.Timestamptz()
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fileName           String   @map("file_name")
+  fileUrl            String   @map("file_url")
+  fileType           String   @map("file_type")
+  mimeType           String   @map("mime_type")
+  fileSize           Int      @map("file_size")
+  altText            String?  @map("alt_text")
+  uploadedById       String?  @map("uploaded_by") @db.Uuid
+  cloudinaryPublicId String   @map("cloudinary_public_id")
+  isDelete           Boolean  @default(false) @map("is_delete")
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamptz()
 
-  uploadedBy         User?              @relation(name: "UserUploads", fields: [uploadedById], references: [id], onDelete: SetNull)
-  profileUsers       User[]             @relation(name: "UserProfileImage")
-  items              Item_Information[]
+  uploadedBy   User?              @relation(name: "UserUploads", fields: [uploadedById], references: [id], onDelete: SetNull)
+  profileUsers User[]             @relation(name: "UserProfileImage")
+  items        Item_Information[]
 
   @@map("media_files")
 }
@@ -35,7 +35,7 @@ model MediaFile {
 // ==================== BRANCH & SYSTEM ====================
 
 model Branch {
-  id           String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("Id")
+  id           String              @id @default(dbgenerated("gen_random_uuid()")) @map("Id") @db.Uuid
   branchCode   String?             @unique @map("BranchCode")
   branchName   String?             @map("BranchName")
   address      String?             @map("Address")
@@ -47,7 +47,7 @@ model Branch {
 }
 
 model Bank {
-  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id         String     @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   name       String?    @map("Name")
   createBy   String?    @map("CreateBy")
   createDate DateTime?  @map("CreateDate")
@@ -57,7 +57,7 @@ model Bank {
 }
 
 model Setup_System {
-  id             String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id             String  @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   companyName    String  @map("CompanyName")
   companyAddress String? @map("CompanyAddress")
   companyUtility String? @map("CompanyUtility")
@@ -69,7 +69,7 @@ model Setup_System {
 // ==================== AUTHENTICATION & USERS ====================
 
 model User {
-  id                         String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id                         String              @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   name                       String?             @map("Name")
   userName                   String              @unique @map("UserName")
   userPrefix                 String?             @unique @map("UserPrefix")
@@ -92,7 +92,7 @@ model User {
   passwordResetCode          String?             @map("PasswordResetCode")
   passwordResetCodeExpiredAt DateTime?           @map("PasswordResetCodeExpiredAt")
   passwordResetVerifiedAt    DateTime?           @map("PasswordResetVerifiedAt")
-  mediaFileId                String?             @db.Uuid @map("media_file_id")
+  mediaFileId                String?             @map("media_file_id") @db.Uuid
   userRoles                  t_UserRole[]
   branchMappings             UserBranchMapping[]
   mediaFiles                 MediaFile[]         @relation(name: "UserUploads")
@@ -103,8 +103,8 @@ model User {
 
 model UserBranchMapping {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId    String   @db.Uuid @map("user_id")
-  branchId  String   @db.Uuid @map("branch_id")
+  userId    String   @map("user_id") @db.Uuid
+  branchId  String   @map("branch_id") @db.Uuid
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -128,7 +128,7 @@ model t_UserRole {
 }
 
 model AuditLog {
-  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   actionPage String?   @map("ActionPage")
   actionDone String?   @map("ActionDone")
   userName   String?   @map("UserName")
@@ -142,13 +142,13 @@ model AuditLog {
 
 model AuditLogs {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId     String?  @db.Uuid @map("user_id")
+  userId     String?  @map("user_id") @db.Uuid
   action     String   @db.VarChar(100)
-  entityType String?  @db.VarChar(100) @map("entity_type")
-  entityId   String?  @db.Uuid @map("entity_id")
+  entityType String?  @map("entity_type") @db.VarChar(100)
+  entityId   String?  @map("entity_id") @db.Uuid
   oldValues  Json?    @map("old_values")
   newValues  Json?    @map("new_values")
-  ipAddress  String?  @db.VarChar(45) @map("ip_address")
+  ipAddress  String?  @map("ip_address") @db.VarChar(45)
   userAgent  String?  @map("user_agent")
   createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz()
 
@@ -158,7 +158,7 @@ model AuditLogs {
 }
 
 model Menu {
-  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   menuName    String       @map("MenuName")
   controlName String       @unique @map("ControlName")
   description String?      @map("Description")
@@ -173,7 +173,7 @@ model Menu {
 }
 
 model Role {
-  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   name        String       @unique @map("Name")
   description String?      @map("Description")
   permissions Permission[]
@@ -182,9 +182,9 @@ model Role {
 }
 
 model Permission {
-  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
-  roleId    String  @db.Uuid @map("RoleId")
-  menuId    String  @db.Uuid @map("MenuId")
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  roleId    String  @map("RoleId") @db.Uuid
+  menuId    String  @map("MenuId") @db.Uuid
   isEnable  Boolean @default(false) @map("IsEnable")
   canCreate Boolean @default(false) @map("CanCreate")
   canEdit   Boolean @default(false) @map("CanEdit")
@@ -199,7 +199,7 @@ model Permission {
 // ==================== CUSTOMERS ====================
 
 model Customer {
-  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   code               String               @unique @map("Code")
   name               String               @map("Name")
   mobile             String?              @map("Mobile")
@@ -209,13 +209,12 @@ model Customer {
   sales              CSMaster[]
   salesVat           CSVMaster[]
   clientTransactions Client_Transaction[]
-  moneyReceives      MoneyReceive[]
 
   @@map("Customer")
 }
 
 model Client_Transaction {
-  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   clientCode    String?   @map("ClientCode")
   paymentDate   DateTime? @map("PaymentDate")
   paymentAmount Decimal?  @map("PaymentAmount") @db.Decimal(9, 2)
@@ -224,6 +223,7 @@ model Client_Transaction {
   moneyReceptNo String?   @map("MoneyReceptNo")
   bankName      String?   @map("BankName")
   bankNo        String?   @map("BankNo")
+  branchId      String?   @map("BranchId") @db.Uuid
   customer      Customer? @relation(fields: [clientCode], references: [code])
 
   @@map("Client_Transaction")
@@ -232,7 +232,7 @@ model Client_Transaction {
 // ==================== EMPLOYEES ====================
 
 model Employee {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   code        String    @unique @map("Code")
   name        String?   @map("Name")
   mobile      String?   @map("Mobile")
@@ -249,18 +249,18 @@ model Employee {
 // ==================== ITEMS ====================
 
 model Item_Information {
-  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
-  itmCode         String           @unique @map("itmCode")
-  itmName         String?          @map("itmName")
-  itmCategory     String?          @map("itmCategory")
-  itmType         String?          @map("itmType")
-  itmUOM          String?          @map("itmUOM")
-  itmRemarks      String?          @map("itmRemarks")
-  imageId         String?          @db.Uuid @map("image_id")
-  itmOrderLevel   Decimal?         @map("itmOrderLevel") @db.Decimal(9, 2)
-  image           MediaFile?       @relation(fields: [imageId], references: [id], onDelete: SetNull)
-  orderLevelUOM   String?          @map("OrderLevelUOM")
-  isActive        String?          @map("IsActive")
+  id                    String         @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  itmCode               String         @unique @map("itmCode")
+  itmName               String?        @map("itmName")
+  itmCategory           String?        @map("itmCategory")
+  itmType               String?        @map("itmType")
+  itmUOM                String?        @map("itmUOM")
+  itmRemarks            String?        @map("itmRemarks")
+  imageId               String?        @map("image_id") @db.Uuid
+  itmOrderLevel         Decimal?       @map("itmOrderLevel") @db.Decimal(9, 2)
+  image                 MediaFile?     @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  orderLevelUOM         String?        @map("OrderLevelUOM")
+  isActive              String?        @map("IsActive")
   // Relations using Item_Information.ID (uuid)
   runningSaleDetails    t_SODet[]
   runningSaleVatDetails t_SODeV[]
@@ -271,14 +271,14 @@ model Item_Information {
   itemReceives          Item_Receive[]
   itemIssues            Item_Issue[]
   inventory             Inventory?
-  prices                t_Price[]    @relation("ItemPrices")
-  costPrices            t_CostPr[]   @relation("ItemCostPrices")
+  prices                t_Price[]      @relation("ItemPrices")
+  costPrices            t_CostPr[]     @relation("ItemCostPrices")
 
   @@map("Item_Information")
 }
 
 model Item_Category {
-  id      String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id      String  @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   code    String  @unique @map("Code")
   name    String? @map("Name")
   remarks String? @map("Remarks")
@@ -290,7 +290,7 @@ model RW_Stock {
   itemCode  String  @id @map("ItemCode")
   stockQty  Decimal @map("StockQty") @db.Decimal(9, 2)
   unitPrice Decimal @map("UnitPrice") @db.Decimal(9, 4)
-  branchId  Int?    @map("BranchId")
+  branchId  String? @map("BranchId") @db.Uuid
 
   @@map("RW_Stock")
 }
@@ -306,7 +306,7 @@ model Inventory {
 // ==================== PRICING ====================
 
 model t_Price {
-  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("Price_OId")
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @map("Price_OId") @db.Uuid
   priceItemOId      String            @map("Price_ItemOId")
   priceFromDate     DateTime?         @map("Price_FromDate")
   priceToDate       DateTime?         @map("Price_ToDate")
@@ -325,7 +325,7 @@ model t_Price {
 }
 
 model t_CostPr {
-  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("Price_OId")
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @map("Price_OId") @db.Uuid
   priceItemOId      String            @map("Price_ItemOId")
   priceFromDate     DateTime?         @map("Price_FromDate")
   priceToDate       DateTime?         @map("Price_ToDate")
@@ -346,7 +346,7 @@ model t_CostPr {
 // ==================== CREDIT SALES (NON-VAT) ====================
 
 model CSMaster {
-  id              String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id              String     @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   invNo           String     @unique @map("InvNo")
   invDate         DateTime?  @map("InvDate")
   poNo            String?    @map("PONo")
@@ -358,7 +358,7 @@ model CSMaster {
   totalVat        Decimal?   @map("TotalVat") @db.Decimal(8, 2)
   discountRemarks String?    @map("DiscountRemarks")
   isActive        Int?       @map("IsActive")
-  branchId        Int?       @map("BranchId")
+  branchId        String?    @map("BranchId") @db.Uuid
   createDate      DateTime?  @map("CreateDate")
   customer        Customer?  @relation(fields: [clientCode], references: [code])
   details         CSDetail[]
@@ -367,7 +367,7 @@ model CSMaster {
 }
 
 model CSDetail {
-  id      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id      String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   invNo   String?   @map("InvNo")
   itemOId String?   @map("ItemOId")
   rate    Decimal?  @map("Rate") @db.Decimal(8, 2)
@@ -384,7 +384,7 @@ model CSDetail {
 // ==================== CREDIT SALES (VAT) ====================
 
 model CSVMaster {
-  id              String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id              String      @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   invNo           String      @unique @map("InvNo")
   invDate         DateTime?   @map("InvDate")
   poNo            String?     @map("PONo")
@@ -395,7 +395,7 @@ model CSVMaster {
   totalDiscount   Decimal?    @map("TotalDiscount") @db.Decimal(18, 6)
   totalVat        Decimal?    @map("TotalVat") @db.Decimal(18, 6)
   discountRemarks String?     @map("DiscountRemarks")
-  branchId        Int?        @map("BranchId")
+  branchId        String?     @map("BranchId") @db.Uuid
   customer        Customer?   @relation(fields: [clientCode], references: [code])
   details         CSVDetail[]
 
@@ -403,7 +403,7 @@ model CSVMaster {
 }
 
 model CSVDetail {
-  id      String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id      String     @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   invNo   String?    @map("InvNo")
   itemOId String?    @map("ItemOId")
   rate    Decimal?   @map("Rate") @db.Decimal(18, 6)
@@ -420,7 +420,7 @@ model CSVDetail {
 // ==================== RUNNING SALES (CASH / NON-VAT) ====================
 
 model t_SOMstr {
-  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("SOMstr_OID")
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @map("SOMstr_OID") @db.Uuid
   somstrCode            String?   @map("SOMstr_Code")
   somstrDate            DateTime? @map("SOMstr_Date")
   somstrTotalAmt        Decimal?  @map("SOMstr_TotalAmt") @db.Decimal(18, 4)
@@ -436,12 +436,12 @@ model t_SOMstr {
   somstrIsActive        Boolean?  @map("SOMstr_IsActive")
   somstrCustomerpay     Decimal?  @map("SOMstr_Customerpay") @db.Decimal(18, 4)
   somstrChange          Decimal?  @map("SOMstr_Change") @db.Decimal(18, 4)
-  branchId              Int?      @map("BranchId")
+  branchId              String?   @map("BranchId") @db.Uuid
   soMstrDiscountRemarks String?   @map("SoMstr_DiscountRemarks")
   soMstrModifyRemarks   String?   @map("SoMstr_ModifyRemarks")
   soMstrDiscountContact String?   @map("SoMstr_DiscountContact")
   mtype                 String?   @map("Mtype")
-  soMstrMBank           String?   @db.Uuid @map("SoMstr_MBank")
+  soMstrMBank           String?   @map("SoMstr_MBank") @db.Uuid
   bank                  Bank?     @relation(fields: [soMstrMBank], references: [id])
   details               t_SODet[]
 
@@ -449,10 +449,10 @@ model t_SOMstr {
 }
 
 model t_SODet {
-  id             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("SODet_OID")
-  t_SOMstr_id    String?           @db.Uuid @map("SODet_MStrOID")
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @map("SODet_OID") @db.Uuid
+  t_SOMstr_id    String?           @map("SODet_MStrOID") @db.Uuid
   sodetItemSLNum String?           @map("SODet_ItemSLNum")
-  sodetItemOID   String            @db.Uuid @map("SODet_ItemOID")
+  sodetItemOID   String            @map("SODet_ItemOID") @db.Uuid
   sodetQTY       Decimal?          @map("SODet_QTY") @db.Decimal(18, 4)
   sodetUOM       String?           @map("SODet_UOM")
   sodetPrice     Decimal?          @map("SODet_Price") @db.Decimal(18, 4)
@@ -463,7 +463,7 @@ model t_SODet {
   sodetVATAmount Decimal?          @map("SODet_VATAmount") @db.Decimal(18, 4)
   sodetDiscount  Decimal?          @map("SODet_Discount") @db.Decimal(18, 4)
   sodetNetAmount Decimal?          @map("SODet_NetAmount") @db.Decimal(18, 4)
-  branchId       Int?              @map("BranchId")
+  branchId       String?           @map("BranchId") @db.Uuid
   sale           t_SOMstr?         @relation(fields: [t_SOMstr_id], references: [id])
   item           Item_Information? @relation(fields: [sodetItemOID], references: [id])
 
@@ -473,7 +473,7 @@ model t_SODet {
 // ==================== RUNNING SALES (VAT) ====================
 
 model t_SOMstV {
-  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("SOMstr_OID")
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @map("SOMstr_OID") @db.Uuid
   somstrCode            String?   @map("SOMstr_Code")
   somstrDate            DateTime? @map("SOMstr_Date")
   somstrTotalAmt        Decimal?  @map("SOMstr_TotalAmt") @db.Decimal(18, 6)
@@ -489,7 +489,7 @@ model t_SOMstV {
   somstrIsActive        Boolean?  @map("SOMstr_IsActive")
   somstrCustomerpay     Decimal?  @map("SOMstr_Customerpay") @db.Decimal(18, 4)
   somstrChange          Decimal?  @map("SOMstr_Change") @db.Decimal(18, 4)
-  branchId              Int?      @map("BranchId")
+  branchId              String?   @map("BranchId") @db.Uuid
   soMstrDiscountRemarks String?   @map("SoMstr_DiscountRemarks")
   soMstrModifyRemarks   String?   @map("SoMstr_ModifyRemarks")
   soMstrDiscountContact String?   @map("SoMstr_DiscountContact")
@@ -500,10 +500,10 @@ model t_SOMstV {
 }
 
 model t_SODeV {
-  id             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("SODet_OID")
-  t_SOMstV_id    String?           @db.Uuid @map("SODet_MStrOID")
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @map("SODet_OID") @db.Uuid
+  t_SOMstV_id    String?           @map("SODet_MStrOID") @db.Uuid
   sodetItemSLNum String?           @map("SODet_ItemSLNum")
-  sodetItemOID   String            @db.Uuid @map("SODet_ItemOID")
+  sodetItemOID   String            @map("SODet_ItemOID") @db.Uuid
   sodetQTY       Decimal?          @map("SODet_QTY") @db.Decimal(18, 6)
   sodetUOM       String?           @map("SODet_UOM")
   sodetPrice     Decimal?          @map("SODet_Price") @db.Decimal(18, 6)
@@ -514,7 +514,7 @@ model t_SODeV {
   sodetVATAmount Decimal?          @map("SODet_VATAmount") @db.Decimal(18, 6)
   sodetDiscount  Decimal?          @map("SODet_Discount") @db.Decimal(18, 6)
   sodetNetAmount Decimal?          @map("SODet_NetAmount") @db.Decimal(18, 6)
-  branchId       Int?              @map("BranchId")
+  branchId       String?           @map("BranchId") @db.Uuid
   sale           t_SOMstV?         @relation(fields: [t_SOMstV_id], references: [id])
   item           Item_Information? @relation(fields: [sodetItemOID], references: [id])
 
@@ -524,7 +524,7 @@ model t_SODeV {
 // ==================== ASSORTMENT SALES ====================
 
 model AsstMsrt {
-  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("id")
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @map("id") @db.Uuid
   code            String?   @map("Code")
   date            DateTime? @map("Date")
   totalAmt        Decimal?  @map("TotalAmt") @db.Decimal(8, 4)
@@ -541,7 +541,7 @@ model AsstMsrt {
   isActive        Boolean?  @map("IsActive")
   customerpay     Decimal?  @map("Customerpay") @db.Decimal(8, 4)
   change          Decimal?  @map("Change") @db.Decimal(8, 4)
-  branchId        Int?      @map("BranchId")
+  branchId        String?   @map("BranchId") @db.Uuid
   discountRemarks String?   @map("DiscountRemarks")
   details         AsstDet[]
 
@@ -549,9 +549,9 @@ model AsstMsrt {
 }
 
 model AsstDet {
-  id          String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("id")
+  id          String           @id @default(dbgenerated("gen_random_uuid()")) @map("id") @db.Uuid
   itemSLNum   String?          @map("ItemSLNum")
-  itemOID     String           @db.Uuid @map("ItemOID")
+  itemOID     String           @map("ItemOID") @db.Uuid
   qty         Decimal?         @map("QTY") @db.Decimal(18, 4)
   uom         String?          @map("UOM")
   price       Decimal?         @map("Price") @db.Decimal(8, 4)
@@ -562,7 +562,7 @@ model AsstDet {
   vatAmount   Decimal?         @map("VATAmount") @db.Decimal(8, 4)
   discount    Decimal?         @map("Discount") @db.Decimal(8, 4)
   netAmount   Decimal?         @map("NetAmount") @db.Decimal(8, 4)
-  AsstMsrt_id String?          @db.Uuid @map("AsstMsrt_id")
+  AsstMsrt_id String?          @map("AsstMsrt_id") @db.Uuid
   item        Item_Information @relation(fields: [itemOID], references: [id], onDelete: Restrict, onUpdate: Cascade)
   sale        AsstMsrt?        @relation(fields: [AsstMsrt_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
 
@@ -572,7 +572,7 @@ model AsstDet {
 // ==================== NC ADJUSTMENT ====================
 
 model t_NCMstr {
-  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("NCMstr_OID")
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @map("NCMstr_OID") @db.Uuid
   ncmstrCode         String?   @map("NCMstr_Code")
   ncmstrDate         DateTime? @map("NCMstr_Date")
   ncmstrCreator      String?   @map("NCMstr_Creator")
@@ -580,7 +580,7 @@ model t_NCMstr {
   ncmstrUpdateBy     String?   @map("NCMstr_UpdateBy")
   ncmstrUpdateDate   DateTime? @map("NCMstr_UpdateDate")
   ncmstrIsActive     Boolean?  @map("NCMstr_IsActive")
-  branchId           Int?      @map("BranchId")
+  branchId           String?   @map("BranchId") @db.Uuid
   ncmstrName         String?   @map("NCMstr_Name")
   ncmstrContactNo    String?   @map("NCMstr_ContactNo")
   ncmstrReference    String?   @map("NCMstr_Reference")
@@ -590,10 +590,10 @@ model t_NCMstr {
 }
 
 model t_NCDet {
-  id             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("NCDet_OID")
-  t_NCMstr_id    String?           @db.Uuid @map("NCDet_MStrOID")
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @map("NCDet_OID") @db.Uuid
+  t_NCMstr_id    String?           @map("NCDet_MStrOID") @db.Uuid
   ncdetItemSLNum String?           @map("NCDet_ItemSLNum")
-  ncdetItemOID   String            @db.Uuid @map("NCDet_ItemOID")
+  ncdetItemOID   String            @map("NCDet_ItemOID") @db.Uuid
   ncdetQTY       Decimal?          @map("NCDet_QTY") @db.Decimal(18, 4)
   ncdetUOM       String?           @map("NCDet_UOM")
   ncdetPrice     Decimal?          @map("NCDet_Price") @db.Decimal(8, 4)
@@ -604,7 +604,7 @@ model t_NCDet {
   ncdetVATAmount Decimal?          @map("NCDet_VATAmount") @db.Decimal(8, 4)
   ncdetDiscount  Decimal?          @map("NCDet_Discount") @db.Decimal(8, 4)
   ncdetNetAmount Decimal?          @map("NCDet_NetAmount") @db.Decimal(8, 4)
-  branchId       Int?              @map("BranchId")
+  branchId       String?           @map("BranchId") @db.Uuid
   sale           t_NCMstr?         @relation(fields: [t_NCMstr_id], references: [id])
   item           Item_Information? @relation(fields: [ncdetItemOID], references: [id])
 
@@ -614,7 +614,7 @@ model t_NCDet {
 // ==================== ITEM TRANSACTIONS ====================
 
 model Item_Receive {
-  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   serialNo        String?           @map("SerialNo")
   voucharNo       String?           @map("VoucharNo")
   itemCode        String?           @map("ItemCode")
@@ -626,23 +626,23 @@ model Item_Receive {
   createDate      DateTime?         @map("CreateDate")
   updateBy        String?           @map("UpdateBy")
   updateDate      DateTime?         @map("UpdateDate")
-  branchId        Int               @map("BranchId")
-  receiveBranchID Int?              @map("ReceiveBranchID")
+  branchId        String            @map("BranchId") @db.Uuid
+  receiveBranchID String?           @map("ReceiveBranchID") @db.Uuid
   item            Item_Information? @relation(fields: [itemCode], references: [itmCode])
 
   @@map("Item_Receive")
 }
 
 model Item_Issue {
-  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   serialNo        String?           @map("SerialNo")
   voucharNo       String?           @map("VoucharNo")
   itemCode        String?           @map("ItemCode")
   unitPrice       Decimal?          @map("UnitPrice") @db.Decimal(18, 6)
   qty             Decimal?          @map("Qty") @db.Decimal(18, 6)
   issueDate       DateTime?         @map("IssueDate")
-  issueBranchId   Int               @map("IssueBranchId")
-  receiveBranchId Int               @map("ReceiveBranchId")
+  issueBranchId   String            @map("IssueBranchId") @db.Uuid
+  receiveBranchId String            @map("ReceiveBranchId") @db.Uuid
   isActive        Int?              @map("IsActive")
   createBy        String?           @map("CreateBy")
   createDate      DateTime?         @map("CreateDate")
@@ -654,14 +654,14 @@ model Item_Issue {
 }
 
 model ItemReject {
-  id       String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id       String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   invNo    String?           @map("InvNo")
-  itmOId   String?           @db.Uuid @map("itmOId")
+  itmOId   String?           @map("itmOId") @db.Uuid
   reject   Decimal?          @map("Reject") @db.Decimal(8, 2)
   excess   Decimal?          @map("Excess") @db.Decimal(8, 2)
   short    Decimal?          @map("Short") @db.Decimal(8, 2)
   date     DateTime?         @map("Date")
-  branchId Int?              @map("BranchId")
+  branchId String?           @map("BranchId") @db.Uuid
   assort   Decimal?          @map("Assort") @db.Decimal(8, 2)
   isActive Int?              @map("IsActive")
   item     Item_Information? @relation(fields: [itmOId], references: [id])
@@ -672,7 +672,7 @@ model ItemReject {
 // ==================== PACKET MANAGEMENT ====================
 
 model PacketInfo {
-  id         String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id         String           @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   code       String           @unique @map("Code")
   name       String?          @map("Name")
   uom        String?          @map("UOM")
@@ -691,7 +691,7 @@ model PacketInfo {
 }
 
 model Packet_Receive {
-  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   serialNo    String?     @map("SerialNo")
   voucharNo   String?     @map("VoucharNo")
   code        String?     @map("Code")
@@ -700,14 +700,14 @@ model Packet_Receive {
   isActive    Int?        @map("IsActive")
   createBy    String?     @map("CreateBy")
   createDate  DateTime?   @map("CreateDate")
-  branchId    Int         @map("BranchId")
+  branchId    String      @map("BranchId") @db.Uuid
   packet      PacketInfo? @relation(fields: [code], references: [code])
 
   @@map("Packet_Receive")
 }
 
 model Packet_Issue {
-  id         String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id         String      @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   serialNo   String?     @map("SerialNo")
   invoiceNo  String?     @map("InvoiceNo")
   issueType  String?     @map("IssueType")
@@ -719,7 +719,7 @@ model Packet_Issue {
   createBy   String?     @map("CreateBy")
   createDate DateTime?   @map("CreateDate")
   updateBy   String?     @map("UpdateBy")
-  branchId   Int         @map("BranchId")
+  branchId   String      @map("BranchId") @db.Uuid
   packet     PacketInfo? @relation(fields: [code], references: [code])
 
   @@map("Packet_Issue")
@@ -728,70 +728,70 @@ model Packet_Issue {
 // ==================== ORDERS ====================
 
 model OrderReceive_Master {
-  id              String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
-  clientCode      String                 @map("ClientCode")
-  serialNo        String?                @map("SerialNo")
-  advance         Decimal?               @map("Advance") @db.Decimal(9, 2)
-  orderDate       DateTime?              @map("OrderDate")
-  totalPrice      Decimal?               @map("TotalPrice") @db.Decimal(18, 2)
-  discount        Decimal?               @map("Discount") @db.Decimal(18, 2)
-  deliveryDate    DateTime?              @map("DeliveryDate")
-  deliveryAddress String?                @map("DeliveryAddress")
-  cType           String?                @map("CType")
-  branchId        Int?                   @map("BranchId")
-  deliveryTime    DateTime?              @map("DeliveryTime")
-  isActive        Int?                   @map("IsActive")
-  createBy        String?                @map("CreateBy")
-  createDate      DateTime?              @map("CreateDate")
-  updateBy        String?                @map("UpdateBy")
-  updateDate      DateTime?              @map("UpdateDate")
+  id              String                @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  clientCode      String                @map("ClientCode")
+  serialNo        String?               @map("SerialNo")
+  advance         Decimal?              @map("Advance") @db.Decimal(9, 2)
+  orderDate       DateTime?             @map("OrderDate")
+  totalPrice      Decimal?              @map("TotalPrice") @db.Decimal(18, 2)
+  discount        Decimal?              @map("Discount") @db.Decimal(18, 2)
+  deliveryDate    DateTime?             @map("DeliveryDate")
+  deliveryAddress String?               @map("DeliveryAddress")
+  cType           String?               @map("CType")
+  branchId        String?               @map("BranchId") @db.Uuid
+  deliveryTime    DateTime?             @map("DeliveryTime")
+  isActive        Int?                  @map("IsActive")
+  createBy        String?               @map("CreateBy")
+  createDate      DateTime?             @map("CreateDate")
+  updateBy        String?               @map("UpdateBy")
+  updateDate      DateTime?             @map("UpdateDate")
   details         OrderReceive_Detail[]
 
   @@map("OrderReceive_Master")
 }
 
 model OrderReceive_Detail {
-  id        String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
-  masterId  String?               @db.Uuid @map("MasterId")
-  itemCode  String                @map("ItemCode")
-  qty       Decimal               @map("Qty") @db.Decimal(9, 2)
-  unitPrice Decimal?              @map("UnitPrice") @db.Decimal(9, 2)
-  serialNo  String?               @map("SerialNo")
-  vatPrice  Decimal?              @map("VatPrice") @db.Decimal(18, 2)
-  amount    Decimal?              @map("Amount") @db.Decimal(18, 2)
-  master    OrderReceive_Master?  @relation(fields: [masterId], references: [id])
+  id        String               @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  masterId  String?              @map("MasterId") @db.Uuid
+  itemCode  String               @map("ItemCode")
+  qty       Decimal              @map("Qty") @db.Decimal(9, 2)
+  unitPrice Decimal?             @map("UnitPrice") @db.Decimal(9, 2)
+  serialNo  String?              @map("SerialNo")
+  vatPrice  Decimal?             @map("VatPrice") @db.Decimal(18, 2)
+  amount    Decimal?             @map("Amount") @db.Decimal(18, 2)
+  master    OrderReceive_Master? @relation(fields: [masterId], references: [id])
 
   @@map("OrderReceive_Detail")
 }
 
 model VOrderReceive_Master {
-  id              String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
-  clientCode      String                  @map("ClientCode")
-  serialNo        String?                 @map("SerialNo")
-  advance         Decimal?                @map("Advance") @db.Decimal(9, 2)
-  orderDate       DateTime?               @map("OrderDate")
-  deliveryDate    DateTime?               @map("DeliveryDate")
-  deliveryAddress String?                 @map("DeliveryAddress")
-  cType           String?                 @map("CType")
-  branchId        Int?                    @map("BranchId")
-  deliveryTime    DateTime?               @map("DeliveryTime")
-  createBy        String?                 @map("CreateBy")
-  createDate      DateTime?               @map("CreateDate")
-  updateBy        String?                 @map("UpdateBy")
-  updateDate      DateTime?               @map("UpdateDate")
+  id              String                 @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  clientCode      String                 @map("ClientCode")
+  serialNo        String?                @map("SerialNo")
+  advance         Decimal?               @map("Advance") @db.Decimal(9, 2)
+  orderDate       DateTime?              @map("OrderDate")
+  deliveryDate    DateTime?              @map("DeliveryDate")
+  deliveryAddress String?                @map("DeliveryAddress")
+  cType           String?                @map("CType")
+  branchId        String?                @map("BranchId") @db.Uuid
+  deliveryTime    DateTime?              @map("DeliveryTime")
+  createBy        String?                @map("CreateBy")
+  createDate      DateTime?              @map("CreateDate")
+  updateBy        String?                @map("UpdateBy")
+  updateDate      DateTime?              @map("UpdateDate")
   details         VOrderReceive_Detail[]
 
   @@map("VOrderReceive_Master")
 }
 
 model VOrderReceive_Detail {
-  id        String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
-  masterId  String?                @db.Uuid @map("MasterId")
-  itemCode  String                 @map("ItemCode")
-  qty       Decimal                @map("Qty") @db.Decimal(9, 2)
-  unitPrice Decimal?               @map("UnitPrice") @db.Decimal(9, 2)
-  serialNo  String?                @map("SerialNo")
-  master    VOrderReceive_Master?  @relation(fields: [masterId], references: [id])
+  id        String                @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  masterId  String?               @map("MasterId") @db.Uuid
+  itemCode  String                @map("ItemCode")
+  qty       Decimal               @map("Qty") @db.Decimal(9, 2)
+  unitPrice Decimal?              @map("UnitPrice") @db.Decimal(9, 2)
+  serialNo  String?               @map("SerialNo")
+  master    VOrderReceive_Master? @relation(fields: [masterId], references: [id])
 
   @@map("VOrderReceive_Detail")
 }
@@ -799,33 +799,19 @@ model VOrderReceive_Detail {
 // ==================== SALE AMOUNT POST ====================
 
 model t_SaleAmountPost {
-  id       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id       String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   cashSale Decimal   @map("CashSale") @db.Decimal(10, 2)
   cardSale Decimal   @map("CardSale") @db.Decimal(10, 2)
   date     DateTime? @map("Date")
-  branchId Int?      @map("BranchId")
+  branchId String?   @map("BranchId") @db.Uuid
 
   @@map("t_SaleAmountPost")
 }
 
 // ==================== FINANCE ====================
 
-model MoneyReceive {
-  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
-  receiptNo     String    @unique @map("ReceiptNo")
-  receiptDate   DateTime? @map("ReceiptDate")
-  customerCode  String?   @map("CustomerCode")
-  amount        Decimal?  @map("Amount") @db.Decimal(18, 2)
-  paymentMethod String?   @map("PaymentMethod")
-  description   String?   @map("Description")
-  createdBy     String?   @map("CreatedBy")
-  customer      Customer? @relation(fields: [customerCode], references: [code])
-
-  @@map("MoneyReceive")
-}
-
 model CashPurchase {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("ID")
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   voucherNo   String    @unique @map("VoucherNo")
   voucherDate DateTime? @map("VoucherDate")
   supplier    String?   @map("Supplier")
@@ -879,4 +865,3 @@ model temp_table {
 
   @@map("temp_table")
 }
-

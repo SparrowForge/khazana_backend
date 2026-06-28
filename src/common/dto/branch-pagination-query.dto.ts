@@ -1,12 +1,10 @@
-import { IsInt, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsUUID, IsOptional } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationQueryDto } from './pagination-query.dto';
 
 export class BranchPaginationQueryDto extends PaginationQueryDto {
-  @ApiPropertyOptional({ description: 'Filter by branch ID' })
+  @ApiPropertyOptional({ format: 'uuid', description: 'Filter by branch UUID' })
   @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  branchId?: number;
+  @IsUUID()
+  branchId?: string;
 }

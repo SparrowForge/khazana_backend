@@ -234,11 +234,6 @@ export type VOrderReceive_Detail = $Result.DefaultSelection<Prisma.$VOrderReceiv
  */
 export type t_SaleAmountPost = $Result.DefaultSelection<Prisma.$t_SaleAmountPostPayload>
 /**
- * Model MoneyReceive
- * 
- */
-export type MoneyReceive = $Result.DefaultSelection<Prisma.$MoneyReceivePayload>
-/**
  * Model CashPurchase
  * 
  */
@@ -808,16 +803,6 @@ export class PrismaClient<
   get t_SaleAmountPost(): Prisma.t_SaleAmountPostDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.moneyReceive`: Exposes CRUD operations for the **MoneyReceive** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more MoneyReceives
-    * const moneyReceives = await prisma.moneyReceive.findMany()
-    * ```
-    */
-  get moneyReceive(): Prisma.MoneyReceiveDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.cashPurchase`: Exposes CRUD operations for the **CashPurchase** model.
     * Example usage:
     * ```ts
@@ -1321,7 +1306,6 @@ export namespace Prisma {
     VOrderReceive_Master: 'VOrderReceive_Master',
     VOrderReceive_Detail: 'VOrderReceive_Detail',
     t_SaleAmountPost: 't_SaleAmountPost',
-    MoneyReceive: 'MoneyReceive',
     CashPurchase: 'CashPurchase',
     temp_table: 'temp_table'
   };
@@ -1342,7 +1326,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "client_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "moneyReceive" | "cashPurchase" | "temp_table"
+      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "client_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4602,80 +4586,6 @@ export namespace Prisma {
           }
         }
       }
-      MoneyReceive: {
-        payload: Prisma.$MoneyReceivePayload<ExtArgs>
-        fields: Prisma.MoneyReceiveFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.MoneyReceiveFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MoneyReceivePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.MoneyReceiveFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MoneyReceivePayload>
-          }
-          findFirst: {
-            args: Prisma.MoneyReceiveFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MoneyReceivePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.MoneyReceiveFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MoneyReceivePayload>
-          }
-          findMany: {
-            args: Prisma.MoneyReceiveFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MoneyReceivePayload>[]
-          }
-          create: {
-            args: Prisma.MoneyReceiveCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MoneyReceivePayload>
-          }
-          createMany: {
-            args: Prisma.MoneyReceiveCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.MoneyReceiveCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MoneyReceivePayload>[]
-          }
-          delete: {
-            args: Prisma.MoneyReceiveDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MoneyReceivePayload>
-          }
-          update: {
-            args: Prisma.MoneyReceiveUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MoneyReceivePayload>
-          }
-          deleteMany: {
-            args: Prisma.MoneyReceiveDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.MoneyReceiveUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.MoneyReceiveUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MoneyReceivePayload>[]
-          }
-          upsert: {
-            args: Prisma.MoneyReceiveUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MoneyReceivePayload>
-          }
-          aggregate: {
-            args: Prisma.MoneyReceiveAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateMoneyReceive>
-          }
-          groupBy: {
-            args: Prisma.MoneyReceiveGroupByArgs<ExtArgs>
-            result: $Utils.Optional<MoneyReceiveGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.MoneyReceiveCountArgs<ExtArgs>
-            result: $Utils.Optional<MoneyReceiveCountAggregateOutputType> | number
-          }
-        }
-      }
       CashPurchase: {
         payload: Prisma.$CashPurchasePayload<ExtArgs>
         fields: Prisma.CashPurchaseFieldRefs
@@ -4964,7 +4874,6 @@ export namespace Prisma {
     vOrderReceive_Master?: VOrderReceive_MasterOmit
     vOrderReceive_Detail?: VOrderReceive_DetailOmit
     t_SaleAmountPost?: t_SaleAmountPostOmit
-    moneyReceive?: MoneyReceiveOmit
     cashPurchase?: CashPurchaseOmit
     temp_table?: temp_tableOmit
   }
@@ -5263,14 +5172,12 @@ export namespace Prisma {
     sales: number
     salesVat: number
     clientTransactions: number
-    moneyReceives: number
   }
 
   export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sales?: boolean | CustomerCountOutputTypeCountSalesArgs
     salesVat?: boolean | CustomerCountOutputTypeCountSalesVatArgs
     clientTransactions?: boolean | CustomerCountOutputTypeCountClientTransactionsArgs
-    moneyReceives?: boolean | CustomerCountOutputTypeCountMoneyReceivesArgs
   }
 
   // Custom InputTypes
@@ -5303,13 +5210,6 @@ export namespace Prisma {
    */
   export type CustomerCountOutputTypeCountClientTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: Client_TransactionWhereInput
-  }
-
-  /**
-   * CustomerCountOutputType without action
-   */
-  export type CustomerCountOutputTypeCountMoneyReceivesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MoneyReceiveWhereInput
   }
 
 
@@ -19211,7 +19111,6 @@ export namespace Prisma {
     sales?: boolean | Customer$salesArgs<ExtArgs>
     salesVat?: boolean | Customer$salesVatArgs<ExtArgs>
     clientTransactions?: boolean | Customer$clientTransactionsArgs<ExtArgs>
-    moneyReceives?: boolean | Customer$moneyReceivesArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -19250,7 +19149,6 @@ export namespace Prisma {
     sales?: boolean | Customer$salesArgs<ExtArgs>
     salesVat?: boolean | Customer$salesVatArgs<ExtArgs>
     clientTransactions?: boolean | Customer$clientTransactionsArgs<ExtArgs>
-    moneyReceives?: boolean | Customer$moneyReceivesArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -19262,7 +19160,6 @@ export namespace Prisma {
       sales: Prisma.$CSMasterPayload<ExtArgs>[]
       salesVat: Prisma.$CSVMasterPayload<ExtArgs>[]
       clientTransactions: Prisma.$Client_TransactionPayload<ExtArgs>[]
-      moneyReceives: Prisma.$MoneyReceivePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -19669,7 +19566,6 @@ export namespace Prisma {
     sales<T extends Customer$salesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$salesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CSMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     salesVat<T extends Customer$salesVatArgs<ExtArgs> = {}>(args?: Subset<T, Customer$salesVatArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CSVMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     clientTransactions<T extends Customer$clientTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$clientTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Client_TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    moneyReceives<T extends Customer$moneyReceivesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$moneyReceivesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MoneyReceivePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20166,30 +20062,6 @@ export namespace Prisma {
   }
 
   /**
-   * Customer.moneyReceives
-   */
-  export type Customer$moneyReceivesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MoneyReceive
-     */
-    select?: MoneyReceiveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MoneyReceive
-     */
-    omit?: MoneyReceiveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MoneyReceiveInclude<ExtArgs> | null
-    where?: MoneyReceiveWhereInput
-    orderBy?: MoneyReceiveOrderByWithRelationInput | MoneyReceiveOrderByWithRelationInput[]
-    cursor?: MoneyReceiveWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: MoneyReceiveScalarFieldEnum | MoneyReceiveScalarFieldEnum[]
-  }
-
-  /**
    * Customer without action
    */
   export type CustomerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20238,6 +20110,7 @@ export namespace Prisma {
     moneyReceptNo: string | null
     bankName: string | null
     bankNo: string | null
+    branchId: string | null
   }
 
   export type Client_TransactionMaxAggregateOutputType = {
@@ -20250,6 +20123,7 @@ export namespace Prisma {
     moneyReceptNo: string | null
     bankName: string | null
     bankNo: string | null
+    branchId: string | null
   }
 
   export type Client_TransactionCountAggregateOutputType = {
@@ -20262,6 +20136,7 @@ export namespace Prisma {
     moneyReceptNo: number
     bankName: number
     bankNo: number
+    branchId: number
     _all: number
   }
 
@@ -20284,6 +20159,7 @@ export namespace Prisma {
     moneyReceptNo?: true
     bankName?: true
     bankNo?: true
+    branchId?: true
   }
 
   export type Client_TransactionMaxAggregateInputType = {
@@ -20296,6 +20172,7 @@ export namespace Prisma {
     moneyReceptNo?: true
     bankName?: true
     bankNo?: true
+    branchId?: true
   }
 
   export type Client_TransactionCountAggregateInputType = {
@@ -20308,6 +20185,7 @@ export namespace Prisma {
     moneyReceptNo?: true
     bankName?: true
     bankNo?: true
+    branchId?: true
     _all?: true
   }
 
@@ -20407,6 +20285,7 @@ export namespace Prisma {
     moneyReceptNo: string | null
     bankName: string | null
     bankNo: string | null
+    branchId: string | null
     _count: Client_TransactionCountAggregateOutputType | null
     _avg: Client_TransactionAvgAggregateOutputType | null
     _sum: Client_TransactionSumAggregateOutputType | null
@@ -20438,6 +20317,7 @@ export namespace Prisma {
     moneyReceptNo?: boolean
     bankName?: boolean
     bankNo?: boolean
+    branchId?: boolean
     customer?: boolean | Client_Transaction$customerArgs<ExtArgs>
   }, ExtArgs["result"]["client_Transaction"]>
 
@@ -20451,6 +20331,7 @@ export namespace Prisma {
     moneyReceptNo?: boolean
     bankName?: boolean
     bankNo?: boolean
+    branchId?: boolean
     customer?: boolean | Client_Transaction$customerArgs<ExtArgs>
   }, ExtArgs["result"]["client_Transaction"]>
 
@@ -20464,6 +20345,7 @@ export namespace Prisma {
     moneyReceptNo?: boolean
     bankName?: boolean
     bankNo?: boolean
+    branchId?: boolean
     customer?: boolean | Client_Transaction$customerArgs<ExtArgs>
   }, ExtArgs["result"]["client_Transaction"]>
 
@@ -20477,9 +20359,10 @@ export namespace Prisma {
     moneyReceptNo?: boolean
     bankName?: boolean
     bankNo?: boolean
+    branchId?: boolean
   }
 
-  export type Client_TransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clientCode" | "paymentDate" | "paymentAmount" | "tType" | "serialNo" | "moneyReceptNo" | "bankName" | "bankNo", ExtArgs["result"]["client_Transaction"]>
+  export type Client_TransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clientCode" | "paymentDate" | "paymentAmount" | "tType" | "serialNo" | "moneyReceptNo" | "bankName" | "bankNo" | "branchId", ExtArgs["result"]["client_Transaction"]>
   export type Client_TransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | Client_Transaction$customerArgs<ExtArgs>
   }
@@ -20505,6 +20388,7 @@ export namespace Prisma {
       moneyReceptNo: string | null
       bankName: string | null
       bankNo: string | null
+      branchId: string | null
     }, ExtArgs["result"]["client_Transaction"]>
     composites: {}
   }
@@ -20938,6 +20822,7 @@ export namespace Prisma {
     readonly moneyReceptNo: FieldRef<"Client_Transaction", 'String'>
     readonly bankName: FieldRef<"Client_Transaction", 'String'>
     readonly bankNo: FieldRef<"Client_Transaction", 'String'>
+    readonly branchId: FieldRef<"Client_Transaction", 'String'>
   }
     
 
@@ -24894,27 +24779,25 @@ export namespace Prisma {
   export type RW_StockAvgAggregateOutputType = {
     stockQty: Decimal | null
     unitPrice: Decimal | null
-    branchId: number | null
   }
 
   export type RW_StockSumAggregateOutputType = {
     stockQty: Decimal | null
     unitPrice: Decimal | null
-    branchId: number | null
   }
 
   export type RW_StockMinAggregateOutputType = {
     itemCode: string | null
     stockQty: Decimal | null
     unitPrice: Decimal | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type RW_StockMaxAggregateOutputType = {
     itemCode: string | null
     stockQty: Decimal | null
     unitPrice: Decimal | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type RW_StockCountAggregateOutputType = {
@@ -24929,13 +24812,11 @@ export namespace Prisma {
   export type RW_StockAvgAggregateInputType = {
     stockQty?: true
     unitPrice?: true
-    branchId?: true
   }
 
   export type RW_StockSumAggregateInputType = {
     stockQty?: true
     unitPrice?: true
-    branchId?: true
   }
 
   export type RW_StockMinAggregateInputType = {
@@ -25050,7 +24931,7 @@ export namespace Prisma {
     itemCode: string
     stockQty: Decimal
     unitPrice: Decimal
-    branchId: number | null
+    branchId: string | null
     _count: RW_StockCountAggregateOutputType | null
     _avg: RW_StockAvgAggregateOutputType | null
     _sum: RW_StockSumAggregateOutputType | null
@@ -25109,7 +24990,7 @@ export namespace Prisma {
       itemCode: string
       stockQty: Prisma.Decimal
       unitPrice: Prisma.Decimal
-      branchId: number | null
+      branchId: string | null
     }, ExtArgs["result"]["rW_Stock"]>
     composites: {}
   }
@@ -25536,7 +25417,7 @@ export namespace Prisma {
     readonly itemCode: FieldRef<"RW_Stock", 'String'>
     readonly stockQty: FieldRef<"RW_Stock", 'Decimal'>
     readonly unitPrice: FieldRef<"RW_Stock", 'Decimal'>
-    readonly branchId: FieldRef<"RW_Stock", 'Int'>
+    readonly branchId: FieldRef<"RW_Stock", 'String'>
   }
     
 
@@ -29435,7 +29316,6 @@ export namespace Prisma {
     totalDiscount: Decimal | null
     totalVat: Decimal | null
     isActive: number | null
-    branchId: number | null
   }
 
   export type CSMasterSumAggregateOutputType = {
@@ -29443,7 +29323,6 @@ export namespace Prisma {
     totalDiscount: Decimal | null
     totalVat: Decimal | null
     isActive: number | null
-    branchId: number | null
   }
 
   export type CSMasterMinAggregateOutputType = {
@@ -29459,7 +29338,7 @@ export namespace Prisma {
     totalVat: Decimal | null
     discountRemarks: string | null
     isActive: number | null
-    branchId: number | null
+    branchId: string | null
     createDate: Date | null
   }
 
@@ -29476,7 +29355,7 @@ export namespace Prisma {
     totalVat: Decimal | null
     discountRemarks: string | null
     isActive: number | null
-    branchId: number | null
+    branchId: string | null
     createDate: Date | null
   }
 
@@ -29504,7 +29383,6 @@ export namespace Prisma {
     totalDiscount?: true
     totalVat?: true
     isActive?: true
-    branchId?: true
   }
 
   export type CSMasterSumAggregateInputType = {
@@ -29512,7 +29390,6 @@ export namespace Prisma {
     totalDiscount?: true
     totalVat?: true
     isActive?: true
-    branchId?: true
   }
 
   export type CSMasterMinAggregateInputType = {
@@ -29666,7 +29543,7 @@ export namespace Prisma {
     totalVat: Decimal | null
     discountRemarks: string | null
     isActive: number | null
-    branchId: number | null
+    branchId: string | null
     createDate: Date | null
     _count: CSMasterCountAggregateOutputType | null
     _avg: CSMasterAvgAggregateOutputType | null
@@ -29794,7 +29671,7 @@ export namespace Prisma {
       totalVat: Prisma.Decimal | null
       discountRemarks: string | null
       isActive: number | null
-      branchId: number | null
+      branchId: string | null
       createDate: Date | null
     }, ExtArgs["result"]["cSMaster"]>
     composites: {}
@@ -30233,7 +30110,7 @@ export namespace Prisma {
     readonly totalVat: FieldRef<"CSMaster", 'Decimal'>
     readonly discountRemarks: FieldRef<"CSMaster", 'String'>
     readonly isActive: FieldRef<"CSMaster", 'Int'>
-    readonly branchId: FieldRef<"CSMaster", 'Int'>
+    readonly branchId: FieldRef<"CSMaster", 'String'>
     readonly createDate: FieldRef<"CSMaster", 'DateTime'>
   }
     
@@ -31891,14 +31768,12 @@ export namespace Prisma {
     totalAmount: Decimal | null
     totalDiscount: Decimal | null
     totalVat: Decimal | null
-    branchId: number | null
   }
 
   export type CSVMasterSumAggregateOutputType = {
     totalAmount: Decimal | null
     totalDiscount: Decimal | null
     totalVat: Decimal | null
-    branchId: number | null
   }
 
   export type CSVMasterMinAggregateOutputType = {
@@ -31913,7 +31788,7 @@ export namespace Prisma {
     totalDiscount: Decimal | null
     totalVat: Decimal | null
     discountRemarks: string | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type CSVMasterMaxAggregateOutputType = {
@@ -31928,7 +31803,7 @@ export namespace Prisma {
     totalDiscount: Decimal | null
     totalVat: Decimal | null
     discountRemarks: string | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type CSVMasterCountAggregateOutputType = {
@@ -31952,14 +31827,12 @@ export namespace Prisma {
     totalAmount?: true
     totalDiscount?: true
     totalVat?: true
-    branchId?: true
   }
 
   export type CSVMasterSumAggregateInputType = {
     totalAmount?: true
     totalDiscount?: true
     totalVat?: true
-    branchId?: true
   }
 
   export type CSVMasterMinAggregateInputType = {
@@ -32106,7 +31979,7 @@ export namespace Prisma {
     totalDiscount: Decimal | null
     totalVat: Decimal | null
     discountRemarks: string | null
-    branchId: number | null
+    branchId: string | null
     _count: CSVMasterCountAggregateOutputType | null
     _avg: CSVMasterAvgAggregateOutputType | null
     _sum: CSVMasterSumAggregateOutputType | null
@@ -32224,7 +32097,7 @@ export namespace Prisma {
       totalDiscount: Prisma.Decimal | null
       totalVat: Prisma.Decimal | null
       discountRemarks: string | null
-      branchId: number | null
+      branchId: string | null
     }, ExtArgs["result"]["cSVMaster"]>
     composites: {}
   }
@@ -32661,7 +32534,7 @@ export namespace Prisma {
     readonly totalDiscount: FieldRef<"CSVMaster", 'Decimal'>
     readonly totalVat: FieldRef<"CSVMaster", 'Decimal'>
     readonly discountRemarks: FieldRef<"CSVMaster", 'String'>
-    readonly branchId: FieldRef<"CSVMaster", 'Int'>
+    readonly branchId: FieldRef<"CSVMaster", 'String'>
   }
     
 
@@ -34320,7 +34193,6 @@ export namespace Prisma {
     somstrNetAmt: Decimal | null
     somstrCustomerpay: Decimal | null
     somstrChange: Decimal | null
-    branchId: number | null
   }
 
   export type T_SOMstrSumAggregateOutputType = {
@@ -34329,7 +34201,6 @@ export namespace Prisma {
     somstrNetAmt: Decimal | null
     somstrCustomerpay: Decimal | null
     somstrChange: Decimal | null
-    branchId: number | null
   }
 
   export type T_SOMstrMinAggregateOutputType = {
@@ -34349,7 +34220,7 @@ export namespace Prisma {
     somstrIsActive: boolean | null
     somstrCustomerpay: Decimal | null
     somstrChange: Decimal | null
-    branchId: number | null
+    branchId: string | null
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
@@ -34374,7 +34245,7 @@ export namespace Prisma {
     somstrIsActive: boolean | null
     somstrCustomerpay: Decimal | null
     somstrChange: Decimal | null
-    branchId: number | null
+    branchId: string | null
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
@@ -34415,7 +34286,6 @@ export namespace Prisma {
     somstrNetAmt?: true
     somstrCustomerpay?: true
     somstrChange?: true
-    branchId?: true
   }
 
   export type T_SOMstrSumAggregateInputType = {
@@ -34424,7 +34294,6 @@ export namespace Prisma {
     somstrNetAmt?: true
     somstrCustomerpay?: true
     somstrChange?: true
-    branchId?: true
   }
 
   export type T_SOMstrMinAggregateInputType = {
@@ -34606,7 +34475,7 @@ export namespace Prisma {
     somstrIsActive: boolean | null
     somstrCustomerpay: Decimal | null
     somstrChange: Decimal | null
-    branchId: number | null
+    branchId: string | null
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
@@ -34774,7 +34643,7 @@ export namespace Prisma {
       somstrIsActive: boolean | null
       somstrCustomerpay: Prisma.Decimal | null
       somstrChange: Prisma.Decimal | null
-      branchId: number | null
+      branchId: string | null
       soMstrDiscountRemarks: string | null
       soMstrModifyRemarks: string | null
       soMstrDiscountContact: string | null
@@ -35221,7 +35090,7 @@ export namespace Prisma {
     readonly somstrIsActive: FieldRef<"t_SOMstr", 'Boolean'>
     readonly somstrCustomerpay: FieldRef<"t_SOMstr", 'Decimal'>
     readonly somstrChange: FieldRef<"t_SOMstr", 'Decimal'>
-    readonly branchId: FieldRef<"t_SOMstr", 'Int'>
+    readonly branchId: FieldRef<"t_SOMstr", 'String'>
     readonly soMstrDiscountRemarks: FieldRef<"t_SOMstr", 'String'>
     readonly soMstrModifyRemarks: FieldRef<"t_SOMstr", 'String'>
     readonly soMstrDiscountContact: FieldRef<"t_SOMstr", 'String'>
@@ -35706,7 +35575,6 @@ export namespace Prisma {
     sodetVATAmount: Decimal | null
     sodetDiscount: Decimal | null
     sodetNetAmount: Decimal | null
-    branchId: number | null
   }
 
   export type T_SODetSumAggregateOutputType = {
@@ -35719,7 +35587,6 @@ export namespace Prisma {
     sodetVATAmount: Decimal | null
     sodetDiscount: Decimal | null
     sodetNetAmount: Decimal | null
-    branchId: number | null
   }
 
   export type T_SODetMinAggregateOutputType = {
@@ -35737,7 +35604,7 @@ export namespace Prisma {
     sodetVATAmount: Decimal | null
     sodetDiscount: Decimal | null
     sodetNetAmount: Decimal | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type T_SODetMaxAggregateOutputType = {
@@ -35755,7 +35622,7 @@ export namespace Prisma {
     sodetVATAmount: Decimal | null
     sodetDiscount: Decimal | null
     sodetNetAmount: Decimal | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type T_SODetCountAggregateOutputType = {
@@ -35788,7 +35655,6 @@ export namespace Prisma {
     sodetVATAmount?: true
     sodetDiscount?: true
     sodetNetAmount?: true
-    branchId?: true
   }
 
   export type T_SODetSumAggregateInputType = {
@@ -35801,7 +35667,6 @@ export namespace Prisma {
     sodetVATAmount?: true
     sodetDiscount?: true
     sodetNetAmount?: true
-    branchId?: true
   }
 
   export type T_SODetMinAggregateInputType = {
@@ -35960,7 +35825,7 @@ export namespace Prisma {
     sodetVATAmount: Decimal | null
     sodetDiscount: Decimal | null
     sodetNetAmount: Decimal | null
-    branchId: number | null
+    branchId: string | null
     _count: T_SODetCountAggregateOutputType | null
     _avg: T_SODetAvgAggregateOutputType | null
     _sum: T_SODetSumAggregateOutputType | null
@@ -36095,7 +35960,7 @@ export namespace Prisma {
       sodetVATAmount: Prisma.Decimal | null
       sodetDiscount: Prisma.Decimal | null
       sodetNetAmount: Prisma.Decimal | null
-      branchId: number | null
+      branchId: string | null
     }, ExtArgs["result"]["t_SODet"]>
     composites: {}
   }
@@ -36535,7 +36400,7 @@ export namespace Prisma {
     readonly sodetVATAmount: FieldRef<"t_SODet", 'Decimal'>
     readonly sodetDiscount: FieldRef<"t_SODet", 'Decimal'>
     readonly sodetNetAmount: FieldRef<"t_SODet", 'Decimal'>
-    readonly branchId: FieldRef<"t_SODet", 'Int'>
+    readonly branchId: FieldRef<"t_SODet", 'String'>
   }
     
 
@@ -37006,7 +36871,6 @@ export namespace Prisma {
     somstrNetAmt: Decimal | null
     somstrCustomerpay: Decimal | null
     somstrChange: Decimal | null
-    branchId: number | null
   }
 
   export type T_SOMstVSumAggregateOutputType = {
@@ -37015,7 +36879,6 @@ export namespace Prisma {
     somstrNetAmt: Decimal | null
     somstrCustomerpay: Decimal | null
     somstrChange: Decimal | null
-    branchId: number | null
   }
 
   export type T_SOMstVMinAggregateOutputType = {
@@ -37035,7 +36898,7 @@ export namespace Prisma {
     somstrIsActive: boolean | null
     somstrCustomerpay: Decimal | null
     somstrChange: Decimal | null
-    branchId: number | null
+    branchId: string | null
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
@@ -37059,7 +36922,7 @@ export namespace Prisma {
     somstrIsActive: boolean | null
     somstrCustomerpay: Decimal | null
     somstrChange: Decimal | null
-    branchId: number | null
+    branchId: string | null
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
@@ -37098,7 +36961,6 @@ export namespace Prisma {
     somstrNetAmt?: true
     somstrCustomerpay?: true
     somstrChange?: true
-    branchId?: true
   }
 
   export type T_SOMstVSumAggregateInputType = {
@@ -37107,7 +36969,6 @@ export namespace Prisma {
     somstrNetAmt?: true
     somstrCustomerpay?: true
     somstrChange?: true
-    branchId?: true
   }
 
   export type T_SOMstVMinAggregateInputType = {
@@ -37286,7 +37147,7 @@ export namespace Prisma {
     somstrIsActive: boolean | null
     somstrCustomerpay: Decimal | null
     somstrChange: Decimal | null
-    branchId: number | null
+    branchId: string | null
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
@@ -37440,7 +37301,7 @@ export namespace Prisma {
       somstrIsActive: boolean | null
       somstrCustomerpay: Prisma.Decimal | null
       somstrChange: Prisma.Decimal | null
-      branchId: number | null
+      branchId: string | null
       soMstrDiscountRemarks: string | null
       soMstrModifyRemarks: string | null
       soMstrDiscountContact: string | null
@@ -37885,7 +37746,7 @@ export namespace Prisma {
     readonly somstrIsActive: FieldRef<"t_SOMstV", 'Boolean'>
     readonly somstrCustomerpay: FieldRef<"t_SOMstV", 'Decimal'>
     readonly somstrChange: FieldRef<"t_SOMstV", 'Decimal'>
-    readonly branchId: FieldRef<"t_SOMstV", 'Int'>
+    readonly branchId: FieldRef<"t_SOMstV", 'String'>
     readonly soMstrDiscountRemarks: FieldRef<"t_SOMstV", 'String'>
     readonly soMstrModifyRemarks: FieldRef<"t_SOMstV", 'String'>
     readonly soMstrDiscountContact: FieldRef<"t_SOMstV", 'String'>
@@ -38342,7 +38203,6 @@ export namespace Prisma {
     sodetVATAmount: Decimal | null
     sodetDiscount: Decimal | null
     sodetNetAmount: Decimal | null
-    branchId: number | null
   }
 
   export type T_SODeVSumAggregateOutputType = {
@@ -38355,7 +38215,6 @@ export namespace Prisma {
     sodetVATAmount: Decimal | null
     sodetDiscount: Decimal | null
     sodetNetAmount: Decimal | null
-    branchId: number | null
   }
 
   export type T_SODeVMinAggregateOutputType = {
@@ -38373,7 +38232,7 @@ export namespace Prisma {
     sodetVATAmount: Decimal | null
     sodetDiscount: Decimal | null
     sodetNetAmount: Decimal | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type T_SODeVMaxAggregateOutputType = {
@@ -38391,7 +38250,7 @@ export namespace Prisma {
     sodetVATAmount: Decimal | null
     sodetDiscount: Decimal | null
     sodetNetAmount: Decimal | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type T_SODeVCountAggregateOutputType = {
@@ -38424,7 +38283,6 @@ export namespace Prisma {
     sodetVATAmount?: true
     sodetDiscount?: true
     sodetNetAmount?: true
-    branchId?: true
   }
 
   export type T_SODeVSumAggregateInputType = {
@@ -38437,7 +38295,6 @@ export namespace Prisma {
     sodetVATAmount?: true
     sodetDiscount?: true
     sodetNetAmount?: true
-    branchId?: true
   }
 
   export type T_SODeVMinAggregateInputType = {
@@ -38596,7 +38453,7 @@ export namespace Prisma {
     sodetVATAmount: Decimal | null
     sodetDiscount: Decimal | null
     sodetNetAmount: Decimal | null
-    branchId: number | null
+    branchId: string | null
     _count: T_SODeVCountAggregateOutputType | null
     _avg: T_SODeVAvgAggregateOutputType | null
     _sum: T_SODeVSumAggregateOutputType | null
@@ -38731,7 +38588,7 @@ export namespace Prisma {
       sodetVATAmount: Prisma.Decimal | null
       sodetDiscount: Prisma.Decimal | null
       sodetNetAmount: Prisma.Decimal | null
-      branchId: number | null
+      branchId: string | null
     }, ExtArgs["result"]["t_SODeV"]>
     composites: {}
   }
@@ -39171,7 +39028,7 @@ export namespace Prisma {
     readonly sodetVATAmount: FieldRef<"t_SODeV", 'Decimal'>
     readonly sodetDiscount: FieldRef<"t_SODeV", 'Decimal'>
     readonly sodetNetAmount: FieldRef<"t_SODeV", 'Decimal'>
-    readonly branchId: FieldRef<"t_SODeV", 'Int'>
+    readonly branchId: FieldRef<"t_SODeV", 'String'>
   }
     
 
@@ -39642,7 +39499,6 @@ export namespace Prisma {
     netAmt: Decimal | null
     customerpay: Decimal | null
     change: Decimal | null
-    branchId: number | null
   }
 
   export type AsstMsrtSumAggregateOutputType = {
@@ -39651,7 +39507,6 @@ export namespace Prisma {
     netAmt: Decimal | null
     customerpay: Decimal | null
     change: Decimal | null
-    branchId: number | null
   }
 
   export type AsstMsrtMinAggregateOutputType = {
@@ -39672,7 +39527,7 @@ export namespace Prisma {
     isActive: boolean | null
     customerpay: Decimal | null
     change: Decimal | null
-    branchId: number | null
+    branchId: string | null
     discountRemarks: string | null
   }
 
@@ -39694,7 +39549,7 @@ export namespace Prisma {
     isActive: boolean | null
     customerpay: Decimal | null
     change: Decimal | null
-    branchId: number | null
+    branchId: string | null
     discountRemarks: string | null
   }
 
@@ -39728,7 +39583,6 @@ export namespace Prisma {
     netAmt?: true
     customerpay?: true
     change?: true
-    branchId?: true
   }
 
   export type AsstMsrtSumAggregateInputType = {
@@ -39737,7 +39591,6 @@ export namespace Prisma {
     netAmt?: true
     customerpay?: true
     change?: true
-    branchId?: true
   }
 
   export type AsstMsrtMinAggregateInputType = {
@@ -39911,7 +39764,7 @@ export namespace Prisma {
     isActive: boolean | null
     customerpay: Decimal | null
     change: Decimal | null
-    branchId: number | null
+    branchId: string | null
     discountRemarks: string | null
     _count: AsstMsrtCountAggregateOutputType | null
     _avg: AsstMsrtAvgAggregateOutputType | null
@@ -40055,7 +39908,7 @@ export namespace Prisma {
       isActive: boolean | null
       customerpay: Prisma.Decimal | null
       change: Prisma.Decimal | null
-      branchId: number | null
+      branchId: string | null
       discountRemarks: string | null
     }, ExtArgs["result"]["asstMsrt"]>
     composites: {}
@@ -40498,7 +40351,7 @@ export namespace Prisma {
     readonly isActive: FieldRef<"AsstMsrt", 'Boolean'>
     readonly customerpay: FieldRef<"AsstMsrt", 'Decimal'>
     readonly change: FieldRef<"AsstMsrt", 'Decimal'>
-    readonly branchId: FieldRef<"AsstMsrt", 'Int'>
+    readonly branchId: FieldRef<"AsstMsrt", 'String'>
     readonly discountRemarks: FieldRef<"AsstMsrt", 'String'>
   }
     
@@ -42204,18 +42057,8 @@ export namespace Prisma {
 
   export type AggregateT_NCMstr = {
     _count: T_NCMstrCountAggregateOutputType | null
-    _avg: T_NCMstrAvgAggregateOutputType | null
-    _sum: T_NCMstrSumAggregateOutputType | null
     _min: T_NCMstrMinAggregateOutputType | null
     _max: T_NCMstrMaxAggregateOutputType | null
-  }
-
-  export type T_NCMstrAvgAggregateOutputType = {
-    branchId: number | null
-  }
-
-  export type T_NCMstrSumAggregateOutputType = {
-    branchId: number | null
   }
 
   export type T_NCMstrMinAggregateOutputType = {
@@ -42227,7 +42070,7 @@ export namespace Prisma {
     ncmstrUpdateBy: string | null
     ncmstrUpdateDate: Date | null
     ncmstrIsActive: boolean | null
-    branchId: number | null
+    branchId: string | null
     ncmstrName: string | null
     ncmstrContactNo: string | null
     ncmstrReference: string | null
@@ -42242,7 +42085,7 @@ export namespace Prisma {
     ncmstrUpdateBy: string | null
     ncmstrUpdateDate: Date | null
     ncmstrIsActive: boolean | null
-    branchId: number | null
+    branchId: string | null
     ncmstrName: string | null
     ncmstrContactNo: string | null
     ncmstrReference: string | null
@@ -42264,14 +42107,6 @@ export namespace Prisma {
     _all: number
   }
 
-
-  export type T_NCMstrAvgAggregateInputType = {
-    branchId?: true
-  }
-
-  export type T_NCMstrSumAggregateInputType = {
-    branchId?: true
-  }
 
   export type T_NCMstrMinAggregateInputType = {
     id?: true
@@ -42357,18 +42192,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: T_NCMstrAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: T_NCMstrSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: T_NCMstrMinAggregateInputType
@@ -42399,8 +42222,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: T_NCMstrCountAggregateInputType | true
-    _avg?: T_NCMstrAvgAggregateInputType
-    _sum?: T_NCMstrSumAggregateInputType
     _min?: T_NCMstrMinAggregateInputType
     _max?: T_NCMstrMaxAggregateInputType
   }
@@ -42414,13 +42235,11 @@ export namespace Prisma {
     ncmstrUpdateBy: string | null
     ncmstrUpdateDate: Date | null
     ncmstrIsActive: boolean | null
-    branchId: number | null
+    branchId: string | null
     ncmstrName: string | null
     ncmstrContactNo: string | null
     ncmstrReference: string | null
     _count: T_NCMstrCountAggregateOutputType | null
-    _avg: T_NCMstrAvgAggregateOutputType | null
-    _sum: T_NCMstrSumAggregateOutputType | null
     _min: T_NCMstrMinAggregateOutputType | null
     _max: T_NCMstrMaxAggregateOutputType | null
   }
@@ -42523,7 +42342,7 @@ export namespace Prisma {
       ncmstrUpdateBy: string | null
       ncmstrUpdateDate: Date | null
       ncmstrIsActive: boolean | null
-      branchId: number | null
+      branchId: string | null
       ncmstrName: string | null
       ncmstrContactNo: string | null
       ncmstrReference: string | null
@@ -42959,7 +42778,7 @@ export namespace Prisma {
     readonly ncmstrUpdateBy: FieldRef<"t_NCMstr", 'String'>
     readonly ncmstrUpdateDate: FieldRef<"t_NCMstr", 'DateTime'>
     readonly ncmstrIsActive: FieldRef<"t_NCMstr", 'Boolean'>
-    readonly branchId: FieldRef<"t_NCMstr", 'Int'>
+    readonly branchId: FieldRef<"t_NCMstr", 'String'>
     readonly ncmstrName: FieldRef<"t_NCMstr", 'String'>
     readonly ncmstrContactNo: FieldRef<"t_NCMstr", 'String'>
     readonly ncmstrReference: FieldRef<"t_NCMstr", 'String'>
@@ -43415,7 +43234,6 @@ export namespace Prisma {
     ncdetVATAmount: Decimal | null
     ncdetDiscount: Decimal | null
     ncdetNetAmount: Decimal | null
-    branchId: number | null
   }
 
   export type T_NCDetSumAggregateOutputType = {
@@ -43428,7 +43246,6 @@ export namespace Prisma {
     ncdetVATAmount: Decimal | null
     ncdetDiscount: Decimal | null
     ncdetNetAmount: Decimal | null
-    branchId: number | null
   }
 
   export type T_NCDetMinAggregateOutputType = {
@@ -43446,7 +43263,7 @@ export namespace Prisma {
     ncdetVATAmount: Decimal | null
     ncdetDiscount: Decimal | null
     ncdetNetAmount: Decimal | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type T_NCDetMaxAggregateOutputType = {
@@ -43464,7 +43281,7 @@ export namespace Prisma {
     ncdetVATAmount: Decimal | null
     ncdetDiscount: Decimal | null
     ncdetNetAmount: Decimal | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type T_NCDetCountAggregateOutputType = {
@@ -43497,7 +43314,6 @@ export namespace Prisma {
     ncdetVATAmount?: true
     ncdetDiscount?: true
     ncdetNetAmount?: true
-    branchId?: true
   }
 
   export type T_NCDetSumAggregateInputType = {
@@ -43510,7 +43326,6 @@ export namespace Prisma {
     ncdetVATAmount?: true
     ncdetDiscount?: true
     ncdetNetAmount?: true
-    branchId?: true
   }
 
   export type T_NCDetMinAggregateInputType = {
@@ -43669,7 +43484,7 @@ export namespace Prisma {
     ncdetVATAmount: Decimal | null
     ncdetDiscount: Decimal | null
     ncdetNetAmount: Decimal | null
-    branchId: number | null
+    branchId: string | null
     _count: T_NCDetCountAggregateOutputType | null
     _avg: T_NCDetAvgAggregateOutputType | null
     _sum: T_NCDetSumAggregateOutputType | null
@@ -43804,7 +43619,7 @@ export namespace Prisma {
       ncdetVATAmount: Prisma.Decimal | null
       ncdetDiscount: Prisma.Decimal | null
       ncdetNetAmount: Prisma.Decimal | null
-      branchId: number | null
+      branchId: string | null
     }, ExtArgs["result"]["t_NCDet"]>
     composites: {}
   }
@@ -44244,7 +44059,7 @@ export namespace Prisma {
     readonly ncdetVATAmount: FieldRef<"t_NCDet", 'Decimal'>
     readonly ncdetDiscount: FieldRef<"t_NCDet", 'Decimal'>
     readonly ncdetNetAmount: FieldRef<"t_NCDet", 'Decimal'>
-    readonly branchId: FieldRef<"t_NCDet", 'Int'>
+    readonly branchId: FieldRef<"t_NCDet", 'String'>
   }
     
 
@@ -44712,15 +44527,11 @@ export namespace Prisma {
   export type Item_ReceiveAvgAggregateOutputType = {
     qty: Decimal | null
     isActive: number | null
-    branchId: number | null
-    receiveBranchID: number | null
   }
 
   export type Item_ReceiveSumAggregateOutputType = {
     qty: Decimal | null
     isActive: number | null
-    branchId: number | null
-    receiveBranchID: number | null
   }
 
   export type Item_ReceiveMinAggregateOutputType = {
@@ -44736,8 +44547,8 @@ export namespace Prisma {
     createDate: Date | null
     updateBy: string | null
     updateDate: Date | null
-    branchId: number | null
-    receiveBranchID: number | null
+    branchId: string | null
+    receiveBranchID: string | null
   }
 
   export type Item_ReceiveMaxAggregateOutputType = {
@@ -44753,8 +44564,8 @@ export namespace Prisma {
     createDate: Date | null
     updateBy: string | null
     updateDate: Date | null
-    branchId: number | null
-    receiveBranchID: number | null
+    branchId: string | null
+    receiveBranchID: string | null
   }
 
   export type Item_ReceiveCountAggregateOutputType = {
@@ -44779,15 +44590,11 @@ export namespace Prisma {
   export type Item_ReceiveAvgAggregateInputType = {
     qty?: true
     isActive?: true
-    branchId?: true
-    receiveBranchID?: true
   }
 
   export type Item_ReceiveSumAggregateInputType = {
     qty?: true
     isActive?: true
-    branchId?: true
-    receiveBranchID?: true
   }
 
   export type Item_ReceiveMinAggregateInputType = {
@@ -44941,8 +44748,8 @@ export namespace Prisma {
     createDate: Date | null
     updateBy: string | null
     updateDate: Date | null
-    branchId: number
-    receiveBranchID: number | null
+    branchId: string
+    receiveBranchID: string | null
     _count: Item_ReceiveCountAggregateOutputType | null
     _avg: Item_ReceiveAvgAggregateOutputType | null
     _sum: Item_ReceiveSumAggregateOutputType | null
@@ -45064,8 +44871,8 @@ export namespace Prisma {
       createDate: Date | null
       updateBy: string | null
       updateDate: Date | null
-      branchId: number
-      receiveBranchID: number | null
+      branchId: string
+      receiveBranchID: string | null
     }, ExtArgs["result"]["item_Receive"]>
     composites: {}
   }
@@ -45502,8 +45309,8 @@ export namespace Prisma {
     readonly createDate: FieldRef<"Item_Receive", 'DateTime'>
     readonly updateBy: FieldRef<"Item_Receive", 'String'>
     readonly updateDate: FieldRef<"Item_Receive", 'DateTime'>
-    readonly branchId: FieldRef<"Item_Receive", 'Int'>
-    readonly receiveBranchID: FieldRef<"Item_Receive", 'Int'>
+    readonly branchId: FieldRef<"Item_Receive", 'String'>
+    readonly receiveBranchID: FieldRef<"Item_Receive", 'String'>
   }
     
 
@@ -45952,16 +45759,12 @@ export namespace Prisma {
   export type Item_IssueAvgAggregateOutputType = {
     unitPrice: Decimal | null
     qty: Decimal | null
-    issueBranchId: number | null
-    receiveBranchId: number | null
     isActive: number | null
   }
 
   export type Item_IssueSumAggregateOutputType = {
     unitPrice: Decimal | null
     qty: Decimal | null
-    issueBranchId: number | null
-    receiveBranchId: number | null
     isActive: number | null
   }
 
@@ -45973,8 +45776,8 @@ export namespace Prisma {
     unitPrice: Decimal | null
     qty: Decimal | null
     issueDate: Date | null
-    issueBranchId: number | null
-    receiveBranchId: number | null
+    issueBranchId: string | null
+    receiveBranchId: string | null
     isActive: number | null
     createBy: string | null
     createDate: Date | null
@@ -45990,8 +45793,8 @@ export namespace Prisma {
     unitPrice: Decimal | null
     qty: Decimal | null
     issueDate: Date | null
-    issueBranchId: number | null
-    receiveBranchId: number | null
+    issueBranchId: string | null
+    receiveBranchId: string | null
     isActive: number | null
     createBy: string | null
     createDate: Date | null
@@ -46021,16 +45824,12 @@ export namespace Prisma {
   export type Item_IssueAvgAggregateInputType = {
     unitPrice?: true
     qty?: true
-    issueBranchId?: true
-    receiveBranchId?: true
     isActive?: true
   }
 
   export type Item_IssueSumAggregateInputType = {
     unitPrice?: true
     qty?: true
-    issueBranchId?: true
-    receiveBranchId?: true
     isActive?: true
   }
 
@@ -46180,8 +45979,8 @@ export namespace Prisma {
     unitPrice: Decimal | null
     qty: Decimal | null
     issueDate: Date | null
-    issueBranchId: number
-    receiveBranchId: number
+    issueBranchId: string
+    receiveBranchId: string
     isActive: number | null
     createBy: string | null
     createDate: Date | null
@@ -46303,8 +46102,8 @@ export namespace Prisma {
       unitPrice: Prisma.Decimal | null
       qty: Prisma.Decimal | null
       issueDate: Date | null
-      issueBranchId: number
-      receiveBranchId: number
+      issueBranchId: string
+      receiveBranchId: string
       isActive: number | null
       createBy: string | null
       createDate: Date | null
@@ -46741,8 +46540,8 @@ export namespace Prisma {
     readonly unitPrice: FieldRef<"Item_Issue", 'Decimal'>
     readonly qty: FieldRef<"Item_Issue", 'Decimal'>
     readonly issueDate: FieldRef<"Item_Issue", 'DateTime'>
-    readonly issueBranchId: FieldRef<"Item_Issue", 'Int'>
-    readonly receiveBranchId: FieldRef<"Item_Issue", 'Int'>
+    readonly issueBranchId: FieldRef<"Item_Issue", 'String'>
+    readonly receiveBranchId: FieldRef<"Item_Issue", 'String'>
     readonly isActive: FieldRef<"Item_Issue", 'Int'>
     readonly createBy: FieldRef<"Item_Issue", 'String'>
     readonly createDate: FieldRef<"Item_Issue", 'DateTime'>
@@ -47197,7 +46996,6 @@ export namespace Prisma {
     reject: Decimal | null
     excess: Decimal | null
     short: Decimal | null
-    branchId: number | null
     assort: Decimal | null
     isActive: number | null
   }
@@ -47206,7 +47004,6 @@ export namespace Prisma {
     reject: Decimal | null
     excess: Decimal | null
     short: Decimal | null
-    branchId: number | null
     assort: Decimal | null
     isActive: number | null
   }
@@ -47219,7 +47016,7 @@ export namespace Prisma {
     excess: Decimal | null
     short: Decimal | null
     date: Date | null
-    branchId: number | null
+    branchId: string | null
     assort: Decimal | null
     isActive: number | null
   }
@@ -47232,7 +47029,7 @@ export namespace Prisma {
     excess: Decimal | null
     short: Decimal | null
     date: Date | null
-    branchId: number | null
+    branchId: string | null
     assort: Decimal | null
     isActive: number | null
   }
@@ -47256,7 +47053,6 @@ export namespace Prisma {
     reject?: true
     excess?: true
     short?: true
-    branchId?: true
     assort?: true
     isActive?: true
   }
@@ -47265,7 +47061,6 @@ export namespace Prisma {
     reject?: true
     excess?: true
     short?: true
-    branchId?: true
     assort?: true
     isActive?: true
   }
@@ -47404,7 +47199,7 @@ export namespace Prisma {
     excess: Decimal | null
     short: Decimal | null
     date: Date | null
-    branchId: number | null
+    branchId: string | null
     assort: Decimal | null
     isActive: number | null
     _count: ItemRejectCountAggregateOutputType | null
@@ -47507,7 +47302,7 @@ export namespace Prisma {
       excess: Prisma.Decimal | null
       short: Prisma.Decimal | null
       date: Date | null
-      branchId: number | null
+      branchId: string | null
       assort: Prisma.Decimal | null
       isActive: number | null
     }, ExtArgs["result"]["itemReject"]>
@@ -47941,7 +47736,7 @@ export namespace Prisma {
     readonly excess: FieldRef<"ItemReject", 'Decimal'>
     readonly short: FieldRef<"ItemReject", 'Decimal'>
     readonly date: FieldRef<"ItemReject", 'DateTime'>
-    readonly branchId: FieldRef<"ItemReject", 'Int'>
+    readonly branchId: FieldRef<"ItemReject", 'String'>
     readonly assort: FieldRef<"ItemReject", 'Decimal'>
     readonly isActive: FieldRef<"ItemReject", 'Int'>
   }
@@ -49623,13 +49418,11 @@ export namespace Prisma {
   export type Packet_ReceiveAvgAggregateOutputType = {
     qty: Decimal | null
     isActive: number | null
-    branchId: number | null
   }
 
   export type Packet_ReceiveSumAggregateOutputType = {
     qty: Decimal | null
     isActive: number | null
-    branchId: number | null
   }
 
   export type Packet_ReceiveMinAggregateOutputType = {
@@ -49642,7 +49435,7 @@ export namespace Prisma {
     isActive: number | null
     createBy: string | null
     createDate: Date | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type Packet_ReceiveMaxAggregateOutputType = {
@@ -49655,7 +49448,7 @@ export namespace Prisma {
     isActive: number | null
     createBy: string | null
     createDate: Date | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type Packet_ReceiveCountAggregateOutputType = {
@@ -49676,13 +49469,11 @@ export namespace Prisma {
   export type Packet_ReceiveAvgAggregateInputType = {
     qty?: true
     isActive?: true
-    branchId?: true
   }
 
   export type Packet_ReceiveSumAggregateInputType = {
     qty?: true
     isActive?: true
-    branchId?: true
   }
 
   export type Packet_ReceiveMinAggregateInputType = {
@@ -49821,7 +49612,7 @@ export namespace Prisma {
     isActive: number | null
     createBy: string | null
     createDate: Date | null
-    branchId: number
+    branchId: string
     _count: Packet_ReceiveCountAggregateOutputType | null
     _avg: Packet_ReceiveAvgAggregateOutputType | null
     _sum: Packet_ReceiveSumAggregateOutputType | null
@@ -49924,7 +49715,7 @@ export namespace Prisma {
       isActive: number | null
       createBy: string | null
       createDate: Date | null
-      branchId: number
+      branchId: string
     }, ExtArgs["result"]["packet_Receive"]>
     composites: {}
   }
@@ -50358,7 +50149,7 @@ export namespace Prisma {
     readonly isActive: FieldRef<"Packet_Receive", 'Int'>
     readonly createBy: FieldRef<"Packet_Receive", 'String'>
     readonly createDate: FieldRef<"Packet_Receive", 'DateTime'>
-    readonly branchId: FieldRef<"Packet_Receive", 'Int'>
+    readonly branchId: FieldRef<"Packet_Receive", 'String'>
   }
     
 
@@ -50807,13 +50598,11 @@ export namespace Prisma {
   export type Packet_IssueAvgAggregateOutputType = {
     qty: Decimal | null
     isActive: number | null
-    branchId: number | null
   }
 
   export type Packet_IssueSumAggregateOutputType = {
     qty: Decimal | null
     isActive: number | null
-    branchId: number | null
   }
 
   export type Packet_IssueMinAggregateOutputType = {
@@ -50829,7 +50618,7 @@ export namespace Prisma {
     createBy: string | null
     createDate: Date | null
     updateBy: string | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type Packet_IssueMaxAggregateOutputType = {
@@ -50845,7 +50634,7 @@ export namespace Prisma {
     createBy: string | null
     createDate: Date | null
     updateBy: string | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type Packet_IssueCountAggregateOutputType = {
@@ -50869,13 +50658,11 @@ export namespace Prisma {
   export type Packet_IssueAvgAggregateInputType = {
     qty?: true
     isActive?: true
-    branchId?: true
   }
 
   export type Packet_IssueSumAggregateInputType = {
     qty?: true
     isActive?: true
-    branchId?: true
   }
 
   export type Packet_IssueMinAggregateInputType = {
@@ -51026,7 +50813,7 @@ export namespace Prisma {
     createBy: string | null
     createDate: Date | null
     updateBy: string | null
-    branchId: number
+    branchId: string
     _count: Packet_IssueCountAggregateOutputType | null
     _avg: Packet_IssueAvgAggregateOutputType | null
     _sum: Packet_IssueSumAggregateOutputType | null
@@ -51144,7 +50931,7 @@ export namespace Prisma {
       createBy: string | null
       createDate: Date | null
       updateBy: string | null
-      branchId: number
+      branchId: string
     }, ExtArgs["result"]["packet_Issue"]>
     composites: {}
   }
@@ -51581,7 +51368,7 @@ export namespace Prisma {
     readonly createBy: FieldRef<"Packet_Issue", 'String'>
     readonly createDate: FieldRef<"Packet_Issue", 'DateTime'>
     readonly updateBy: FieldRef<"Packet_Issue", 'String'>
-    readonly branchId: FieldRef<"Packet_Issue", 'Int'>
+    readonly branchId: FieldRef<"Packet_Issue", 'String'>
   }
     
 
@@ -52031,7 +51818,6 @@ export namespace Prisma {
     advance: Decimal | null
     totalPrice: Decimal | null
     discount: Decimal | null
-    branchId: number | null
     isActive: number | null
   }
 
@@ -52039,7 +51825,6 @@ export namespace Prisma {
     advance: Decimal | null
     totalPrice: Decimal | null
     discount: Decimal | null
-    branchId: number | null
     isActive: number | null
   }
 
@@ -52054,7 +51839,7 @@ export namespace Prisma {
     deliveryDate: Date | null
     deliveryAddress: string | null
     cType: string | null
-    branchId: number | null
+    branchId: string | null
     deliveryTime: Date | null
     isActive: number | null
     createBy: string | null
@@ -52074,7 +51859,7 @@ export namespace Prisma {
     deliveryDate: Date | null
     deliveryAddress: string | null
     cType: string | null
-    branchId: number | null
+    branchId: string | null
     deliveryTime: Date | null
     isActive: number | null
     createBy: string | null
@@ -52109,7 +51894,6 @@ export namespace Prisma {
     advance?: true
     totalPrice?: true
     discount?: true
-    branchId?: true
     isActive?: true
   }
 
@@ -52117,7 +51901,6 @@ export namespace Prisma {
     advance?: true
     totalPrice?: true
     discount?: true
-    branchId?: true
     isActive?: true
   }
 
@@ -52279,7 +52062,7 @@ export namespace Prisma {
     deliveryDate: Date | null
     deliveryAddress: string | null
     cType: string | null
-    branchId: number | null
+    branchId: string | null
     deliveryTime: Date | null
     isActive: number | null
     createBy: string | null
@@ -52413,7 +52196,7 @@ export namespace Prisma {
       deliveryDate: Date | null
       deliveryAddress: string | null
       cType: string | null
-      branchId: number | null
+      branchId: string | null
       deliveryTime: Date | null
       isActive: number | null
       createBy: string | null
@@ -52854,7 +52637,7 @@ export namespace Prisma {
     readonly deliveryDate: FieldRef<"OrderReceive_Master", 'DateTime'>
     readonly deliveryAddress: FieldRef<"OrderReceive_Master", 'String'>
     readonly cType: FieldRef<"OrderReceive_Master", 'String'>
-    readonly branchId: FieldRef<"OrderReceive_Master", 'Int'>
+    readonly branchId: FieldRef<"OrderReceive_Master", 'String'>
     readonly deliveryTime: FieldRef<"OrderReceive_Master", 'DateTime'>
     readonly isActive: FieldRef<"OrderReceive_Master", 'Int'>
     readonly createBy: FieldRef<"OrderReceive_Master", 'String'>
@@ -54467,12 +54250,10 @@ export namespace Prisma {
 
   export type VOrderReceive_MasterAvgAggregateOutputType = {
     advance: Decimal | null
-    branchId: number | null
   }
 
   export type VOrderReceive_MasterSumAggregateOutputType = {
     advance: Decimal | null
-    branchId: number | null
   }
 
   export type VOrderReceive_MasterMinAggregateOutputType = {
@@ -54484,7 +54265,7 @@ export namespace Prisma {
     deliveryDate: Date | null
     deliveryAddress: string | null
     cType: string | null
-    branchId: number | null
+    branchId: string | null
     deliveryTime: Date | null
     createBy: string | null
     createDate: Date | null
@@ -54501,7 +54282,7 @@ export namespace Prisma {
     deliveryDate: Date | null
     deliveryAddress: string | null
     cType: string | null
-    branchId: number | null
+    branchId: string | null
     deliveryTime: Date | null
     createBy: string | null
     createDate: Date | null
@@ -54530,12 +54311,10 @@ export namespace Prisma {
 
   export type VOrderReceive_MasterAvgAggregateInputType = {
     advance?: true
-    branchId?: true
   }
 
   export type VOrderReceive_MasterSumAggregateInputType = {
     advance?: true
-    branchId?: true
   }
 
   export type VOrderReceive_MasterMinAggregateInputType = {
@@ -54685,7 +54464,7 @@ export namespace Prisma {
     deliveryDate: Date | null
     deliveryAddress: string | null
     cType: string | null
-    branchId: number | null
+    branchId: string | null
     deliveryTime: Date | null
     createBy: string | null
     createDate: Date | null
@@ -54804,7 +54583,7 @@ export namespace Prisma {
       deliveryDate: Date | null
       deliveryAddress: string | null
       cType: string | null
-      branchId: number | null
+      branchId: string | null
       deliveryTime: Date | null
       createBy: string | null
       createDate: Date | null
@@ -55242,7 +55021,7 @@ export namespace Prisma {
     readonly deliveryDate: FieldRef<"VOrderReceive_Master", 'DateTime'>
     readonly deliveryAddress: FieldRef<"VOrderReceive_Master", 'String'>
     readonly cType: FieldRef<"VOrderReceive_Master", 'String'>
-    readonly branchId: FieldRef<"VOrderReceive_Master", 'Int'>
+    readonly branchId: FieldRef<"VOrderReceive_Master", 'String'>
     readonly deliveryTime: FieldRef<"VOrderReceive_Master", 'DateTime'>
     readonly createBy: FieldRef<"VOrderReceive_Master", 'String'>
     readonly createDate: FieldRef<"VOrderReceive_Master", 'DateTime'>
@@ -56821,13 +56600,11 @@ export namespace Prisma {
   export type T_SaleAmountPostAvgAggregateOutputType = {
     cashSale: Decimal | null
     cardSale: Decimal | null
-    branchId: number | null
   }
 
   export type T_SaleAmountPostSumAggregateOutputType = {
     cashSale: Decimal | null
     cardSale: Decimal | null
-    branchId: number | null
   }
 
   export type T_SaleAmountPostMinAggregateOutputType = {
@@ -56835,7 +56612,7 @@ export namespace Prisma {
     cashSale: Decimal | null
     cardSale: Decimal | null
     date: Date | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type T_SaleAmountPostMaxAggregateOutputType = {
@@ -56843,7 +56620,7 @@ export namespace Prisma {
     cashSale: Decimal | null
     cardSale: Decimal | null
     date: Date | null
-    branchId: number | null
+    branchId: string | null
   }
 
   export type T_SaleAmountPostCountAggregateOutputType = {
@@ -56859,13 +56636,11 @@ export namespace Prisma {
   export type T_SaleAmountPostAvgAggregateInputType = {
     cashSale?: true
     cardSale?: true
-    branchId?: true
   }
 
   export type T_SaleAmountPostSumAggregateInputType = {
     cashSale?: true
     cardSale?: true
-    branchId?: true
   }
 
   export type T_SaleAmountPostMinAggregateInputType = {
@@ -56984,7 +56759,7 @@ export namespace Prisma {
     cashSale: Decimal
     cardSale: Decimal
     date: Date | null
-    branchId: number | null
+    branchId: string | null
     _count: T_SaleAmountPostCountAggregateOutputType | null
     _avg: T_SaleAmountPostAvgAggregateOutputType | null
     _sum: T_SaleAmountPostSumAggregateOutputType | null
@@ -57048,7 +56823,7 @@ export namespace Prisma {
       cashSale: Prisma.Decimal
       cardSale: Prisma.Decimal
       date: Date | null
-      branchId: number | null
+      branchId: string | null
     }, ExtArgs["result"]["t_SaleAmountPost"]>
     composites: {}
   }
@@ -57476,7 +57251,7 @@ export namespace Prisma {
     readonly cashSale: FieldRef<"t_SaleAmountPost", 'Decimal'>
     readonly cardSale: FieldRef<"t_SaleAmountPost", 'Decimal'>
     readonly date: FieldRef<"t_SaleAmountPost", 'DateTime'>
-    readonly branchId: FieldRef<"t_SaleAmountPost", 'Int'>
+    readonly branchId: FieldRef<"t_SaleAmountPost", 'String'>
   }
     
 
@@ -57840,1156 +57615,6 @@ export namespace Prisma {
      * Omit specific fields from the t_SaleAmountPost
      */
     omit?: t_SaleAmountPostOmit<ExtArgs> | null
-  }
-
-
-  /**
-   * Model MoneyReceive
-   */
-
-  export type AggregateMoneyReceive = {
-    _count: MoneyReceiveCountAggregateOutputType | null
-    _avg: MoneyReceiveAvgAggregateOutputType | null
-    _sum: MoneyReceiveSumAggregateOutputType | null
-    _min: MoneyReceiveMinAggregateOutputType | null
-    _max: MoneyReceiveMaxAggregateOutputType | null
-  }
-
-  export type MoneyReceiveAvgAggregateOutputType = {
-    amount: Decimal | null
-  }
-
-  export type MoneyReceiveSumAggregateOutputType = {
-    amount: Decimal | null
-  }
-
-  export type MoneyReceiveMinAggregateOutputType = {
-    id: string | null
-    receiptNo: string | null
-    receiptDate: Date | null
-    customerCode: string | null
-    amount: Decimal | null
-    paymentMethod: string | null
-    description: string | null
-    createdBy: string | null
-  }
-
-  export type MoneyReceiveMaxAggregateOutputType = {
-    id: string | null
-    receiptNo: string | null
-    receiptDate: Date | null
-    customerCode: string | null
-    amount: Decimal | null
-    paymentMethod: string | null
-    description: string | null
-    createdBy: string | null
-  }
-
-  export type MoneyReceiveCountAggregateOutputType = {
-    id: number
-    receiptNo: number
-    receiptDate: number
-    customerCode: number
-    amount: number
-    paymentMethod: number
-    description: number
-    createdBy: number
-    _all: number
-  }
-
-
-  export type MoneyReceiveAvgAggregateInputType = {
-    amount?: true
-  }
-
-  export type MoneyReceiveSumAggregateInputType = {
-    amount?: true
-  }
-
-  export type MoneyReceiveMinAggregateInputType = {
-    id?: true
-    receiptNo?: true
-    receiptDate?: true
-    customerCode?: true
-    amount?: true
-    paymentMethod?: true
-    description?: true
-    createdBy?: true
-  }
-
-  export type MoneyReceiveMaxAggregateInputType = {
-    id?: true
-    receiptNo?: true
-    receiptDate?: true
-    customerCode?: true
-    amount?: true
-    paymentMethod?: true
-    description?: true
-    createdBy?: true
-  }
-
-  export type MoneyReceiveCountAggregateInputType = {
-    id?: true
-    receiptNo?: true
-    receiptDate?: true
-    customerCode?: true
-    amount?: true
-    paymentMethod?: true
-    description?: true
-    createdBy?: true
-    _all?: true
-  }
-
-  export type MoneyReceiveAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which MoneyReceive to aggregate.
-     */
-    where?: MoneyReceiveWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MoneyReceives to fetch.
-     */
-    orderBy?: MoneyReceiveOrderByWithRelationInput | MoneyReceiveOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: MoneyReceiveWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MoneyReceives from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MoneyReceives.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned MoneyReceives
-    **/
-    _count?: true | MoneyReceiveCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: MoneyReceiveAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: MoneyReceiveSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: MoneyReceiveMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: MoneyReceiveMaxAggregateInputType
-  }
-
-  export type GetMoneyReceiveAggregateType<T extends MoneyReceiveAggregateArgs> = {
-        [P in keyof T & keyof AggregateMoneyReceive]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateMoneyReceive[P]>
-      : GetScalarType<T[P], AggregateMoneyReceive[P]>
-  }
-
-
-
-
-  export type MoneyReceiveGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MoneyReceiveWhereInput
-    orderBy?: MoneyReceiveOrderByWithAggregationInput | MoneyReceiveOrderByWithAggregationInput[]
-    by: MoneyReceiveScalarFieldEnum[] | MoneyReceiveScalarFieldEnum
-    having?: MoneyReceiveScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: MoneyReceiveCountAggregateInputType | true
-    _avg?: MoneyReceiveAvgAggregateInputType
-    _sum?: MoneyReceiveSumAggregateInputType
-    _min?: MoneyReceiveMinAggregateInputType
-    _max?: MoneyReceiveMaxAggregateInputType
-  }
-
-  export type MoneyReceiveGroupByOutputType = {
-    id: string
-    receiptNo: string
-    receiptDate: Date | null
-    customerCode: string | null
-    amount: Decimal | null
-    paymentMethod: string | null
-    description: string | null
-    createdBy: string | null
-    _count: MoneyReceiveCountAggregateOutputType | null
-    _avg: MoneyReceiveAvgAggregateOutputType | null
-    _sum: MoneyReceiveSumAggregateOutputType | null
-    _min: MoneyReceiveMinAggregateOutputType | null
-    _max: MoneyReceiveMaxAggregateOutputType | null
-  }
-
-  type GetMoneyReceiveGroupByPayload<T extends MoneyReceiveGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<MoneyReceiveGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof MoneyReceiveGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], MoneyReceiveGroupByOutputType[P]>
-            : GetScalarType<T[P], MoneyReceiveGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type MoneyReceiveSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    receiptNo?: boolean
-    receiptDate?: boolean
-    customerCode?: boolean
-    amount?: boolean
-    paymentMethod?: boolean
-    description?: boolean
-    createdBy?: boolean
-    customer?: boolean | MoneyReceive$customerArgs<ExtArgs>
-  }, ExtArgs["result"]["moneyReceive"]>
-
-  export type MoneyReceiveSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    receiptNo?: boolean
-    receiptDate?: boolean
-    customerCode?: boolean
-    amount?: boolean
-    paymentMethod?: boolean
-    description?: boolean
-    createdBy?: boolean
-    customer?: boolean | MoneyReceive$customerArgs<ExtArgs>
-  }, ExtArgs["result"]["moneyReceive"]>
-
-  export type MoneyReceiveSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    receiptNo?: boolean
-    receiptDate?: boolean
-    customerCode?: boolean
-    amount?: boolean
-    paymentMethod?: boolean
-    description?: boolean
-    createdBy?: boolean
-    customer?: boolean | MoneyReceive$customerArgs<ExtArgs>
-  }, ExtArgs["result"]["moneyReceive"]>
-
-  export type MoneyReceiveSelectScalar = {
-    id?: boolean
-    receiptNo?: boolean
-    receiptDate?: boolean
-    customerCode?: boolean
-    amount?: boolean
-    paymentMethod?: boolean
-    description?: boolean
-    createdBy?: boolean
-  }
-
-  export type MoneyReceiveOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "receiptNo" | "receiptDate" | "customerCode" | "amount" | "paymentMethod" | "description" | "createdBy", ExtArgs["result"]["moneyReceive"]>
-  export type MoneyReceiveInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | MoneyReceive$customerArgs<ExtArgs>
-  }
-  export type MoneyReceiveIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | MoneyReceive$customerArgs<ExtArgs>
-  }
-  export type MoneyReceiveIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | MoneyReceive$customerArgs<ExtArgs>
-  }
-
-  export type $MoneyReceivePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "MoneyReceive"
-    objects: {
-      customer: Prisma.$CustomerPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      receiptNo: string
-      receiptDate: Date | null
-      customerCode: string | null
-      amount: Prisma.Decimal | null
-      paymentMethod: string | null
-      description: string | null
-      createdBy: string | null
-    }, ExtArgs["result"]["moneyReceive"]>
-    composites: {}
-  }
-
-  type MoneyReceiveGetPayload<S extends boolean | null | undefined | MoneyReceiveDefaultArgs> = $Result.GetResult<Prisma.$MoneyReceivePayload, S>
-
-  type MoneyReceiveCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<MoneyReceiveFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: MoneyReceiveCountAggregateInputType | true
-    }
-
-  export interface MoneyReceiveDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MoneyReceive'], meta: { name: 'MoneyReceive' } }
-    /**
-     * Find zero or one MoneyReceive that matches the filter.
-     * @param {MoneyReceiveFindUniqueArgs} args - Arguments to find a MoneyReceive
-     * @example
-     * // Get one MoneyReceive
-     * const moneyReceive = await prisma.moneyReceive.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends MoneyReceiveFindUniqueArgs>(args: SelectSubset<T, MoneyReceiveFindUniqueArgs<ExtArgs>>): Prisma__MoneyReceiveClient<$Result.GetResult<Prisma.$MoneyReceivePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one MoneyReceive that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {MoneyReceiveFindUniqueOrThrowArgs} args - Arguments to find a MoneyReceive
-     * @example
-     * // Get one MoneyReceive
-     * const moneyReceive = await prisma.moneyReceive.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends MoneyReceiveFindUniqueOrThrowArgs>(args: SelectSubset<T, MoneyReceiveFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MoneyReceiveClient<$Result.GetResult<Prisma.$MoneyReceivePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first MoneyReceive that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MoneyReceiveFindFirstArgs} args - Arguments to find a MoneyReceive
-     * @example
-     * // Get one MoneyReceive
-     * const moneyReceive = await prisma.moneyReceive.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends MoneyReceiveFindFirstArgs>(args?: SelectSubset<T, MoneyReceiveFindFirstArgs<ExtArgs>>): Prisma__MoneyReceiveClient<$Result.GetResult<Prisma.$MoneyReceivePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first MoneyReceive that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MoneyReceiveFindFirstOrThrowArgs} args - Arguments to find a MoneyReceive
-     * @example
-     * // Get one MoneyReceive
-     * const moneyReceive = await prisma.moneyReceive.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends MoneyReceiveFindFirstOrThrowArgs>(args?: SelectSubset<T, MoneyReceiveFindFirstOrThrowArgs<ExtArgs>>): Prisma__MoneyReceiveClient<$Result.GetResult<Prisma.$MoneyReceivePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more MoneyReceives that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MoneyReceiveFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all MoneyReceives
-     * const moneyReceives = await prisma.moneyReceive.findMany()
-     * 
-     * // Get first 10 MoneyReceives
-     * const moneyReceives = await prisma.moneyReceive.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const moneyReceiveWithIdOnly = await prisma.moneyReceive.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends MoneyReceiveFindManyArgs>(args?: SelectSubset<T, MoneyReceiveFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MoneyReceivePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a MoneyReceive.
-     * @param {MoneyReceiveCreateArgs} args - Arguments to create a MoneyReceive.
-     * @example
-     * // Create one MoneyReceive
-     * const MoneyReceive = await prisma.moneyReceive.create({
-     *   data: {
-     *     // ... data to create a MoneyReceive
-     *   }
-     * })
-     * 
-     */
-    create<T extends MoneyReceiveCreateArgs>(args: SelectSubset<T, MoneyReceiveCreateArgs<ExtArgs>>): Prisma__MoneyReceiveClient<$Result.GetResult<Prisma.$MoneyReceivePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many MoneyReceives.
-     * @param {MoneyReceiveCreateManyArgs} args - Arguments to create many MoneyReceives.
-     * @example
-     * // Create many MoneyReceives
-     * const moneyReceive = await prisma.moneyReceive.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends MoneyReceiveCreateManyArgs>(args?: SelectSubset<T, MoneyReceiveCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many MoneyReceives and returns the data saved in the database.
-     * @param {MoneyReceiveCreateManyAndReturnArgs} args - Arguments to create many MoneyReceives.
-     * @example
-     * // Create many MoneyReceives
-     * const moneyReceive = await prisma.moneyReceive.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many MoneyReceives and only return the `id`
-     * const moneyReceiveWithIdOnly = await prisma.moneyReceive.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends MoneyReceiveCreateManyAndReturnArgs>(args?: SelectSubset<T, MoneyReceiveCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MoneyReceivePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a MoneyReceive.
-     * @param {MoneyReceiveDeleteArgs} args - Arguments to delete one MoneyReceive.
-     * @example
-     * // Delete one MoneyReceive
-     * const MoneyReceive = await prisma.moneyReceive.delete({
-     *   where: {
-     *     // ... filter to delete one MoneyReceive
-     *   }
-     * })
-     * 
-     */
-    delete<T extends MoneyReceiveDeleteArgs>(args: SelectSubset<T, MoneyReceiveDeleteArgs<ExtArgs>>): Prisma__MoneyReceiveClient<$Result.GetResult<Prisma.$MoneyReceivePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one MoneyReceive.
-     * @param {MoneyReceiveUpdateArgs} args - Arguments to update one MoneyReceive.
-     * @example
-     * // Update one MoneyReceive
-     * const moneyReceive = await prisma.moneyReceive.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends MoneyReceiveUpdateArgs>(args: SelectSubset<T, MoneyReceiveUpdateArgs<ExtArgs>>): Prisma__MoneyReceiveClient<$Result.GetResult<Prisma.$MoneyReceivePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more MoneyReceives.
-     * @param {MoneyReceiveDeleteManyArgs} args - Arguments to filter MoneyReceives to delete.
-     * @example
-     * // Delete a few MoneyReceives
-     * const { count } = await prisma.moneyReceive.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends MoneyReceiveDeleteManyArgs>(args?: SelectSubset<T, MoneyReceiveDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more MoneyReceives.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MoneyReceiveUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many MoneyReceives
-     * const moneyReceive = await prisma.moneyReceive.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends MoneyReceiveUpdateManyArgs>(args: SelectSubset<T, MoneyReceiveUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more MoneyReceives and returns the data updated in the database.
-     * @param {MoneyReceiveUpdateManyAndReturnArgs} args - Arguments to update many MoneyReceives.
-     * @example
-     * // Update many MoneyReceives
-     * const moneyReceive = await prisma.moneyReceive.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more MoneyReceives and only return the `id`
-     * const moneyReceiveWithIdOnly = await prisma.moneyReceive.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends MoneyReceiveUpdateManyAndReturnArgs>(args: SelectSubset<T, MoneyReceiveUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MoneyReceivePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one MoneyReceive.
-     * @param {MoneyReceiveUpsertArgs} args - Arguments to update or create a MoneyReceive.
-     * @example
-     * // Update or create a MoneyReceive
-     * const moneyReceive = await prisma.moneyReceive.upsert({
-     *   create: {
-     *     // ... data to create a MoneyReceive
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the MoneyReceive we want to update
-     *   }
-     * })
-     */
-    upsert<T extends MoneyReceiveUpsertArgs>(args: SelectSubset<T, MoneyReceiveUpsertArgs<ExtArgs>>): Prisma__MoneyReceiveClient<$Result.GetResult<Prisma.$MoneyReceivePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of MoneyReceives.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MoneyReceiveCountArgs} args - Arguments to filter MoneyReceives to count.
-     * @example
-     * // Count the number of MoneyReceives
-     * const count = await prisma.moneyReceive.count({
-     *   where: {
-     *     // ... the filter for the MoneyReceives we want to count
-     *   }
-     * })
-    **/
-    count<T extends MoneyReceiveCountArgs>(
-      args?: Subset<T, MoneyReceiveCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], MoneyReceiveCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a MoneyReceive.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MoneyReceiveAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends MoneyReceiveAggregateArgs>(args: Subset<T, MoneyReceiveAggregateArgs>): Prisma.PrismaPromise<GetMoneyReceiveAggregateType<T>>
-
-    /**
-     * Group by MoneyReceive.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MoneyReceiveGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends MoneyReceiveGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: MoneyReceiveGroupByArgs['orderBy'] }
-        : { orderBy?: MoneyReceiveGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, MoneyReceiveGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMoneyReceiveGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the MoneyReceive model
-   */
-  readonly fields: MoneyReceiveFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for MoneyReceive.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__MoneyReceiveClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    customer<T extends MoneyReceive$customerArgs<ExtArgs> = {}>(args?: Subset<T, MoneyReceive$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the MoneyReceive model
-   */
-  interface MoneyReceiveFieldRefs {
-    readonly id: FieldRef<"MoneyReceive", 'String'>
-    readonly receiptNo: FieldRef<"MoneyReceive", 'String'>
-    readonly receiptDate: FieldRef<"MoneyReceive", 'DateTime'>
-    readonly customerCode: FieldRef<"MoneyReceive", 'String'>
-    readonly amount: FieldRef<"MoneyReceive", 'Decimal'>
-    readonly paymentMethod: FieldRef<"MoneyReceive", 'String'>
-    readonly description: FieldRef<"MoneyReceive", 'String'>
-    readonly createdBy: FieldRef<"MoneyReceive", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * MoneyReceive findUnique
-   */
-  export type MoneyReceiveFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MoneyReceive
-     */
-    select?: MoneyReceiveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MoneyReceive
-     */
-    omit?: MoneyReceiveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MoneyReceiveInclude<ExtArgs> | null
-    /**
-     * Filter, which MoneyReceive to fetch.
-     */
-    where: MoneyReceiveWhereUniqueInput
-  }
-
-  /**
-   * MoneyReceive findUniqueOrThrow
-   */
-  export type MoneyReceiveFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MoneyReceive
-     */
-    select?: MoneyReceiveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MoneyReceive
-     */
-    omit?: MoneyReceiveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MoneyReceiveInclude<ExtArgs> | null
-    /**
-     * Filter, which MoneyReceive to fetch.
-     */
-    where: MoneyReceiveWhereUniqueInput
-  }
-
-  /**
-   * MoneyReceive findFirst
-   */
-  export type MoneyReceiveFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MoneyReceive
-     */
-    select?: MoneyReceiveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MoneyReceive
-     */
-    omit?: MoneyReceiveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MoneyReceiveInclude<ExtArgs> | null
-    /**
-     * Filter, which MoneyReceive to fetch.
-     */
-    where?: MoneyReceiveWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MoneyReceives to fetch.
-     */
-    orderBy?: MoneyReceiveOrderByWithRelationInput | MoneyReceiveOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for MoneyReceives.
-     */
-    cursor?: MoneyReceiveWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MoneyReceives from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MoneyReceives.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of MoneyReceives.
-     */
-    distinct?: MoneyReceiveScalarFieldEnum | MoneyReceiveScalarFieldEnum[]
-  }
-
-  /**
-   * MoneyReceive findFirstOrThrow
-   */
-  export type MoneyReceiveFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MoneyReceive
-     */
-    select?: MoneyReceiveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MoneyReceive
-     */
-    omit?: MoneyReceiveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MoneyReceiveInclude<ExtArgs> | null
-    /**
-     * Filter, which MoneyReceive to fetch.
-     */
-    where?: MoneyReceiveWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MoneyReceives to fetch.
-     */
-    orderBy?: MoneyReceiveOrderByWithRelationInput | MoneyReceiveOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for MoneyReceives.
-     */
-    cursor?: MoneyReceiveWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MoneyReceives from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MoneyReceives.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of MoneyReceives.
-     */
-    distinct?: MoneyReceiveScalarFieldEnum | MoneyReceiveScalarFieldEnum[]
-  }
-
-  /**
-   * MoneyReceive findMany
-   */
-  export type MoneyReceiveFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MoneyReceive
-     */
-    select?: MoneyReceiveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MoneyReceive
-     */
-    omit?: MoneyReceiveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MoneyReceiveInclude<ExtArgs> | null
-    /**
-     * Filter, which MoneyReceives to fetch.
-     */
-    where?: MoneyReceiveWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MoneyReceives to fetch.
-     */
-    orderBy?: MoneyReceiveOrderByWithRelationInput | MoneyReceiveOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing MoneyReceives.
-     */
-    cursor?: MoneyReceiveWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MoneyReceives from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MoneyReceives.
-     */
-    skip?: number
-    distinct?: MoneyReceiveScalarFieldEnum | MoneyReceiveScalarFieldEnum[]
-  }
-
-  /**
-   * MoneyReceive create
-   */
-  export type MoneyReceiveCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MoneyReceive
-     */
-    select?: MoneyReceiveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MoneyReceive
-     */
-    omit?: MoneyReceiveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MoneyReceiveInclude<ExtArgs> | null
-    /**
-     * The data needed to create a MoneyReceive.
-     */
-    data: XOR<MoneyReceiveCreateInput, MoneyReceiveUncheckedCreateInput>
-  }
-
-  /**
-   * MoneyReceive createMany
-   */
-  export type MoneyReceiveCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many MoneyReceives.
-     */
-    data: MoneyReceiveCreateManyInput | MoneyReceiveCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * MoneyReceive createManyAndReturn
-   */
-  export type MoneyReceiveCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MoneyReceive
-     */
-    select?: MoneyReceiveSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the MoneyReceive
-     */
-    omit?: MoneyReceiveOmit<ExtArgs> | null
-    /**
-     * The data used to create many MoneyReceives.
-     */
-    data: MoneyReceiveCreateManyInput | MoneyReceiveCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MoneyReceiveIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * MoneyReceive update
-   */
-  export type MoneyReceiveUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MoneyReceive
-     */
-    select?: MoneyReceiveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MoneyReceive
-     */
-    omit?: MoneyReceiveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MoneyReceiveInclude<ExtArgs> | null
-    /**
-     * The data needed to update a MoneyReceive.
-     */
-    data: XOR<MoneyReceiveUpdateInput, MoneyReceiveUncheckedUpdateInput>
-    /**
-     * Choose, which MoneyReceive to update.
-     */
-    where: MoneyReceiveWhereUniqueInput
-  }
-
-  /**
-   * MoneyReceive updateMany
-   */
-  export type MoneyReceiveUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update MoneyReceives.
-     */
-    data: XOR<MoneyReceiveUpdateManyMutationInput, MoneyReceiveUncheckedUpdateManyInput>
-    /**
-     * Filter which MoneyReceives to update
-     */
-    where?: MoneyReceiveWhereInput
-    /**
-     * Limit how many MoneyReceives to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * MoneyReceive updateManyAndReturn
-   */
-  export type MoneyReceiveUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MoneyReceive
-     */
-    select?: MoneyReceiveSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the MoneyReceive
-     */
-    omit?: MoneyReceiveOmit<ExtArgs> | null
-    /**
-     * The data used to update MoneyReceives.
-     */
-    data: XOR<MoneyReceiveUpdateManyMutationInput, MoneyReceiveUncheckedUpdateManyInput>
-    /**
-     * Filter which MoneyReceives to update
-     */
-    where?: MoneyReceiveWhereInput
-    /**
-     * Limit how many MoneyReceives to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MoneyReceiveIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * MoneyReceive upsert
-   */
-  export type MoneyReceiveUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MoneyReceive
-     */
-    select?: MoneyReceiveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MoneyReceive
-     */
-    omit?: MoneyReceiveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MoneyReceiveInclude<ExtArgs> | null
-    /**
-     * The filter to search for the MoneyReceive to update in case it exists.
-     */
-    where: MoneyReceiveWhereUniqueInput
-    /**
-     * In case the MoneyReceive found by the `where` argument doesn't exist, create a new MoneyReceive with this data.
-     */
-    create: XOR<MoneyReceiveCreateInput, MoneyReceiveUncheckedCreateInput>
-    /**
-     * In case the MoneyReceive was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<MoneyReceiveUpdateInput, MoneyReceiveUncheckedUpdateInput>
-  }
-
-  /**
-   * MoneyReceive delete
-   */
-  export type MoneyReceiveDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MoneyReceive
-     */
-    select?: MoneyReceiveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MoneyReceive
-     */
-    omit?: MoneyReceiveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MoneyReceiveInclude<ExtArgs> | null
-    /**
-     * Filter which MoneyReceive to delete.
-     */
-    where: MoneyReceiveWhereUniqueInput
-  }
-
-  /**
-   * MoneyReceive deleteMany
-   */
-  export type MoneyReceiveDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which MoneyReceives to delete
-     */
-    where?: MoneyReceiveWhereInput
-    /**
-     * Limit how many MoneyReceives to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * MoneyReceive.customer
-   */
-  export type MoneyReceive$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Customer
-     */
-    select?: CustomerSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Customer
-     */
-    omit?: CustomerOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CustomerInclude<ExtArgs> | null
-    where?: CustomerWhereInput
-  }
-
-  /**
-   * MoneyReceive without action
-   */
-  export type MoneyReceiveDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MoneyReceive
-     */
-    select?: MoneyReceiveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MoneyReceive
-     */
-    omit?: MoneyReceiveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MoneyReceiveInclude<ExtArgs> | null
   }
 
 
@@ -61832,7 +60457,8 @@ export namespace Prisma {
     serialNo: 'serialNo',
     moneyReceptNo: 'moneyReceptNo',
     bankName: 'bankName',
-    bankNo: 'bankNo'
+    bankNo: 'bankNo',
+    branchId: 'branchId'
   };
 
   export type Client_TransactionScalarFieldEnum = (typeof Client_TransactionScalarFieldEnum)[keyof typeof Client_TransactionScalarFieldEnum]
@@ -62373,20 +60999,6 @@ export namespace Prisma {
   };
 
   export type T_SaleAmountPostScalarFieldEnum = (typeof T_SaleAmountPostScalarFieldEnum)[keyof typeof T_SaleAmountPostScalarFieldEnum]
-
-
-  export const MoneyReceiveScalarFieldEnum: {
-    id: 'id',
-    receiptNo: 'receiptNo',
-    receiptDate: 'receiptDate',
-    customerCode: 'customerCode',
-    amount: 'amount',
-    paymentMethod: 'paymentMethod',
-    description: 'description',
-    createdBy: 'createdBy'
-  };
-
-  export type MoneyReceiveScalarFieldEnum = (typeof MoneyReceiveScalarFieldEnum)[keyof typeof MoneyReceiveScalarFieldEnum]
 
 
   export const CashPurchaseScalarFieldEnum: {
@@ -63473,7 +62085,6 @@ export namespace Prisma {
     sales?: CSMasterListRelationFilter
     salesVat?: CSVMasterListRelationFilter
     clientTransactions?: Client_TransactionListRelationFilter
-    moneyReceives?: MoneyReceiveListRelationFilter
   }
 
   export type CustomerOrderByWithRelationInput = {
@@ -63487,7 +62098,6 @@ export namespace Prisma {
     sales?: CSMasterOrderByRelationAggregateInput
     salesVat?: CSVMasterOrderByRelationAggregateInput
     clientTransactions?: Client_TransactionOrderByRelationAggregateInput
-    moneyReceives?: MoneyReceiveOrderByRelationAggregateInput
   }
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -63504,7 +62114,6 @@ export namespace Prisma {
     sales?: CSMasterListRelationFilter
     salesVat?: CSVMasterListRelationFilter
     clientTransactions?: Client_TransactionListRelationFilter
-    moneyReceives?: MoneyReceiveListRelationFilter
   }, "id" | "code">
 
   export type CustomerOrderByWithAggregationInput = {
@@ -63546,6 +62155,7 @@ export namespace Prisma {
     moneyReceptNo?: StringNullableFilter<"Client_Transaction"> | string | null
     bankName?: StringNullableFilter<"Client_Transaction"> | string | null
     bankNo?: StringNullableFilter<"Client_Transaction"> | string | null
+    branchId?: UuidNullableFilter<"Client_Transaction"> | string | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
   }
 
@@ -63559,6 +62169,7 @@ export namespace Prisma {
     moneyReceptNo?: SortOrderInput | SortOrder
     bankName?: SortOrderInput | SortOrder
     bankNo?: SortOrderInput | SortOrder
+    branchId?: SortOrderInput | SortOrder
     customer?: CustomerOrderByWithRelationInput
   }
 
@@ -63575,6 +62186,7 @@ export namespace Prisma {
     moneyReceptNo?: StringNullableFilter<"Client_Transaction"> | string | null
     bankName?: StringNullableFilter<"Client_Transaction"> | string | null
     bankNo?: StringNullableFilter<"Client_Transaction"> | string | null
+    branchId?: UuidNullableFilter<"Client_Transaction"> | string | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
   }, "id">
 
@@ -63588,6 +62200,7 @@ export namespace Prisma {
     moneyReceptNo?: SortOrderInput | SortOrder
     bankName?: SortOrderInput | SortOrder
     bankNo?: SortOrderInput | SortOrder
+    branchId?: SortOrderInput | SortOrder
     _count?: Client_TransactionCountOrderByAggregateInput
     _avg?: Client_TransactionAvgOrderByAggregateInput
     _max?: Client_TransactionMaxOrderByAggregateInput
@@ -63608,6 +62221,7 @@ export namespace Prisma {
     moneyReceptNo?: StringNullableWithAggregatesFilter<"Client_Transaction"> | string | null
     bankName?: StringNullableWithAggregatesFilter<"Client_Transaction"> | string | null
     bankNo?: StringNullableWithAggregatesFilter<"Client_Transaction"> | string | null
+    branchId?: UuidNullableWithAggregatesFilter<"Client_Transaction"> | string | null
   }
 
   export type EmployeeWhereInput = {
@@ -63858,7 +62472,7 @@ export namespace Prisma {
     itemCode?: StringFilter<"RW_Stock"> | string
     stockQty?: DecimalFilter<"RW_Stock"> | Decimal | DecimalJsLike | number | string
     unitPrice?: DecimalFilter<"RW_Stock"> | Decimal | DecimalJsLike | number | string
-    branchId?: IntNullableFilter<"RW_Stock"> | number | null
+    branchId?: UuidNullableFilter<"RW_Stock"> | string | null
   }
 
   export type RW_StockOrderByWithRelationInput = {
@@ -63875,7 +62489,7 @@ export namespace Prisma {
     NOT?: RW_StockWhereInput | RW_StockWhereInput[]
     stockQty?: DecimalFilter<"RW_Stock"> | Decimal | DecimalJsLike | number | string
     unitPrice?: DecimalFilter<"RW_Stock"> | Decimal | DecimalJsLike | number | string
-    branchId?: IntNullableFilter<"RW_Stock"> | number | null
+    branchId?: UuidNullableFilter<"RW_Stock"> | string | null
   }, "itemCode">
 
   export type RW_StockOrderByWithAggregationInput = {
@@ -63897,7 +62511,7 @@ export namespace Prisma {
     itemCode?: StringWithAggregatesFilter<"RW_Stock"> | string
     stockQty?: DecimalWithAggregatesFilter<"RW_Stock"> | Decimal | DecimalJsLike | number | string
     unitPrice?: DecimalWithAggregatesFilter<"RW_Stock"> | Decimal | DecimalJsLike | number | string
-    branchId?: IntNullableWithAggregatesFilter<"RW_Stock"> | number | null
+    branchId?: UuidNullableWithAggregatesFilter<"RW_Stock"> | string | null
   }
 
   export type InventoryWhereInput = {
@@ -64152,7 +62766,7 @@ export namespace Prisma {
     totalVat?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: StringNullableFilter<"CSMaster"> | string | null
     isActive?: IntNullableFilter<"CSMaster"> | number | null
-    branchId?: IntNullableFilter<"CSMaster"> | number | null
+    branchId?: UuidNullableFilter<"CSMaster"> | string | null
     createDate?: DateTimeNullableFilter<"CSMaster"> | Date | string | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     details?: CSDetailListRelationFilter
@@ -64193,7 +62807,7 @@ export namespace Prisma {
     totalVat?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: StringNullableFilter<"CSMaster"> | string | null
     isActive?: IntNullableFilter<"CSMaster"> | number | null
-    branchId?: IntNullableFilter<"CSMaster"> | number | null
+    branchId?: UuidNullableFilter<"CSMaster"> | string | null
     createDate?: DateTimeNullableFilter<"CSMaster"> | Date | string | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     details?: CSDetailListRelationFilter
@@ -64237,7 +62851,7 @@ export namespace Prisma {
     totalVat?: DecimalNullableWithAggregatesFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: StringNullableWithAggregatesFilter<"CSMaster"> | string | null
     isActive?: IntNullableWithAggregatesFilter<"CSMaster"> | number | null
-    branchId?: IntNullableWithAggregatesFilter<"CSMaster"> | number | null
+    branchId?: UuidNullableWithAggregatesFilter<"CSMaster"> | string | null
     createDate?: DateTimeNullableWithAggregatesFilter<"CSMaster"> | Date | string | null
   }
 
@@ -64333,7 +62947,7 @@ export namespace Prisma {
     totalDiscount?: DecimalNullableFilter<"CSVMaster"> | Decimal | DecimalJsLike | number | string | null
     totalVat?: DecimalNullableFilter<"CSVMaster"> | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: StringNullableFilter<"CSVMaster"> | string | null
-    branchId?: IntNullableFilter<"CSVMaster"> | number | null
+    branchId?: UuidNullableFilter<"CSVMaster"> | string | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     details?: CSVDetailListRelationFilter
   }
@@ -64370,7 +62984,7 @@ export namespace Prisma {
     totalDiscount?: DecimalNullableFilter<"CSVMaster"> | Decimal | DecimalJsLike | number | string | null
     totalVat?: DecimalNullableFilter<"CSVMaster"> | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: StringNullableFilter<"CSVMaster"> | string | null
-    branchId?: IntNullableFilter<"CSVMaster"> | number | null
+    branchId?: UuidNullableFilter<"CSVMaster"> | string | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     details?: CSVDetailListRelationFilter
   }, "id" | "invNo">
@@ -64410,7 +63024,7 @@ export namespace Prisma {
     totalDiscount?: DecimalNullableWithAggregatesFilter<"CSVMaster"> | Decimal | DecimalJsLike | number | string | null
     totalVat?: DecimalNullableWithAggregatesFilter<"CSVMaster"> | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: StringNullableWithAggregatesFilter<"CSVMaster"> | string | null
-    branchId?: IntNullableWithAggregatesFilter<"CSVMaster"> | number | null
+    branchId?: UuidNullableWithAggregatesFilter<"CSVMaster"> | string | null
   }
 
   export type CSVDetailWhereInput = {
@@ -64510,7 +63124,7 @@ export namespace Prisma {
     somstrIsActive?: BoolNullableFilter<"t_SOMstr"> | boolean | null
     somstrCustomerpay?: DecimalNullableFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
     somstrChange?: DecimalNullableFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"t_SOMstr"> | number | null
+    branchId?: UuidNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableFilter<"t_SOMstr"> | string | null
@@ -64567,7 +63181,7 @@ export namespace Prisma {
     somstrIsActive?: BoolNullableFilter<"t_SOMstr"> | boolean | null
     somstrCustomerpay?: DecimalNullableFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
     somstrChange?: DecimalNullableFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"t_SOMstr"> | number | null
+    branchId?: UuidNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableFilter<"t_SOMstr"> | string | null
@@ -64627,7 +63241,7 @@ export namespace Prisma {
     somstrIsActive?: BoolNullableWithAggregatesFilter<"t_SOMstr"> | boolean | null
     somstrCustomerpay?: DecimalNullableWithAggregatesFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
     somstrChange?: DecimalNullableWithAggregatesFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableWithAggregatesFilter<"t_SOMstr"> | number | null
+    branchId?: UuidNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     soMstrDiscountRemarks?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
@@ -64653,7 +63267,7 @@ export namespace Prisma {
     sodetVATAmount?: DecimalNullableFilter<"t_SODet"> | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: DecimalNullableFilter<"t_SODet"> | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: DecimalNullableFilter<"t_SODet"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"t_SODet"> | number | null
+    branchId?: UuidNullableFilter<"t_SODet"> | string | null
     sale?: XOR<T_SOMstrNullableScalarRelationFilter, t_SOMstrWhereInput> | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }
@@ -64696,7 +63310,7 @@ export namespace Prisma {
     sodetVATAmount?: DecimalNullableFilter<"t_SODet"> | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: DecimalNullableFilter<"t_SODet"> | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: DecimalNullableFilter<"t_SODet"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"t_SODet"> | number | null
+    branchId?: UuidNullableFilter<"t_SODet"> | string | null
     sale?: XOR<T_SOMstrNullableScalarRelationFilter, t_SOMstrWhereInput> | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }, "id">
@@ -64742,7 +63356,7 @@ export namespace Prisma {
     sodetVATAmount?: DecimalNullableWithAggregatesFilter<"t_SODet"> | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: DecimalNullableWithAggregatesFilter<"t_SODet"> | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: DecimalNullableWithAggregatesFilter<"t_SODet"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableWithAggregatesFilter<"t_SODet"> | number | null
+    branchId?: UuidNullableWithAggregatesFilter<"t_SODet"> | string | null
   }
 
   export type t_SOMstVWhereInput = {
@@ -64765,7 +63379,7 @@ export namespace Prisma {
     somstrIsActive?: BoolNullableFilter<"t_SOMstV"> | boolean | null
     somstrCustomerpay?: DecimalNullableFilter<"t_SOMstV"> | Decimal | DecimalJsLike | number | string | null
     somstrChange?: DecimalNullableFilter<"t_SOMstV"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"t_SOMstV"> | number | null
+    branchId?: UuidNullableFilter<"t_SOMstV"> | string | null
     soMstrDiscountRemarks?: StringNullableFilter<"t_SOMstV"> | string | null
     soMstrModifyRemarks?: StringNullableFilter<"t_SOMstV"> | string | null
     soMstrDiscountContact?: StringNullableFilter<"t_SOMstV"> | string | null
@@ -64818,7 +63432,7 @@ export namespace Prisma {
     somstrIsActive?: BoolNullableFilter<"t_SOMstV"> | boolean | null
     somstrCustomerpay?: DecimalNullableFilter<"t_SOMstV"> | Decimal | DecimalJsLike | number | string | null
     somstrChange?: DecimalNullableFilter<"t_SOMstV"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"t_SOMstV"> | number | null
+    branchId?: UuidNullableFilter<"t_SOMstV"> | string | null
     soMstrDiscountRemarks?: StringNullableFilter<"t_SOMstV"> | string | null
     soMstrModifyRemarks?: StringNullableFilter<"t_SOMstV"> | string | null
     soMstrDiscountContact?: StringNullableFilter<"t_SOMstV"> | string | null
@@ -64875,7 +63489,7 @@ export namespace Prisma {
     somstrIsActive?: BoolNullableWithAggregatesFilter<"t_SOMstV"> | boolean | null
     somstrCustomerpay?: DecimalNullableWithAggregatesFilter<"t_SOMstV"> | Decimal | DecimalJsLike | number | string | null
     somstrChange?: DecimalNullableWithAggregatesFilter<"t_SOMstV"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableWithAggregatesFilter<"t_SOMstV"> | number | null
+    branchId?: UuidNullableWithAggregatesFilter<"t_SOMstV"> | string | null
     soMstrDiscountRemarks?: StringNullableWithAggregatesFilter<"t_SOMstV"> | string | null
     soMstrModifyRemarks?: StringNullableWithAggregatesFilter<"t_SOMstV"> | string | null
     soMstrDiscountContact?: StringNullableWithAggregatesFilter<"t_SOMstV"> | string | null
@@ -64900,7 +63514,7 @@ export namespace Prisma {
     sodetVATAmount?: DecimalNullableFilter<"t_SODeV"> | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: DecimalNullableFilter<"t_SODeV"> | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: DecimalNullableFilter<"t_SODeV"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"t_SODeV"> | number | null
+    branchId?: UuidNullableFilter<"t_SODeV"> | string | null
     sale?: XOR<T_SOMstVNullableScalarRelationFilter, t_SOMstVWhereInput> | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }
@@ -64943,7 +63557,7 @@ export namespace Prisma {
     sodetVATAmount?: DecimalNullableFilter<"t_SODeV"> | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: DecimalNullableFilter<"t_SODeV"> | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: DecimalNullableFilter<"t_SODeV"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"t_SODeV"> | number | null
+    branchId?: UuidNullableFilter<"t_SODeV"> | string | null
     sale?: XOR<T_SOMstVNullableScalarRelationFilter, t_SOMstVWhereInput> | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }, "id">
@@ -64989,7 +63603,7 @@ export namespace Prisma {
     sodetVATAmount?: DecimalNullableWithAggregatesFilter<"t_SODeV"> | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: DecimalNullableWithAggregatesFilter<"t_SODeV"> | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: DecimalNullableWithAggregatesFilter<"t_SODeV"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableWithAggregatesFilter<"t_SODeV"> | number | null
+    branchId?: UuidNullableWithAggregatesFilter<"t_SODeV"> | string | null
   }
 
   export type AsstMsrtWhereInput = {
@@ -65013,7 +63627,7 @@ export namespace Prisma {
     isActive?: BoolNullableFilter<"AsstMsrt"> | boolean | null
     customerpay?: DecimalNullableFilter<"AsstMsrt"> | Decimal | DecimalJsLike | number | string | null
     change?: DecimalNullableFilter<"AsstMsrt"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"AsstMsrt"> | number | null
+    branchId?: UuidNullableFilter<"AsstMsrt"> | string | null
     discountRemarks?: StringNullableFilter<"AsstMsrt"> | string | null
     details?: AsstDetListRelationFilter
   }
@@ -65062,7 +63676,7 @@ export namespace Prisma {
     isActive?: BoolNullableFilter<"AsstMsrt"> | boolean | null
     customerpay?: DecimalNullableFilter<"AsstMsrt"> | Decimal | DecimalJsLike | number | string | null
     change?: DecimalNullableFilter<"AsstMsrt"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"AsstMsrt"> | number | null
+    branchId?: UuidNullableFilter<"AsstMsrt"> | string | null
     discountRemarks?: StringNullableFilter<"AsstMsrt"> | string | null
     details?: AsstDetListRelationFilter
   }, "id">
@@ -65115,7 +63729,7 @@ export namespace Prisma {
     isActive?: BoolNullableWithAggregatesFilter<"AsstMsrt"> | boolean | null
     customerpay?: DecimalNullableWithAggregatesFilter<"AsstMsrt"> | Decimal | DecimalJsLike | number | string | null
     change?: DecimalNullableWithAggregatesFilter<"AsstMsrt"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableWithAggregatesFilter<"AsstMsrt"> | number | null
+    branchId?: UuidNullableWithAggregatesFilter<"AsstMsrt"> | string | null
     discountRemarks?: StringNullableWithAggregatesFilter<"AsstMsrt"> | string | null
   }
 
@@ -65236,7 +63850,7 @@ export namespace Prisma {
     ncmstrUpdateBy?: StringNullableFilter<"t_NCMstr"> | string | null
     ncmstrUpdateDate?: DateTimeNullableFilter<"t_NCMstr"> | Date | string | null
     ncmstrIsActive?: BoolNullableFilter<"t_NCMstr"> | boolean | null
-    branchId?: IntNullableFilter<"t_NCMstr"> | number | null
+    branchId?: UuidNullableFilter<"t_NCMstr"> | string | null
     ncmstrName?: StringNullableFilter<"t_NCMstr"> | string | null
     ncmstrContactNo?: StringNullableFilter<"t_NCMstr"> | string | null
     ncmstrReference?: StringNullableFilter<"t_NCMstr"> | string | null
@@ -65271,7 +63885,7 @@ export namespace Prisma {
     ncmstrUpdateBy?: StringNullableFilter<"t_NCMstr"> | string | null
     ncmstrUpdateDate?: DateTimeNullableFilter<"t_NCMstr"> | Date | string | null
     ncmstrIsActive?: BoolNullableFilter<"t_NCMstr"> | boolean | null
-    branchId?: IntNullableFilter<"t_NCMstr"> | number | null
+    branchId?: UuidNullableFilter<"t_NCMstr"> | string | null
     ncmstrName?: StringNullableFilter<"t_NCMstr"> | string | null
     ncmstrContactNo?: StringNullableFilter<"t_NCMstr"> | string | null
     ncmstrReference?: StringNullableFilter<"t_NCMstr"> | string | null
@@ -65292,10 +63906,8 @@ export namespace Prisma {
     ncmstrContactNo?: SortOrderInput | SortOrder
     ncmstrReference?: SortOrderInput | SortOrder
     _count?: t_NCMstrCountOrderByAggregateInput
-    _avg?: t_NCMstrAvgOrderByAggregateInput
     _max?: t_NCMstrMaxOrderByAggregateInput
     _min?: t_NCMstrMinOrderByAggregateInput
-    _sum?: t_NCMstrSumOrderByAggregateInput
   }
 
   export type t_NCMstrScalarWhereWithAggregatesInput = {
@@ -65310,7 +63922,7 @@ export namespace Prisma {
     ncmstrUpdateBy?: StringNullableWithAggregatesFilter<"t_NCMstr"> | string | null
     ncmstrUpdateDate?: DateTimeNullableWithAggregatesFilter<"t_NCMstr"> | Date | string | null
     ncmstrIsActive?: BoolNullableWithAggregatesFilter<"t_NCMstr"> | boolean | null
-    branchId?: IntNullableWithAggregatesFilter<"t_NCMstr"> | number | null
+    branchId?: UuidNullableWithAggregatesFilter<"t_NCMstr"> | string | null
     ncmstrName?: StringNullableWithAggregatesFilter<"t_NCMstr"> | string | null
     ncmstrContactNo?: StringNullableWithAggregatesFilter<"t_NCMstr"> | string | null
     ncmstrReference?: StringNullableWithAggregatesFilter<"t_NCMstr"> | string | null
@@ -65334,7 +63946,7 @@ export namespace Prisma {
     ncdetVATAmount?: DecimalNullableFilter<"t_NCDet"> | Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: DecimalNullableFilter<"t_NCDet"> | Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: DecimalNullableFilter<"t_NCDet"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"t_NCDet"> | number | null
+    branchId?: UuidNullableFilter<"t_NCDet"> | string | null
     sale?: XOR<T_NCMstrNullableScalarRelationFilter, t_NCMstrWhereInput> | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }
@@ -65377,7 +63989,7 @@ export namespace Prisma {
     ncdetVATAmount?: DecimalNullableFilter<"t_NCDet"> | Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: DecimalNullableFilter<"t_NCDet"> | Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: DecimalNullableFilter<"t_NCDet"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"t_NCDet"> | number | null
+    branchId?: UuidNullableFilter<"t_NCDet"> | string | null
     sale?: XOR<T_NCMstrNullableScalarRelationFilter, t_NCMstrWhereInput> | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }, "id">
@@ -65423,7 +64035,7 @@ export namespace Prisma {
     ncdetVATAmount?: DecimalNullableWithAggregatesFilter<"t_NCDet"> | Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: DecimalNullableWithAggregatesFilter<"t_NCDet"> | Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: DecimalNullableWithAggregatesFilter<"t_NCDet"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableWithAggregatesFilter<"t_NCDet"> | number | null
+    branchId?: UuidNullableWithAggregatesFilter<"t_NCDet"> | string | null
   }
 
   export type Item_ReceiveWhereInput = {
@@ -65442,8 +64054,8 @@ export namespace Prisma {
     createDate?: DateTimeNullableFilter<"Item_Receive"> | Date | string | null
     updateBy?: StringNullableFilter<"Item_Receive"> | string | null
     updateDate?: DateTimeNullableFilter<"Item_Receive"> | Date | string | null
-    branchId?: IntFilter<"Item_Receive"> | number
-    receiveBranchID?: IntNullableFilter<"Item_Receive"> | number | null
+    branchId?: UuidFilter<"Item_Receive"> | string
+    receiveBranchID?: UuidNullableFilter<"Item_Receive"> | string | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }
 
@@ -65481,8 +64093,8 @@ export namespace Prisma {
     createDate?: DateTimeNullableFilter<"Item_Receive"> | Date | string | null
     updateBy?: StringNullableFilter<"Item_Receive"> | string | null
     updateDate?: DateTimeNullableFilter<"Item_Receive"> | Date | string | null
-    branchId?: IntFilter<"Item_Receive"> | number
-    receiveBranchID?: IntNullableFilter<"Item_Receive"> | number | null
+    branchId?: UuidFilter<"Item_Receive"> | string
+    receiveBranchID?: UuidNullableFilter<"Item_Receive"> | string | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }, "id">
 
@@ -65524,8 +64136,8 @@ export namespace Prisma {
     createDate?: DateTimeNullableWithAggregatesFilter<"Item_Receive"> | Date | string | null
     updateBy?: StringNullableWithAggregatesFilter<"Item_Receive"> | string | null
     updateDate?: DateTimeNullableWithAggregatesFilter<"Item_Receive"> | Date | string | null
-    branchId?: IntWithAggregatesFilter<"Item_Receive"> | number
-    receiveBranchID?: IntNullableWithAggregatesFilter<"Item_Receive"> | number | null
+    branchId?: UuidWithAggregatesFilter<"Item_Receive"> | string
+    receiveBranchID?: UuidNullableWithAggregatesFilter<"Item_Receive"> | string | null
   }
 
   export type Item_IssueWhereInput = {
@@ -65539,8 +64151,8 @@ export namespace Prisma {
     unitPrice?: DecimalNullableFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     issueDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
-    issueBranchId?: IntFilter<"Item_Issue"> | number
-    receiveBranchId?: IntFilter<"Item_Issue"> | number
+    issueBranchId?: UuidFilter<"Item_Issue"> | string
+    receiveBranchId?: UuidFilter<"Item_Issue"> | string
     isActive?: IntNullableFilter<"Item_Issue"> | number | null
     createBy?: StringNullableFilter<"Item_Issue"> | string | null
     createDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
@@ -65578,8 +64190,8 @@ export namespace Prisma {
     unitPrice?: DecimalNullableFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     issueDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
-    issueBranchId?: IntFilter<"Item_Issue"> | number
-    receiveBranchId?: IntFilter<"Item_Issue"> | number
+    issueBranchId?: UuidFilter<"Item_Issue"> | string
+    receiveBranchId?: UuidFilter<"Item_Issue"> | string
     isActive?: IntNullableFilter<"Item_Issue"> | number | null
     createBy?: StringNullableFilter<"Item_Issue"> | string | null
     createDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
@@ -65621,8 +64233,8 @@ export namespace Prisma {
     unitPrice?: DecimalNullableWithAggregatesFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableWithAggregatesFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     issueDate?: DateTimeNullableWithAggregatesFilter<"Item_Issue"> | Date | string | null
-    issueBranchId?: IntWithAggregatesFilter<"Item_Issue"> | number
-    receiveBranchId?: IntWithAggregatesFilter<"Item_Issue"> | number
+    issueBranchId?: UuidWithAggregatesFilter<"Item_Issue"> | string
+    receiveBranchId?: UuidWithAggregatesFilter<"Item_Issue"> | string
     isActive?: IntNullableWithAggregatesFilter<"Item_Issue"> | number | null
     createBy?: StringNullableWithAggregatesFilter<"Item_Issue"> | string | null
     createDate?: DateTimeNullableWithAggregatesFilter<"Item_Issue"> | Date | string | null
@@ -65641,7 +64253,7 @@ export namespace Prisma {
     excess?: DecimalNullableFilter<"ItemReject"> | Decimal | DecimalJsLike | number | string | null
     short?: DecimalNullableFilter<"ItemReject"> | Decimal | DecimalJsLike | number | string | null
     date?: DateTimeNullableFilter<"ItemReject"> | Date | string | null
-    branchId?: IntNullableFilter<"ItemReject"> | number | null
+    branchId?: UuidNullableFilter<"ItemReject"> | string | null
     assort?: DecimalNullableFilter<"ItemReject"> | Decimal | DecimalJsLike | number | string | null
     isActive?: IntNullableFilter<"ItemReject"> | number | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
@@ -65672,7 +64284,7 @@ export namespace Prisma {
     excess?: DecimalNullableFilter<"ItemReject"> | Decimal | DecimalJsLike | number | string | null
     short?: DecimalNullableFilter<"ItemReject"> | Decimal | DecimalJsLike | number | string | null
     date?: DateTimeNullableFilter<"ItemReject"> | Date | string | null
-    branchId?: IntNullableFilter<"ItemReject"> | number | null
+    branchId?: UuidNullableFilter<"ItemReject"> | string | null
     assort?: DecimalNullableFilter<"ItemReject"> | Decimal | DecimalJsLike | number | string | null
     isActive?: IntNullableFilter<"ItemReject"> | number | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
@@ -65707,7 +64319,7 @@ export namespace Prisma {
     excess?: DecimalNullableWithAggregatesFilter<"ItemReject"> | Decimal | DecimalJsLike | number | string | null
     short?: DecimalNullableWithAggregatesFilter<"ItemReject"> | Decimal | DecimalJsLike | number | string | null
     date?: DateTimeNullableWithAggregatesFilter<"ItemReject"> | Date | string | null
-    branchId?: IntNullableWithAggregatesFilter<"ItemReject"> | number | null
+    branchId?: UuidNullableWithAggregatesFilter<"ItemReject"> | string | null
     assort?: DecimalNullableWithAggregatesFilter<"ItemReject"> | Decimal | DecimalJsLike | number | string | null
     isActive?: IntNullableWithAggregatesFilter<"ItemReject"> | number | null
   }
@@ -65820,7 +64432,7 @@ export namespace Prisma {
     isActive?: IntNullableFilter<"Packet_Receive"> | number | null
     createBy?: StringNullableFilter<"Packet_Receive"> | string | null
     createDate?: DateTimeNullableFilter<"Packet_Receive"> | Date | string | null
-    branchId?: IntFilter<"Packet_Receive"> | number
+    branchId?: UuidFilter<"Packet_Receive"> | string
     packet?: XOR<PacketInfoNullableScalarRelationFilter, PacketInfoWhereInput> | null
   }
 
@@ -65851,7 +64463,7 @@ export namespace Prisma {
     isActive?: IntNullableFilter<"Packet_Receive"> | number | null
     createBy?: StringNullableFilter<"Packet_Receive"> | string | null
     createDate?: DateTimeNullableFilter<"Packet_Receive"> | Date | string | null
-    branchId?: IntFilter<"Packet_Receive"> | number
+    branchId?: UuidFilter<"Packet_Receive"> | string
     packet?: XOR<PacketInfoNullableScalarRelationFilter, PacketInfoWhereInput> | null
   }, "id">
 
@@ -65886,7 +64498,7 @@ export namespace Prisma {
     isActive?: IntNullableWithAggregatesFilter<"Packet_Receive"> | number | null
     createBy?: StringNullableWithAggregatesFilter<"Packet_Receive"> | string | null
     createDate?: DateTimeNullableWithAggregatesFilter<"Packet_Receive"> | Date | string | null
-    branchId?: IntWithAggregatesFilter<"Packet_Receive"> | number
+    branchId?: UuidWithAggregatesFilter<"Packet_Receive"> | string
   }
 
   export type Packet_IssueWhereInput = {
@@ -65905,7 +64517,7 @@ export namespace Prisma {
     createBy?: StringNullableFilter<"Packet_Issue"> | string | null
     createDate?: DateTimeNullableFilter<"Packet_Issue"> | Date | string | null
     updateBy?: StringNullableFilter<"Packet_Issue"> | string | null
-    branchId?: IntFilter<"Packet_Issue"> | number
+    branchId?: UuidFilter<"Packet_Issue"> | string
     packet?: XOR<PacketInfoNullableScalarRelationFilter, PacketInfoWhereInput> | null
   }
 
@@ -65942,7 +64554,7 @@ export namespace Prisma {
     createBy?: StringNullableFilter<"Packet_Issue"> | string | null
     createDate?: DateTimeNullableFilter<"Packet_Issue"> | Date | string | null
     updateBy?: StringNullableFilter<"Packet_Issue"> | string | null
-    branchId?: IntFilter<"Packet_Issue"> | number
+    branchId?: UuidFilter<"Packet_Issue"> | string
     packet?: XOR<PacketInfoNullableScalarRelationFilter, PacketInfoWhereInput> | null
   }, "id">
 
@@ -65983,7 +64595,7 @@ export namespace Prisma {
     createBy?: StringNullableWithAggregatesFilter<"Packet_Issue"> | string | null
     createDate?: DateTimeNullableWithAggregatesFilter<"Packet_Issue"> | Date | string | null
     updateBy?: StringNullableWithAggregatesFilter<"Packet_Issue"> | string | null
-    branchId?: IntWithAggregatesFilter<"Packet_Issue"> | number
+    branchId?: UuidWithAggregatesFilter<"Packet_Issue"> | string
   }
 
   export type OrderReceive_MasterWhereInput = {
@@ -66000,7 +64612,7 @@ export namespace Prisma {
     deliveryDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
     deliveryAddress?: StringNullableFilter<"OrderReceive_Master"> | string | null
     cType?: StringNullableFilter<"OrderReceive_Master"> | string | null
-    branchId?: IntNullableFilter<"OrderReceive_Master"> | number | null
+    branchId?: UuidNullableFilter<"OrderReceive_Master"> | string | null
     deliveryTime?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
     isActive?: IntNullableFilter<"OrderReceive_Master"> | number | null
     createBy?: StringNullableFilter<"OrderReceive_Master"> | string | null
@@ -66045,7 +64657,7 @@ export namespace Prisma {
     deliveryDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
     deliveryAddress?: StringNullableFilter<"OrderReceive_Master"> | string | null
     cType?: StringNullableFilter<"OrderReceive_Master"> | string | null
-    branchId?: IntNullableFilter<"OrderReceive_Master"> | number | null
+    branchId?: UuidNullableFilter<"OrderReceive_Master"> | string | null
     deliveryTime?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
     isActive?: IntNullableFilter<"OrderReceive_Master"> | number | null
     createBy?: StringNullableFilter<"OrderReceive_Master"> | string | null
@@ -66094,7 +64706,7 @@ export namespace Prisma {
     deliveryDate?: DateTimeNullableWithAggregatesFilter<"OrderReceive_Master"> | Date | string | null
     deliveryAddress?: StringNullableWithAggregatesFilter<"OrderReceive_Master"> | string | null
     cType?: StringNullableWithAggregatesFilter<"OrderReceive_Master"> | string | null
-    branchId?: IntNullableWithAggregatesFilter<"OrderReceive_Master"> | number | null
+    branchId?: UuidNullableWithAggregatesFilter<"OrderReceive_Master"> | string | null
     deliveryTime?: DateTimeNullableWithAggregatesFilter<"OrderReceive_Master"> | Date | string | null
     isActive?: IntNullableWithAggregatesFilter<"OrderReceive_Master"> | number | null
     createBy?: StringNullableWithAggregatesFilter<"OrderReceive_Master"> | string | null
@@ -66187,7 +64799,7 @@ export namespace Prisma {
     deliveryDate?: DateTimeNullableFilter<"VOrderReceive_Master"> | Date | string | null
     deliveryAddress?: StringNullableFilter<"VOrderReceive_Master"> | string | null
     cType?: StringNullableFilter<"VOrderReceive_Master"> | string | null
-    branchId?: IntNullableFilter<"VOrderReceive_Master"> | number | null
+    branchId?: UuidNullableFilter<"VOrderReceive_Master"> | string | null
     deliveryTime?: DateTimeNullableFilter<"VOrderReceive_Master"> | Date | string | null
     createBy?: StringNullableFilter<"VOrderReceive_Master"> | string | null
     createDate?: DateTimeNullableFilter<"VOrderReceive_Master"> | Date | string | null
@@ -66226,7 +64838,7 @@ export namespace Prisma {
     deliveryDate?: DateTimeNullableFilter<"VOrderReceive_Master"> | Date | string | null
     deliveryAddress?: StringNullableFilter<"VOrderReceive_Master"> | string | null
     cType?: StringNullableFilter<"VOrderReceive_Master"> | string | null
-    branchId?: IntNullableFilter<"VOrderReceive_Master"> | number | null
+    branchId?: UuidNullableFilter<"VOrderReceive_Master"> | string | null
     deliveryTime?: DateTimeNullableFilter<"VOrderReceive_Master"> | Date | string | null
     createBy?: StringNullableFilter<"VOrderReceive_Master"> | string | null
     createDate?: DateTimeNullableFilter<"VOrderReceive_Master"> | Date | string | null
@@ -66269,7 +64881,7 @@ export namespace Prisma {
     deliveryDate?: DateTimeNullableWithAggregatesFilter<"VOrderReceive_Master"> | Date | string | null
     deliveryAddress?: StringNullableWithAggregatesFilter<"VOrderReceive_Master"> | string | null
     cType?: StringNullableWithAggregatesFilter<"VOrderReceive_Master"> | string | null
-    branchId?: IntNullableWithAggregatesFilter<"VOrderReceive_Master"> | number | null
+    branchId?: UuidNullableWithAggregatesFilter<"VOrderReceive_Master"> | string | null
     deliveryTime?: DateTimeNullableWithAggregatesFilter<"VOrderReceive_Master"> | Date | string | null
     createBy?: StringNullableWithAggregatesFilter<"VOrderReceive_Master"> | string | null
     createDate?: DateTimeNullableWithAggregatesFilter<"VOrderReceive_Master"> | Date | string | null
@@ -66347,7 +64959,7 @@ export namespace Prisma {
     cashSale?: DecimalFilter<"t_SaleAmountPost"> | Decimal | DecimalJsLike | number | string
     cardSale?: DecimalFilter<"t_SaleAmountPost"> | Decimal | DecimalJsLike | number | string
     date?: DateTimeNullableFilter<"t_SaleAmountPost"> | Date | string | null
-    branchId?: IntNullableFilter<"t_SaleAmountPost"> | number | null
+    branchId?: UuidNullableFilter<"t_SaleAmountPost"> | string | null
   }
 
   export type t_SaleAmountPostOrderByWithRelationInput = {
@@ -66366,7 +64978,7 @@ export namespace Prisma {
     cashSale?: DecimalFilter<"t_SaleAmountPost"> | Decimal | DecimalJsLike | number | string
     cardSale?: DecimalFilter<"t_SaleAmountPost"> | Decimal | DecimalJsLike | number | string
     date?: DateTimeNullableFilter<"t_SaleAmountPost"> | Date | string | null
-    branchId?: IntNullableFilter<"t_SaleAmountPost"> | number | null
+    branchId?: UuidNullableFilter<"t_SaleAmountPost"> | string | null
   }, "id">
 
   export type t_SaleAmountPostOrderByWithAggregationInput = {
@@ -66390,79 +65002,7 @@ export namespace Prisma {
     cashSale?: DecimalWithAggregatesFilter<"t_SaleAmountPost"> | Decimal | DecimalJsLike | number | string
     cardSale?: DecimalWithAggregatesFilter<"t_SaleAmountPost"> | Decimal | DecimalJsLike | number | string
     date?: DateTimeNullableWithAggregatesFilter<"t_SaleAmountPost"> | Date | string | null
-    branchId?: IntNullableWithAggregatesFilter<"t_SaleAmountPost"> | number | null
-  }
-
-  export type MoneyReceiveWhereInput = {
-    AND?: MoneyReceiveWhereInput | MoneyReceiveWhereInput[]
-    OR?: MoneyReceiveWhereInput[]
-    NOT?: MoneyReceiveWhereInput | MoneyReceiveWhereInput[]
-    id?: UuidFilter<"MoneyReceive"> | string
-    receiptNo?: StringFilter<"MoneyReceive"> | string
-    receiptDate?: DateTimeNullableFilter<"MoneyReceive"> | Date | string | null
-    customerCode?: StringNullableFilter<"MoneyReceive"> | string | null
-    amount?: DecimalNullableFilter<"MoneyReceive"> | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: StringNullableFilter<"MoneyReceive"> | string | null
-    description?: StringNullableFilter<"MoneyReceive"> | string | null
-    createdBy?: StringNullableFilter<"MoneyReceive"> | string | null
-    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
-  }
-
-  export type MoneyReceiveOrderByWithRelationInput = {
-    id?: SortOrder
-    receiptNo?: SortOrder
-    receiptDate?: SortOrderInput | SortOrder
-    customerCode?: SortOrderInput | SortOrder
-    amount?: SortOrderInput | SortOrder
-    paymentMethod?: SortOrderInput | SortOrder
-    description?: SortOrderInput | SortOrder
-    createdBy?: SortOrderInput | SortOrder
-    customer?: CustomerOrderByWithRelationInput
-  }
-
-  export type MoneyReceiveWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    receiptNo?: string
-    AND?: MoneyReceiveWhereInput | MoneyReceiveWhereInput[]
-    OR?: MoneyReceiveWhereInput[]
-    NOT?: MoneyReceiveWhereInput | MoneyReceiveWhereInput[]
-    receiptDate?: DateTimeNullableFilter<"MoneyReceive"> | Date | string | null
-    customerCode?: StringNullableFilter<"MoneyReceive"> | string | null
-    amount?: DecimalNullableFilter<"MoneyReceive"> | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: StringNullableFilter<"MoneyReceive"> | string | null
-    description?: StringNullableFilter<"MoneyReceive"> | string | null
-    createdBy?: StringNullableFilter<"MoneyReceive"> | string | null
-    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
-  }, "id" | "receiptNo">
-
-  export type MoneyReceiveOrderByWithAggregationInput = {
-    id?: SortOrder
-    receiptNo?: SortOrder
-    receiptDate?: SortOrderInput | SortOrder
-    customerCode?: SortOrderInput | SortOrder
-    amount?: SortOrderInput | SortOrder
-    paymentMethod?: SortOrderInput | SortOrder
-    description?: SortOrderInput | SortOrder
-    createdBy?: SortOrderInput | SortOrder
-    _count?: MoneyReceiveCountOrderByAggregateInput
-    _avg?: MoneyReceiveAvgOrderByAggregateInput
-    _max?: MoneyReceiveMaxOrderByAggregateInput
-    _min?: MoneyReceiveMinOrderByAggregateInput
-    _sum?: MoneyReceiveSumOrderByAggregateInput
-  }
-
-  export type MoneyReceiveScalarWhereWithAggregatesInput = {
-    AND?: MoneyReceiveScalarWhereWithAggregatesInput | MoneyReceiveScalarWhereWithAggregatesInput[]
-    OR?: MoneyReceiveScalarWhereWithAggregatesInput[]
-    NOT?: MoneyReceiveScalarWhereWithAggregatesInput | MoneyReceiveScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"MoneyReceive"> | string
-    receiptNo?: StringWithAggregatesFilter<"MoneyReceive"> | string
-    receiptDate?: DateTimeNullableWithAggregatesFilter<"MoneyReceive"> | Date | string | null
-    customerCode?: StringNullableWithAggregatesFilter<"MoneyReceive"> | string | null
-    amount?: DecimalNullableWithAggregatesFilter<"MoneyReceive"> | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: StringNullableWithAggregatesFilter<"MoneyReceive"> | string | null
-    description?: StringNullableWithAggregatesFilter<"MoneyReceive"> | string | null
-    createdBy?: StringNullableWithAggregatesFilter<"MoneyReceive"> | string | null
+    branchId?: UuidNullableWithAggregatesFilter<"t_SaleAmountPost"> | string | null
   }
 
   export type CashPurchaseWhereInput = {
@@ -67728,7 +66268,6 @@ export namespace Prisma {
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     clientTransactions?: Client_TransactionCreateNestedManyWithoutCustomerInput
-    moneyReceives?: MoneyReceiveCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateInput = {
@@ -67742,7 +66281,6 @@ export namespace Prisma {
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     clientTransactions?: Client_TransactionUncheckedCreateNestedManyWithoutCustomerInput
-    moneyReceives?: MoneyReceiveUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUpdateInput = {
@@ -67756,7 +66294,6 @@ export namespace Prisma {
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     clientTransactions?: Client_TransactionUpdateManyWithoutCustomerNestedInput
-    moneyReceives?: MoneyReceiveUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
@@ -67770,7 +66307,6 @@ export namespace Prisma {
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     clientTransactions?: Client_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
-    moneyReceives?: MoneyReceiveUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateManyInput = {
@@ -67812,6 +66348,7 @@ export namespace Prisma {
     moneyReceptNo?: string | null
     bankName?: string | null
     bankNo?: string | null
+    branchId?: string | null
     customer?: CustomerCreateNestedOneWithoutClientTransactionsInput
   }
 
@@ -67825,6 +66362,7 @@ export namespace Prisma {
     moneyReceptNo?: string | null
     bankName?: string | null
     bankNo?: string | null
+    branchId?: string | null
   }
 
   export type Client_TransactionUpdateInput = {
@@ -67836,6 +66374,7 @@ export namespace Prisma {
     moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     bankNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneWithoutClientTransactionsNestedInput
   }
 
@@ -67849,6 +66388,7 @@ export namespace Prisma {
     moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     bankNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Client_TransactionCreateManyInput = {
@@ -67861,6 +66401,7 @@ export namespace Prisma {
     moneyReceptNo?: string | null
     bankName?: string | null
     bankNo?: string | null
+    branchId?: string | null
   }
 
   export type Client_TransactionUpdateManyMutationInput = {
@@ -67872,6 +66413,7 @@ export namespace Prisma {
     moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     bankNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Client_TransactionUncheckedUpdateManyInput = {
@@ -67884,6 +66426,7 @@ export namespace Prisma {
     moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     bankNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EmployeeCreateInput = {
@@ -68167,49 +66710,49 @@ export namespace Prisma {
     itemCode: string
     stockQty: Decimal | DecimalJsLike | number | string
     unitPrice: Decimal | DecimalJsLike | number | string
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type RW_StockUncheckedCreateInput = {
     itemCode: string
     stockQty: Decimal | DecimalJsLike | number | string
     unitPrice: Decimal | DecimalJsLike | number | string
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type RW_StockUpdateInput = {
     itemCode?: StringFieldUpdateOperationsInput | string
     stockQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type RW_StockUncheckedUpdateInput = {
     itemCode?: StringFieldUpdateOperationsInput | string
     stockQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type RW_StockCreateManyInput = {
     itemCode: string
     stockQty: Decimal | DecimalJsLike | number | string
     unitPrice: Decimal | DecimalJsLike | number | string
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type RW_StockUpdateManyMutationInput = {
     itemCode?: StringFieldUpdateOperationsInput | string
     stockQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type RW_StockUncheckedUpdateManyInput = {
     itemCode?: StringFieldUpdateOperationsInput | string
     stockQty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type InventoryCreateInput = {
@@ -68480,7 +67023,7 @@ export namespace Prisma {
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
-    branchId?: number | null
+    branchId?: string | null
     createDate?: Date | string | null
     customer?: CustomerCreateNestedOneWithoutSalesInput
     details?: CSDetailCreateNestedManyWithoutSaleInput
@@ -68499,7 +67042,7 @@ export namespace Prisma {
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
-    branchId?: number | null
+    branchId?: string | null
     createDate?: Date | string | null
     details?: CSDetailUncheckedCreateNestedManyWithoutSaleInput
   }
@@ -68516,7 +67059,7 @@ export namespace Prisma {
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     customer?: CustomerUpdateOneWithoutSalesNestedInput
     details?: CSDetailUpdateManyWithoutSaleNestedInput
@@ -68535,7 +67078,7 @@ export namespace Prisma {
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     details?: CSDetailUncheckedUpdateManyWithoutSaleNestedInput
   }
@@ -68553,7 +67096,7 @@ export namespace Prisma {
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
-    branchId?: number | null
+    branchId?: string | null
     createDate?: Date | string | null
   }
 
@@ -68569,7 +67112,7 @@ export namespace Prisma {
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -68586,7 +67129,7 @@ export namespace Prisma {
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -68684,7 +67227,7 @@ export namespace Prisma {
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
-    branchId?: number | null
+    branchId?: string | null
     customer?: CustomerCreateNestedOneWithoutSalesVatInput
     details?: CSVDetailCreateNestedManyWithoutSaleInput
   }
@@ -68701,7 +67244,7 @@ export namespace Prisma {
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
-    branchId?: number | null
+    branchId?: string | null
     details?: CSVDetailUncheckedCreateNestedManyWithoutSaleInput
   }
 
@@ -68716,7 +67259,7 @@ export namespace Prisma {
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneWithoutSalesVatNestedInput
     details?: CSVDetailUpdateManyWithoutSaleNestedInput
   }
@@ -68733,7 +67276,7 @@ export namespace Prisma {
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     details?: CSVDetailUncheckedUpdateManyWithoutSaleNestedInput
   }
 
@@ -68749,7 +67292,7 @@ export namespace Prisma {
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type CSVMasterUpdateManyMutationInput = {
@@ -68763,7 +67306,7 @@ export namespace Prisma {
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CSVMasterUncheckedUpdateManyInput = {
@@ -68778,7 +67321,7 @@ export namespace Prisma {
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CSVDetailCreateInput = {
@@ -68881,7 +67424,7 @@ export namespace Prisma {
     somstrIsActive?: boolean | null
     somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
     somstrChange?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
@@ -68907,7 +67450,7 @@ export namespace Prisma {
     somstrIsActive?: boolean | null
     somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
     somstrChange?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
@@ -68933,7 +67476,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68959,7 +67502,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -68985,7 +67528,7 @@ export namespace Prisma {
     somstrIsActive?: boolean | null
     somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
     somstrChange?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
@@ -69010,7 +67553,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69034,7 +67577,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69055,7 +67598,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     sale?: t_SOMstrCreateNestedOneWithoutDetailsInput
     item?: Item_InformationCreateNestedOneWithoutRunningSaleDetailsInput
   }
@@ -69075,7 +67618,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_SODetUpdateInput = {
@@ -69091,7 +67634,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     sale?: t_SOMstrUpdateOneWithoutDetailsNestedInput
     item?: Item_InformationUpdateOneWithoutRunningSaleDetailsNestedInput
   }
@@ -69111,7 +67654,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SODetCreateManyInput = {
@@ -69129,7 +67672,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_SODetUpdateManyMutationInput = {
@@ -69145,7 +67688,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SODetUncheckedUpdateManyInput = {
@@ -69163,7 +67706,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SOMstVCreateInput = {
@@ -69183,7 +67726,7 @@ export namespace Prisma {
     somstrIsActive?: boolean | null
     somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
     somstrChange?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
@@ -69208,7 +67751,7 @@ export namespace Prisma {
     somstrIsActive?: boolean | null
     somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
     somstrChange?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
@@ -69233,7 +67776,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69258,7 +67801,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69283,7 +67826,7 @@ export namespace Prisma {
     somstrIsActive?: boolean | null
     somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
     somstrChange?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
@@ -69307,7 +67850,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69331,7 +67874,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69351,7 +67894,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     sale?: t_SOMstVCreateNestedOneWithoutDetailsInput
     item?: Item_InformationCreateNestedOneWithoutRunningSaleVatDetailsInput
   }
@@ -69371,7 +67914,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_SODeVUpdateInput = {
@@ -69387,7 +67930,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     sale?: t_SOMstVUpdateOneWithoutDetailsNestedInput
     item?: Item_InformationUpdateOneWithoutRunningSaleVatDetailsNestedInput
   }
@@ -69407,7 +67950,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SODeVCreateManyInput = {
@@ -69425,7 +67968,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_SODeVUpdateManyMutationInput = {
@@ -69441,7 +67984,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SODeVUncheckedUpdateManyInput = {
@@ -69459,7 +68002,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AsstMsrtCreateInput = {
@@ -69480,7 +68023,7 @@ export namespace Prisma {
     isActive?: boolean | null
     customerpay?: Decimal | DecimalJsLike | number | string | null
     change?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     discountRemarks?: string | null
     details?: AsstDetCreateNestedManyWithoutSaleInput
   }
@@ -69503,7 +68046,7 @@ export namespace Prisma {
     isActive?: boolean | null
     customerpay?: Decimal | DecimalJsLike | number | string | null
     change?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     discountRemarks?: string | null
     details?: AsstDetUncheckedCreateNestedManyWithoutSaleInput
   }
@@ -69526,7 +68069,7 @@ export namespace Prisma {
     isActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     change?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     details?: AsstDetUpdateManyWithoutSaleNestedInput
   }
@@ -69549,7 +68092,7 @@ export namespace Prisma {
     isActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     change?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     details?: AsstDetUncheckedUpdateManyWithoutSaleNestedInput
   }
@@ -69572,7 +68115,7 @@ export namespace Prisma {
     isActive?: boolean | null
     customerpay?: Decimal | DecimalJsLike | number | string | null
     change?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     discountRemarks?: string | null
   }
 
@@ -69594,7 +68137,7 @@ export namespace Prisma {
     isActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     change?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -69616,7 +68159,7 @@ export namespace Prisma {
     isActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     change?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -69746,7 +68289,7 @@ export namespace Prisma {
     ncmstrUpdateBy?: string | null
     ncmstrUpdateDate?: Date | string | null
     ncmstrIsActive?: boolean | null
-    branchId?: number | null
+    branchId?: string | null
     ncmstrName?: string | null
     ncmstrContactNo?: string | null
     ncmstrReference?: string | null
@@ -69762,7 +68305,7 @@ export namespace Prisma {
     ncmstrUpdateBy?: string | null
     ncmstrUpdateDate?: Date | string | null
     ncmstrIsActive?: boolean | null
-    branchId?: number | null
+    branchId?: string | null
     ncmstrName?: string | null
     ncmstrContactNo?: string | null
     ncmstrReference?: string | null
@@ -69778,7 +68321,7 @@ export namespace Prisma {
     ncmstrUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ncmstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrName?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrContactNo?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrReference?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69794,7 +68337,7 @@ export namespace Prisma {
     ncmstrUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ncmstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrName?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrContactNo?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrReference?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69810,7 +68353,7 @@ export namespace Prisma {
     ncmstrUpdateBy?: string | null
     ncmstrUpdateDate?: Date | string | null
     ncmstrIsActive?: boolean | null
-    branchId?: number | null
+    branchId?: string | null
     ncmstrName?: string | null
     ncmstrContactNo?: string | null
     ncmstrReference?: string | null
@@ -69825,7 +68368,7 @@ export namespace Prisma {
     ncmstrUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ncmstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrName?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrContactNo?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrReference?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69840,7 +68383,7 @@ export namespace Prisma {
     ncmstrUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ncmstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrName?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrContactNo?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrReference?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69859,7 +68402,7 @@ export namespace Prisma {
     ncdetVATAmount?: Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     sale?: t_NCMstrCreateNestedOneWithoutDetailsInput
     item?: Item_InformationCreateNestedOneWithoutNcDetailsInput
   }
@@ -69879,7 +68422,7 @@ export namespace Prisma {
     ncdetVATAmount?: Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_NCDetUpdateInput = {
@@ -69895,7 +68438,7 @@ export namespace Prisma {
     ncdetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     sale?: t_NCMstrUpdateOneWithoutDetailsNestedInput
     item?: Item_InformationUpdateOneWithoutNcDetailsNestedInput
   }
@@ -69915,7 +68458,7 @@ export namespace Prisma {
     ncdetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_NCDetCreateManyInput = {
@@ -69933,7 +68476,7 @@ export namespace Prisma {
     ncdetVATAmount?: Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_NCDetUpdateManyMutationInput = {
@@ -69949,7 +68492,7 @@ export namespace Prisma {
     ncdetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_NCDetUncheckedUpdateManyInput = {
@@ -69967,7 +68510,7 @@ export namespace Prisma {
     ncdetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Item_ReceiveCreateInput = {
@@ -69982,8 +68525,8 @@ export namespace Prisma {
     createDate?: Date | string | null
     updateBy?: string | null
     updateDate?: Date | string | null
-    branchId: number
-    receiveBranchID?: number | null
+    branchId: string
+    receiveBranchID?: string | null
     item?: Item_InformationCreateNestedOneWithoutItemReceivesInput
   }
 
@@ -70000,8 +68543,8 @@ export namespace Prisma {
     createDate?: Date | string | null
     updateBy?: string | null
     updateDate?: Date | string | null
-    branchId: number
-    receiveBranchID?: number | null
+    branchId: string
+    receiveBranchID?: string | null
   }
 
   export type Item_ReceiveUpdateInput = {
@@ -70016,8 +68559,8 @@ export namespace Prisma {
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
-    receiveBranchID?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: StringFieldUpdateOperationsInput | string
+    receiveBranchID?: NullableStringFieldUpdateOperationsInput | string | null
     item?: Item_InformationUpdateOneWithoutItemReceivesNestedInput
   }
 
@@ -70034,8 +68577,8 @@ export namespace Prisma {
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
-    receiveBranchID?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: StringFieldUpdateOperationsInput | string
+    receiveBranchID?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Item_ReceiveCreateManyInput = {
@@ -70051,8 +68594,8 @@ export namespace Prisma {
     createDate?: Date | string | null
     updateBy?: string | null
     updateDate?: Date | string | null
-    branchId: number
-    receiveBranchID?: number | null
+    branchId: string
+    receiveBranchID?: string | null
   }
 
   export type Item_ReceiveUpdateManyMutationInput = {
@@ -70067,8 +68610,8 @@ export namespace Prisma {
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
-    receiveBranchID?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: StringFieldUpdateOperationsInput | string
+    receiveBranchID?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Item_ReceiveUncheckedUpdateManyInput = {
@@ -70084,8 +68627,8 @@ export namespace Prisma {
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
-    receiveBranchID?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: StringFieldUpdateOperationsInput | string
+    receiveBranchID?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Item_IssueCreateInput = {
@@ -70095,8 +68638,8 @@ export namespace Prisma {
     unitPrice?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     issueDate?: Date | string | null
-    issueBranchId: number
-    receiveBranchId: number
+    issueBranchId: string
+    receiveBranchId: string
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -70113,8 +68656,8 @@ export namespace Prisma {
     unitPrice?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     issueDate?: Date | string | null
-    issueBranchId: number
-    receiveBranchId: number
+    issueBranchId: string
+    receiveBranchId: string
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -70129,8 +68672,8 @@ export namespace Prisma {
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    issueBranchId?: IntFieldUpdateOperationsInput | number
-    receiveBranchId?: IntFieldUpdateOperationsInput | number
+    issueBranchId?: StringFieldUpdateOperationsInput | string
+    receiveBranchId?: StringFieldUpdateOperationsInput | string
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70147,8 +68690,8 @@ export namespace Prisma {
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    issueBranchId?: IntFieldUpdateOperationsInput | number
-    receiveBranchId?: IntFieldUpdateOperationsInput | number
+    issueBranchId?: StringFieldUpdateOperationsInput | string
+    receiveBranchId?: StringFieldUpdateOperationsInput | string
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70164,8 +68707,8 @@ export namespace Prisma {
     unitPrice?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     issueDate?: Date | string | null
-    issueBranchId: number
-    receiveBranchId: number
+    issueBranchId: string
+    receiveBranchId: string
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -70180,8 +68723,8 @@ export namespace Prisma {
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    issueBranchId?: IntFieldUpdateOperationsInput | number
-    receiveBranchId?: IntFieldUpdateOperationsInput | number
+    issueBranchId?: StringFieldUpdateOperationsInput | string
+    receiveBranchId?: StringFieldUpdateOperationsInput | string
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70197,8 +68740,8 @@ export namespace Prisma {
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    issueBranchId?: IntFieldUpdateOperationsInput | number
-    receiveBranchId?: IntFieldUpdateOperationsInput | number
+    issueBranchId?: StringFieldUpdateOperationsInput | string
+    receiveBranchId?: StringFieldUpdateOperationsInput | string
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70213,7 +68756,7 @@ export namespace Prisma {
     excess?: Decimal | DecimalJsLike | number | string | null
     short?: Decimal | DecimalJsLike | number | string | null
     date?: Date | string | null
-    branchId?: number | null
+    branchId?: string | null
     assort?: Decimal | DecimalJsLike | number | string | null
     isActive?: number | null
     item?: Item_InformationCreateNestedOneWithoutItemRejectsInput
@@ -70227,7 +68770,7 @@ export namespace Prisma {
     excess?: Decimal | DecimalJsLike | number | string | null
     short?: Decimal | DecimalJsLike | number | string | null
     date?: Date | string | null
-    branchId?: number | null
+    branchId?: string | null
     assort?: Decimal | DecimalJsLike | number | string | null
     isActive?: number | null
   }
@@ -70239,7 +68782,7 @@ export namespace Prisma {
     excess?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     short?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     assort?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     item?: Item_InformationUpdateOneWithoutItemRejectsNestedInput
@@ -70253,7 +68796,7 @@ export namespace Prisma {
     excess?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     short?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     assort?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
   }
@@ -70266,7 +68809,7 @@ export namespace Prisma {
     excess?: Decimal | DecimalJsLike | number | string | null
     short?: Decimal | DecimalJsLike | number | string | null
     date?: Date | string | null
-    branchId?: number | null
+    branchId?: string | null
     assort?: Decimal | DecimalJsLike | number | string | null
     isActive?: number | null
   }
@@ -70278,7 +68821,7 @@ export namespace Prisma {
     excess?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     short?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     assort?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
   }
@@ -70291,7 +68834,7 @@ export namespace Prisma {
     excess?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     short?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     assort?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
   }
@@ -70418,7 +68961,7 @@ export namespace Prisma {
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
-    branchId: number
+    branchId: string
     packet?: PacketInfoCreateNestedOneWithoutReceivesInput
   }
 
@@ -70432,7 +68975,7 @@ export namespace Prisma {
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
-    branchId: number
+    branchId: string
   }
 
   export type Packet_ReceiveUpdateInput = {
@@ -70444,7 +68987,7 @@ export namespace Prisma {
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
+    branchId?: StringFieldUpdateOperationsInput | string
     packet?: PacketInfoUpdateOneWithoutReceivesNestedInput
   }
 
@@ -70458,7 +69001,7 @@ export namespace Prisma {
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
+    branchId?: StringFieldUpdateOperationsInput | string
   }
 
   export type Packet_ReceiveCreateManyInput = {
@@ -70471,7 +69014,7 @@ export namespace Prisma {
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
-    branchId: number
+    branchId: string
   }
 
   export type Packet_ReceiveUpdateManyMutationInput = {
@@ -70483,7 +69026,7 @@ export namespace Prisma {
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
+    branchId?: StringFieldUpdateOperationsInput | string
   }
 
   export type Packet_ReceiveUncheckedUpdateManyInput = {
@@ -70496,7 +69039,7 @@ export namespace Prisma {
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
+    branchId?: StringFieldUpdateOperationsInput | string
   }
 
   export type Packet_IssueCreateInput = {
@@ -70511,7 +69054,7 @@ export namespace Prisma {
     createBy?: string | null
     createDate?: Date | string | null
     updateBy?: string | null
-    branchId: number
+    branchId: string
     packet?: PacketInfoCreateNestedOneWithoutIssuesInput
   }
 
@@ -70528,7 +69071,7 @@ export namespace Prisma {
     createBy?: string | null
     createDate?: Date | string | null
     updateBy?: string | null
-    branchId: number
+    branchId: string
   }
 
   export type Packet_IssueUpdateInput = {
@@ -70543,7 +69086,7 @@ export namespace Prisma {
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
+    branchId?: StringFieldUpdateOperationsInput | string
     packet?: PacketInfoUpdateOneWithoutIssuesNestedInput
   }
 
@@ -70560,7 +69103,7 @@ export namespace Prisma {
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
+    branchId?: StringFieldUpdateOperationsInput | string
   }
 
   export type Packet_IssueCreateManyInput = {
@@ -70576,7 +69119,7 @@ export namespace Prisma {
     createBy?: string | null
     createDate?: Date | string | null
     updateBy?: string | null
-    branchId: number
+    branchId: string
   }
 
   export type Packet_IssueUpdateManyMutationInput = {
@@ -70591,7 +69134,7 @@ export namespace Prisma {
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
+    branchId?: StringFieldUpdateOperationsInput | string
   }
 
   export type Packet_IssueUncheckedUpdateManyInput = {
@@ -70607,7 +69150,7 @@ export namespace Prisma {
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
+    branchId?: StringFieldUpdateOperationsInput | string
   }
 
   export type OrderReceive_MasterCreateInput = {
@@ -70621,7 +69164,7 @@ export namespace Prisma {
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
     cType?: string | null
-    branchId?: number | null
+    branchId?: string | null
     deliveryTime?: Date | string | null
     isActive?: number | null
     createBy?: string | null
@@ -70642,7 +69185,7 @@ export namespace Prisma {
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
     cType?: string | null
-    branchId?: number | null
+    branchId?: string | null
     deliveryTime?: Date | string | null
     isActive?: number | null
     createBy?: string | null
@@ -70663,7 +69206,7 @@ export namespace Prisma {
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70684,7 +69227,7 @@ export namespace Prisma {
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70705,7 +69248,7 @@ export namespace Prisma {
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
     cType?: string | null
-    branchId?: number | null
+    branchId?: string | null
     deliveryTime?: Date | string | null
     isActive?: number | null
     createBy?: string | null
@@ -70725,7 +69268,7 @@ export namespace Prisma {
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70745,7 +69288,7 @@ export namespace Prisma {
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70839,7 +69382,7 @@ export namespace Prisma {
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
     cType?: string | null
-    branchId?: number | null
+    branchId?: string | null
     deliveryTime?: Date | string | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -70857,7 +69400,7 @@ export namespace Prisma {
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
     cType?: string | null
-    branchId?: number | null
+    branchId?: string | null
     deliveryTime?: Date | string | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -70875,7 +69418,7 @@ export namespace Prisma {
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70893,7 +69436,7 @@ export namespace Prisma {
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70911,7 +69454,7 @@ export namespace Prisma {
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
     cType?: string | null
-    branchId?: number | null
+    branchId?: string | null
     deliveryTime?: Date | string | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -70928,7 +69471,7 @@ export namespace Prisma {
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -70945,7 +69488,7 @@ export namespace Prisma {
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -71020,7 +69563,7 @@ export namespace Prisma {
     cashSale: Decimal | DecimalJsLike | number | string
     cardSale: Decimal | DecimalJsLike | number | string
     date?: Date | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_SaleAmountPostUncheckedCreateInput = {
@@ -71028,7 +69571,7 @@ export namespace Prisma {
     cashSale: Decimal | DecimalJsLike | number | string
     cardSale: Decimal | DecimalJsLike | number | string
     date?: Date | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_SaleAmountPostUpdateInput = {
@@ -71036,7 +69579,7 @@ export namespace Prisma {
     cashSale?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cardSale?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SaleAmountPostUncheckedUpdateInput = {
@@ -71044,7 +69587,7 @@ export namespace Prisma {
     cashSale?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cardSale?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SaleAmountPostCreateManyInput = {
@@ -71052,7 +69595,7 @@ export namespace Prisma {
     cashSale: Decimal | DecimalJsLike | number | string
     cardSale: Decimal | DecimalJsLike | number | string
     date?: Date | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_SaleAmountPostUpdateManyMutationInput = {
@@ -71060,7 +69603,7 @@ export namespace Prisma {
     cashSale?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cardSale?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SaleAmountPostUncheckedUpdateManyInput = {
@@ -71068,83 +69611,7 @@ export namespace Prisma {
     cashSale?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cardSale?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type MoneyReceiveCreateInput = {
-    id?: string
-    receiptNo: string
-    receiptDate?: Date | string | null
-    amount?: Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: string | null
-    description?: string | null
-    createdBy?: string | null
-    customer?: CustomerCreateNestedOneWithoutMoneyReceivesInput
-  }
-
-  export type MoneyReceiveUncheckedCreateInput = {
-    id?: string
-    receiptNo: string
-    receiptDate?: Date | string | null
-    customerCode?: string | null
-    amount?: Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: string | null
-    description?: string | null
-    createdBy?: string | null
-  }
-
-  export type MoneyReceiveUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    receiptNo?: StringFieldUpdateOperationsInput | string
-    receiptDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-    customer?: CustomerUpdateOneWithoutMoneyReceivesNestedInput
-  }
-
-  export type MoneyReceiveUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    receiptNo?: StringFieldUpdateOperationsInput | string
-    receiptDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    customerCode?: NullableStringFieldUpdateOperationsInput | string | null
-    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type MoneyReceiveCreateManyInput = {
-    id?: string
-    receiptNo: string
-    receiptDate?: Date | string | null
-    customerCode?: string | null
-    amount?: Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: string | null
-    description?: string | null
-    createdBy?: string | null
-  }
-
-  export type MoneyReceiveUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    receiptNo?: StringFieldUpdateOperationsInput | string
-    receiptDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type MoneyReceiveUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    receiptNo?: StringFieldUpdateOperationsInput | string
-    receiptDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    customerCode?: NullableStringFieldUpdateOperationsInput | string | null
-    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CashPurchaseCreateInput = {
@@ -72351,12 +70818,6 @@ export namespace Prisma {
     none?: Client_TransactionWhereInput
   }
 
-  export type MoneyReceiveListRelationFilter = {
-    every?: MoneyReceiveWhereInput
-    some?: MoneyReceiveWhereInput
-    none?: MoneyReceiveWhereInput
-  }
-
   export type CSMasterOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -72366,10 +70827,6 @@ export namespace Prisma {
   }
 
   export type Client_TransactionOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type MoneyReceiveOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -72429,6 +70886,7 @@ export namespace Prisma {
     moneyReceptNo?: SortOrder
     bankName?: SortOrder
     bankNo?: SortOrder
+    branchId?: SortOrder
   }
 
   export type Client_TransactionAvgOrderByAggregateInput = {
@@ -72445,6 +70903,7 @@ export namespace Prisma {
     moneyReceptNo?: SortOrder
     bankName?: SortOrder
     bankNo?: SortOrder
+    branchId?: SortOrder
   }
 
   export type Client_TransactionMinOrderByAggregateInput = {
@@ -72457,6 +70916,7 @@ export namespace Prisma {
     moneyReceptNo?: SortOrder
     bankName?: SortOrder
     bankNo?: SortOrder
+    branchId?: SortOrder
   }
 
   export type Client_TransactionSumOrderByAggregateInput = {
@@ -72705,7 +71165,6 @@ export namespace Prisma {
   export type RW_StockAvgOrderByAggregateInput = {
     stockQty?: SortOrder
     unitPrice?: SortOrder
-    branchId?: SortOrder
   }
 
   export type RW_StockMaxOrderByAggregateInput = {
@@ -72725,7 +71184,6 @@ export namespace Prisma {
   export type RW_StockSumOrderByAggregateInput = {
     stockQty?: SortOrder
     unitPrice?: SortOrder
-    branchId?: SortOrder
   }
 
   export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -72964,7 +71422,6 @@ export namespace Prisma {
     totalDiscount?: SortOrder
     totalVat?: SortOrder
     isActive?: SortOrder
-    branchId?: SortOrder
   }
 
   export type CSMasterMaxOrderByAggregateInput = {
@@ -73006,7 +71463,6 @@ export namespace Prisma {
     totalDiscount?: SortOrder
     totalVat?: SortOrder
     isActive?: SortOrder
-    branchId?: SortOrder
   }
 
   export type CSMasterNullableScalarRelationFilter = {
@@ -73097,7 +71553,6 @@ export namespace Prisma {
     totalAmount?: SortOrder
     totalDiscount?: SortOrder
     totalVat?: SortOrder
-    branchId?: SortOrder
   }
 
   export type CSVMasterMaxOrderByAggregateInput = {
@@ -73134,7 +71589,6 @@ export namespace Prisma {
     totalAmount?: SortOrder
     totalDiscount?: SortOrder
     totalVat?: SortOrder
-    branchId?: SortOrder
   }
 
   export type CSVMasterNullableScalarRelationFilter = {
@@ -73232,7 +71686,6 @@ export namespace Prisma {
     somstrNetAmt?: SortOrder
     somstrCustomerpay?: SortOrder
     somstrChange?: SortOrder
-    branchId?: SortOrder
   }
 
   export type t_SOMstrMaxOrderByAggregateInput = {
@@ -73291,7 +71744,6 @@ export namespace Prisma {
     somstrNetAmt?: SortOrder
     somstrCustomerpay?: SortOrder
     somstrChange?: SortOrder
-    branchId?: SortOrder
   }
 
   export type T_SOMstrNullableScalarRelationFilter = {
@@ -73327,7 +71779,6 @@ export namespace Prisma {
     sodetVATAmount?: SortOrder
     sodetDiscount?: SortOrder
     sodetNetAmount?: SortOrder
-    branchId?: SortOrder
   }
 
   export type t_SODetMaxOrderByAggregateInput = {
@@ -73376,7 +71827,6 @@ export namespace Prisma {
     sodetVATAmount?: SortOrder
     sodetDiscount?: SortOrder
     sodetNetAmount?: SortOrder
-    branchId?: SortOrder
   }
 
   export type t_SOMstVCountOrderByAggregateInput = {
@@ -73409,7 +71859,6 @@ export namespace Prisma {
     somstrNetAmt?: SortOrder
     somstrCustomerpay?: SortOrder
     somstrChange?: SortOrder
-    branchId?: SortOrder
   }
 
   export type t_SOMstVMaxOrderByAggregateInput = {
@@ -73466,7 +71915,6 @@ export namespace Prisma {
     somstrNetAmt?: SortOrder
     somstrCustomerpay?: SortOrder
     somstrChange?: SortOrder
-    branchId?: SortOrder
   }
 
   export type T_SOMstVNullableScalarRelationFilter = {
@@ -73502,7 +71950,6 @@ export namespace Prisma {
     sodetVATAmount?: SortOrder
     sodetDiscount?: SortOrder
     sodetNetAmount?: SortOrder
-    branchId?: SortOrder
   }
 
   export type t_SODeVMaxOrderByAggregateInput = {
@@ -73551,7 +71998,6 @@ export namespace Prisma {
     sodetVATAmount?: SortOrder
     sodetDiscount?: SortOrder
     sodetNetAmount?: SortOrder
-    branchId?: SortOrder
   }
 
   export type AsstMsrtCountOrderByAggregateInput = {
@@ -73582,7 +72028,6 @@ export namespace Prisma {
     netAmt?: SortOrder
     customerpay?: SortOrder
     change?: SortOrder
-    branchId?: SortOrder
   }
 
   export type AsstMsrtMaxOrderByAggregateInput = {
@@ -73635,7 +72080,6 @@ export namespace Prisma {
     netAmt?: SortOrder
     customerpay?: SortOrder
     change?: SortOrder
-    branchId?: SortOrder
   }
 
   export type AsstMsrtNullableScalarRelationFilter = {
@@ -73733,10 +72177,6 @@ export namespace Prisma {
     ncmstrReference?: SortOrder
   }
 
-  export type t_NCMstrAvgOrderByAggregateInput = {
-    branchId?: SortOrder
-  }
-
   export type t_NCMstrMaxOrderByAggregateInput = {
     id?: SortOrder
     ncmstrCode?: SortOrder
@@ -73765,10 +72205,6 @@ export namespace Prisma {
     ncmstrName?: SortOrder
     ncmstrContactNo?: SortOrder
     ncmstrReference?: SortOrder
-  }
-
-  export type t_NCMstrSumOrderByAggregateInput = {
-    branchId?: SortOrder
   }
 
   export type T_NCMstrNullableScalarRelationFilter = {
@@ -73804,7 +72240,6 @@ export namespace Prisma {
     ncdetVATAmount?: SortOrder
     ncdetDiscount?: SortOrder
     ncdetNetAmount?: SortOrder
-    branchId?: SortOrder
   }
 
   export type t_NCDetMaxOrderByAggregateInput = {
@@ -73853,7 +72288,6 @@ export namespace Prisma {
     ncdetVATAmount?: SortOrder
     ncdetDiscount?: SortOrder
     ncdetNetAmount?: SortOrder
-    branchId?: SortOrder
   }
 
   export type Item_ReceiveCountOrderByAggregateInput = {
@@ -73876,8 +72310,6 @@ export namespace Prisma {
   export type Item_ReceiveAvgOrderByAggregateInput = {
     qty?: SortOrder
     isActive?: SortOrder
-    branchId?: SortOrder
-    receiveBranchID?: SortOrder
   }
 
   export type Item_ReceiveMaxOrderByAggregateInput = {
@@ -73917,8 +72349,6 @@ export namespace Prisma {
   export type Item_ReceiveSumOrderByAggregateInput = {
     qty?: SortOrder
     isActive?: SortOrder
-    branchId?: SortOrder
-    receiveBranchID?: SortOrder
   }
 
   export type Item_IssueCountOrderByAggregateInput = {
@@ -73941,8 +72371,6 @@ export namespace Prisma {
   export type Item_IssueAvgOrderByAggregateInput = {
     unitPrice?: SortOrder
     qty?: SortOrder
-    issueBranchId?: SortOrder
-    receiveBranchId?: SortOrder
     isActive?: SortOrder
   }
 
@@ -73983,8 +72411,6 @@ export namespace Prisma {
   export type Item_IssueSumOrderByAggregateInput = {
     unitPrice?: SortOrder
     qty?: SortOrder
-    issueBranchId?: SortOrder
-    receiveBranchId?: SortOrder
     isActive?: SortOrder
   }
 
@@ -74005,7 +72431,6 @@ export namespace Prisma {
     reject?: SortOrder
     excess?: SortOrder
     short?: SortOrder
-    branchId?: SortOrder
     assort?: SortOrder
     isActive?: SortOrder
   }
@@ -74040,7 +72465,6 @@ export namespace Prisma {
     reject?: SortOrder
     excess?: SortOrder
     short?: SortOrder
-    branchId?: SortOrder
     assort?: SortOrder
     isActive?: SortOrder
   }
@@ -74143,7 +72567,6 @@ export namespace Prisma {
   export type Packet_ReceiveAvgOrderByAggregateInput = {
     qty?: SortOrder
     isActive?: SortOrder
-    branchId?: SortOrder
   }
 
   export type Packet_ReceiveMaxOrderByAggregateInput = {
@@ -74175,7 +72598,6 @@ export namespace Prisma {
   export type Packet_ReceiveSumOrderByAggregateInput = {
     qty?: SortOrder
     isActive?: SortOrder
-    branchId?: SortOrder
   }
 
   export type Packet_IssueCountOrderByAggregateInput = {
@@ -74197,7 +72619,6 @@ export namespace Prisma {
   export type Packet_IssueAvgOrderByAggregateInput = {
     qty?: SortOrder
     isActive?: SortOrder
-    branchId?: SortOrder
   }
 
   export type Packet_IssueMaxOrderByAggregateInput = {
@@ -74235,7 +72656,6 @@ export namespace Prisma {
   export type Packet_IssueSumOrderByAggregateInput = {
     qty?: SortOrder
     isActive?: SortOrder
-    branchId?: SortOrder
   }
 
   export type OrderReceive_DetailListRelationFilter = {
@@ -74272,7 +72692,6 @@ export namespace Prisma {
     advance?: SortOrder
     totalPrice?: SortOrder
     discount?: SortOrder
-    branchId?: SortOrder
     isActive?: SortOrder
   }
 
@@ -74320,7 +72739,6 @@ export namespace Prisma {
     advance?: SortOrder
     totalPrice?: SortOrder
     discount?: SortOrder
-    branchId?: SortOrder
     isActive?: SortOrder
   }
 
@@ -74405,7 +72823,6 @@ export namespace Prisma {
 
   export type VOrderReceive_MasterAvgOrderByAggregateInput = {
     advance?: SortOrder
-    branchId?: SortOrder
   }
 
   export type VOrderReceive_MasterMaxOrderByAggregateInput = {
@@ -74444,7 +72861,6 @@ export namespace Prisma {
 
   export type VOrderReceive_MasterSumOrderByAggregateInput = {
     advance?: SortOrder
-    branchId?: SortOrder
   }
 
   export type VOrderReceive_MasterNullableScalarRelationFilter = {
@@ -74500,7 +72916,6 @@ export namespace Prisma {
   export type t_SaleAmountPostAvgOrderByAggregateInput = {
     cashSale?: SortOrder
     cardSale?: SortOrder
-    branchId?: SortOrder
   }
 
   export type t_SaleAmountPostMaxOrderByAggregateInput = {
@@ -74522,48 +72937,6 @@ export namespace Prisma {
   export type t_SaleAmountPostSumOrderByAggregateInput = {
     cashSale?: SortOrder
     cardSale?: SortOrder
-    branchId?: SortOrder
-  }
-
-  export type MoneyReceiveCountOrderByAggregateInput = {
-    id?: SortOrder
-    receiptNo?: SortOrder
-    receiptDate?: SortOrder
-    customerCode?: SortOrder
-    amount?: SortOrder
-    paymentMethod?: SortOrder
-    description?: SortOrder
-    createdBy?: SortOrder
-  }
-
-  export type MoneyReceiveAvgOrderByAggregateInput = {
-    amount?: SortOrder
-  }
-
-  export type MoneyReceiveMaxOrderByAggregateInput = {
-    id?: SortOrder
-    receiptNo?: SortOrder
-    receiptDate?: SortOrder
-    customerCode?: SortOrder
-    amount?: SortOrder
-    paymentMethod?: SortOrder
-    description?: SortOrder
-    createdBy?: SortOrder
-  }
-
-  export type MoneyReceiveMinOrderByAggregateInput = {
-    id?: SortOrder
-    receiptNo?: SortOrder
-    receiptDate?: SortOrder
-    customerCode?: SortOrder
-    amount?: SortOrder
-    paymentMethod?: SortOrder
-    description?: SortOrder
-    createdBy?: SortOrder
-  }
-
-  export type MoneyReceiveSumOrderByAggregateInput = {
-    amount?: SortOrder
   }
 
   export type CashPurchaseCountOrderByAggregateInput = {
@@ -75339,13 +73712,6 @@ export namespace Prisma {
     connect?: Client_TransactionWhereUniqueInput | Client_TransactionWhereUniqueInput[]
   }
 
-  export type MoneyReceiveCreateNestedManyWithoutCustomerInput = {
-    create?: XOR<MoneyReceiveCreateWithoutCustomerInput, MoneyReceiveUncheckedCreateWithoutCustomerInput> | MoneyReceiveCreateWithoutCustomerInput[] | MoneyReceiveUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: MoneyReceiveCreateOrConnectWithoutCustomerInput | MoneyReceiveCreateOrConnectWithoutCustomerInput[]
-    createMany?: MoneyReceiveCreateManyCustomerInputEnvelope
-    connect?: MoneyReceiveWhereUniqueInput | MoneyReceiveWhereUniqueInput[]
-  }
-
   export type CSMasterUncheckedCreateNestedManyWithoutCustomerInput = {
     create?: XOR<CSMasterCreateWithoutCustomerInput, CSMasterUncheckedCreateWithoutCustomerInput> | CSMasterCreateWithoutCustomerInput[] | CSMasterUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: CSMasterCreateOrConnectWithoutCustomerInput | CSMasterCreateOrConnectWithoutCustomerInput[]
@@ -75365,13 +73731,6 @@ export namespace Prisma {
     connectOrCreate?: Client_TransactionCreateOrConnectWithoutCustomerInput | Client_TransactionCreateOrConnectWithoutCustomerInput[]
     createMany?: Client_TransactionCreateManyCustomerInputEnvelope
     connect?: Client_TransactionWhereUniqueInput | Client_TransactionWhereUniqueInput[]
-  }
-
-  export type MoneyReceiveUncheckedCreateNestedManyWithoutCustomerInput = {
-    create?: XOR<MoneyReceiveCreateWithoutCustomerInput, MoneyReceiveUncheckedCreateWithoutCustomerInput> | MoneyReceiveCreateWithoutCustomerInput[] | MoneyReceiveUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: MoneyReceiveCreateOrConnectWithoutCustomerInput | MoneyReceiveCreateOrConnectWithoutCustomerInput[]
-    createMany?: MoneyReceiveCreateManyCustomerInputEnvelope
-    connect?: MoneyReceiveWhereUniqueInput | MoneyReceiveWhereUniqueInput[]
   }
 
   export type CSMasterUpdateManyWithoutCustomerNestedInput = {
@@ -75416,20 +73775,6 @@ export namespace Prisma {
     deleteMany?: Client_TransactionScalarWhereInput | Client_TransactionScalarWhereInput[]
   }
 
-  export type MoneyReceiveUpdateManyWithoutCustomerNestedInput = {
-    create?: XOR<MoneyReceiveCreateWithoutCustomerInput, MoneyReceiveUncheckedCreateWithoutCustomerInput> | MoneyReceiveCreateWithoutCustomerInput[] | MoneyReceiveUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: MoneyReceiveCreateOrConnectWithoutCustomerInput | MoneyReceiveCreateOrConnectWithoutCustomerInput[]
-    upsert?: MoneyReceiveUpsertWithWhereUniqueWithoutCustomerInput | MoneyReceiveUpsertWithWhereUniqueWithoutCustomerInput[]
-    createMany?: MoneyReceiveCreateManyCustomerInputEnvelope
-    set?: MoneyReceiveWhereUniqueInput | MoneyReceiveWhereUniqueInput[]
-    disconnect?: MoneyReceiveWhereUniqueInput | MoneyReceiveWhereUniqueInput[]
-    delete?: MoneyReceiveWhereUniqueInput | MoneyReceiveWhereUniqueInput[]
-    connect?: MoneyReceiveWhereUniqueInput | MoneyReceiveWhereUniqueInput[]
-    update?: MoneyReceiveUpdateWithWhereUniqueWithoutCustomerInput | MoneyReceiveUpdateWithWhereUniqueWithoutCustomerInput[]
-    updateMany?: MoneyReceiveUpdateManyWithWhereWithoutCustomerInput | MoneyReceiveUpdateManyWithWhereWithoutCustomerInput[]
-    deleteMany?: MoneyReceiveScalarWhereInput | MoneyReceiveScalarWhereInput[]
-  }
-
   export type CSMasterUncheckedUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<CSMasterCreateWithoutCustomerInput, CSMasterUncheckedCreateWithoutCustomerInput> | CSMasterCreateWithoutCustomerInput[] | CSMasterUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: CSMasterCreateOrConnectWithoutCustomerInput | CSMasterCreateOrConnectWithoutCustomerInput[]
@@ -75470,20 +73815,6 @@ export namespace Prisma {
     update?: Client_TransactionUpdateWithWhereUniqueWithoutCustomerInput | Client_TransactionUpdateWithWhereUniqueWithoutCustomerInput[]
     updateMany?: Client_TransactionUpdateManyWithWhereWithoutCustomerInput | Client_TransactionUpdateManyWithWhereWithoutCustomerInput[]
     deleteMany?: Client_TransactionScalarWhereInput | Client_TransactionScalarWhereInput[]
-  }
-
-  export type MoneyReceiveUncheckedUpdateManyWithoutCustomerNestedInput = {
-    create?: XOR<MoneyReceiveCreateWithoutCustomerInput, MoneyReceiveUncheckedCreateWithoutCustomerInput> | MoneyReceiveCreateWithoutCustomerInput[] | MoneyReceiveUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: MoneyReceiveCreateOrConnectWithoutCustomerInput | MoneyReceiveCreateOrConnectWithoutCustomerInput[]
-    upsert?: MoneyReceiveUpsertWithWhereUniqueWithoutCustomerInput | MoneyReceiveUpsertWithWhereUniqueWithoutCustomerInput[]
-    createMany?: MoneyReceiveCreateManyCustomerInputEnvelope
-    set?: MoneyReceiveWhereUniqueInput | MoneyReceiveWhereUniqueInput[]
-    disconnect?: MoneyReceiveWhereUniqueInput | MoneyReceiveWhereUniqueInput[]
-    delete?: MoneyReceiveWhereUniqueInput | MoneyReceiveWhereUniqueInput[]
-    connect?: MoneyReceiveWhereUniqueInput | MoneyReceiveWhereUniqueInput[]
-    update?: MoneyReceiveUpdateWithWhereUniqueWithoutCustomerInput | MoneyReceiveUpdateWithWhereUniqueWithoutCustomerInput[]
-    updateMany?: MoneyReceiveUpdateManyWithWhereWithoutCustomerInput | MoneyReceiveUpdateManyWithWhereWithoutCustomerInput[]
-    deleteMany?: MoneyReceiveScalarWhereInput | MoneyReceiveScalarWhereInput[]
   }
 
   export type CustomerCreateNestedOneWithoutClientTransactionsInput = {
@@ -76736,22 +75067,6 @@ export namespace Prisma {
     update?: XOR<XOR<VOrderReceive_MasterUpdateToOneWithWhereWithoutDetailsInput, VOrderReceive_MasterUpdateWithoutDetailsInput>, VOrderReceive_MasterUncheckedUpdateWithoutDetailsInput>
   }
 
-  export type CustomerCreateNestedOneWithoutMoneyReceivesInput = {
-    create?: XOR<CustomerCreateWithoutMoneyReceivesInput, CustomerUncheckedCreateWithoutMoneyReceivesInput>
-    connectOrCreate?: CustomerCreateOrConnectWithoutMoneyReceivesInput
-    connect?: CustomerWhereUniqueInput
-  }
-
-  export type CustomerUpdateOneWithoutMoneyReceivesNestedInput = {
-    create?: XOR<CustomerCreateWithoutMoneyReceivesInput, CustomerUncheckedCreateWithoutMoneyReceivesInput>
-    connectOrCreate?: CustomerCreateOrConnectWithoutMoneyReceivesInput
-    upsert?: CustomerUpsertWithoutMoneyReceivesInput
-    disconnect?: CustomerWhereInput | boolean
-    delete?: CustomerWhereInput | boolean
-    connect?: CustomerWhereUniqueInput
-    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutMoneyReceivesInput, CustomerUpdateWithoutMoneyReceivesInput>, CustomerUncheckedUpdateWithoutMoneyReceivesInput>
-  }
-
   export type NestedUuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -77512,7 +75827,7 @@ export namespace Prisma {
     somstrIsActive?: boolean | null
     somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
     somstrChange?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
@@ -77537,7 +75852,7 @@ export namespace Prisma {
     somstrIsActive?: boolean | null
     somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
     somstrChange?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
@@ -77591,7 +75906,7 @@ export namespace Prisma {
     somstrIsActive?: BoolNullableFilter<"t_SOMstr"> | boolean | null
     somstrCustomerpay?: DecimalNullableFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
     somstrChange?: DecimalNullableFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"t_SOMstr"> | number | null
+    branchId?: UuidNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableFilter<"t_SOMstr"> | string | null
@@ -78382,7 +76697,7 @@ export namespace Prisma {
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
-    branchId?: number | null
+    branchId?: string | null
     createDate?: Date | string | null
     details?: CSDetailCreateNestedManyWithoutSaleInput
   }
@@ -78399,7 +76714,7 @@ export namespace Prisma {
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
-    branchId?: number | null
+    branchId?: string | null
     createDate?: Date | string | null
     details?: CSDetailUncheckedCreateNestedManyWithoutSaleInput
   }
@@ -78425,7 +76740,7 @@ export namespace Prisma {
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
-    branchId?: number | null
+    branchId?: string | null
     details?: CSVDetailCreateNestedManyWithoutSaleInput
   }
 
@@ -78440,7 +76755,7 @@ export namespace Prisma {
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
-    branchId?: number | null
+    branchId?: string | null
     details?: CSVDetailUncheckedCreateNestedManyWithoutSaleInput
   }
 
@@ -78463,6 +76778,7 @@ export namespace Prisma {
     moneyReceptNo?: string | null
     bankName?: string | null
     bankNo?: string | null
+    branchId?: string | null
   }
 
   export type Client_TransactionUncheckedCreateWithoutCustomerInput = {
@@ -78474,6 +76790,7 @@ export namespace Prisma {
     moneyReceptNo?: string | null
     bankName?: string | null
     bankNo?: string | null
+    branchId?: string | null
   }
 
   export type Client_TransactionCreateOrConnectWithoutCustomerInput = {
@@ -78483,36 +76800,6 @@ export namespace Prisma {
 
   export type Client_TransactionCreateManyCustomerInputEnvelope = {
     data: Client_TransactionCreateManyCustomerInput | Client_TransactionCreateManyCustomerInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type MoneyReceiveCreateWithoutCustomerInput = {
-    id?: string
-    receiptNo: string
-    receiptDate?: Date | string | null
-    amount?: Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: string | null
-    description?: string | null
-    createdBy?: string | null
-  }
-
-  export type MoneyReceiveUncheckedCreateWithoutCustomerInput = {
-    id?: string
-    receiptNo: string
-    receiptDate?: Date | string | null
-    amount?: Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: string | null
-    description?: string | null
-    createdBy?: string | null
-  }
-
-  export type MoneyReceiveCreateOrConnectWithoutCustomerInput = {
-    where: MoneyReceiveWhereUniqueInput
-    create: XOR<MoneyReceiveCreateWithoutCustomerInput, MoneyReceiveUncheckedCreateWithoutCustomerInput>
-  }
-
-  export type MoneyReceiveCreateManyCustomerInputEnvelope = {
-    data: MoneyReceiveCreateManyCustomerInput | MoneyReceiveCreateManyCustomerInput[]
     skipDuplicates?: boolean
   }
 
@@ -78548,7 +76835,7 @@ export namespace Prisma {
     totalVat?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: StringNullableFilter<"CSMaster"> | string | null
     isActive?: IntNullableFilter<"CSMaster"> | number | null
-    branchId?: IntNullableFilter<"CSMaster"> | number | null
+    branchId?: UuidNullableFilter<"CSMaster"> | string | null
     createDate?: DateTimeNullableFilter<"CSMaster"> | Date | string | null
   }
 
@@ -78583,7 +76870,7 @@ export namespace Prisma {
     totalDiscount?: DecimalNullableFilter<"CSVMaster"> | Decimal | DecimalJsLike | number | string | null
     totalVat?: DecimalNullableFilter<"CSVMaster"> | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: StringNullableFilter<"CSVMaster"> | string | null
-    branchId?: IntNullableFilter<"CSVMaster"> | number | null
+    branchId?: UuidNullableFilter<"CSVMaster"> | string | null
   }
 
   export type Client_TransactionUpsertWithWhereUniqueWithoutCustomerInput = {
@@ -78615,36 +76902,7 @@ export namespace Prisma {
     moneyReceptNo?: StringNullableFilter<"Client_Transaction"> | string | null
     bankName?: StringNullableFilter<"Client_Transaction"> | string | null
     bankNo?: StringNullableFilter<"Client_Transaction"> | string | null
-  }
-
-  export type MoneyReceiveUpsertWithWhereUniqueWithoutCustomerInput = {
-    where: MoneyReceiveWhereUniqueInput
-    update: XOR<MoneyReceiveUpdateWithoutCustomerInput, MoneyReceiveUncheckedUpdateWithoutCustomerInput>
-    create: XOR<MoneyReceiveCreateWithoutCustomerInput, MoneyReceiveUncheckedCreateWithoutCustomerInput>
-  }
-
-  export type MoneyReceiveUpdateWithWhereUniqueWithoutCustomerInput = {
-    where: MoneyReceiveWhereUniqueInput
-    data: XOR<MoneyReceiveUpdateWithoutCustomerInput, MoneyReceiveUncheckedUpdateWithoutCustomerInput>
-  }
-
-  export type MoneyReceiveUpdateManyWithWhereWithoutCustomerInput = {
-    where: MoneyReceiveScalarWhereInput
-    data: XOR<MoneyReceiveUpdateManyMutationInput, MoneyReceiveUncheckedUpdateManyWithoutCustomerInput>
-  }
-
-  export type MoneyReceiveScalarWhereInput = {
-    AND?: MoneyReceiveScalarWhereInput | MoneyReceiveScalarWhereInput[]
-    OR?: MoneyReceiveScalarWhereInput[]
-    NOT?: MoneyReceiveScalarWhereInput | MoneyReceiveScalarWhereInput[]
-    id?: UuidFilter<"MoneyReceive"> | string
-    receiptNo?: StringFilter<"MoneyReceive"> | string
-    receiptDate?: DateTimeNullableFilter<"MoneyReceive"> | Date | string | null
-    customerCode?: StringNullableFilter<"MoneyReceive"> | string | null
-    amount?: DecimalNullableFilter<"MoneyReceive"> | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: StringNullableFilter<"MoneyReceive"> | string | null
-    description?: StringNullableFilter<"MoneyReceive"> | string | null
-    createdBy?: StringNullableFilter<"MoneyReceive"> | string | null
+    branchId?: UuidNullableFilter<"Client_Transaction"> | string | null
   }
 
   export type CustomerCreateWithoutClientTransactionsInput = {
@@ -78657,7 +76915,6 @@ export namespace Prisma {
     joiningDate?: Date | string | null
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
-    moneyReceives?: MoneyReceiveCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutClientTransactionsInput = {
@@ -78670,7 +76927,6 @@ export namespace Prisma {
     joiningDate?: Date | string | null
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
-    moneyReceives?: MoneyReceiveUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutClientTransactionsInput = {
@@ -78699,7 +76955,6 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
-    moneyReceives?: MoneyReceiveUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutClientTransactionsInput = {
@@ -78712,7 +76967,6 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
-    moneyReceives?: MoneyReceiveUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type MediaFileCreateWithoutItemsInput = {
@@ -78765,7 +77019,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     sale?: t_SOMstrCreateNestedOneWithoutDetailsInput
   }
 
@@ -78783,7 +77037,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_SODetCreateOrConnectWithoutItemInput = {
@@ -78809,7 +77063,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     sale?: t_SOMstVCreateNestedOneWithoutDetailsInput
   }
 
@@ -78827,7 +77081,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_SODeVCreateOrConnectWithoutItemInput = {
@@ -78853,7 +77107,7 @@ export namespace Prisma {
     ncdetVATAmount?: Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     sale?: t_NCMstrCreateNestedOneWithoutDetailsInput
   }
 
@@ -78871,7 +77125,7 @@ export namespace Prisma {
     ncdetVATAmount?: Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_NCDetCreateOrConnectWithoutItemInput = {
@@ -78933,7 +77187,7 @@ export namespace Prisma {
     excess?: Decimal | DecimalJsLike | number | string | null
     short?: Decimal | DecimalJsLike | number | string | null
     date?: Date | string | null
-    branchId?: number | null
+    branchId?: string | null
     assort?: Decimal | DecimalJsLike | number | string | null
     isActive?: number | null
   }
@@ -78945,7 +77199,7 @@ export namespace Prisma {
     excess?: Decimal | DecimalJsLike | number | string | null
     short?: Decimal | DecimalJsLike | number | string | null
     date?: Date | string | null
-    branchId?: number | null
+    branchId?: string | null
     assort?: Decimal | DecimalJsLike | number | string | null
     isActive?: number | null
   }
@@ -78972,8 +77226,8 @@ export namespace Prisma {
     createDate?: Date | string | null
     updateBy?: string | null
     updateDate?: Date | string | null
-    branchId: number
-    receiveBranchID?: number | null
+    branchId: string
+    receiveBranchID?: string | null
   }
 
   export type Item_ReceiveUncheckedCreateWithoutItemInput = {
@@ -78988,8 +77242,8 @@ export namespace Prisma {
     createDate?: Date | string | null
     updateBy?: string | null
     updateDate?: Date | string | null
-    branchId: number
-    receiveBranchID?: number | null
+    branchId: string
+    receiveBranchID?: string | null
   }
 
   export type Item_ReceiveCreateOrConnectWithoutItemInput = {
@@ -79009,8 +77263,8 @@ export namespace Prisma {
     unitPrice?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     issueDate?: Date | string | null
-    issueBranchId: number
-    receiveBranchId: number
+    issueBranchId: string
+    receiveBranchId: string
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -79025,8 +77279,8 @@ export namespace Prisma {
     unitPrice?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     issueDate?: Date | string | null
-    issueBranchId: number
-    receiveBranchId: number
+    issueBranchId: string
+    receiveBranchId: string
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -79214,7 +77468,7 @@ export namespace Prisma {
     sodetVATAmount?: DecimalNullableFilter<"t_SODet"> | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: DecimalNullableFilter<"t_SODet"> | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: DecimalNullableFilter<"t_SODet"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"t_SODet"> | number | null
+    branchId?: UuidNullableFilter<"t_SODet"> | string | null
   }
 
   export type t_SODeVUpsertWithWhereUniqueWithoutItemInput = {
@@ -79251,7 +77505,7 @@ export namespace Prisma {
     sodetVATAmount?: DecimalNullableFilter<"t_SODeV"> | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: DecimalNullableFilter<"t_SODeV"> | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: DecimalNullableFilter<"t_SODeV"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"t_SODeV"> | number | null
+    branchId?: UuidNullableFilter<"t_SODeV"> | string | null
   }
 
   export type t_NCDetUpsertWithWhereUniqueWithoutItemInput = {
@@ -79288,7 +77542,7 @@ export namespace Prisma {
     ncdetVATAmount?: DecimalNullableFilter<"t_NCDet"> | Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: DecimalNullableFilter<"t_NCDet"> | Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: DecimalNullableFilter<"t_NCDet"> | Decimal | DecimalJsLike | number | string | null
-    branchId?: IntNullableFilter<"t_NCDet"> | number | null
+    branchId?: UuidNullableFilter<"t_NCDet"> | string | null
   }
 
   export type AsstDetUpsertWithWhereUniqueWithoutItemInput = {
@@ -79354,7 +77608,7 @@ export namespace Prisma {
     excess?: DecimalNullableFilter<"ItemReject"> | Decimal | DecimalJsLike | number | string | null
     short?: DecimalNullableFilter<"ItemReject"> | Decimal | DecimalJsLike | number | string | null
     date?: DateTimeNullableFilter<"ItemReject"> | Date | string | null
-    branchId?: IntNullableFilter<"ItemReject"> | number | null
+    branchId?: UuidNullableFilter<"ItemReject"> | string | null
     assort?: DecimalNullableFilter<"ItemReject"> | Decimal | DecimalJsLike | number | string | null
     isActive?: IntNullableFilter<"ItemReject"> | number | null
   }
@@ -79391,8 +77645,8 @@ export namespace Prisma {
     createDate?: DateTimeNullableFilter<"Item_Receive"> | Date | string | null
     updateBy?: StringNullableFilter<"Item_Receive"> | string | null
     updateDate?: DateTimeNullableFilter<"Item_Receive"> | Date | string | null
-    branchId?: IntFilter<"Item_Receive"> | number
-    receiveBranchID?: IntNullableFilter<"Item_Receive"> | number | null
+    branchId?: UuidFilter<"Item_Receive"> | string
+    receiveBranchID?: UuidNullableFilter<"Item_Receive"> | string | null
   }
 
   export type Item_IssueUpsertWithWhereUniqueWithoutItemInput = {
@@ -79422,8 +77676,8 @@ export namespace Prisma {
     unitPrice?: DecimalNullableFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     issueDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
-    issueBranchId?: IntFilter<"Item_Issue"> | number
-    receiveBranchId?: IntFilter<"Item_Issue"> | number
+    issueBranchId?: UuidFilter<"Item_Issue"> | string
+    receiveBranchId?: UuidFilter<"Item_Issue"> | string
     isActive?: IntNullableFilter<"Item_Issue"> | number | null
     createBy?: StringNullableFilter<"Item_Issue"> | string | null
     createDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
@@ -79854,7 +78108,6 @@ export namespace Prisma {
     joiningDate?: Date | string | null
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     clientTransactions?: Client_TransactionCreateNestedManyWithoutCustomerInput
-    moneyReceives?: MoneyReceiveCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutSalesInput = {
@@ -79867,7 +78120,6 @@ export namespace Prisma {
     joiningDate?: Date | string | null
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     clientTransactions?: Client_TransactionUncheckedCreateNestedManyWithoutCustomerInput
-    moneyReceives?: MoneyReceiveUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutSalesInput = {
@@ -79928,7 +78180,6 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     clientTransactions?: Client_TransactionUpdateManyWithoutCustomerNestedInput
-    moneyReceives?: MoneyReceiveUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutSalesInput = {
@@ -79941,7 +78192,6 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     clientTransactions?: Client_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
-    moneyReceives?: MoneyReceiveUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CSDetailUpsertWithWhereUniqueWithoutSaleInput = {
@@ -79987,7 +78237,7 @@ export namespace Prisma {
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
-    branchId?: number | null
+    branchId?: string | null
     createDate?: Date | string | null
     customer?: CustomerCreateNestedOneWithoutSalesInput
   }
@@ -80005,7 +78255,7 @@ export namespace Prisma {
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
-    branchId?: number | null
+    branchId?: string | null
     createDate?: Date | string | null
   }
 
@@ -80037,7 +78287,7 @@ export namespace Prisma {
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     customer?: CustomerUpdateOneWithoutSalesNestedInput
   }
@@ -80055,7 +78305,7 @@ export namespace Prisma {
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -80069,7 +78319,6 @@ export namespace Prisma {
     joiningDate?: Date | string | null
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     clientTransactions?: Client_TransactionCreateNestedManyWithoutCustomerInput
-    moneyReceives?: MoneyReceiveCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutSalesVatInput = {
@@ -80082,7 +78331,6 @@ export namespace Prisma {
     joiningDate?: Date | string | null
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     clientTransactions?: Client_TransactionUncheckedCreateNestedManyWithoutCustomerInput
-    moneyReceives?: MoneyReceiveUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutSalesVatInput = {
@@ -80143,7 +78391,6 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     clientTransactions?: Client_TransactionUpdateManyWithoutCustomerNestedInput
-    moneyReceives?: MoneyReceiveUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutSalesVatInput = {
@@ -80156,7 +78403,6 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     clientTransactions?: Client_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
-    moneyReceives?: MoneyReceiveUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CSVDetailUpsertWithWhereUniqueWithoutSaleInput = {
@@ -80201,7 +78447,7 @@ export namespace Prisma {
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
-    branchId?: number | null
+    branchId?: string | null
     customer?: CustomerCreateNestedOneWithoutSalesVatInput
   }
 
@@ -80217,7 +78463,7 @@ export namespace Prisma {
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type CSVMasterCreateOrConnectWithoutDetailsInput = {
@@ -80247,7 +78493,7 @@ export namespace Prisma {
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneWithoutSalesVatNestedInput
   }
 
@@ -80263,7 +78509,7 @@ export namespace Prisma {
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type BankCreateWithoutSalesInput = {
@@ -80298,7 +78544,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     item?: Item_InformationCreateNestedOneWithoutRunningSaleDetailsInput
   }
 
@@ -80316,7 +78562,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_SODetCreateOrConnectWithoutSaleInput = {
@@ -80387,7 +78633,7 @@ export namespace Prisma {
     somstrIsActive?: boolean | null
     somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
     somstrChange?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
@@ -80412,7 +78658,7 @@ export namespace Prisma {
     somstrIsActive?: boolean | null
     somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
     somstrChange?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
@@ -80504,7 +78750,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80529,7 +78775,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80607,7 +78853,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     item?: Item_InformationCreateNestedOneWithoutRunningSaleVatDetailsInput
   }
 
@@ -80625,7 +78871,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_SODeVCreateOrConnectWithoutSaleInput = {
@@ -80671,7 +78917,7 @@ export namespace Prisma {
     somstrIsActive?: boolean | null
     somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
     somstrChange?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
@@ -80695,7 +78941,7 @@ export namespace Prisma {
     somstrIsActive?: boolean | null
     somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
     somstrChange?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
@@ -80786,7 +79032,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80810,7 +79056,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81001,7 +79247,7 @@ export namespace Prisma {
     isActive?: boolean | null
     customerpay?: Decimal | DecimalJsLike | number | string | null
     change?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     discountRemarks?: string | null
   }
 
@@ -81023,7 +79269,7 @@ export namespace Prisma {
     isActive?: boolean | null
     customerpay?: Decimal | DecimalJsLike | number | string | null
     change?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     discountRemarks?: string | null
   }
 
@@ -81118,7 +79364,7 @@ export namespace Prisma {
     isActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     change?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -81140,7 +79386,7 @@ export namespace Prisma {
     isActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     customerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     change?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -81157,7 +79403,7 @@ export namespace Prisma {
     ncdetVATAmount?: Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     item?: Item_InformationCreateNestedOneWithoutNcDetailsInput
   }
 
@@ -81175,7 +79421,7 @@ export namespace Prisma {
     ncdetVATAmount?: Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_NCDetCreateOrConnectWithoutSaleInput = {
@@ -81213,7 +79459,7 @@ export namespace Prisma {
     ncmstrUpdateBy?: string | null
     ncmstrUpdateDate?: Date | string | null
     ncmstrIsActive?: boolean | null
-    branchId?: number | null
+    branchId?: string | null
     ncmstrName?: string | null
     ncmstrContactNo?: string | null
     ncmstrReference?: string | null
@@ -81228,7 +79474,7 @@ export namespace Prisma {
     ncmstrUpdateBy?: string | null
     ncmstrUpdateDate?: Date | string | null
     ncmstrIsActive?: boolean | null
-    branchId?: number | null
+    branchId?: string | null
     ncmstrName?: string | null
     ncmstrContactNo?: string | null
     ncmstrReference?: string | null
@@ -81310,7 +79556,7 @@ export namespace Prisma {
     ncmstrUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ncmstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrName?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrContactNo?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrReference?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81325,7 +79571,7 @@ export namespace Prisma {
     ncmstrUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ncmstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrName?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrContactNo?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrReference?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81721,7 +79967,7 @@ export namespace Prisma {
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
-    branchId: number
+    branchId: string
   }
 
   export type Packet_ReceiveUncheckedCreateWithoutPacketInput = {
@@ -81733,7 +79979,7 @@ export namespace Prisma {
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
-    branchId: number
+    branchId: string
   }
 
   export type Packet_ReceiveCreateOrConnectWithoutPacketInput = {
@@ -81758,7 +80004,7 @@ export namespace Prisma {
     createBy?: string | null
     createDate?: Date | string | null
     updateBy?: string | null
-    branchId: number
+    branchId: string
   }
 
   export type Packet_IssueUncheckedCreateWithoutPacketInput = {
@@ -81773,7 +80019,7 @@ export namespace Prisma {
     createBy?: string | null
     createDate?: Date | string | null
     updateBy?: string | null
-    branchId: number
+    branchId: string
   }
 
   export type Packet_IssueCreateOrConnectWithoutPacketInput = {
@@ -81815,7 +80061,7 @@ export namespace Prisma {
     isActive?: IntNullableFilter<"Packet_Receive"> | number | null
     createBy?: StringNullableFilter<"Packet_Receive"> | string | null
     createDate?: DateTimeNullableFilter<"Packet_Receive"> | Date | string | null
-    branchId?: IntFilter<"Packet_Receive"> | number
+    branchId?: UuidFilter<"Packet_Receive"> | string
   }
 
   export type Packet_IssueUpsertWithWhereUniqueWithoutPacketInput = {
@@ -81850,7 +80096,7 @@ export namespace Prisma {
     createBy?: StringNullableFilter<"Packet_Issue"> | string | null
     createDate?: DateTimeNullableFilter<"Packet_Issue"> | Date | string | null
     updateBy?: StringNullableFilter<"Packet_Issue"> | string | null
-    branchId?: IntFilter<"Packet_Issue"> | number
+    branchId?: UuidFilter<"Packet_Issue"> | string
   }
 
   export type PacketInfoCreateWithoutReceivesInput = {
@@ -82084,7 +80330,7 @@ export namespace Prisma {
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
     cType?: string | null
-    branchId?: number | null
+    branchId?: string | null
     deliveryTime?: Date | string | null
     isActive?: number | null
     createBy?: string | null
@@ -82104,7 +80350,7 @@ export namespace Prisma {
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
     cType?: string | null
-    branchId?: number | null
+    branchId?: string | null
     deliveryTime?: Date | string | null
     isActive?: number | null
     createBy?: string | null
@@ -82140,7 +80386,7 @@ export namespace Prisma {
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -82160,7 +80406,7 @@ export namespace Prisma {
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -82232,7 +80478,7 @@ export namespace Prisma {
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
     cType?: string | null
-    branchId?: number | null
+    branchId?: string | null
     deliveryTime?: Date | string | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -82249,7 +80495,7 @@ export namespace Prisma {
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
     cType?: string | null
-    branchId?: number | null
+    branchId?: string | null
     deliveryTime?: Date | string | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -82282,7 +80528,7 @@ export namespace Prisma {
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -82299,80 +80545,12 @@ export namespace Prisma {
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type CustomerCreateWithoutMoneyReceivesInput = {
-    id?: string
-    code: string
-    name: string
-    mobile?: string | null
-    address?: string | null
-    email?: string | null
-    joiningDate?: Date | string | null
-    sales?: CSMasterCreateNestedManyWithoutCustomerInput
-    salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
-    clientTransactions?: Client_TransactionCreateNestedManyWithoutCustomerInput
-  }
-
-  export type CustomerUncheckedCreateWithoutMoneyReceivesInput = {
-    id?: string
-    code: string
-    name: string
-    mobile?: string | null
-    address?: string | null
-    email?: string | null
-    joiningDate?: Date | string | null
-    sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
-    salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
-    clientTransactions?: Client_TransactionUncheckedCreateNestedManyWithoutCustomerInput
-  }
-
-  export type CustomerCreateOrConnectWithoutMoneyReceivesInput = {
-    where: CustomerWhereUniqueInput
-    create: XOR<CustomerCreateWithoutMoneyReceivesInput, CustomerUncheckedCreateWithoutMoneyReceivesInput>
-  }
-
-  export type CustomerUpsertWithoutMoneyReceivesInput = {
-    update: XOR<CustomerUpdateWithoutMoneyReceivesInput, CustomerUncheckedUpdateWithoutMoneyReceivesInput>
-    create: XOR<CustomerCreateWithoutMoneyReceivesInput, CustomerUncheckedCreateWithoutMoneyReceivesInput>
-    where?: CustomerWhereInput
-  }
-
-  export type CustomerUpdateToOneWithWhereWithoutMoneyReceivesInput = {
-    where?: CustomerWhereInput
-    data: XOR<CustomerUpdateWithoutMoneyReceivesInput, CustomerUncheckedUpdateWithoutMoneyReceivesInput>
-  }
-
-  export type CustomerUpdateWithoutMoneyReceivesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    mobile?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    sales?: CSMasterUpdateManyWithoutCustomerNestedInput
-    salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
-    clientTransactions?: Client_TransactionUpdateManyWithoutCustomerNestedInput
-  }
-
-  export type CustomerUncheckedUpdateWithoutMoneyReceivesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    code?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    mobile?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
-    salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
-    clientTransactions?: Client_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type UserCreateManyProfileImageInput = {
@@ -82602,7 +80780,7 @@ export namespace Prisma {
     somstrIsActive?: boolean | null
     somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
     somstrChange?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
@@ -82626,7 +80804,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -82651,7 +80829,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -82676,7 +80854,7 @@ export namespace Prisma {
     somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
@@ -82887,7 +81065,7 @@ export namespace Prisma {
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
-    branchId?: number | null
+    branchId?: string | null
     createDate?: Date | string | null
   }
 
@@ -82902,7 +81080,7 @@ export namespace Prisma {
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type Client_TransactionCreateManyCustomerInput = {
@@ -82914,16 +81092,7 @@ export namespace Prisma {
     moneyReceptNo?: string | null
     bankName?: string | null
     bankNo?: string | null
-  }
-
-  export type MoneyReceiveCreateManyCustomerInput = {
-    id?: string
-    receiptNo: string
-    receiptDate?: Date | string | null
-    amount?: Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: string | null
-    description?: string | null
-    createdBy?: string | null
+    branchId?: string | null
   }
 
   export type CSMasterUpdateWithoutCustomerInput = {
@@ -82938,7 +81107,7 @@ export namespace Prisma {
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     details?: CSDetailUpdateManyWithoutSaleNestedInput
   }
@@ -82955,7 +81124,7 @@ export namespace Prisma {
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     details?: CSDetailUncheckedUpdateManyWithoutSaleNestedInput
   }
@@ -82972,7 +81141,7 @@ export namespace Prisma {
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -82987,7 +81156,7 @@ export namespace Prisma {
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     details?: CSVDetailUpdateManyWithoutSaleNestedInput
   }
 
@@ -83002,7 +81171,7 @@ export namespace Prisma {
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     details?: CSVDetailUncheckedUpdateManyWithoutSaleNestedInput
   }
 
@@ -83017,7 +81186,7 @@ export namespace Prisma {
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Client_TransactionUpdateWithoutCustomerInput = {
@@ -83029,6 +81198,7 @@ export namespace Prisma {
     moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     bankNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Client_TransactionUncheckedUpdateWithoutCustomerInput = {
@@ -83040,6 +81210,7 @@ export namespace Prisma {
     moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     bankNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Client_TransactionUncheckedUpdateManyWithoutCustomerInput = {
@@ -83051,36 +81222,7 @@ export namespace Prisma {
     moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     bankNo?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type MoneyReceiveUpdateWithoutCustomerInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    receiptNo?: StringFieldUpdateOperationsInput | string
-    receiptDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type MoneyReceiveUncheckedUpdateWithoutCustomerInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    receiptNo?: StringFieldUpdateOperationsInput | string
-    receiptDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type MoneyReceiveUncheckedUpdateManyWithoutCustomerInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    receiptNo?: StringFieldUpdateOperationsInput | string
-    receiptDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    createdBy?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SODetCreateManyItemInput = {
@@ -83097,7 +81239,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_SODeVCreateManyItemInput = {
@@ -83114,7 +81256,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_NCDetCreateManyItemInput = {
@@ -83131,7 +81273,7 @@ export namespace Prisma {
     ncdetVATAmount?: Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type AsstDetCreateManyItemInput = {
@@ -83157,7 +81299,7 @@ export namespace Prisma {
     excess?: Decimal | DecimalJsLike | number | string | null
     short?: Decimal | DecimalJsLike | number | string | null
     date?: Date | string | null
-    branchId?: number | null
+    branchId?: string | null
     assort?: Decimal | DecimalJsLike | number | string | null
     isActive?: number | null
   }
@@ -83174,8 +81316,8 @@ export namespace Prisma {
     createDate?: Date | string | null
     updateBy?: string | null
     updateDate?: Date | string | null
-    branchId: number
-    receiveBranchID?: number | null
+    branchId: string
+    receiveBranchID?: string | null
   }
 
   export type Item_IssueCreateManyItemInput = {
@@ -83185,8 +81327,8 @@ export namespace Prisma {
     unitPrice?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     issueDate?: Date | string | null
-    issueBranchId: number
-    receiveBranchId: number
+    issueBranchId: string
+    receiveBranchId: string
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -83237,7 +81379,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     sale?: t_SOMstrUpdateOneWithoutDetailsNestedInput
   }
 
@@ -83255,7 +81397,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SODetUncheckedUpdateManyWithoutItemInput = {
@@ -83272,7 +81414,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SODeVUpdateWithoutItemInput = {
@@ -83288,7 +81430,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     sale?: t_SOMstVUpdateOneWithoutDetailsNestedInput
   }
 
@@ -83306,7 +81448,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SODeVUncheckedUpdateManyWithoutItemInput = {
@@ -83323,7 +81465,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_NCDetUpdateWithoutItemInput = {
@@ -83339,7 +81481,7 @@ export namespace Prisma {
     ncdetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     sale?: t_NCMstrUpdateOneWithoutDetailsNestedInput
   }
 
@@ -83357,7 +81499,7 @@ export namespace Prisma {
     ncdetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_NCDetUncheckedUpdateManyWithoutItemInput = {
@@ -83374,7 +81516,7 @@ export namespace Prisma {
     ncdetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AsstDetUpdateWithoutItemInput = {
@@ -83432,7 +81574,7 @@ export namespace Prisma {
     excess?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     short?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     assort?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
   }
@@ -83444,7 +81586,7 @@ export namespace Prisma {
     excess?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     short?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     assort?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
   }
@@ -83456,7 +81598,7 @@ export namespace Prisma {
     excess?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     short?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     assort?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
   }
@@ -83473,8 +81615,8 @@ export namespace Prisma {
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
-    receiveBranchID?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: StringFieldUpdateOperationsInput | string
+    receiveBranchID?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Item_ReceiveUncheckedUpdateWithoutItemInput = {
@@ -83489,8 +81631,8 @@ export namespace Prisma {
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
-    receiveBranchID?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: StringFieldUpdateOperationsInput | string
+    receiveBranchID?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Item_ReceiveUncheckedUpdateManyWithoutItemInput = {
@@ -83505,8 +81647,8 @@ export namespace Prisma {
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
-    receiveBranchID?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: StringFieldUpdateOperationsInput | string
+    receiveBranchID?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Item_IssueUpdateWithoutItemInput = {
@@ -83516,8 +81658,8 @@ export namespace Prisma {
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    issueBranchId?: IntFieldUpdateOperationsInput | number
-    receiveBranchId?: IntFieldUpdateOperationsInput | number
+    issueBranchId?: StringFieldUpdateOperationsInput | string
+    receiveBranchId?: StringFieldUpdateOperationsInput | string
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -83532,8 +81674,8 @@ export namespace Prisma {
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    issueBranchId?: IntFieldUpdateOperationsInput | number
-    receiveBranchId?: IntFieldUpdateOperationsInput | number
+    issueBranchId?: StringFieldUpdateOperationsInput | string
+    receiveBranchId?: StringFieldUpdateOperationsInput | string
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -83548,8 +81690,8 @@ export namespace Prisma {
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    issueBranchId?: IntFieldUpdateOperationsInput | number
-    receiveBranchId?: IntFieldUpdateOperationsInput | number
+    issueBranchId?: StringFieldUpdateOperationsInput | string
+    receiveBranchId?: StringFieldUpdateOperationsInput | string
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -83749,7 +81891,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_SODetUpdateWithoutSaleInput = {
@@ -83765,7 +81907,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     item?: Item_InformationUpdateOneWithoutRunningSaleDetailsNestedInput
   }
 
@@ -83783,7 +81925,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SODetUncheckedUpdateManyWithoutSaleInput = {
@@ -83800,7 +81942,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SODeVCreateManySaleInput = {
@@ -83817,7 +81959,7 @@ export namespace Prisma {
     sodetVATAmount?: Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_SODeVUpdateWithoutSaleInput = {
@@ -83833,7 +81975,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     item?: Item_InformationUpdateOneWithoutRunningSaleVatDetailsNestedInput
   }
 
@@ -83851,7 +81993,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SODeVUncheckedUpdateManyWithoutSaleInput = {
@@ -83868,7 +82010,7 @@ export namespace Prisma {
     sodetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AsstDetCreateManySaleInput = {
@@ -83949,7 +82091,7 @@ export namespace Prisma {
     ncdetVATAmount?: Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: Decimal | DecimalJsLike | number | string | null
-    branchId?: number | null
+    branchId?: string | null
   }
 
   export type t_NCDetUpdateWithoutSaleInput = {
@@ -83965,7 +82107,7 @@ export namespace Prisma {
     ncdetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
     item?: Item_InformationUpdateOneWithoutNcDetailsNestedInput
   }
 
@@ -83983,7 +82125,7 @@ export namespace Prisma {
     ncdetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_NCDetUncheckedUpdateManyWithoutSaleInput = {
@@ -84000,7 +82142,7 @@ export namespace Prisma {
     ncdetVATAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     ncdetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    branchId?: NullableIntFieldUpdateOperationsInput | number | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Packet_ReceiveCreateManyPacketInput = {
@@ -84012,7 +82154,7 @@ export namespace Prisma {
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
-    branchId: number
+    branchId: string
   }
 
   export type Packet_IssueCreateManyPacketInput = {
@@ -84027,7 +82169,7 @@ export namespace Prisma {
     createBy?: string | null
     createDate?: Date | string | null
     updateBy?: string | null
-    branchId: number
+    branchId: string
   }
 
   export type Packet_ReceiveUpdateWithoutPacketInput = {
@@ -84039,7 +82181,7 @@ export namespace Prisma {
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
+    branchId?: StringFieldUpdateOperationsInput | string
   }
 
   export type Packet_ReceiveUncheckedUpdateWithoutPacketInput = {
@@ -84051,7 +82193,7 @@ export namespace Prisma {
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
+    branchId?: StringFieldUpdateOperationsInput | string
   }
 
   export type Packet_ReceiveUncheckedUpdateManyWithoutPacketInput = {
@@ -84063,7 +82205,7 @@ export namespace Prisma {
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
+    branchId?: StringFieldUpdateOperationsInput | string
   }
 
   export type Packet_IssueUpdateWithoutPacketInput = {
@@ -84078,7 +82220,7 @@ export namespace Prisma {
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
+    branchId?: StringFieldUpdateOperationsInput | string
   }
 
   export type Packet_IssueUncheckedUpdateWithoutPacketInput = {
@@ -84093,7 +82235,7 @@ export namespace Prisma {
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
+    branchId?: StringFieldUpdateOperationsInput | string
   }
 
   export type Packet_IssueUncheckedUpdateManyWithoutPacketInput = {
@@ -84108,7 +82250,7 @@ export namespace Prisma {
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: IntFieldUpdateOperationsInput | number
+    branchId?: StringFieldUpdateOperationsInput | string
   }
 
   export type OrderReceive_DetailCreateManyMasterInput = {

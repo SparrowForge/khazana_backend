@@ -209,7 +209,6 @@ model Customer {
   sales              CSMaster[]
   salesVat           CSVMaster[]
   clientTransactions Client_Transaction[]
-  moneyReceives      MoneyReceive[]
 
   @@map("Customer")
 }
@@ -224,6 +223,7 @@ model Client_Transaction {
   moneyReceptNo String?   @map("MoneyReceptNo")
   bankName      String?   @map("BankName")
   bankNo        String?   @map("BankNo")
+  branchId      String?   @map("BranchId") @db.Uuid
   customer      Customer? @relation(fields: [clientCode], references: [code])
 
   @@map("Client_Transaction")
@@ -290,7 +290,7 @@ model RW_Stock {
   itemCode  String  @id @map("ItemCode")
   stockQty  Decimal @map("StockQty") @db.Decimal(9, 2)
   unitPrice Decimal @map("UnitPrice") @db.Decimal(9, 4)
-  branchId  Int?    @map("BranchId")
+  branchId  String? @map("BranchId") @db.Uuid
 
   @@map("RW_Stock")
 }
@@ -358,7 +358,7 @@ model CSMaster {
   totalVat        Decimal?   @map("TotalVat") @db.Decimal(8, 2)
   discountRemarks String?    @map("DiscountRemarks")
   isActive        Int?       @map("IsActive")
-  branchId        Int?       @map("BranchId")
+  branchId        String?    @map("BranchId") @db.Uuid
   createDate      DateTime?  @map("CreateDate")
   customer        Customer?  @relation(fields: [clientCode], references: [code])
   details         CSDetail[]
@@ -395,7 +395,7 @@ model CSVMaster {
   totalDiscount   Decimal?    @map("TotalDiscount") @db.Decimal(18, 6)
   totalVat        Decimal?    @map("TotalVat") @db.Decimal(18, 6)
   discountRemarks String?     @map("DiscountRemarks")
-  branchId        Int?        @map("BranchId")
+  branchId        String?     @map("BranchId") @db.Uuid
   customer        Customer?   @relation(fields: [clientCode], references: [code])
   details         CSVDetail[]
 
@@ -436,7 +436,7 @@ model t_SOMstr {
   somstrIsActive        Boolean?  @map("SOMstr_IsActive")
   somstrCustomerpay     Decimal?  @map("SOMstr_Customerpay") @db.Decimal(18, 4)
   somstrChange          Decimal?  @map("SOMstr_Change") @db.Decimal(18, 4)
-  branchId              Int?      @map("BranchId")
+  branchId              String?   @map("BranchId") @db.Uuid
   soMstrDiscountRemarks String?   @map("SoMstr_DiscountRemarks")
   soMstrModifyRemarks   String?   @map("SoMstr_ModifyRemarks")
   soMstrDiscountContact String?   @map("SoMstr_DiscountContact")
@@ -463,7 +463,7 @@ model t_SODet {
   sodetVATAmount Decimal?          @map("SODet_VATAmount") @db.Decimal(18, 4)
   sodetDiscount  Decimal?          @map("SODet_Discount") @db.Decimal(18, 4)
   sodetNetAmount Decimal?          @map("SODet_NetAmount") @db.Decimal(18, 4)
-  branchId       Int?              @map("BranchId")
+  branchId       String?           @map("BranchId") @db.Uuid
   sale           t_SOMstr?         @relation(fields: [t_SOMstr_id], references: [id])
   item           Item_Information? @relation(fields: [sodetItemOID], references: [id])
 
@@ -489,7 +489,7 @@ model t_SOMstV {
   somstrIsActive        Boolean?  @map("SOMstr_IsActive")
   somstrCustomerpay     Decimal?  @map("SOMstr_Customerpay") @db.Decimal(18, 4)
   somstrChange          Decimal?  @map("SOMstr_Change") @db.Decimal(18, 4)
-  branchId              Int?      @map("BranchId")
+  branchId              String?   @map("BranchId") @db.Uuid
   soMstrDiscountRemarks String?   @map("SoMstr_DiscountRemarks")
   soMstrModifyRemarks   String?   @map("SoMstr_ModifyRemarks")
   soMstrDiscountContact String?   @map("SoMstr_DiscountContact")
@@ -514,7 +514,7 @@ model t_SODeV {
   sodetVATAmount Decimal?          @map("SODet_VATAmount") @db.Decimal(18, 6)
   sodetDiscount  Decimal?          @map("SODet_Discount") @db.Decimal(18, 6)
   sodetNetAmount Decimal?          @map("SODet_NetAmount") @db.Decimal(18, 6)
-  branchId       Int?              @map("BranchId")
+  branchId       String?           @map("BranchId") @db.Uuid
   sale           t_SOMstV?         @relation(fields: [t_SOMstV_id], references: [id])
   item           Item_Information? @relation(fields: [sodetItemOID], references: [id])
 
@@ -541,7 +541,7 @@ model AsstMsrt {
   isActive        Boolean?  @map("IsActive")
   customerpay     Decimal?  @map("Customerpay") @db.Decimal(8, 4)
   change          Decimal?  @map("Change") @db.Decimal(8, 4)
-  branchId        Int?      @map("BranchId")
+  branchId        String?   @map("BranchId") @db.Uuid
   discountRemarks String?   @map("DiscountRemarks")
   details         AsstDet[]
 
@@ -580,7 +580,7 @@ model t_NCMstr {
   ncmstrUpdateBy     String?   @map("NCMstr_UpdateBy")
   ncmstrUpdateDate   DateTime? @map("NCMstr_UpdateDate")
   ncmstrIsActive     Boolean?  @map("NCMstr_IsActive")
-  branchId           Int?      @map("BranchId")
+  branchId           String?   @map("BranchId") @db.Uuid
   ncmstrName         String?   @map("NCMstr_Name")
   ncmstrContactNo    String?   @map("NCMstr_ContactNo")
   ncmstrReference    String?   @map("NCMstr_Reference")
@@ -604,7 +604,7 @@ model t_NCDet {
   ncdetVATAmount Decimal?          @map("NCDet_VATAmount") @db.Decimal(8, 4)
   ncdetDiscount  Decimal?          @map("NCDet_Discount") @db.Decimal(8, 4)
   ncdetNetAmount Decimal?          @map("NCDet_NetAmount") @db.Decimal(8, 4)
-  branchId       Int?              @map("BranchId")
+  branchId       String?           @map("BranchId") @db.Uuid
   sale           t_NCMstr?         @relation(fields: [t_NCMstr_id], references: [id])
   item           Item_Information? @relation(fields: [ncdetItemOID], references: [id])
 
@@ -626,8 +626,8 @@ model Item_Receive {
   createDate      DateTime?         @map("CreateDate")
   updateBy        String?           @map("UpdateBy")
   updateDate      DateTime?         @map("UpdateDate")
-  branchId        Int               @map("BranchId")
-  receiveBranchID Int?              @map("ReceiveBranchID")
+  branchId        String            @map("BranchId") @db.Uuid
+  receiveBranchID String?           @map("ReceiveBranchID") @db.Uuid
   item            Item_Information? @relation(fields: [itemCode], references: [itmCode])
 
   @@map("Item_Receive")
@@ -641,8 +641,8 @@ model Item_Issue {
   unitPrice       Decimal?          @map("UnitPrice") @db.Decimal(18, 6)
   qty             Decimal?          @map("Qty") @db.Decimal(18, 6)
   issueDate       DateTime?         @map("IssueDate")
-  issueBranchId   Int               @map("IssueBranchId")
-  receiveBranchId Int               @map("ReceiveBranchId")
+  issueBranchId   String            @map("IssueBranchId") @db.Uuid
+  receiveBranchId String            @map("ReceiveBranchId") @db.Uuid
   isActive        Int?              @map("IsActive")
   createBy        String?           @map("CreateBy")
   createDate      DateTime?         @map("CreateDate")
@@ -661,7 +661,7 @@ model ItemReject {
   excess   Decimal?          @map("Excess") @db.Decimal(8, 2)
   short    Decimal?          @map("Short") @db.Decimal(8, 2)
   date     DateTime?         @map("Date")
-  branchId Int?              @map("BranchId")
+  branchId String?           @map("BranchId") @db.Uuid
   assort   Decimal?          @map("Assort") @db.Decimal(8, 2)
   isActive Int?              @map("IsActive")
   item     Item_Information? @relation(fields: [itmOId], references: [id])
@@ -700,7 +700,7 @@ model Packet_Receive {
   isActive    Int?        @map("IsActive")
   createBy    String?     @map("CreateBy")
   createDate  DateTime?   @map("CreateDate")
-  branchId    Int         @map("BranchId")
+  branchId    String      @map("BranchId") @db.Uuid
   packet      PacketInfo? @relation(fields: [code], references: [code])
 
   @@map("Packet_Receive")
@@ -719,7 +719,7 @@ model Packet_Issue {
   createBy   String?     @map("CreateBy")
   createDate DateTime?   @map("CreateDate")
   updateBy   String?     @map("UpdateBy")
-  branchId   Int         @map("BranchId")
+  branchId   String      @map("BranchId") @db.Uuid
   packet     PacketInfo? @relation(fields: [code], references: [code])
 
   @@map("Packet_Issue")
@@ -738,7 +738,7 @@ model OrderReceive_Master {
   deliveryDate    DateTime?             @map("DeliveryDate")
   deliveryAddress String?               @map("DeliveryAddress")
   cType           String?               @map("CType")
-  branchId        Int?                  @map("BranchId")
+  branchId        String?               @map("BranchId") @db.Uuid
   deliveryTime    DateTime?             @map("DeliveryTime")
   isActive        Int?                  @map("IsActive")
   createBy        String?               @map("CreateBy")
@@ -773,7 +773,7 @@ model VOrderReceive_Master {
   deliveryDate    DateTime?              @map("DeliveryDate")
   deliveryAddress String?                @map("DeliveryAddress")
   cType           String?                @map("CType")
-  branchId        Int?                   @map("BranchId")
+  branchId        String?                @map("BranchId") @db.Uuid
   deliveryTime    DateTime?              @map("DeliveryTime")
   createBy        String?                @map("CreateBy")
   createDate      DateTime?              @map("CreateDate")
@@ -803,26 +803,12 @@ model t_SaleAmountPost {
   cashSale Decimal   @map("CashSale") @db.Decimal(10, 2)
   cardSale Decimal   @map("CardSale") @db.Decimal(10, 2)
   date     DateTime? @map("Date")
-  branchId Int?      @map("BranchId")
+  branchId String?   @map("BranchId") @db.Uuid
 
   @@map("t_SaleAmountPost")
 }
 
 // ==================== FINANCE ====================
-
-model MoneyReceive {
-  id            String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  receiptNo     String    @unique @map("ReceiptNo")
-  receiptDate   DateTime? @map("ReceiptDate")
-  customerCode  String?   @map("CustomerCode")
-  amount        Decimal?  @map("Amount") @db.Decimal(18, 2)
-  paymentMethod String?   @map("PaymentMethod")
-  description   String?   @map("Description")
-  createdBy     String?   @map("CreatedBy")
-  customer      Customer? @relation(fields: [customerCode], references: [code])
-
-  @@map("MoneyReceive")
-}
 
 model CashPurchase {
   id          String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid

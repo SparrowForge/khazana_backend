@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsPositive, IsOptional, IsDateString, IsInt, IsArray, ValidateNested } from 'class-validator';
+import { IsString, IsNumber, IsPositive, IsOptional, IsDateString, IsUUID, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -33,13 +33,13 @@ export class ReceiveStockDto {
   @IsDateString()
   purDate: string;
 
-  @ApiPropertyOptional({ example: 1, description: 'Receiving branch — defaults to the authenticated user\'s (login) branch' })
-  @IsInt()
+  @ApiPropertyOptional({ format: 'uuid', description: 'Receiving branch UUID — defaults to the authenticated user\'s (login) branch' })
+  @IsUUID()
   @IsOptional()
-  branchId?: number;
+  branchId?: string;
 
-  @ApiPropertyOptional({ description: 'Source branch the stock is received FROM (branch id/code)' })
-  @IsString()
+  @ApiPropertyOptional({ format: 'uuid', description: 'Source branch UUID the stock is received FROM' })
+  @IsUUID()
   @IsOptional()
   fromBranchId?: string;
 

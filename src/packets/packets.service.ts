@@ -75,7 +75,7 @@ export class PacketsService {
   }
 
   receivePacket(dto: {
-    code: string; qty: number; receiveDate: string; branchId: number;
+    code: string; qty: number; receiveDate: string; branchId: string;
     serialNo?: string; voucharNo?: string; createBy: string;
   }) {
     return this.prisma.packet_Receive.create({
@@ -94,7 +94,7 @@ export class PacketsService {
   }
 
   issuePacket(dto: {
-    code: string; qty: number; issueDate: string; branchId: number;
+    code: string; qty: number; issueDate: string; branchId: string;
     issueType?: string; invoiceNo?: string; createBy: string;
   }) {
     return this.prisma.packet_Issue.create({

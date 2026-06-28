@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsString, IsOptional, IsNumber, IsArray, ValidateNested,
-  IsDateString, IsPositive, Min, IsInt,
+  IsDateString, IsPositive, Min, IsUUID,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -56,10 +56,10 @@ export class CreateCreditSaleDto {
   @IsOptional()
   poNo?: string;
 
-  @ApiPropertyOptional({ example: 1, description: 'Branch ID' })
-  @IsInt()
+  @ApiPropertyOptional({ format: 'uuid', description: 'Branch UUID' })
+  @IsUUID()
   @IsOptional()
-  branchId?: number;
+  branchId?: string;
 
   @ApiProperty({ example: 1000.00, description: 'Gross total' })
   @IsNumber()
