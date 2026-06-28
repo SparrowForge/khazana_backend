@@ -266,11 +266,11 @@ exports.Prisma.CustomerScalarFieldEnum = {
   joiningDate: 'joiningDate'
 };
 
-exports.Prisma.Client_TransactionScalarFieldEnum = {
+exports.Prisma.Customer_TransactionScalarFieldEnum = {
   id: 'id',
-  clientCode: 'clientCode',
-  paymentDate: 'paymentDate',
-  paymentAmount: 'paymentAmount',
+  customerId: 'customerId',
+  receiveDate: 'receiveDate',
+  receiveAmount: 'receiveAmount',
   tType: 'tType',
   serialNo: 'serialNo',
   moneyReceptNo: 'moneyReceptNo',
@@ -364,7 +364,7 @@ exports.Prisma.CSMasterScalarFieldEnum = {
   poNo: 'poNo',
   invoiceBy: 'invoiceBy',
   manualInvoice: 'manualInvoice',
-  clientCode: 'clientCode',
+  customerId: 'customerId',
   totalAmount: 'totalAmount',
   totalDiscount: 'totalDiscount',
   totalVat: 'totalVat',
@@ -817,7 +817,7 @@ exports.Prisma.ModelName = {
   Role: 'Role',
   Permission: 'Permission',
   Customer: 'Customer',
-  Client_Transaction: 'Client_Transaction',
+  Customer_Transaction: 'Customer_Transaction',
   Employee: 'Employee',
   Item_Information: 'Item_Information',
   Item_Category: 'Item_Category',

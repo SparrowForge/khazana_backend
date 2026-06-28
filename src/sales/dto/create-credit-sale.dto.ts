@@ -47,9 +47,9 @@ export class CreateCreditSaleDto {
   @IsDateString()
   invDate: string;
 
-  @ApiProperty({ example: 'CUST-001', description: 'Customer code' })
-  @IsString()
-  clientCode: string;
+  @ApiProperty({ format: 'uuid', description: 'Customer ID (Customer.id)' })
+  @IsUUID()
+  customerId: string;
 
   @ApiPropertyOptional({ example: 'PO-2024-001', description: 'Purchase order number' })
   @IsString()

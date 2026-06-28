@@ -79,10 +79,10 @@ export type Permission = $Result.DefaultSelection<Prisma.$PermissionPayload>
  */
 export type Customer = $Result.DefaultSelection<Prisma.$CustomerPayload>
 /**
- * Model Client_Transaction
+ * Model Customer_Transaction
  * 
  */
-export type Client_Transaction = $Result.DefaultSelection<Prisma.$Client_TransactionPayload>
+export type Customer_Transaction = $Result.DefaultSelection<Prisma.$Customer_TransactionPayload>
 /**
  * Model Employee
  * 
@@ -493,14 +493,14 @@ export class PrismaClient<
   get customer(): Prisma.CustomerDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.client_Transaction`: Exposes CRUD operations for the **Client_Transaction** model.
+   * `prisma.customer_Transaction`: Exposes CRUD operations for the **Customer_Transaction** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Client_Transactions
-    * const client_Transactions = await prisma.client_Transaction.findMany()
+    * // Fetch zero or more Customer_Transactions
+    * const customer_Transactions = await prisma.customer_Transaction.findMany()
     * ```
     */
-  get client_Transaction(): Prisma.Client_TransactionDelegate<ExtArgs, ClientOptions>;
+  get customer_Transaction(): Prisma.Customer_TransactionDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.employee`: Exposes CRUD operations for the **Employee** model.
@@ -1275,7 +1275,7 @@ export namespace Prisma {
     Role: 'Role',
     Permission: 'Permission',
     Customer: 'Customer',
-    Client_Transaction: 'Client_Transaction',
+    Customer_Transaction: 'Customer_Transaction',
     Employee: 'Employee',
     Item_Information: 'Item_Information',
     Item_Category: 'Item_Category',
@@ -1326,7 +1326,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "client_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
+      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "customer_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2292,77 +2292,77 @@ export namespace Prisma {
           }
         }
       }
-      Client_Transaction: {
-        payload: Prisma.$Client_TransactionPayload<ExtArgs>
-        fields: Prisma.Client_TransactionFieldRefs
+      Customer_Transaction: {
+        payload: Prisma.$Customer_TransactionPayload<ExtArgs>
+        fields: Prisma.Customer_TransactionFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.Client_TransactionFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Client_TransactionPayload> | null
+            args: Prisma.Customer_TransactionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Customer_TransactionPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.Client_TransactionFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Client_TransactionPayload>
+            args: Prisma.Customer_TransactionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Customer_TransactionPayload>
           }
           findFirst: {
-            args: Prisma.Client_TransactionFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Client_TransactionPayload> | null
+            args: Prisma.Customer_TransactionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Customer_TransactionPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.Client_TransactionFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Client_TransactionPayload>
+            args: Prisma.Customer_TransactionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Customer_TransactionPayload>
           }
           findMany: {
-            args: Prisma.Client_TransactionFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Client_TransactionPayload>[]
+            args: Prisma.Customer_TransactionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Customer_TransactionPayload>[]
           }
           create: {
-            args: Prisma.Client_TransactionCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Client_TransactionPayload>
+            args: Prisma.Customer_TransactionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Customer_TransactionPayload>
           }
           createMany: {
-            args: Prisma.Client_TransactionCreateManyArgs<ExtArgs>
+            args: Prisma.Customer_TransactionCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.Client_TransactionCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Client_TransactionPayload>[]
+            args: Prisma.Customer_TransactionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Customer_TransactionPayload>[]
           }
           delete: {
-            args: Prisma.Client_TransactionDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Client_TransactionPayload>
+            args: Prisma.Customer_TransactionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Customer_TransactionPayload>
           }
           update: {
-            args: Prisma.Client_TransactionUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Client_TransactionPayload>
+            args: Prisma.Customer_TransactionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Customer_TransactionPayload>
           }
           deleteMany: {
-            args: Prisma.Client_TransactionDeleteManyArgs<ExtArgs>
+            args: Prisma.Customer_TransactionDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.Client_TransactionUpdateManyArgs<ExtArgs>
+            args: Prisma.Customer_TransactionUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.Client_TransactionUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Client_TransactionPayload>[]
+            args: Prisma.Customer_TransactionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Customer_TransactionPayload>[]
           }
           upsert: {
-            args: Prisma.Client_TransactionUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$Client_TransactionPayload>
+            args: Prisma.Customer_TransactionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Customer_TransactionPayload>
           }
           aggregate: {
-            args: Prisma.Client_TransactionAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateClient_Transaction>
+            args: Prisma.Customer_TransactionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCustomer_Transaction>
           }
           groupBy: {
-            args: Prisma.Client_TransactionGroupByArgs<ExtArgs>
-            result: $Utils.Optional<Client_TransactionGroupByOutputType>[]
+            args: Prisma.Customer_TransactionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Customer_TransactionGroupByOutputType>[]
           }
           count: {
-            args: Prisma.Client_TransactionCountArgs<ExtArgs>
-            result: $Utils.Optional<Client_TransactionCountAggregateOutputType> | number
+            args: Prisma.Customer_TransactionCountArgs<ExtArgs>
+            result: $Utils.Optional<Customer_TransactionCountAggregateOutputType> | number
           }
         }
       }
@@ -4843,7 +4843,7 @@ export namespace Prisma {
     role?: RoleOmit
     permission?: PermissionOmit
     customer?: CustomerOmit
-    client_Transaction?: Client_TransactionOmit
+    customer_Transaction?: Customer_TransactionOmit
     employee?: EmployeeOmit
     item_Information?: Item_InformationOmit
     item_Category?: Item_CategoryOmit
@@ -5171,13 +5171,13 @@ export namespace Prisma {
   export type CustomerCountOutputType = {
     sales: number
     salesVat: number
-    clientTransactions: number
+    customerTransactions: number
   }
 
   export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sales?: boolean | CustomerCountOutputTypeCountSalesArgs
     salesVat?: boolean | CustomerCountOutputTypeCountSalesVatArgs
-    clientTransactions?: boolean | CustomerCountOutputTypeCountClientTransactionsArgs
+    customerTransactions?: boolean | CustomerCountOutputTypeCountCustomerTransactionsArgs
   }
 
   // Custom InputTypes
@@ -5208,8 +5208,8 @@ export namespace Prisma {
   /**
    * CustomerCountOutputType without action
    */
-  export type CustomerCountOutputTypeCountClientTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: Client_TransactionWhereInput
+  export type CustomerCountOutputTypeCountCustomerTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: Customer_TransactionWhereInput
   }
 
 
@@ -19110,7 +19110,7 @@ export namespace Prisma {
     joiningDate?: boolean
     sales?: boolean | Customer$salesArgs<ExtArgs>
     salesVat?: boolean | Customer$salesVatArgs<ExtArgs>
-    clientTransactions?: boolean | Customer$clientTransactionsArgs<ExtArgs>
+    customerTransactions?: boolean | Customer$customerTransactionsArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -19148,7 +19148,7 @@ export namespace Prisma {
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sales?: boolean | Customer$salesArgs<ExtArgs>
     salesVat?: boolean | Customer$salesVatArgs<ExtArgs>
-    clientTransactions?: boolean | Customer$clientTransactionsArgs<ExtArgs>
+    customerTransactions?: boolean | Customer$customerTransactionsArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -19159,7 +19159,7 @@ export namespace Prisma {
     objects: {
       sales: Prisma.$CSMasterPayload<ExtArgs>[]
       salesVat: Prisma.$CSVMasterPayload<ExtArgs>[]
-      clientTransactions: Prisma.$Client_TransactionPayload<ExtArgs>[]
+      customerTransactions: Prisma.$Customer_TransactionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -19565,7 +19565,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     sales<T extends Customer$salesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$salesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CSMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     salesVat<T extends Customer$salesVatArgs<ExtArgs> = {}>(args?: Subset<T, Customer$salesVatArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CSVMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    clientTransactions<T extends Customer$clientTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$clientTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Client_TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    customerTransactions<T extends Customer$customerTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$customerTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20038,27 +20038,27 @@ export namespace Prisma {
   }
 
   /**
-   * Customer.clientTransactions
+   * Customer.customerTransactions
    */
-  export type Customer$clientTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer$customerTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Client_Transaction
+     * Select specific fields to fetch from the Customer_Transaction
      */
-    select?: Client_TransactionSelect<ExtArgs> | null
+    select?: Customer_TransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Client_Transaction
+     * Omit specific fields from the Customer_Transaction
      */
-    omit?: Client_TransactionOmit<ExtArgs> | null
+    omit?: Customer_TransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Client_TransactionInclude<ExtArgs> | null
-    where?: Client_TransactionWhereInput
-    orderBy?: Client_TransactionOrderByWithRelationInput | Client_TransactionOrderByWithRelationInput[]
-    cursor?: Client_TransactionWhereUniqueInput
+    include?: Customer_TransactionInclude<ExtArgs> | null
+    where?: Customer_TransactionWhereInput
+    orderBy?: Customer_TransactionOrderByWithRelationInput | Customer_TransactionOrderByWithRelationInput[]
+    cursor?: Customer_TransactionWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: Client_TransactionScalarFieldEnum | Client_TransactionScalarFieldEnum[]
+    distinct?: Customer_TransactionScalarFieldEnum | Customer_TransactionScalarFieldEnum[]
   }
 
   /**
@@ -20081,30 +20081,30 @@ export namespace Prisma {
 
 
   /**
-   * Model Client_Transaction
+   * Model Customer_Transaction
    */
 
-  export type AggregateClient_Transaction = {
-    _count: Client_TransactionCountAggregateOutputType | null
-    _avg: Client_TransactionAvgAggregateOutputType | null
-    _sum: Client_TransactionSumAggregateOutputType | null
-    _min: Client_TransactionMinAggregateOutputType | null
-    _max: Client_TransactionMaxAggregateOutputType | null
+  export type AggregateCustomer_Transaction = {
+    _count: Customer_TransactionCountAggregateOutputType | null
+    _avg: Customer_TransactionAvgAggregateOutputType | null
+    _sum: Customer_TransactionSumAggregateOutputType | null
+    _min: Customer_TransactionMinAggregateOutputType | null
+    _max: Customer_TransactionMaxAggregateOutputType | null
   }
 
-  export type Client_TransactionAvgAggregateOutputType = {
-    paymentAmount: Decimal | null
+  export type Customer_TransactionAvgAggregateOutputType = {
+    receiveAmount: Decimal | null
   }
 
-  export type Client_TransactionSumAggregateOutputType = {
-    paymentAmount: Decimal | null
+  export type Customer_TransactionSumAggregateOutputType = {
+    receiveAmount: Decimal | null
   }
 
-  export type Client_TransactionMinAggregateOutputType = {
+  export type Customer_TransactionMinAggregateOutputType = {
     id: string | null
-    clientCode: string | null
-    paymentDate: Date | null
-    paymentAmount: Decimal | null
+    customerId: string | null
+    receiveDate: Date | null
+    receiveAmount: Decimal | null
     tType: string | null
     serialNo: string | null
     moneyReceptNo: string | null
@@ -20113,11 +20113,11 @@ export namespace Prisma {
     branchId: string | null
   }
 
-  export type Client_TransactionMaxAggregateOutputType = {
+  export type Customer_TransactionMaxAggregateOutputType = {
     id: string | null
-    clientCode: string | null
-    paymentDate: Date | null
-    paymentAmount: Decimal | null
+    customerId: string | null
+    receiveDate: Date | null
+    receiveAmount: Decimal | null
     tType: string | null
     serialNo: string | null
     moneyReceptNo: string | null
@@ -20126,11 +20126,11 @@ export namespace Prisma {
     branchId: string | null
   }
 
-  export type Client_TransactionCountAggregateOutputType = {
+  export type Customer_TransactionCountAggregateOutputType = {
     id: number
-    clientCode: number
-    paymentDate: number
-    paymentAmount: number
+    customerId: number
+    receiveDate: number
+    receiveAmount: number
     tType: number
     serialNo: number
     moneyReceptNo: number
@@ -20141,19 +20141,19 @@ export namespace Prisma {
   }
 
 
-  export type Client_TransactionAvgAggregateInputType = {
-    paymentAmount?: true
+  export type Customer_TransactionAvgAggregateInputType = {
+    receiveAmount?: true
   }
 
-  export type Client_TransactionSumAggregateInputType = {
-    paymentAmount?: true
+  export type Customer_TransactionSumAggregateInputType = {
+    receiveAmount?: true
   }
 
-  export type Client_TransactionMinAggregateInputType = {
+  export type Customer_TransactionMinAggregateInputType = {
     id?: true
-    clientCode?: true
-    paymentDate?: true
-    paymentAmount?: true
+    customerId?: true
+    receiveDate?: true
+    receiveAmount?: true
     tType?: true
     serialNo?: true
     moneyReceptNo?: true
@@ -20162,11 +20162,11 @@ export namespace Prisma {
     branchId?: true
   }
 
-  export type Client_TransactionMaxAggregateInputType = {
+  export type Customer_TransactionMaxAggregateInputType = {
     id?: true
-    clientCode?: true
-    paymentDate?: true
-    paymentAmount?: true
+    customerId?: true
+    receiveDate?: true
+    receiveAmount?: true
     tType?: true
     serialNo?: true
     moneyReceptNo?: true
@@ -20175,11 +20175,11 @@ export namespace Prisma {
     branchId?: true
   }
 
-  export type Client_TransactionCountAggregateInputType = {
+  export type Customer_TransactionCountAggregateInputType = {
     id?: true
-    clientCode?: true
-    paymentDate?: true
-    paymentAmount?: true
+    customerId?: true
+    receiveDate?: true
+    receiveAmount?: true
     tType?: true
     serialNo?: true
     moneyReceptNo?: true
@@ -20189,171 +20189,171 @@ export namespace Prisma {
     _all?: true
   }
 
-  export type Client_TransactionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Client_Transaction to aggregate.
+     * Filter which Customer_Transaction to aggregate.
      */
-    where?: Client_TransactionWhereInput
+    where?: Customer_TransactionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Client_Transactions to fetch.
+     * Determine the order of Customer_Transactions to fetch.
      */
-    orderBy?: Client_TransactionOrderByWithRelationInput | Client_TransactionOrderByWithRelationInput[]
+    orderBy?: Customer_TransactionOrderByWithRelationInput | Customer_TransactionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: Client_TransactionWhereUniqueInput
+    cursor?: Customer_TransactionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Client_Transactions from the position of the cursor.
+     * Take `±n` Customer_Transactions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Client_Transactions.
+     * Skip the first `n` Customer_Transactions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned Client_Transactions
+     * Count returned Customer_Transactions
     **/
-    _count?: true | Client_TransactionCountAggregateInputType
+    _count?: true | Customer_TransactionCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: Client_TransactionAvgAggregateInputType
+    _avg?: Customer_TransactionAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: Client_TransactionSumAggregateInputType
+    _sum?: Customer_TransactionSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: Client_TransactionMinAggregateInputType
+    _min?: Customer_TransactionMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: Client_TransactionMaxAggregateInputType
+    _max?: Customer_TransactionMaxAggregateInputType
   }
 
-  export type GetClient_TransactionAggregateType<T extends Client_TransactionAggregateArgs> = {
-        [P in keyof T & keyof AggregateClient_Transaction]: P extends '_count' | 'count'
+  export type GetCustomer_TransactionAggregateType<T extends Customer_TransactionAggregateArgs> = {
+        [P in keyof T & keyof AggregateCustomer_Transaction]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateClient_Transaction[P]>
-      : GetScalarType<T[P], AggregateClient_Transaction[P]>
+        : GetScalarType<T[P], AggregateCustomer_Transaction[P]>
+      : GetScalarType<T[P], AggregateCustomer_Transaction[P]>
   }
 
 
 
 
-  export type Client_TransactionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: Client_TransactionWhereInput
-    orderBy?: Client_TransactionOrderByWithAggregationInput | Client_TransactionOrderByWithAggregationInput[]
-    by: Client_TransactionScalarFieldEnum[] | Client_TransactionScalarFieldEnum
-    having?: Client_TransactionScalarWhereWithAggregatesInput
+  export type Customer_TransactionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: Customer_TransactionWhereInput
+    orderBy?: Customer_TransactionOrderByWithAggregationInput | Customer_TransactionOrderByWithAggregationInput[]
+    by: Customer_TransactionScalarFieldEnum[] | Customer_TransactionScalarFieldEnum
+    having?: Customer_TransactionScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: Client_TransactionCountAggregateInputType | true
-    _avg?: Client_TransactionAvgAggregateInputType
-    _sum?: Client_TransactionSumAggregateInputType
-    _min?: Client_TransactionMinAggregateInputType
-    _max?: Client_TransactionMaxAggregateInputType
+    _count?: Customer_TransactionCountAggregateInputType | true
+    _avg?: Customer_TransactionAvgAggregateInputType
+    _sum?: Customer_TransactionSumAggregateInputType
+    _min?: Customer_TransactionMinAggregateInputType
+    _max?: Customer_TransactionMaxAggregateInputType
   }
 
-  export type Client_TransactionGroupByOutputType = {
+  export type Customer_TransactionGroupByOutputType = {
     id: string
-    clientCode: string | null
-    paymentDate: Date | null
-    paymentAmount: Decimal | null
+    customerId: string | null
+    receiveDate: Date | null
+    receiveAmount: Decimal | null
     tType: string | null
     serialNo: string | null
     moneyReceptNo: string | null
     bankName: string | null
     bankNo: string | null
     branchId: string | null
-    _count: Client_TransactionCountAggregateOutputType | null
-    _avg: Client_TransactionAvgAggregateOutputType | null
-    _sum: Client_TransactionSumAggregateOutputType | null
-    _min: Client_TransactionMinAggregateOutputType | null
-    _max: Client_TransactionMaxAggregateOutputType | null
+    _count: Customer_TransactionCountAggregateOutputType | null
+    _avg: Customer_TransactionAvgAggregateOutputType | null
+    _sum: Customer_TransactionSumAggregateOutputType | null
+    _min: Customer_TransactionMinAggregateOutputType | null
+    _max: Customer_TransactionMaxAggregateOutputType | null
   }
 
-  type GetClient_TransactionGroupByPayload<T extends Client_TransactionGroupByArgs> = Prisma.PrismaPromise<
+  type GetCustomer_TransactionGroupByPayload<T extends Customer_TransactionGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<Client_TransactionGroupByOutputType, T['by']> &
+      PickEnumerable<Customer_TransactionGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof Client_TransactionGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof Customer_TransactionGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], Client_TransactionGroupByOutputType[P]>
-            : GetScalarType<T[P], Client_TransactionGroupByOutputType[P]>
+              : GetScalarType<T[P], Customer_TransactionGroupByOutputType[P]>
+            : GetScalarType<T[P], Customer_TransactionGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type Client_TransactionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type Customer_TransactionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    clientCode?: boolean
-    paymentDate?: boolean
-    paymentAmount?: boolean
+    customerId?: boolean
+    receiveDate?: boolean
+    receiveAmount?: boolean
     tType?: boolean
     serialNo?: boolean
     moneyReceptNo?: boolean
     bankName?: boolean
     bankNo?: boolean
     branchId?: boolean
-    customer?: boolean | Client_Transaction$customerArgs<ExtArgs>
-  }, ExtArgs["result"]["client_Transaction"]>
+    customer?: boolean | Customer_Transaction$customerArgs<ExtArgs>
+  }, ExtArgs["result"]["customer_Transaction"]>
 
-  export type Client_TransactionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type Customer_TransactionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    clientCode?: boolean
-    paymentDate?: boolean
-    paymentAmount?: boolean
+    customerId?: boolean
+    receiveDate?: boolean
+    receiveAmount?: boolean
     tType?: boolean
     serialNo?: boolean
     moneyReceptNo?: boolean
     bankName?: boolean
     bankNo?: boolean
     branchId?: boolean
-    customer?: boolean | Client_Transaction$customerArgs<ExtArgs>
-  }, ExtArgs["result"]["client_Transaction"]>
+    customer?: boolean | Customer_Transaction$customerArgs<ExtArgs>
+  }, ExtArgs["result"]["customer_Transaction"]>
 
-  export type Client_TransactionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type Customer_TransactionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    clientCode?: boolean
-    paymentDate?: boolean
-    paymentAmount?: boolean
+    customerId?: boolean
+    receiveDate?: boolean
+    receiveAmount?: boolean
     tType?: boolean
     serialNo?: boolean
     moneyReceptNo?: boolean
     bankName?: boolean
     bankNo?: boolean
     branchId?: boolean
-    customer?: boolean | Client_Transaction$customerArgs<ExtArgs>
-  }, ExtArgs["result"]["client_Transaction"]>
+    customer?: boolean | Customer_Transaction$customerArgs<ExtArgs>
+  }, ExtArgs["result"]["customer_Transaction"]>
 
-  export type Client_TransactionSelectScalar = {
+  export type Customer_TransactionSelectScalar = {
     id?: boolean
-    clientCode?: boolean
-    paymentDate?: boolean
-    paymentAmount?: boolean
+    customerId?: boolean
+    receiveDate?: boolean
+    receiveAmount?: boolean
     tType?: boolean
     serialNo?: boolean
     moneyReceptNo?: boolean
@@ -20362,163 +20362,163 @@ export namespace Prisma {
     branchId?: boolean
   }
 
-  export type Client_TransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clientCode" | "paymentDate" | "paymentAmount" | "tType" | "serialNo" | "moneyReceptNo" | "bankName" | "bankNo" | "branchId", ExtArgs["result"]["client_Transaction"]>
-  export type Client_TransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | Client_Transaction$customerArgs<ExtArgs>
+  export type Customer_TransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "customerId" | "receiveDate" | "receiveAmount" | "tType" | "serialNo" | "moneyReceptNo" | "bankName" | "bankNo" | "branchId", ExtArgs["result"]["customer_Transaction"]>
+  export type Customer_TransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | Customer_Transaction$customerArgs<ExtArgs>
   }
-  export type Client_TransactionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | Client_Transaction$customerArgs<ExtArgs>
+  export type Customer_TransactionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | Customer_Transaction$customerArgs<ExtArgs>
   }
-  export type Client_TransactionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    customer?: boolean | Client_Transaction$customerArgs<ExtArgs>
+  export type Customer_TransactionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | Customer_Transaction$customerArgs<ExtArgs>
   }
 
-  export type $Client_TransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Client_Transaction"
+  export type $Customer_TransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Customer_Transaction"
     objects: {
       customer: Prisma.$CustomerPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      clientCode: string | null
-      paymentDate: Date | null
-      paymentAmount: Prisma.Decimal | null
+      customerId: string | null
+      receiveDate: Date | null
+      receiveAmount: Prisma.Decimal | null
       tType: string | null
       serialNo: string | null
       moneyReceptNo: string | null
       bankName: string | null
       bankNo: string | null
       branchId: string | null
-    }, ExtArgs["result"]["client_Transaction"]>
+    }, ExtArgs["result"]["customer_Transaction"]>
     composites: {}
   }
 
-  type Client_TransactionGetPayload<S extends boolean | null | undefined | Client_TransactionDefaultArgs> = $Result.GetResult<Prisma.$Client_TransactionPayload, S>
+  type Customer_TransactionGetPayload<S extends boolean | null | undefined | Customer_TransactionDefaultArgs> = $Result.GetResult<Prisma.$Customer_TransactionPayload, S>
 
-  type Client_TransactionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<Client_TransactionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: Client_TransactionCountAggregateInputType | true
+  type Customer_TransactionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<Customer_TransactionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Customer_TransactionCountAggregateInputType | true
     }
 
-  export interface Client_TransactionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Client_Transaction'], meta: { name: 'Client_Transaction' } }
+  export interface Customer_TransactionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Customer_Transaction'], meta: { name: 'Customer_Transaction' } }
     /**
-     * Find zero or one Client_Transaction that matches the filter.
-     * @param {Client_TransactionFindUniqueArgs} args - Arguments to find a Client_Transaction
+     * Find zero or one Customer_Transaction that matches the filter.
+     * @param {Customer_TransactionFindUniqueArgs} args - Arguments to find a Customer_Transaction
      * @example
-     * // Get one Client_Transaction
-     * const client_Transaction = await prisma.client_Transaction.findUnique({
+     * // Get one Customer_Transaction
+     * const customer_Transaction = await prisma.customer_Transaction.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends Client_TransactionFindUniqueArgs>(args: SelectSubset<T, Client_TransactionFindUniqueArgs<ExtArgs>>): Prisma__Client_TransactionClient<$Result.GetResult<Prisma.$Client_TransactionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends Customer_TransactionFindUniqueArgs>(args: SelectSubset<T, Customer_TransactionFindUniqueArgs<ExtArgs>>): Prisma__Customer_TransactionClient<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one Client_Transaction that matches the filter or throw an error with `error.code='P2025'`
+     * Find one Customer_Transaction that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {Client_TransactionFindUniqueOrThrowArgs} args - Arguments to find a Client_Transaction
+     * @param {Customer_TransactionFindUniqueOrThrowArgs} args - Arguments to find a Customer_Transaction
      * @example
-     * // Get one Client_Transaction
-     * const client_Transaction = await prisma.client_Transaction.findUniqueOrThrow({
+     * // Get one Customer_Transaction
+     * const customer_Transaction = await prisma.customer_Transaction.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends Client_TransactionFindUniqueOrThrowArgs>(args: SelectSubset<T, Client_TransactionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__Client_TransactionClient<$Result.GetResult<Prisma.$Client_TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends Customer_TransactionFindUniqueOrThrowArgs>(args: SelectSubset<T, Customer_TransactionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__Customer_TransactionClient<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Client_Transaction that matches the filter.
+     * Find the first Customer_Transaction that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {Client_TransactionFindFirstArgs} args - Arguments to find a Client_Transaction
+     * @param {Customer_TransactionFindFirstArgs} args - Arguments to find a Customer_Transaction
      * @example
-     * // Get one Client_Transaction
-     * const client_Transaction = await prisma.client_Transaction.findFirst({
+     * // Get one Customer_Transaction
+     * const customer_Transaction = await prisma.customer_Transaction.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends Client_TransactionFindFirstArgs>(args?: SelectSubset<T, Client_TransactionFindFirstArgs<ExtArgs>>): Prisma__Client_TransactionClient<$Result.GetResult<Prisma.$Client_TransactionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends Customer_TransactionFindFirstArgs>(args?: SelectSubset<T, Customer_TransactionFindFirstArgs<ExtArgs>>): Prisma__Customer_TransactionClient<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Client_Transaction that matches the filter or
+     * Find the first Customer_Transaction that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {Client_TransactionFindFirstOrThrowArgs} args - Arguments to find a Client_Transaction
+     * @param {Customer_TransactionFindFirstOrThrowArgs} args - Arguments to find a Customer_Transaction
      * @example
-     * // Get one Client_Transaction
-     * const client_Transaction = await prisma.client_Transaction.findFirstOrThrow({
+     * // Get one Customer_Transaction
+     * const customer_Transaction = await prisma.customer_Transaction.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends Client_TransactionFindFirstOrThrowArgs>(args?: SelectSubset<T, Client_TransactionFindFirstOrThrowArgs<ExtArgs>>): Prisma__Client_TransactionClient<$Result.GetResult<Prisma.$Client_TransactionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends Customer_TransactionFindFirstOrThrowArgs>(args?: SelectSubset<T, Customer_TransactionFindFirstOrThrowArgs<ExtArgs>>): Prisma__Customer_TransactionClient<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more Client_Transactions that matches the filter.
+     * Find zero or more Customer_Transactions that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {Client_TransactionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {Customer_TransactionFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all Client_Transactions
-     * const client_Transactions = await prisma.client_Transaction.findMany()
+     * // Get all Customer_Transactions
+     * const customer_Transactions = await prisma.customer_Transaction.findMany()
      * 
-     * // Get first 10 Client_Transactions
-     * const client_Transactions = await prisma.client_Transaction.findMany({ take: 10 })
+     * // Get first 10 Customer_Transactions
+     * const customer_Transactions = await prisma.customer_Transaction.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const client_TransactionWithIdOnly = await prisma.client_Transaction.findMany({ select: { id: true } })
+     * const customer_TransactionWithIdOnly = await prisma.customer_Transaction.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends Client_TransactionFindManyArgs>(args?: SelectSubset<T, Client_TransactionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Client_TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends Customer_TransactionFindManyArgs>(args?: SelectSubset<T, Customer_TransactionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a Client_Transaction.
-     * @param {Client_TransactionCreateArgs} args - Arguments to create a Client_Transaction.
+     * Create a Customer_Transaction.
+     * @param {Customer_TransactionCreateArgs} args - Arguments to create a Customer_Transaction.
      * @example
-     * // Create one Client_Transaction
-     * const Client_Transaction = await prisma.client_Transaction.create({
+     * // Create one Customer_Transaction
+     * const Customer_Transaction = await prisma.customer_Transaction.create({
      *   data: {
-     *     // ... data to create a Client_Transaction
+     *     // ... data to create a Customer_Transaction
      *   }
      * })
      * 
      */
-    create<T extends Client_TransactionCreateArgs>(args: SelectSubset<T, Client_TransactionCreateArgs<ExtArgs>>): Prisma__Client_TransactionClient<$Result.GetResult<Prisma.$Client_TransactionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends Customer_TransactionCreateArgs>(args: SelectSubset<T, Customer_TransactionCreateArgs<ExtArgs>>): Prisma__Customer_TransactionClient<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many Client_Transactions.
-     * @param {Client_TransactionCreateManyArgs} args - Arguments to create many Client_Transactions.
+     * Create many Customer_Transactions.
+     * @param {Customer_TransactionCreateManyArgs} args - Arguments to create many Customer_Transactions.
      * @example
-     * // Create many Client_Transactions
-     * const client_Transaction = await prisma.client_Transaction.createMany({
+     * // Create many Customer_Transactions
+     * const customer_Transaction = await prisma.customer_Transaction.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends Client_TransactionCreateManyArgs>(args?: SelectSubset<T, Client_TransactionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends Customer_TransactionCreateManyArgs>(args?: SelectSubset<T, Customer_TransactionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many Client_Transactions and returns the data saved in the database.
-     * @param {Client_TransactionCreateManyAndReturnArgs} args - Arguments to create many Client_Transactions.
+     * Create many Customer_Transactions and returns the data saved in the database.
+     * @param {Customer_TransactionCreateManyAndReturnArgs} args - Arguments to create many Customer_Transactions.
      * @example
-     * // Create many Client_Transactions
-     * const client_Transaction = await prisma.client_Transaction.createManyAndReturn({
+     * // Create many Customer_Transactions
+     * const customer_Transaction = await prisma.customer_Transaction.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many Client_Transactions and only return the `id`
-     * const client_TransactionWithIdOnly = await prisma.client_Transaction.createManyAndReturn({
+     * // Create many Customer_Transactions and only return the `id`
+     * const customer_TransactionWithIdOnly = await prisma.customer_Transaction.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -20528,28 +20528,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends Client_TransactionCreateManyAndReturnArgs>(args?: SelectSubset<T, Client_TransactionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Client_TransactionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends Customer_TransactionCreateManyAndReturnArgs>(args?: SelectSubset<T, Customer_TransactionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a Client_Transaction.
-     * @param {Client_TransactionDeleteArgs} args - Arguments to delete one Client_Transaction.
+     * Delete a Customer_Transaction.
+     * @param {Customer_TransactionDeleteArgs} args - Arguments to delete one Customer_Transaction.
      * @example
-     * // Delete one Client_Transaction
-     * const Client_Transaction = await prisma.client_Transaction.delete({
+     * // Delete one Customer_Transaction
+     * const Customer_Transaction = await prisma.customer_Transaction.delete({
      *   where: {
-     *     // ... filter to delete one Client_Transaction
+     *     // ... filter to delete one Customer_Transaction
      *   }
      * })
      * 
      */
-    delete<T extends Client_TransactionDeleteArgs>(args: SelectSubset<T, Client_TransactionDeleteArgs<ExtArgs>>): Prisma__Client_TransactionClient<$Result.GetResult<Prisma.$Client_TransactionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends Customer_TransactionDeleteArgs>(args: SelectSubset<T, Customer_TransactionDeleteArgs<ExtArgs>>): Prisma__Customer_TransactionClient<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one Client_Transaction.
-     * @param {Client_TransactionUpdateArgs} args - Arguments to update one Client_Transaction.
+     * Update one Customer_Transaction.
+     * @param {Customer_TransactionUpdateArgs} args - Arguments to update one Customer_Transaction.
      * @example
-     * // Update one Client_Transaction
-     * const client_Transaction = await prisma.client_Transaction.update({
+     * // Update one Customer_Transaction
+     * const customer_Transaction = await prisma.customer_Transaction.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -20559,30 +20559,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends Client_TransactionUpdateArgs>(args: SelectSubset<T, Client_TransactionUpdateArgs<ExtArgs>>): Prisma__Client_TransactionClient<$Result.GetResult<Prisma.$Client_TransactionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends Customer_TransactionUpdateArgs>(args: SelectSubset<T, Customer_TransactionUpdateArgs<ExtArgs>>): Prisma__Customer_TransactionClient<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more Client_Transactions.
-     * @param {Client_TransactionDeleteManyArgs} args - Arguments to filter Client_Transactions to delete.
+     * Delete zero or more Customer_Transactions.
+     * @param {Customer_TransactionDeleteManyArgs} args - Arguments to filter Customer_Transactions to delete.
      * @example
-     * // Delete a few Client_Transactions
-     * const { count } = await prisma.client_Transaction.deleteMany({
+     * // Delete a few Customer_Transactions
+     * const { count } = await prisma.customer_Transaction.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends Client_TransactionDeleteManyArgs>(args?: SelectSubset<T, Client_TransactionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends Customer_TransactionDeleteManyArgs>(args?: SelectSubset<T, Customer_TransactionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Client_Transactions.
+     * Update zero or more Customer_Transactions.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {Client_TransactionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {Customer_TransactionUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many Client_Transactions
-     * const client_Transaction = await prisma.client_Transaction.updateMany({
+     * // Update many Customer_Transactions
+     * const customer_Transaction = await prisma.customer_Transaction.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -20592,14 +20592,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends Client_TransactionUpdateManyArgs>(args: SelectSubset<T, Client_TransactionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends Customer_TransactionUpdateManyArgs>(args: SelectSubset<T, Customer_TransactionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Client_Transactions and returns the data updated in the database.
-     * @param {Client_TransactionUpdateManyAndReturnArgs} args - Arguments to update many Client_Transactions.
+     * Update zero or more Customer_Transactions and returns the data updated in the database.
+     * @param {Customer_TransactionUpdateManyAndReturnArgs} args - Arguments to update many Customer_Transactions.
      * @example
-     * // Update many Client_Transactions
-     * const client_Transaction = await prisma.client_Transaction.updateManyAndReturn({
+     * // Update many Customer_Transactions
+     * const customer_Transaction = await prisma.customer_Transaction.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -20608,8 +20608,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Client_Transactions and only return the `id`
-     * const client_TransactionWithIdOnly = await prisma.client_Transaction.updateManyAndReturn({
+     * // Update zero or more Customer_Transactions and only return the `id`
+     * const customer_TransactionWithIdOnly = await prisma.customer_Transaction.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -20622,56 +20622,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends Client_TransactionUpdateManyAndReturnArgs>(args: SelectSubset<T, Client_TransactionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Client_TransactionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends Customer_TransactionUpdateManyAndReturnArgs>(args: SelectSubset<T, Customer_TransactionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one Client_Transaction.
-     * @param {Client_TransactionUpsertArgs} args - Arguments to update or create a Client_Transaction.
+     * Create or update one Customer_Transaction.
+     * @param {Customer_TransactionUpsertArgs} args - Arguments to update or create a Customer_Transaction.
      * @example
-     * // Update or create a Client_Transaction
-     * const client_Transaction = await prisma.client_Transaction.upsert({
+     * // Update or create a Customer_Transaction
+     * const customer_Transaction = await prisma.customer_Transaction.upsert({
      *   create: {
-     *     // ... data to create a Client_Transaction
+     *     // ... data to create a Customer_Transaction
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the Client_Transaction we want to update
+     *     // ... the filter for the Customer_Transaction we want to update
      *   }
      * })
      */
-    upsert<T extends Client_TransactionUpsertArgs>(args: SelectSubset<T, Client_TransactionUpsertArgs<ExtArgs>>): Prisma__Client_TransactionClient<$Result.GetResult<Prisma.$Client_TransactionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends Customer_TransactionUpsertArgs>(args: SelectSubset<T, Customer_TransactionUpsertArgs<ExtArgs>>): Prisma__Customer_TransactionClient<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of Client_Transactions.
+     * Count the number of Customer_Transactions.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {Client_TransactionCountArgs} args - Arguments to filter Client_Transactions to count.
+     * @param {Customer_TransactionCountArgs} args - Arguments to filter Customer_Transactions to count.
      * @example
-     * // Count the number of Client_Transactions
-     * const count = await prisma.client_Transaction.count({
+     * // Count the number of Customer_Transactions
+     * const count = await prisma.customer_Transaction.count({
      *   where: {
-     *     // ... the filter for the Client_Transactions we want to count
+     *     // ... the filter for the Customer_Transactions we want to count
      *   }
      * })
     **/
-    count<T extends Client_TransactionCountArgs>(
-      args?: Subset<T, Client_TransactionCountArgs>,
+    count<T extends Customer_TransactionCountArgs>(
+      args?: Subset<T, Customer_TransactionCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], Client_TransactionCountAggregateOutputType>
+          : GetScalarType<T['select'], Customer_TransactionCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a Client_Transaction.
+     * Allows you to perform aggregations operations on a Customer_Transaction.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {Client_TransactionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {Customer_TransactionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -20691,13 +20691,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends Client_TransactionAggregateArgs>(args: Subset<T, Client_TransactionAggregateArgs>): Prisma.PrismaPromise<GetClient_TransactionAggregateType<T>>
+    aggregate<T extends Customer_TransactionAggregateArgs>(args: Subset<T, Customer_TransactionAggregateArgs>): Prisma.PrismaPromise<GetCustomer_TransactionAggregateType<T>>
 
     /**
-     * Group by Client_Transaction.
+     * Group by Customer_Transaction.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {Client_TransactionGroupByArgs} args - Group by arguments.
+     * @param {Customer_TransactionGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -20712,14 +20712,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends Client_TransactionGroupByArgs,
+      T extends Customer_TransactionGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: Client_TransactionGroupByArgs['orderBy'] }
-        : { orderBy?: Client_TransactionGroupByArgs['orderBy'] },
+        ? { orderBy: Customer_TransactionGroupByArgs['orderBy'] }
+        : { orderBy?: Customer_TransactionGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -20768,22 +20768,22 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, Client_TransactionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClient_TransactionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, Customer_TransactionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCustomer_TransactionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the Client_Transaction model
+   * Fields of the Customer_Transaction model
    */
-  readonly fields: Client_TransactionFieldRefs;
+  readonly fields: Customer_TransactionFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for Client_Transaction.
+   * The delegate class that acts as a "Promise-like" for Customer_Transaction.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__Client_TransactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__Customer_TransactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    customer<T extends Client_Transaction$customerArgs<ExtArgs> = {}>(args?: Subset<T, Client_Transaction$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    customer<T extends Customer_Transaction$customerArgs<ExtArgs> = {}>(args?: Subset<T, Customer_Transaction$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20810,418 +20810,418 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the Client_Transaction model
+   * Fields of the Customer_Transaction model
    */
-  interface Client_TransactionFieldRefs {
-    readonly id: FieldRef<"Client_Transaction", 'String'>
-    readonly clientCode: FieldRef<"Client_Transaction", 'String'>
-    readonly paymentDate: FieldRef<"Client_Transaction", 'DateTime'>
-    readonly paymentAmount: FieldRef<"Client_Transaction", 'Decimal'>
-    readonly tType: FieldRef<"Client_Transaction", 'String'>
-    readonly serialNo: FieldRef<"Client_Transaction", 'String'>
-    readonly moneyReceptNo: FieldRef<"Client_Transaction", 'String'>
-    readonly bankName: FieldRef<"Client_Transaction", 'String'>
-    readonly bankNo: FieldRef<"Client_Transaction", 'String'>
-    readonly branchId: FieldRef<"Client_Transaction", 'String'>
+  interface Customer_TransactionFieldRefs {
+    readonly id: FieldRef<"Customer_Transaction", 'String'>
+    readonly customerId: FieldRef<"Customer_Transaction", 'String'>
+    readonly receiveDate: FieldRef<"Customer_Transaction", 'DateTime'>
+    readonly receiveAmount: FieldRef<"Customer_Transaction", 'Decimal'>
+    readonly tType: FieldRef<"Customer_Transaction", 'String'>
+    readonly serialNo: FieldRef<"Customer_Transaction", 'String'>
+    readonly moneyReceptNo: FieldRef<"Customer_Transaction", 'String'>
+    readonly bankName: FieldRef<"Customer_Transaction", 'String'>
+    readonly bankNo: FieldRef<"Customer_Transaction", 'String'>
+    readonly branchId: FieldRef<"Customer_Transaction", 'String'>
   }
     
 
   // Custom InputTypes
   /**
-   * Client_Transaction findUnique
+   * Customer_Transaction findUnique
    */
-  export type Client_TransactionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Client_Transaction
+     * Select specific fields to fetch from the Customer_Transaction
      */
-    select?: Client_TransactionSelect<ExtArgs> | null
+    select?: Customer_TransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Client_Transaction
+     * Omit specific fields from the Customer_Transaction
      */
-    omit?: Client_TransactionOmit<ExtArgs> | null
+    omit?: Customer_TransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Client_TransactionInclude<ExtArgs> | null
+    include?: Customer_TransactionInclude<ExtArgs> | null
     /**
-     * Filter, which Client_Transaction to fetch.
+     * Filter, which Customer_Transaction to fetch.
      */
-    where: Client_TransactionWhereUniqueInput
+    where: Customer_TransactionWhereUniqueInput
   }
 
   /**
-   * Client_Transaction findUniqueOrThrow
+   * Customer_Transaction findUniqueOrThrow
    */
-  export type Client_TransactionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Client_Transaction
+     * Select specific fields to fetch from the Customer_Transaction
      */
-    select?: Client_TransactionSelect<ExtArgs> | null
+    select?: Customer_TransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Client_Transaction
+     * Omit specific fields from the Customer_Transaction
      */
-    omit?: Client_TransactionOmit<ExtArgs> | null
+    omit?: Customer_TransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Client_TransactionInclude<ExtArgs> | null
+    include?: Customer_TransactionInclude<ExtArgs> | null
     /**
-     * Filter, which Client_Transaction to fetch.
+     * Filter, which Customer_Transaction to fetch.
      */
-    where: Client_TransactionWhereUniqueInput
+    where: Customer_TransactionWhereUniqueInput
   }
 
   /**
-   * Client_Transaction findFirst
+   * Customer_Transaction findFirst
    */
-  export type Client_TransactionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Client_Transaction
+     * Select specific fields to fetch from the Customer_Transaction
      */
-    select?: Client_TransactionSelect<ExtArgs> | null
+    select?: Customer_TransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Client_Transaction
+     * Omit specific fields from the Customer_Transaction
      */
-    omit?: Client_TransactionOmit<ExtArgs> | null
+    omit?: Customer_TransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Client_TransactionInclude<ExtArgs> | null
+    include?: Customer_TransactionInclude<ExtArgs> | null
     /**
-     * Filter, which Client_Transaction to fetch.
+     * Filter, which Customer_Transaction to fetch.
      */
-    where?: Client_TransactionWhereInput
+    where?: Customer_TransactionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Client_Transactions to fetch.
+     * Determine the order of Customer_Transactions to fetch.
      */
-    orderBy?: Client_TransactionOrderByWithRelationInput | Client_TransactionOrderByWithRelationInput[]
+    orderBy?: Customer_TransactionOrderByWithRelationInput | Customer_TransactionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Client_Transactions.
+     * Sets the position for searching for Customer_Transactions.
      */
-    cursor?: Client_TransactionWhereUniqueInput
+    cursor?: Customer_TransactionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Client_Transactions from the position of the cursor.
+     * Take `±n` Customer_Transactions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Client_Transactions.
+     * Skip the first `n` Customer_Transactions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Client_Transactions.
+     * Filter by unique combinations of Customer_Transactions.
      */
-    distinct?: Client_TransactionScalarFieldEnum | Client_TransactionScalarFieldEnum[]
+    distinct?: Customer_TransactionScalarFieldEnum | Customer_TransactionScalarFieldEnum[]
   }
 
   /**
-   * Client_Transaction findFirstOrThrow
+   * Customer_Transaction findFirstOrThrow
    */
-  export type Client_TransactionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Client_Transaction
+     * Select specific fields to fetch from the Customer_Transaction
      */
-    select?: Client_TransactionSelect<ExtArgs> | null
+    select?: Customer_TransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Client_Transaction
+     * Omit specific fields from the Customer_Transaction
      */
-    omit?: Client_TransactionOmit<ExtArgs> | null
+    omit?: Customer_TransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Client_TransactionInclude<ExtArgs> | null
+    include?: Customer_TransactionInclude<ExtArgs> | null
     /**
-     * Filter, which Client_Transaction to fetch.
+     * Filter, which Customer_Transaction to fetch.
      */
-    where?: Client_TransactionWhereInput
+    where?: Customer_TransactionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Client_Transactions to fetch.
+     * Determine the order of Customer_Transactions to fetch.
      */
-    orderBy?: Client_TransactionOrderByWithRelationInput | Client_TransactionOrderByWithRelationInput[]
+    orderBy?: Customer_TransactionOrderByWithRelationInput | Customer_TransactionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Client_Transactions.
+     * Sets the position for searching for Customer_Transactions.
      */
-    cursor?: Client_TransactionWhereUniqueInput
+    cursor?: Customer_TransactionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Client_Transactions from the position of the cursor.
+     * Take `±n` Customer_Transactions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Client_Transactions.
+     * Skip the first `n` Customer_Transactions.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Client_Transactions.
+     * Filter by unique combinations of Customer_Transactions.
      */
-    distinct?: Client_TransactionScalarFieldEnum | Client_TransactionScalarFieldEnum[]
+    distinct?: Customer_TransactionScalarFieldEnum | Customer_TransactionScalarFieldEnum[]
   }
 
   /**
-   * Client_Transaction findMany
+   * Customer_Transaction findMany
    */
-  export type Client_TransactionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Client_Transaction
+     * Select specific fields to fetch from the Customer_Transaction
      */
-    select?: Client_TransactionSelect<ExtArgs> | null
+    select?: Customer_TransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Client_Transaction
+     * Omit specific fields from the Customer_Transaction
      */
-    omit?: Client_TransactionOmit<ExtArgs> | null
+    omit?: Customer_TransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Client_TransactionInclude<ExtArgs> | null
+    include?: Customer_TransactionInclude<ExtArgs> | null
     /**
-     * Filter, which Client_Transactions to fetch.
+     * Filter, which Customer_Transactions to fetch.
      */
-    where?: Client_TransactionWhereInput
+    where?: Customer_TransactionWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Client_Transactions to fetch.
+     * Determine the order of Customer_Transactions to fetch.
      */
-    orderBy?: Client_TransactionOrderByWithRelationInput | Client_TransactionOrderByWithRelationInput[]
+    orderBy?: Customer_TransactionOrderByWithRelationInput | Customer_TransactionOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing Client_Transactions.
+     * Sets the position for listing Customer_Transactions.
      */
-    cursor?: Client_TransactionWhereUniqueInput
+    cursor?: Customer_TransactionWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Client_Transactions from the position of the cursor.
+     * Take `±n` Customer_Transactions from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Client_Transactions.
+     * Skip the first `n` Customer_Transactions.
      */
     skip?: number
-    distinct?: Client_TransactionScalarFieldEnum | Client_TransactionScalarFieldEnum[]
+    distinct?: Customer_TransactionScalarFieldEnum | Customer_TransactionScalarFieldEnum[]
   }
 
   /**
-   * Client_Transaction create
+   * Customer_Transaction create
    */
-  export type Client_TransactionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Client_Transaction
+     * Select specific fields to fetch from the Customer_Transaction
      */
-    select?: Client_TransactionSelect<ExtArgs> | null
+    select?: Customer_TransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Client_Transaction
+     * Omit specific fields from the Customer_Transaction
      */
-    omit?: Client_TransactionOmit<ExtArgs> | null
+    omit?: Customer_TransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Client_TransactionInclude<ExtArgs> | null
+    include?: Customer_TransactionInclude<ExtArgs> | null
     /**
-     * The data needed to create a Client_Transaction.
+     * The data needed to create a Customer_Transaction.
      */
-    data?: XOR<Client_TransactionCreateInput, Client_TransactionUncheckedCreateInput>
+    data?: XOR<Customer_TransactionCreateInput, Customer_TransactionUncheckedCreateInput>
   }
 
   /**
-   * Client_Transaction createMany
+   * Customer_Transaction createMany
    */
-  export type Client_TransactionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many Client_Transactions.
+     * The data used to create many Customer_Transactions.
      */
-    data: Client_TransactionCreateManyInput | Client_TransactionCreateManyInput[]
+    data: Customer_TransactionCreateManyInput | Customer_TransactionCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * Client_Transaction createManyAndReturn
+   * Customer_Transaction createManyAndReturn
    */
-  export type Client_TransactionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Client_Transaction
+     * Select specific fields to fetch from the Customer_Transaction
      */
-    select?: Client_TransactionSelectCreateManyAndReturn<ExtArgs> | null
+    select?: Customer_TransactionSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Client_Transaction
+     * Omit specific fields from the Customer_Transaction
      */
-    omit?: Client_TransactionOmit<ExtArgs> | null
+    omit?: Customer_TransactionOmit<ExtArgs> | null
     /**
-     * The data used to create many Client_Transactions.
+     * The data used to create many Customer_Transactions.
      */
-    data: Client_TransactionCreateManyInput | Client_TransactionCreateManyInput[]
+    data: Customer_TransactionCreateManyInput | Customer_TransactionCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Client_TransactionIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: Customer_TransactionIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * Client_Transaction update
+   * Customer_Transaction update
    */
-  export type Client_TransactionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Client_Transaction
+     * Select specific fields to fetch from the Customer_Transaction
      */
-    select?: Client_TransactionSelect<ExtArgs> | null
+    select?: Customer_TransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Client_Transaction
+     * Omit specific fields from the Customer_Transaction
      */
-    omit?: Client_TransactionOmit<ExtArgs> | null
+    omit?: Customer_TransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Client_TransactionInclude<ExtArgs> | null
+    include?: Customer_TransactionInclude<ExtArgs> | null
     /**
-     * The data needed to update a Client_Transaction.
+     * The data needed to update a Customer_Transaction.
      */
-    data: XOR<Client_TransactionUpdateInput, Client_TransactionUncheckedUpdateInput>
+    data: XOR<Customer_TransactionUpdateInput, Customer_TransactionUncheckedUpdateInput>
     /**
-     * Choose, which Client_Transaction to update.
+     * Choose, which Customer_Transaction to update.
      */
-    where: Client_TransactionWhereUniqueInput
+    where: Customer_TransactionWhereUniqueInput
   }
 
   /**
-   * Client_Transaction updateMany
+   * Customer_Transaction updateMany
    */
-  export type Client_TransactionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update Client_Transactions.
+     * The data used to update Customer_Transactions.
      */
-    data: XOR<Client_TransactionUpdateManyMutationInput, Client_TransactionUncheckedUpdateManyInput>
+    data: XOR<Customer_TransactionUpdateManyMutationInput, Customer_TransactionUncheckedUpdateManyInput>
     /**
-     * Filter which Client_Transactions to update
+     * Filter which Customer_Transactions to update
      */
-    where?: Client_TransactionWhereInput
+    where?: Customer_TransactionWhereInput
     /**
-     * Limit how many Client_Transactions to update.
+     * Limit how many Customer_Transactions to update.
      */
     limit?: number
   }
 
   /**
-   * Client_Transaction updateManyAndReturn
+   * Customer_Transaction updateManyAndReturn
    */
-  export type Client_TransactionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Client_Transaction
+     * Select specific fields to fetch from the Customer_Transaction
      */
-    select?: Client_TransactionSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: Customer_TransactionSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Client_Transaction
+     * Omit specific fields from the Customer_Transaction
      */
-    omit?: Client_TransactionOmit<ExtArgs> | null
+    omit?: Customer_TransactionOmit<ExtArgs> | null
     /**
-     * The data used to update Client_Transactions.
+     * The data used to update Customer_Transactions.
      */
-    data: XOR<Client_TransactionUpdateManyMutationInput, Client_TransactionUncheckedUpdateManyInput>
+    data: XOR<Customer_TransactionUpdateManyMutationInput, Customer_TransactionUncheckedUpdateManyInput>
     /**
-     * Filter which Client_Transactions to update
+     * Filter which Customer_Transactions to update
      */
-    where?: Client_TransactionWhereInput
+    where?: Customer_TransactionWhereInput
     /**
-     * Limit how many Client_Transactions to update.
+     * Limit how many Customer_Transactions to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Client_TransactionIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: Customer_TransactionIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * Client_Transaction upsert
+   * Customer_Transaction upsert
    */
-  export type Client_TransactionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Client_Transaction
+     * Select specific fields to fetch from the Customer_Transaction
      */
-    select?: Client_TransactionSelect<ExtArgs> | null
+    select?: Customer_TransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Client_Transaction
+     * Omit specific fields from the Customer_Transaction
      */
-    omit?: Client_TransactionOmit<ExtArgs> | null
+    omit?: Customer_TransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Client_TransactionInclude<ExtArgs> | null
+    include?: Customer_TransactionInclude<ExtArgs> | null
     /**
-     * The filter to search for the Client_Transaction to update in case it exists.
+     * The filter to search for the Customer_Transaction to update in case it exists.
      */
-    where: Client_TransactionWhereUniqueInput
+    where: Customer_TransactionWhereUniqueInput
     /**
-     * In case the Client_Transaction found by the `where` argument doesn't exist, create a new Client_Transaction with this data.
+     * In case the Customer_Transaction found by the `where` argument doesn't exist, create a new Customer_Transaction with this data.
      */
-    create: XOR<Client_TransactionCreateInput, Client_TransactionUncheckedCreateInput>
+    create: XOR<Customer_TransactionCreateInput, Customer_TransactionUncheckedCreateInput>
     /**
-     * In case the Client_Transaction was found with the provided `where` argument, update it with this data.
+     * In case the Customer_Transaction was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<Client_TransactionUpdateInput, Client_TransactionUncheckedUpdateInput>
+    update: XOR<Customer_TransactionUpdateInput, Customer_TransactionUncheckedUpdateInput>
   }
 
   /**
-   * Client_Transaction delete
+   * Customer_Transaction delete
    */
-  export type Client_TransactionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Client_Transaction
+     * Select specific fields to fetch from the Customer_Transaction
      */
-    select?: Client_TransactionSelect<ExtArgs> | null
+    select?: Customer_TransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Client_Transaction
+     * Omit specific fields from the Customer_Transaction
      */
-    omit?: Client_TransactionOmit<ExtArgs> | null
+    omit?: Customer_TransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Client_TransactionInclude<ExtArgs> | null
+    include?: Customer_TransactionInclude<ExtArgs> | null
     /**
-     * Filter which Client_Transaction to delete.
+     * Filter which Customer_Transaction to delete.
      */
-    where: Client_TransactionWhereUniqueInput
+    where: Customer_TransactionWhereUniqueInput
   }
 
   /**
-   * Client_Transaction deleteMany
+   * Customer_Transaction deleteMany
    */
-  export type Client_TransactionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Client_Transactions to delete
+     * Filter which Customer_Transactions to delete
      */
-    where?: Client_TransactionWhereInput
+    where?: Customer_TransactionWhereInput
     /**
-     * Limit how many Client_Transactions to delete.
+     * Limit how many Customer_Transactions to delete.
      */
     limit?: number
   }
 
   /**
-   * Client_Transaction.customer
+   * Customer_Transaction.customer
    */
-  export type Client_Transaction$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_Transaction$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Customer
      */
@@ -21238,21 +21238,21 @@ export namespace Prisma {
   }
 
   /**
-   * Client_Transaction without action
+   * Customer_Transaction without action
    */
-  export type Client_TransactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Customer_TransactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Client_Transaction
+     * Select specific fields to fetch from the Customer_Transaction
      */
-    select?: Client_TransactionSelect<ExtArgs> | null
+    select?: Customer_TransactionSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Client_Transaction
+     * Omit specific fields from the Customer_Transaction
      */
-    omit?: Client_TransactionOmit<ExtArgs> | null
+    omit?: Customer_TransactionOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: Client_TransactionInclude<ExtArgs> | null
+    include?: Customer_TransactionInclude<ExtArgs> | null
   }
 
 
@@ -29332,7 +29332,7 @@ export namespace Prisma {
     poNo: string | null
     invoiceBy: string | null
     manualInvoice: string | null
-    clientCode: string | null
+    customerId: string | null
     totalAmount: Decimal | null
     totalDiscount: Decimal | null
     totalVat: Decimal | null
@@ -29349,7 +29349,7 @@ export namespace Prisma {
     poNo: string | null
     invoiceBy: string | null
     manualInvoice: string | null
-    clientCode: string | null
+    customerId: string | null
     totalAmount: Decimal | null
     totalDiscount: Decimal | null
     totalVat: Decimal | null
@@ -29366,7 +29366,7 @@ export namespace Prisma {
     poNo: number
     invoiceBy: number
     manualInvoice: number
-    clientCode: number
+    customerId: number
     totalAmount: number
     totalDiscount: number
     totalVat: number
@@ -29399,7 +29399,7 @@ export namespace Prisma {
     poNo?: true
     invoiceBy?: true
     manualInvoice?: true
-    clientCode?: true
+    customerId?: true
     totalAmount?: true
     totalDiscount?: true
     totalVat?: true
@@ -29416,7 +29416,7 @@ export namespace Prisma {
     poNo?: true
     invoiceBy?: true
     manualInvoice?: true
-    clientCode?: true
+    customerId?: true
     totalAmount?: true
     totalDiscount?: true
     totalVat?: true
@@ -29433,7 +29433,7 @@ export namespace Prisma {
     poNo?: true
     invoiceBy?: true
     manualInvoice?: true
-    clientCode?: true
+    customerId?: true
     totalAmount?: true
     totalDiscount?: true
     totalVat?: true
@@ -29537,7 +29537,7 @@ export namespace Prisma {
     poNo: string | null
     invoiceBy: string | null
     manualInvoice: string | null
-    clientCode: string | null
+    customerId: string | null
     totalAmount: Decimal | null
     totalDiscount: Decimal | null
     totalVat: Decimal | null
@@ -29573,7 +29573,7 @@ export namespace Prisma {
     poNo?: boolean
     invoiceBy?: boolean
     manualInvoice?: boolean
-    clientCode?: boolean
+    customerId?: boolean
     totalAmount?: boolean
     totalDiscount?: boolean
     totalVat?: boolean
@@ -29593,7 +29593,7 @@ export namespace Prisma {
     poNo?: boolean
     invoiceBy?: boolean
     manualInvoice?: boolean
-    clientCode?: boolean
+    customerId?: boolean
     totalAmount?: boolean
     totalDiscount?: boolean
     totalVat?: boolean
@@ -29611,7 +29611,7 @@ export namespace Prisma {
     poNo?: boolean
     invoiceBy?: boolean
     manualInvoice?: boolean
-    clientCode?: boolean
+    customerId?: boolean
     totalAmount?: boolean
     totalDiscount?: boolean
     totalVat?: boolean
@@ -29629,7 +29629,7 @@ export namespace Prisma {
     poNo?: boolean
     invoiceBy?: boolean
     manualInvoice?: boolean
-    clientCode?: boolean
+    customerId?: boolean
     totalAmount?: boolean
     totalDiscount?: boolean
     totalVat?: boolean
@@ -29639,7 +29639,7 @@ export namespace Prisma {
     createDate?: boolean
   }
 
-  export type CSMasterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invNo" | "invDate" | "poNo" | "invoiceBy" | "manualInvoice" | "clientCode" | "totalAmount" | "totalDiscount" | "totalVat" | "discountRemarks" | "isActive" | "branchId" | "createDate", ExtArgs["result"]["cSMaster"]>
+  export type CSMasterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invNo" | "invDate" | "poNo" | "invoiceBy" | "manualInvoice" | "customerId" | "totalAmount" | "totalDiscount" | "totalVat" | "discountRemarks" | "isActive" | "branchId" | "createDate", ExtArgs["result"]["cSMaster"]>
   export type CSMasterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CSMaster$customerArgs<ExtArgs>
     details?: boolean | CSMaster$detailsArgs<ExtArgs>
@@ -29665,7 +29665,7 @@ export namespace Prisma {
       poNo: string | null
       invoiceBy: string | null
       manualInvoice: string | null
-      clientCode: string | null
+      customerId: string | null
       totalAmount: Prisma.Decimal | null
       totalDiscount: Prisma.Decimal | null
       totalVat: Prisma.Decimal | null
@@ -30104,7 +30104,7 @@ export namespace Prisma {
     readonly poNo: FieldRef<"CSMaster", 'String'>
     readonly invoiceBy: FieldRef<"CSMaster", 'String'>
     readonly manualInvoice: FieldRef<"CSMaster", 'String'>
-    readonly clientCode: FieldRef<"CSMaster", 'String'>
+    readonly customerId: FieldRef<"CSMaster", 'String'>
     readonly totalAmount: FieldRef<"CSMaster", 'Decimal'>
     readonly totalDiscount: FieldRef<"CSMaster", 'Decimal'>
     readonly totalVat: FieldRef<"CSMaster", 'Decimal'>
@@ -60448,11 +60448,11 @@ export namespace Prisma {
   export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
 
 
-  export const Client_TransactionScalarFieldEnum: {
+  export const Customer_TransactionScalarFieldEnum: {
     id: 'id',
-    clientCode: 'clientCode',
-    paymentDate: 'paymentDate',
-    paymentAmount: 'paymentAmount',
+    customerId: 'customerId',
+    receiveDate: 'receiveDate',
+    receiveAmount: 'receiveAmount',
     tType: 'tType',
     serialNo: 'serialNo',
     moneyReceptNo: 'moneyReceptNo',
@@ -60461,7 +60461,7 @@ export namespace Prisma {
     branchId: 'branchId'
   };
 
-  export type Client_TransactionScalarFieldEnum = (typeof Client_TransactionScalarFieldEnum)[keyof typeof Client_TransactionScalarFieldEnum]
+  export type Customer_TransactionScalarFieldEnum = (typeof Customer_TransactionScalarFieldEnum)[keyof typeof Customer_TransactionScalarFieldEnum]
 
 
   export const EmployeeScalarFieldEnum: {
@@ -60570,7 +60570,7 @@ export namespace Prisma {
     poNo: 'poNo',
     invoiceBy: 'invoiceBy',
     manualInvoice: 'manualInvoice',
-    clientCode: 'clientCode',
+    customerId: 'customerId',
     totalAmount: 'totalAmount',
     totalDiscount: 'totalDiscount',
     totalVat: 'totalVat',
@@ -62084,7 +62084,7 @@ export namespace Prisma {
     joiningDate?: DateTimeNullableFilter<"Customer"> | Date | string | null
     sales?: CSMasterListRelationFilter
     salesVat?: CSVMasterListRelationFilter
-    clientTransactions?: Client_TransactionListRelationFilter
+    customerTransactions?: Customer_TransactionListRelationFilter
   }
 
   export type CustomerOrderByWithRelationInput = {
@@ -62097,7 +62097,7 @@ export namespace Prisma {
     joiningDate?: SortOrderInput | SortOrder
     sales?: CSMasterOrderByRelationAggregateInput
     salesVat?: CSVMasterOrderByRelationAggregateInput
-    clientTransactions?: Client_TransactionOrderByRelationAggregateInput
+    customerTransactions?: Customer_TransactionOrderByRelationAggregateInput
   }
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -62113,7 +62113,7 @@ export namespace Prisma {
     joiningDate?: DateTimeNullableFilter<"Customer"> | Date | string | null
     sales?: CSMasterListRelationFilter
     salesVat?: CSVMasterListRelationFilter
-    clientTransactions?: Client_TransactionListRelationFilter
+    customerTransactions?: Customer_TransactionListRelationFilter
   }, "id" | "code">
 
   export type CustomerOrderByWithAggregationInput = {
@@ -62142,28 +62142,28 @@ export namespace Prisma {
     joiningDate?: DateTimeNullableWithAggregatesFilter<"Customer"> | Date | string | null
   }
 
-  export type Client_TransactionWhereInput = {
-    AND?: Client_TransactionWhereInput | Client_TransactionWhereInput[]
-    OR?: Client_TransactionWhereInput[]
-    NOT?: Client_TransactionWhereInput | Client_TransactionWhereInput[]
-    id?: UuidFilter<"Client_Transaction"> | string
-    clientCode?: StringNullableFilter<"Client_Transaction"> | string | null
-    paymentDate?: DateTimeNullableFilter<"Client_Transaction"> | Date | string | null
-    paymentAmount?: DecimalNullableFilter<"Client_Transaction"> | Decimal | DecimalJsLike | number | string | null
-    tType?: StringNullableFilter<"Client_Transaction"> | string | null
-    serialNo?: StringNullableFilter<"Client_Transaction"> | string | null
-    moneyReceptNo?: StringNullableFilter<"Client_Transaction"> | string | null
-    bankName?: StringNullableFilter<"Client_Transaction"> | string | null
-    bankNo?: StringNullableFilter<"Client_Transaction"> | string | null
-    branchId?: UuidNullableFilter<"Client_Transaction"> | string | null
+  export type Customer_TransactionWhereInput = {
+    AND?: Customer_TransactionWhereInput | Customer_TransactionWhereInput[]
+    OR?: Customer_TransactionWhereInput[]
+    NOT?: Customer_TransactionWhereInput | Customer_TransactionWhereInput[]
+    id?: UuidFilter<"Customer_Transaction"> | string
+    customerId?: UuidNullableFilter<"Customer_Transaction"> | string | null
+    receiveDate?: DateTimeNullableFilter<"Customer_Transaction"> | Date | string | null
+    receiveAmount?: DecimalNullableFilter<"Customer_Transaction"> | Decimal | DecimalJsLike | number | string | null
+    tType?: StringNullableFilter<"Customer_Transaction"> | string | null
+    serialNo?: StringNullableFilter<"Customer_Transaction"> | string | null
+    moneyReceptNo?: StringNullableFilter<"Customer_Transaction"> | string | null
+    bankName?: StringNullableFilter<"Customer_Transaction"> | string | null
+    bankNo?: StringNullableFilter<"Customer_Transaction"> | string | null
+    branchId?: UuidNullableFilter<"Customer_Transaction"> | string | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
   }
 
-  export type Client_TransactionOrderByWithRelationInput = {
+  export type Customer_TransactionOrderByWithRelationInput = {
     id?: SortOrder
-    clientCode?: SortOrderInput | SortOrder
-    paymentDate?: SortOrderInput | SortOrder
-    paymentAmount?: SortOrderInput | SortOrder
+    customerId?: SortOrderInput | SortOrder
+    receiveDate?: SortOrderInput | SortOrder
+    receiveAmount?: SortOrderInput | SortOrder
     tType?: SortOrderInput | SortOrder
     serialNo?: SortOrderInput | SortOrder
     moneyReceptNo?: SortOrderInput | SortOrder
@@ -62173,55 +62173,55 @@ export namespace Prisma {
     customer?: CustomerOrderByWithRelationInput
   }
 
-  export type Client_TransactionWhereUniqueInput = Prisma.AtLeast<{
+  export type Customer_TransactionWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    AND?: Client_TransactionWhereInput | Client_TransactionWhereInput[]
-    OR?: Client_TransactionWhereInput[]
-    NOT?: Client_TransactionWhereInput | Client_TransactionWhereInput[]
-    clientCode?: StringNullableFilter<"Client_Transaction"> | string | null
-    paymentDate?: DateTimeNullableFilter<"Client_Transaction"> | Date | string | null
-    paymentAmount?: DecimalNullableFilter<"Client_Transaction"> | Decimal | DecimalJsLike | number | string | null
-    tType?: StringNullableFilter<"Client_Transaction"> | string | null
-    serialNo?: StringNullableFilter<"Client_Transaction"> | string | null
-    moneyReceptNo?: StringNullableFilter<"Client_Transaction"> | string | null
-    bankName?: StringNullableFilter<"Client_Transaction"> | string | null
-    bankNo?: StringNullableFilter<"Client_Transaction"> | string | null
-    branchId?: UuidNullableFilter<"Client_Transaction"> | string | null
+    AND?: Customer_TransactionWhereInput | Customer_TransactionWhereInput[]
+    OR?: Customer_TransactionWhereInput[]
+    NOT?: Customer_TransactionWhereInput | Customer_TransactionWhereInput[]
+    customerId?: UuidNullableFilter<"Customer_Transaction"> | string | null
+    receiveDate?: DateTimeNullableFilter<"Customer_Transaction"> | Date | string | null
+    receiveAmount?: DecimalNullableFilter<"Customer_Transaction"> | Decimal | DecimalJsLike | number | string | null
+    tType?: StringNullableFilter<"Customer_Transaction"> | string | null
+    serialNo?: StringNullableFilter<"Customer_Transaction"> | string | null
+    moneyReceptNo?: StringNullableFilter<"Customer_Transaction"> | string | null
+    bankName?: StringNullableFilter<"Customer_Transaction"> | string | null
+    bankNo?: StringNullableFilter<"Customer_Transaction"> | string | null
+    branchId?: UuidNullableFilter<"Customer_Transaction"> | string | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
   }, "id">
 
-  export type Client_TransactionOrderByWithAggregationInput = {
+  export type Customer_TransactionOrderByWithAggregationInput = {
     id?: SortOrder
-    clientCode?: SortOrderInput | SortOrder
-    paymentDate?: SortOrderInput | SortOrder
-    paymentAmount?: SortOrderInput | SortOrder
+    customerId?: SortOrderInput | SortOrder
+    receiveDate?: SortOrderInput | SortOrder
+    receiveAmount?: SortOrderInput | SortOrder
     tType?: SortOrderInput | SortOrder
     serialNo?: SortOrderInput | SortOrder
     moneyReceptNo?: SortOrderInput | SortOrder
     bankName?: SortOrderInput | SortOrder
     bankNo?: SortOrderInput | SortOrder
     branchId?: SortOrderInput | SortOrder
-    _count?: Client_TransactionCountOrderByAggregateInput
-    _avg?: Client_TransactionAvgOrderByAggregateInput
-    _max?: Client_TransactionMaxOrderByAggregateInput
-    _min?: Client_TransactionMinOrderByAggregateInput
-    _sum?: Client_TransactionSumOrderByAggregateInput
+    _count?: Customer_TransactionCountOrderByAggregateInput
+    _avg?: Customer_TransactionAvgOrderByAggregateInput
+    _max?: Customer_TransactionMaxOrderByAggregateInput
+    _min?: Customer_TransactionMinOrderByAggregateInput
+    _sum?: Customer_TransactionSumOrderByAggregateInput
   }
 
-  export type Client_TransactionScalarWhereWithAggregatesInput = {
-    AND?: Client_TransactionScalarWhereWithAggregatesInput | Client_TransactionScalarWhereWithAggregatesInput[]
-    OR?: Client_TransactionScalarWhereWithAggregatesInput[]
-    NOT?: Client_TransactionScalarWhereWithAggregatesInput | Client_TransactionScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"Client_Transaction"> | string
-    clientCode?: StringNullableWithAggregatesFilter<"Client_Transaction"> | string | null
-    paymentDate?: DateTimeNullableWithAggregatesFilter<"Client_Transaction"> | Date | string | null
-    paymentAmount?: DecimalNullableWithAggregatesFilter<"Client_Transaction"> | Decimal | DecimalJsLike | number | string | null
-    tType?: StringNullableWithAggregatesFilter<"Client_Transaction"> | string | null
-    serialNo?: StringNullableWithAggregatesFilter<"Client_Transaction"> | string | null
-    moneyReceptNo?: StringNullableWithAggregatesFilter<"Client_Transaction"> | string | null
-    bankName?: StringNullableWithAggregatesFilter<"Client_Transaction"> | string | null
-    bankNo?: StringNullableWithAggregatesFilter<"Client_Transaction"> | string | null
-    branchId?: UuidNullableWithAggregatesFilter<"Client_Transaction"> | string | null
+  export type Customer_TransactionScalarWhereWithAggregatesInput = {
+    AND?: Customer_TransactionScalarWhereWithAggregatesInput | Customer_TransactionScalarWhereWithAggregatesInput[]
+    OR?: Customer_TransactionScalarWhereWithAggregatesInput[]
+    NOT?: Customer_TransactionScalarWhereWithAggregatesInput | Customer_TransactionScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Customer_Transaction"> | string
+    customerId?: UuidNullableWithAggregatesFilter<"Customer_Transaction"> | string | null
+    receiveDate?: DateTimeNullableWithAggregatesFilter<"Customer_Transaction"> | Date | string | null
+    receiveAmount?: DecimalNullableWithAggregatesFilter<"Customer_Transaction"> | Decimal | DecimalJsLike | number | string | null
+    tType?: StringNullableWithAggregatesFilter<"Customer_Transaction"> | string | null
+    serialNo?: StringNullableWithAggregatesFilter<"Customer_Transaction"> | string | null
+    moneyReceptNo?: StringNullableWithAggregatesFilter<"Customer_Transaction"> | string | null
+    bankName?: StringNullableWithAggregatesFilter<"Customer_Transaction"> | string | null
+    bankNo?: StringNullableWithAggregatesFilter<"Customer_Transaction"> | string | null
+    branchId?: UuidNullableWithAggregatesFilter<"Customer_Transaction"> | string | null
   }
 
   export type EmployeeWhereInput = {
@@ -62760,7 +62760,7 @@ export namespace Prisma {
     poNo?: StringNullableFilter<"CSMaster"> | string | null
     invoiceBy?: StringNullableFilter<"CSMaster"> | string | null
     manualInvoice?: StringNullableFilter<"CSMaster"> | string | null
-    clientCode?: StringNullableFilter<"CSMaster"> | string | null
+    customerId?: UuidNullableFilter<"CSMaster"> | string | null
     totalAmount?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalVat?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
@@ -62779,7 +62779,7 @@ export namespace Prisma {
     poNo?: SortOrderInput | SortOrder
     invoiceBy?: SortOrderInput | SortOrder
     manualInvoice?: SortOrderInput | SortOrder
-    clientCode?: SortOrderInput | SortOrder
+    customerId?: SortOrderInput | SortOrder
     totalAmount?: SortOrderInput | SortOrder
     totalDiscount?: SortOrderInput | SortOrder
     totalVat?: SortOrderInput | SortOrder
@@ -62801,7 +62801,7 @@ export namespace Prisma {
     poNo?: StringNullableFilter<"CSMaster"> | string | null
     invoiceBy?: StringNullableFilter<"CSMaster"> | string | null
     manualInvoice?: StringNullableFilter<"CSMaster"> | string | null
-    clientCode?: StringNullableFilter<"CSMaster"> | string | null
+    customerId?: UuidNullableFilter<"CSMaster"> | string | null
     totalAmount?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalVat?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
@@ -62820,7 +62820,7 @@ export namespace Prisma {
     poNo?: SortOrderInput | SortOrder
     invoiceBy?: SortOrderInput | SortOrder
     manualInvoice?: SortOrderInput | SortOrder
-    clientCode?: SortOrderInput | SortOrder
+    customerId?: SortOrderInput | SortOrder
     totalAmount?: SortOrderInput | SortOrder
     totalDiscount?: SortOrderInput | SortOrder
     totalVat?: SortOrderInput | SortOrder
@@ -62845,7 +62845,7 @@ export namespace Prisma {
     poNo?: StringNullableWithAggregatesFilter<"CSMaster"> | string | null
     invoiceBy?: StringNullableWithAggregatesFilter<"CSMaster"> | string | null
     manualInvoice?: StringNullableWithAggregatesFilter<"CSMaster"> | string | null
-    clientCode?: StringNullableWithAggregatesFilter<"CSMaster"> | string | null
+    customerId?: UuidNullableWithAggregatesFilter<"CSMaster"> | string | null
     totalAmount?: DecimalNullableWithAggregatesFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: DecimalNullableWithAggregatesFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalVat?: DecimalNullableWithAggregatesFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
@@ -66267,7 +66267,7 @@ export namespace Prisma {
     joiningDate?: Date | string | null
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
-    clientTransactions?: Client_TransactionCreateNestedManyWithoutCustomerInput
+    customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateInput = {
@@ -66280,7 +66280,7 @@ export namespace Prisma {
     joiningDate?: Date | string | null
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
-    clientTransactions?: Client_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+    customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUpdateInput = {
@@ -66293,7 +66293,7 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
-    clientTransactions?: Client_TransactionUpdateManyWithoutCustomerNestedInput
+    customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
@@ -66306,7 +66306,7 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
-    clientTransactions?: Client_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
+    customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateManyInput = {
@@ -66339,63 +66339,24 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type Client_TransactionCreateInput = {
+  export type Customer_TransactionCreateInput = {
     id?: string
-    paymentDate?: Date | string | null
-    paymentAmount?: Decimal | DecimalJsLike | number | string | null
+    receiveDate?: Date | string | null
+    receiveAmount?: Decimal | DecimalJsLike | number | string | null
     tType?: string | null
     serialNo?: string | null
     moneyReceptNo?: string | null
     bankName?: string | null
     bankNo?: string | null
     branchId?: string | null
-    customer?: CustomerCreateNestedOneWithoutClientTransactionsInput
+    customer?: CustomerCreateNestedOneWithoutCustomerTransactionsInput
   }
 
-  export type Client_TransactionUncheckedCreateInput = {
+  export type Customer_TransactionUncheckedCreateInput = {
     id?: string
-    clientCode?: string | null
-    paymentDate?: Date | string | null
-    paymentAmount?: Decimal | DecimalJsLike | number | string | null
-    tType?: string | null
-    serialNo?: string | null
-    moneyReceptNo?: string | null
-    bankName?: string | null
-    bankNo?: string | null
-    branchId?: string | null
-  }
-
-  export type Client_TransactionUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tType?: NullableStringFieldUpdateOperationsInput | string | null
-    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
-    moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    bankNo?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableStringFieldUpdateOperationsInput | string | null
-    customer?: CustomerUpdateOneWithoutClientTransactionsNestedInput
-  }
-
-  export type Client_TransactionUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    clientCode?: NullableStringFieldUpdateOperationsInput | string | null
-    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tType?: NullableStringFieldUpdateOperationsInput | string | null
-    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
-    moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
-    bankName?: NullableStringFieldUpdateOperationsInput | string | null
-    bankNo?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type Client_TransactionCreateManyInput = {
-    id?: string
-    clientCode?: string | null
-    paymentDate?: Date | string | null
-    paymentAmount?: Decimal | DecimalJsLike | number | string | null
+    customerId?: string | null
+    receiveDate?: Date | string | null
+    receiveAmount?: Decimal | DecimalJsLike | number | string | null
     tType?: string | null
     serialNo?: string | null
     moneyReceptNo?: string | null
@@ -66404,10 +66365,24 @@ export namespace Prisma {
     branchId?: string | null
   }
 
-  export type Client_TransactionUpdateManyMutationInput = {
+  export type Customer_TransactionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    receiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receiveAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    tType?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    bankNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutCustomerTransactionsNestedInput
+  }
+
+  export type Customer_TransactionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    receiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receiveAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tType?: NullableStringFieldUpdateOperationsInput | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -66416,11 +66391,36 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type Client_TransactionUncheckedUpdateManyInput = {
+  export type Customer_TransactionCreateManyInput = {
+    id?: string
+    customerId?: string | null
+    receiveDate?: Date | string | null
+    receiveAmount?: Decimal | DecimalJsLike | number | string | null
+    tType?: string | null
+    serialNo?: string | null
+    moneyReceptNo?: string | null
+    bankName?: string | null
+    bankNo?: string | null
+    branchId?: string | null
+  }
+
+  export type Customer_TransactionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    clientCode?: NullableStringFieldUpdateOperationsInput | string | null
-    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    receiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receiveAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    tType?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
+    bankName?: NullableStringFieldUpdateOperationsInput | string | null
+    bankNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Customer_TransactionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    receiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receiveAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tType?: NullableStringFieldUpdateOperationsInput | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67036,7 +67036,7 @@ export namespace Prisma {
     poNo?: string | null
     invoiceBy?: string | null
     manualInvoice?: string | null
-    clientCode?: string | null
+    customerId?: string | null
     totalAmount?: Decimal | DecimalJsLike | number | string | null
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
@@ -67072,7 +67072,7 @@ export namespace Prisma {
     poNo?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceBy?: NullableStringFieldUpdateOperationsInput | string | null
     manualInvoice?: NullableStringFieldUpdateOperationsInput | string | null
-    clientCode?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -67090,7 +67090,7 @@ export namespace Prisma {
     poNo?: string | null
     invoiceBy?: string | null
     manualInvoice?: string | null
-    clientCode?: string | null
+    customerId?: string | null
     totalAmount?: Decimal | DecimalJsLike | number | string | null
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
@@ -67123,7 +67123,7 @@ export namespace Prisma {
     poNo?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceBy?: NullableStringFieldUpdateOperationsInput | string | null
     manualInvoice?: NullableStringFieldUpdateOperationsInput | string | null
-    clientCode?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -70812,10 +70812,10 @@ export namespace Prisma {
     none?: CSVMasterWhereInput
   }
 
-  export type Client_TransactionListRelationFilter = {
-    every?: Client_TransactionWhereInput
-    some?: Client_TransactionWhereInput
-    none?: Client_TransactionWhereInput
+  export type Customer_TransactionListRelationFilter = {
+    every?: Customer_TransactionWhereInput
+    some?: Customer_TransactionWhereInput
+    none?: Customer_TransactionWhereInput
   }
 
   export type CSMasterOrderByRelationAggregateInput = {
@@ -70826,7 +70826,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type Client_TransactionOrderByRelationAggregateInput = {
+  export type Customer_TransactionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -70876,11 +70876,11 @@ export namespace Prisma {
     isNot?: CustomerWhereInput | null
   }
 
-  export type Client_TransactionCountOrderByAggregateInput = {
+  export type Customer_TransactionCountOrderByAggregateInput = {
     id?: SortOrder
-    clientCode?: SortOrder
-    paymentDate?: SortOrder
-    paymentAmount?: SortOrder
+    customerId?: SortOrder
+    receiveDate?: SortOrder
+    receiveAmount?: SortOrder
     tType?: SortOrder
     serialNo?: SortOrder
     moneyReceptNo?: SortOrder
@@ -70889,15 +70889,15 @@ export namespace Prisma {
     branchId?: SortOrder
   }
 
-  export type Client_TransactionAvgOrderByAggregateInput = {
-    paymentAmount?: SortOrder
+  export type Customer_TransactionAvgOrderByAggregateInput = {
+    receiveAmount?: SortOrder
   }
 
-  export type Client_TransactionMaxOrderByAggregateInput = {
+  export type Customer_TransactionMaxOrderByAggregateInput = {
     id?: SortOrder
-    clientCode?: SortOrder
-    paymentDate?: SortOrder
-    paymentAmount?: SortOrder
+    customerId?: SortOrder
+    receiveDate?: SortOrder
+    receiveAmount?: SortOrder
     tType?: SortOrder
     serialNo?: SortOrder
     moneyReceptNo?: SortOrder
@@ -70906,11 +70906,11 @@ export namespace Prisma {
     branchId?: SortOrder
   }
 
-  export type Client_TransactionMinOrderByAggregateInput = {
+  export type Customer_TransactionMinOrderByAggregateInput = {
     id?: SortOrder
-    clientCode?: SortOrder
-    paymentDate?: SortOrder
-    paymentAmount?: SortOrder
+    customerId?: SortOrder
+    receiveDate?: SortOrder
+    receiveAmount?: SortOrder
     tType?: SortOrder
     serialNo?: SortOrder
     moneyReceptNo?: SortOrder
@@ -70919,8 +70919,8 @@ export namespace Prisma {
     branchId?: SortOrder
   }
 
-  export type Client_TransactionSumOrderByAggregateInput = {
-    paymentAmount?: SortOrder
+  export type Customer_TransactionSumOrderByAggregateInput = {
+    receiveAmount?: SortOrder
   }
 
   export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -71407,7 +71407,7 @@ export namespace Prisma {
     poNo?: SortOrder
     invoiceBy?: SortOrder
     manualInvoice?: SortOrder
-    clientCode?: SortOrder
+    customerId?: SortOrder
     totalAmount?: SortOrder
     totalDiscount?: SortOrder
     totalVat?: SortOrder
@@ -71431,7 +71431,7 @@ export namespace Prisma {
     poNo?: SortOrder
     invoiceBy?: SortOrder
     manualInvoice?: SortOrder
-    clientCode?: SortOrder
+    customerId?: SortOrder
     totalAmount?: SortOrder
     totalDiscount?: SortOrder
     totalVat?: SortOrder
@@ -71448,7 +71448,7 @@ export namespace Prisma {
     poNo?: SortOrder
     invoiceBy?: SortOrder
     manualInvoice?: SortOrder
-    clientCode?: SortOrder
+    customerId?: SortOrder
     totalAmount?: SortOrder
     totalDiscount?: SortOrder
     totalVat?: SortOrder
@@ -73705,11 +73705,11 @@ export namespace Prisma {
     connect?: CSVMasterWhereUniqueInput | CSVMasterWhereUniqueInput[]
   }
 
-  export type Client_TransactionCreateNestedManyWithoutCustomerInput = {
-    create?: XOR<Client_TransactionCreateWithoutCustomerInput, Client_TransactionUncheckedCreateWithoutCustomerInput> | Client_TransactionCreateWithoutCustomerInput[] | Client_TransactionUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: Client_TransactionCreateOrConnectWithoutCustomerInput | Client_TransactionCreateOrConnectWithoutCustomerInput[]
-    createMany?: Client_TransactionCreateManyCustomerInputEnvelope
-    connect?: Client_TransactionWhereUniqueInput | Client_TransactionWhereUniqueInput[]
+  export type Customer_TransactionCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<Customer_TransactionCreateWithoutCustomerInput, Customer_TransactionUncheckedCreateWithoutCustomerInput> | Customer_TransactionCreateWithoutCustomerInput[] | Customer_TransactionUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: Customer_TransactionCreateOrConnectWithoutCustomerInput | Customer_TransactionCreateOrConnectWithoutCustomerInput[]
+    createMany?: Customer_TransactionCreateManyCustomerInputEnvelope
+    connect?: Customer_TransactionWhereUniqueInput | Customer_TransactionWhereUniqueInput[]
   }
 
   export type CSMasterUncheckedCreateNestedManyWithoutCustomerInput = {
@@ -73726,11 +73726,11 @@ export namespace Prisma {
     connect?: CSVMasterWhereUniqueInput | CSVMasterWhereUniqueInput[]
   }
 
-  export type Client_TransactionUncheckedCreateNestedManyWithoutCustomerInput = {
-    create?: XOR<Client_TransactionCreateWithoutCustomerInput, Client_TransactionUncheckedCreateWithoutCustomerInput> | Client_TransactionCreateWithoutCustomerInput[] | Client_TransactionUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: Client_TransactionCreateOrConnectWithoutCustomerInput | Client_TransactionCreateOrConnectWithoutCustomerInput[]
-    createMany?: Client_TransactionCreateManyCustomerInputEnvelope
-    connect?: Client_TransactionWhereUniqueInput | Client_TransactionWhereUniqueInput[]
+  export type Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<Customer_TransactionCreateWithoutCustomerInput, Customer_TransactionUncheckedCreateWithoutCustomerInput> | Customer_TransactionCreateWithoutCustomerInput[] | Customer_TransactionUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: Customer_TransactionCreateOrConnectWithoutCustomerInput | Customer_TransactionCreateOrConnectWithoutCustomerInput[]
+    createMany?: Customer_TransactionCreateManyCustomerInputEnvelope
+    connect?: Customer_TransactionWhereUniqueInput | Customer_TransactionWhereUniqueInput[]
   }
 
   export type CSMasterUpdateManyWithoutCustomerNestedInput = {
@@ -73761,18 +73761,18 @@ export namespace Prisma {
     deleteMany?: CSVMasterScalarWhereInput | CSVMasterScalarWhereInput[]
   }
 
-  export type Client_TransactionUpdateManyWithoutCustomerNestedInput = {
-    create?: XOR<Client_TransactionCreateWithoutCustomerInput, Client_TransactionUncheckedCreateWithoutCustomerInput> | Client_TransactionCreateWithoutCustomerInput[] | Client_TransactionUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: Client_TransactionCreateOrConnectWithoutCustomerInput | Client_TransactionCreateOrConnectWithoutCustomerInput[]
-    upsert?: Client_TransactionUpsertWithWhereUniqueWithoutCustomerInput | Client_TransactionUpsertWithWhereUniqueWithoutCustomerInput[]
-    createMany?: Client_TransactionCreateManyCustomerInputEnvelope
-    set?: Client_TransactionWhereUniqueInput | Client_TransactionWhereUniqueInput[]
-    disconnect?: Client_TransactionWhereUniqueInput | Client_TransactionWhereUniqueInput[]
-    delete?: Client_TransactionWhereUniqueInput | Client_TransactionWhereUniqueInput[]
-    connect?: Client_TransactionWhereUniqueInput | Client_TransactionWhereUniqueInput[]
-    update?: Client_TransactionUpdateWithWhereUniqueWithoutCustomerInput | Client_TransactionUpdateWithWhereUniqueWithoutCustomerInput[]
-    updateMany?: Client_TransactionUpdateManyWithWhereWithoutCustomerInput | Client_TransactionUpdateManyWithWhereWithoutCustomerInput[]
-    deleteMany?: Client_TransactionScalarWhereInput | Client_TransactionScalarWhereInput[]
+  export type Customer_TransactionUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<Customer_TransactionCreateWithoutCustomerInput, Customer_TransactionUncheckedCreateWithoutCustomerInput> | Customer_TransactionCreateWithoutCustomerInput[] | Customer_TransactionUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: Customer_TransactionCreateOrConnectWithoutCustomerInput | Customer_TransactionCreateOrConnectWithoutCustomerInput[]
+    upsert?: Customer_TransactionUpsertWithWhereUniqueWithoutCustomerInput | Customer_TransactionUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: Customer_TransactionCreateManyCustomerInputEnvelope
+    set?: Customer_TransactionWhereUniqueInput | Customer_TransactionWhereUniqueInput[]
+    disconnect?: Customer_TransactionWhereUniqueInput | Customer_TransactionWhereUniqueInput[]
+    delete?: Customer_TransactionWhereUniqueInput | Customer_TransactionWhereUniqueInput[]
+    connect?: Customer_TransactionWhereUniqueInput | Customer_TransactionWhereUniqueInput[]
+    update?: Customer_TransactionUpdateWithWhereUniqueWithoutCustomerInput | Customer_TransactionUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: Customer_TransactionUpdateManyWithWhereWithoutCustomerInput | Customer_TransactionUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: Customer_TransactionScalarWhereInput | Customer_TransactionScalarWhereInput[]
   }
 
   export type CSMasterUncheckedUpdateManyWithoutCustomerNestedInput = {
@@ -73803,23 +73803,23 @@ export namespace Prisma {
     deleteMany?: CSVMasterScalarWhereInput | CSVMasterScalarWhereInput[]
   }
 
-  export type Client_TransactionUncheckedUpdateManyWithoutCustomerNestedInput = {
-    create?: XOR<Client_TransactionCreateWithoutCustomerInput, Client_TransactionUncheckedCreateWithoutCustomerInput> | Client_TransactionCreateWithoutCustomerInput[] | Client_TransactionUncheckedCreateWithoutCustomerInput[]
-    connectOrCreate?: Client_TransactionCreateOrConnectWithoutCustomerInput | Client_TransactionCreateOrConnectWithoutCustomerInput[]
-    upsert?: Client_TransactionUpsertWithWhereUniqueWithoutCustomerInput | Client_TransactionUpsertWithWhereUniqueWithoutCustomerInput[]
-    createMany?: Client_TransactionCreateManyCustomerInputEnvelope
-    set?: Client_TransactionWhereUniqueInput | Client_TransactionWhereUniqueInput[]
-    disconnect?: Client_TransactionWhereUniqueInput | Client_TransactionWhereUniqueInput[]
-    delete?: Client_TransactionWhereUniqueInput | Client_TransactionWhereUniqueInput[]
-    connect?: Client_TransactionWhereUniqueInput | Client_TransactionWhereUniqueInput[]
-    update?: Client_TransactionUpdateWithWhereUniqueWithoutCustomerInput | Client_TransactionUpdateWithWhereUniqueWithoutCustomerInput[]
-    updateMany?: Client_TransactionUpdateManyWithWhereWithoutCustomerInput | Client_TransactionUpdateManyWithWhereWithoutCustomerInput[]
-    deleteMany?: Client_TransactionScalarWhereInput | Client_TransactionScalarWhereInput[]
+  export type Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<Customer_TransactionCreateWithoutCustomerInput, Customer_TransactionUncheckedCreateWithoutCustomerInput> | Customer_TransactionCreateWithoutCustomerInput[] | Customer_TransactionUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: Customer_TransactionCreateOrConnectWithoutCustomerInput | Customer_TransactionCreateOrConnectWithoutCustomerInput[]
+    upsert?: Customer_TransactionUpsertWithWhereUniqueWithoutCustomerInput | Customer_TransactionUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: Customer_TransactionCreateManyCustomerInputEnvelope
+    set?: Customer_TransactionWhereUniqueInput | Customer_TransactionWhereUniqueInput[]
+    disconnect?: Customer_TransactionWhereUniqueInput | Customer_TransactionWhereUniqueInput[]
+    delete?: Customer_TransactionWhereUniqueInput | Customer_TransactionWhereUniqueInput[]
+    connect?: Customer_TransactionWhereUniqueInput | Customer_TransactionWhereUniqueInput[]
+    update?: Customer_TransactionUpdateWithWhereUniqueWithoutCustomerInput | Customer_TransactionUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: Customer_TransactionUpdateManyWithWhereWithoutCustomerInput | Customer_TransactionUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: Customer_TransactionScalarWhereInput | Customer_TransactionScalarWhereInput[]
   }
 
-  export type CustomerCreateNestedOneWithoutClientTransactionsInput = {
-    create?: XOR<CustomerCreateWithoutClientTransactionsInput, CustomerUncheckedCreateWithoutClientTransactionsInput>
-    connectOrCreate?: CustomerCreateOrConnectWithoutClientTransactionsInput
+  export type CustomerCreateNestedOneWithoutCustomerTransactionsInput = {
+    create?: XOR<CustomerCreateWithoutCustomerTransactionsInput, CustomerUncheckedCreateWithoutCustomerTransactionsInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutCustomerTransactionsInput
     connect?: CustomerWhereUniqueInput
   }
 
@@ -73831,14 +73831,14 @@ export namespace Prisma {
     divide?: Decimal | DecimalJsLike | number | string
   }
 
-  export type CustomerUpdateOneWithoutClientTransactionsNestedInput = {
-    create?: XOR<CustomerCreateWithoutClientTransactionsInput, CustomerUncheckedCreateWithoutClientTransactionsInput>
-    connectOrCreate?: CustomerCreateOrConnectWithoutClientTransactionsInput
-    upsert?: CustomerUpsertWithoutClientTransactionsInput
+  export type CustomerUpdateOneWithoutCustomerTransactionsNestedInput = {
+    create?: XOR<CustomerCreateWithoutCustomerTransactionsInput, CustomerUncheckedCreateWithoutCustomerTransactionsInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutCustomerTransactionsInput
+    upsert?: CustomerUpsertWithoutCustomerTransactionsInput
     disconnect?: CustomerWhereInput | boolean
     delete?: CustomerWhereInput | boolean
     connect?: CustomerWhereUniqueInput
-    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutClientTransactionsInput, CustomerUpdateWithoutClientTransactionsInput>, CustomerUncheckedUpdateWithoutClientTransactionsInput>
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutCustomerTransactionsInput, CustomerUpdateWithoutCustomerTransactionsInput>, CustomerUncheckedUpdateWithoutCustomerTransactionsInput>
   }
 
   export type MediaFileCreateNestedOneWithoutItemsInput = {
@@ -76769,10 +76769,10 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type Client_TransactionCreateWithoutCustomerInput = {
+  export type Customer_TransactionCreateWithoutCustomerInput = {
     id?: string
-    paymentDate?: Date | string | null
-    paymentAmount?: Decimal | DecimalJsLike | number | string | null
+    receiveDate?: Date | string | null
+    receiveAmount?: Decimal | DecimalJsLike | number | string | null
     tType?: string | null
     serialNo?: string | null
     moneyReceptNo?: string | null
@@ -76781,10 +76781,10 @@ export namespace Prisma {
     branchId?: string | null
   }
 
-  export type Client_TransactionUncheckedCreateWithoutCustomerInput = {
+  export type Customer_TransactionUncheckedCreateWithoutCustomerInput = {
     id?: string
-    paymentDate?: Date | string | null
-    paymentAmount?: Decimal | DecimalJsLike | number | string | null
+    receiveDate?: Date | string | null
+    receiveAmount?: Decimal | DecimalJsLike | number | string | null
     tType?: string | null
     serialNo?: string | null
     moneyReceptNo?: string | null
@@ -76793,13 +76793,13 @@ export namespace Prisma {
     branchId?: string | null
   }
 
-  export type Client_TransactionCreateOrConnectWithoutCustomerInput = {
-    where: Client_TransactionWhereUniqueInput
-    create: XOR<Client_TransactionCreateWithoutCustomerInput, Client_TransactionUncheckedCreateWithoutCustomerInput>
+  export type Customer_TransactionCreateOrConnectWithoutCustomerInput = {
+    where: Customer_TransactionWhereUniqueInput
+    create: XOR<Customer_TransactionCreateWithoutCustomerInput, Customer_TransactionUncheckedCreateWithoutCustomerInput>
   }
 
-  export type Client_TransactionCreateManyCustomerInputEnvelope = {
-    data: Client_TransactionCreateManyCustomerInput | Client_TransactionCreateManyCustomerInput[]
+  export type Customer_TransactionCreateManyCustomerInputEnvelope = {
+    data: Customer_TransactionCreateManyCustomerInput | Customer_TransactionCreateManyCustomerInput[]
     skipDuplicates?: boolean
   }
 
@@ -76829,7 +76829,7 @@ export namespace Prisma {
     poNo?: StringNullableFilter<"CSMaster"> | string | null
     invoiceBy?: StringNullableFilter<"CSMaster"> | string | null
     manualInvoice?: StringNullableFilter<"CSMaster"> | string | null
-    clientCode?: StringNullableFilter<"CSMaster"> | string | null
+    customerId?: UuidNullableFilter<"CSMaster"> | string | null
     totalAmount?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalVat?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
@@ -76873,39 +76873,39 @@ export namespace Prisma {
     branchId?: UuidNullableFilter<"CSVMaster"> | string | null
   }
 
-  export type Client_TransactionUpsertWithWhereUniqueWithoutCustomerInput = {
-    where: Client_TransactionWhereUniqueInput
-    update: XOR<Client_TransactionUpdateWithoutCustomerInput, Client_TransactionUncheckedUpdateWithoutCustomerInput>
-    create: XOR<Client_TransactionCreateWithoutCustomerInput, Client_TransactionUncheckedCreateWithoutCustomerInput>
+  export type Customer_TransactionUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: Customer_TransactionWhereUniqueInput
+    update: XOR<Customer_TransactionUpdateWithoutCustomerInput, Customer_TransactionUncheckedUpdateWithoutCustomerInput>
+    create: XOR<Customer_TransactionCreateWithoutCustomerInput, Customer_TransactionUncheckedCreateWithoutCustomerInput>
   }
 
-  export type Client_TransactionUpdateWithWhereUniqueWithoutCustomerInput = {
-    where: Client_TransactionWhereUniqueInput
-    data: XOR<Client_TransactionUpdateWithoutCustomerInput, Client_TransactionUncheckedUpdateWithoutCustomerInput>
+  export type Customer_TransactionUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: Customer_TransactionWhereUniqueInput
+    data: XOR<Customer_TransactionUpdateWithoutCustomerInput, Customer_TransactionUncheckedUpdateWithoutCustomerInput>
   }
 
-  export type Client_TransactionUpdateManyWithWhereWithoutCustomerInput = {
-    where: Client_TransactionScalarWhereInput
-    data: XOR<Client_TransactionUpdateManyMutationInput, Client_TransactionUncheckedUpdateManyWithoutCustomerInput>
+  export type Customer_TransactionUpdateManyWithWhereWithoutCustomerInput = {
+    where: Customer_TransactionScalarWhereInput
+    data: XOR<Customer_TransactionUpdateManyMutationInput, Customer_TransactionUncheckedUpdateManyWithoutCustomerInput>
   }
 
-  export type Client_TransactionScalarWhereInput = {
-    AND?: Client_TransactionScalarWhereInput | Client_TransactionScalarWhereInput[]
-    OR?: Client_TransactionScalarWhereInput[]
-    NOT?: Client_TransactionScalarWhereInput | Client_TransactionScalarWhereInput[]
-    id?: UuidFilter<"Client_Transaction"> | string
-    clientCode?: StringNullableFilter<"Client_Transaction"> | string | null
-    paymentDate?: DateTimeNullableFilter<"Client_Transaction"> | Date | string | null
-    paymentAmount?: DecimalNullableFilter<"Client_Transaction"> | Decimal | DecimalJsLike | number | string | null
-    tType?: StringNullableFilter<"Client_Transaction"> | string | null
-    serialNo?: StringNullableFilter<"Client_Transaction"> | string | null
-    moneyReceptNo?: StringNullableFilter<"Client_Transaction"> | string | null
-    bankName?: StringNullableFilter<"Client_Transaction"> | string | null
-    bankNo?: StringNullableFilter<"Client_Transaction"> | string | null
-    branchId?: UuidNullableFilter<"Client_Transaction"> | string | null
+  export type Customer_TransactionScalarWhereInput = {
+    AND?: Customer_TransactionScalarWhereInput | Customer_TransactionScalarWhereInput[]
+    OR?: Customer_TransactionScalarWhereInput[]
+    NOT?: Customer_TransactionScalarWhereInput | Customer_TransactionScalarWhereInput[]
+    id?: UuidFilter<"Customer_Transaction"> | string
+    customerId?: UuidNullableFilter<"Customer_Transaction"> | string | null
+    receiveDate?: DateTimeNullableFilter<"Customer_Transaction"> | Date | string | null
+    receiveAmount?: DecimalNullableFilter<"Customer_Transaction"> | Decimal | DecimalJsLike | number | string | null
+    tType?: StringNullableFilter<"Customer_Transaction"> | string | null
+    serialNo?: StringNullableFilter<"Customer_Transaction"> | string | null
+    moneyReceptNo?: StringNullableFilter<"Customer_Transaction"> | string | null
+    bankName?: StringNullableFilter<"Customer_Transaction"> | string | null
+    bankNo?: StringNullableFilter<"Customer_Transaction"> | string | null
+    branchId?: UuidNullableFilter<"Customer_Transaction"> | string | null
   }
 
-  export type CustomerCreateWithoutClientTransactionsInput = {
+  export type CustomerCreateWithoutCustomerTransactionsInput = {
     id?: string
     code: string
     name: string
@@ -76917,7 +76917,7 @@ export namespace Prisma {
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
   }
 
-  export type CustomerUncheckedCreateWithoutClientTransactionsInput = {
+  export type CustomerUncheckedCreateWithoutCustomerTransactionsInput = {
     id?: string
     code: string
     name: string
@@ -76929,23 +76929,23 @@ export namespace Prisma {
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
   }
 
-  export type CustomerCreateOrConnectWithoutClientTransactionsInput = {
+  export type CustomerCreateOrConnectWithoutCustomerTransactionsInput = {
     where: CustomerWhereUniqueInput
-    create: XOR<CustomerCreateWithoutClientTransactionsInput, CustomerUncheckedCreateWithoutClientTransactionsInput>
+    create: XOR<CustomerCreateWithoutCustomerTransactionsInput, CustomerUncheckedCreateWithoutCustomerTransactionsInput>
   }
 
-  export type CustomerUpsertWithoutClientTransactionsInput = {
-    update: XOR<CustomerUpdateWithoutClientTransactionsInput, CustomerUncheckedUpdateWithoutClientTransactionsInput>
-    create: XOR<CustomerCreateWithoutClientTransactionsInput, CustomerUncheckedCreateWithoutClientTransactionsInput>
+  export type CustomerUpsertWithoutCustomerTransactionsInput = {
+    update: XOR<CustomerUpdateWithoutCustomerTransactionsInput, CustomerUncheckedUpdateWithoutCustomerTransactionsInput>
+    create: XOR<CustomerCreateWithoutCustomerTransactionsInput, CustomerUncheckedCreateWithoutCustomerTransactionsInput>
     where?: CustomerWhereInput
   }
 
-  export type CustomerUpdateToOneWithWhereWithoutClientTransactionsInput = {
+  export type CustomerUpdateToOneWithWhereWithoutCustomerTransactionsInput = {
     where?: CustomerWhereInput
-    data: XOR<CustomerUpdateWithoutClientTransactionsInput, CustomerUncheckedUpdateWithoutClientTransactionsInput>
+    data: XOR<CustomerUpdateWithoutCustomerTransactionsInput, CustomerUncheckedUpdateWithoutCustomerTransactionsInput>
   }
 
-  export type CustomerUpdateWithoutClientTransactionsInput = {
+  export type CustomerUpdateWithoutCustomerTransactionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -76957,7 +76957,7 @@ export namespace Prisma {
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
   }
 
-  export type CustomerUncheckedUpdateWithoutClientTransactionsInput = {
+  export type CustomerUncheckedUpdateWithoutCustomerTransactionsInput = {
     id?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -78107,7 +78107,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
-    clientTransactions?: Client_TransactionCreateNestedManyWithoutCustomerInput
+    customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutSalesInput = {
@@ -78119,7 +78119,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
-    clientTransactions?: Client_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+    customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutSalesInput = {
@@ -78179,7 +78179,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
-    clientTransactions?: Client_TransactionUpdateManyWithoutCustomerNestedInput
+    customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutSalesInput = {
@@ -78191,7 +78191,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
-    clientTransactions?: Client_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
+    customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CSDetailUpsertWithWhereUniqueWithoutSaleInput = {
@@ -78249,7 +78249,7 @@ export namespace Prisma {
     poNo?: string | null
     invoiceBy?: string | null
     manualInvoice?: string | null
-    clientCode?: string | null
+    customerId?: string | null
     totalAmount?: Decimal | DecimalJsLike | number | string | null
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
@@ -78299,7 +78299,7 @@ export namespace Prisma {
     poNo?: NullableStringFieldUpdateOperationsInput | string | null
     invoiceBy?: NullableStringFieldUpdateOperationsInput | string | null
     manualInvoice?: NullableStringFieldUpdateOperationsInput | string | null
-    clientCode?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     totalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -78318,7 +78318,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
-    clientTransactions?: Client_TransactionCreateNestedManyWithoutCustomerInput
+    customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutSalesVatInput = {
@@ -78330,7 +78330,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
-    clientTransactions?: Client_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+    customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutSalesVatInput = {
@@ -78390,7 +78390,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
-    clientTransactions?: Client_TransactionUpdateManyWithoutCustomerNestedInput
+    customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutSalesVatInput = {
@@ -78402,7 +78402,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
-    clientTransactions?: Client_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
+    customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CSVDetailUpsertWithWhereUniqueWithoutSaleInput = {
@@ -81083,10 +81083,10 @@ export namespace Prisma {
     branchId?: string | null
   }
 
-  export type Client_TransactionCreateManyCustomerInput = {
+  export type Customer_TransactionCreateManyCustomerInput = {
     id?: string
-    paymentDate?: Date | string | null
-    paymentAmount?: Decimal | DecimalJsLike | number | string | null
+    receiveDate?: Date | string | null
+    receiveAmount?: Decimal | DecimalJsLike | number | string | null
     tType?: string | null
     serialNo?: string | null
     moneyReceptNo?: string | null
@@ -81189,10 +81189,10 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type Client_TransactionUpdateWithoutCustomerInput = {
+  export type Customer_TransactionUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    receiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receiveAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tType?: NullableStringFieldUpdateOperationsInput | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81201,10 +81201,10 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type Client_TransactionUncheckedUpdateWithoutCustomerInput = {
+  export type Customer_TransactionUncheckedUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    receiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receiveAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tType?: NullableStringFieldUpdateOperationsInput | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81213,10 +81213,10 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type Client_TransactionUncheckedUpdateManyWithoutCustomerInput = {
+  export type Customer_TransactionUncheckedUpdateManyWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
-    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    paymentAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    receiveDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receiveAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     tType?: NullableStringFieldUpdateOperationsInput | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     moneyReceptNo?: NullableStringFieldUpdateOperationsInput | string | null

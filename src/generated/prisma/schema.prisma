@@ -199,34 +199,34 @@ model Permission {
 // ==================== CUSTOMERS ====================
 
 model Customer {
-  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  code               String               @unique @map("Code")
-  name               String               @map("Name")
-  mobile             String?              @map("Mobile")
-  address            String?              @map("Address")
-  email              String?              @map("EMail")
-  joiningDate        DateTime?            @map("JoiningDate")
-  sales              CSMaster[]
-  salesVat           CSVMaster[]
-  clientTransactions Client_Transaction[]
+  id                   String                 @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  code                 String                 @unique @map("Code")
+  name                 String                 @map("Name")
+  mobile               String?                @map("Mobile")
+  address              String?                @map("Address")
+  email                String?                @map("EMail")
+  joiningDate          DateTime?              @map("JoiningDate")
+  sales                CSMaster[]
+  salesVat             CSVMaster[]
+  customerTransactions Customer_Transaction[]
 
   @@map("Customer")
 }
 
-model Client_Transaction {
+model Customer_Transaction {
   id            String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  clientCode    String?   @map("ClientCode")
-  paymentDate   DateTime? @map("PaymentDate")
-  paymentAmount Decimal?  @map("PaymentAmount") @db.Decimal(9, 2)
+  customerId    String?   @map("CustomerID") @db.Uuid
+  receiveDate   DateTime? @map("ReceiveDate")
+  receiveAmount Decimal?  @map("ReceiveAmount") @db.Decimal(9, 2)
   tType         String?   @map("TType")
   serialNo      String?   @map("SerialNo")
   moneyReceptNo String?   @map("MoneyReceptNo")
   bankName      String?   @map("BankName")
   bankNo        String?   @map("BankNo")
   branchId      String?   @map("BranchId") @db.Uuid
-  customer      Customer? @relation(fields: [clientCode], references: [code])
+  customer      Customer? @relation(fields: [customerId], references: [id])
 
-  @@map("Client_Transaction")
+  @@map("Customer_Transaction")
 }
 
 // ==================== EMPLOYEES ====================
@@ -352,7 +352,7 @@ model CSMaster {
   poNo            String?    @map("PONo")
   invoiceBy       String?    @map("InvoiceBy")
   manualInvoice   String?    @map("ManualInvoice")
-  clientCode      String?    @map("ClientCode")
+  customerId      String?    @map("CustomerID") @db.Uuid
   totalAmount     Decimal?   @map("TotalAmount") @db.Decimal(9, 2)
   totalDiscount   Decimal?   @map("TotalDiscount") @db.Decimal(8, 2)
   totalVat        Decimal?   @map("TotalVat") @db.Decimal(8, 2)
@@ -360,7 +360,7 @@ model CSMaster {
   isActive        Int?       @map("IsActive")
   branchId        String?    @map("BranchId") @db.Uuid
   createDate      DateTime?  @map("CreateDate")
-  customer        Customer?  @relation(fields: [clientCode], references: [code])
+  customer        Customer?  @relation(fields: [customerId], references: [id])
   details         CSDetail[]
 
   @@map("CSMaster")

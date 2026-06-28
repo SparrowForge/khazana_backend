@@ -59,7 +59,7 @@ export class ReportsService {
         saleType: 'Cash',
       })),
       ...credit.map((s) => ({
-        id: s.id, invNo: s.invNo, date: s.invDate, customerName: s.customer?.name ?? s.clientCode ?? '',
+        id: s.id, invNo: s.invNo, date: s.invDate, customerName: s.customer?.name ?? '',
         totalAmount: num(s.totalAmount), discount: num(s.totalDiscount), netAmount: num(s.totalAmount) - num(s.totalDiscount),
         saleType: 'Credit',
       })),
@@ -151,9 +151,9 @@ export class ReportsService {
   }> {
     const todayCredit = await this.prisma.cSMaster.findMany({
       where: { invDate: { gte: day, lt: nextDay }, isActive: 1, ...branchFilter },
-      select: { clientCode: true },
+      select: { customer: { select: { code: true } } },
     });
-    const custCodes = [...new Set(todayCredit.map((c) => c.clientCode).filter((x): x is string => !!x))];
+    const custCodes = [...new Set(todayCredit.map((c) => c.customer?.code).filter((x): x is string => !!x))];
     if (!custCodes.length) return { creditRows: [], orderCollection: 0 };
 
     const [advances, allCredits] = await this.prisma.$transaction([
@@ -162,8 +162,8 @@ export class ReportsService {
         select: { clientCode: true, advance: true, orderDate: true },
       }),
       this.prisma.cSMaster.findMany({
-        where: { clientCode: { in: custCodes }, isActive: 1, invDate: { lt: nextDay }, ...branchFilter },
-        select: { id: true, invNo: true, clientCode: true, totalAmount: true, totalDiscount: true, invDate: true },
+        where: { customer: { code: { in: custCodes } }, isActive: 1, invDate: { lt: nextDay }, ...branchFilter },
+        select: { id: true, invNo: true, customer: { select: { code: true } }, totalAmount: true, totalDiscount: true, invDate: true },
       }),
     ]);
 
@@ -181,9 +181,10 @@ export class ReportsService {
       push(a.clientCode, { t: a.orderDate.getTime(), kind: 'adv', amount: num(a.advance) });
     }
     for (const c of allCredits) {
-      if (!c.invDate || !c.clientCode) continue;
+      const code = c.customer?.code;
+      if (!c.invDate || !code) continue;
       const today = c.invDate >= day && c.invDate < nextDay;
-      push(c.clientCode, { t: c.invDate.getTime(), kind: 'cr', amount: num(c.totalAmount) - num(c.totalDiscount), id: c.id, invNo: c.invNo, today });
+      push(code, { t: c.invDate.getTime(), kind: 'cr', amount: num(c.totalAmount) - num(c.totalDiscount), id: c.id, invNo: c.invNo, today });
     }
 
     const creditRows: { id: string; invNo: string; type: string; netAmount: number; net: number }[] = [];
@@ -310,23 +311,23 @@ export class ReportsService {
 
     const [invoices, vatInvoices, payments] = await this.prisma.$transaction([
       this.prisma.cSMaster.findMany({
-        where: { clientCode, invDate: { gte: from, lte: to }, isActive: 1 },
+        where: { customer: { code: clientCode }, invDate: { gte: from, lte: to }, isActive: 1 },
         orderBy: { invDate: 'asc' },
       }),
       this.prisma.cSVMaster.findMany({
         where: { clientCode, invDate: { gte: from, lte: to } },
         orderBy: { invDate: 'asc' },
       }),
-      this.prisma.client_Transaction.findMany({
-        where: { clientCode, paymentDate: { gte: from, lte: to } },
-        orderBy: { paymentDate: 'asc' },
+      this.prisma.customer_Transaction.findMany({
+        where: { customer: { code: clientCode }, receiveDate: { gte: from, lte: to } },
+        orderBy: { receiveDate: 'asc' },
       }),
     ]);
 
     const entries = [
       ...invoices.map((i) => ({ id: i.id, date: i.invDate, description: 'Invoice', invoiceNo: i.invNo, debit: num(i.totalAmount) - num(i.totalDiscount), credit: 0 })),
       ...vatInvoices.map((i) => ({ id: i.id, date: i.invDate, description: 'Invoice (VAT)', invoiceNo: i.invNo, debit: num(i.totalAmount) - num(i.totalDiscount), credit: 0 })),
-      ...payments.map((p) => ({ id: p.id, date: p.paymentDate, description: p.tType ?? 'Payment', invoiceNo: p.moneyReceptNo ?? '', debit: 0, credit: num(p.paymentAmount) })),
+      ...payments.map((p) => ({ id: p.id, date: p.receiveDate, description: p.tType ?? 'Payment', invoiceNo: p.moneyReceptNo ?? '', debit: 0, credit: num(p.receiveAmount) })),
     ];
 
     entries.sort((a, b) => (a.date?.getTime() ?? 0) - (b.date?.getTime() ?? 0));

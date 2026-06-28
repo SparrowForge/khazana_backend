@@ -35,7 +35,7 @@ SELECT
   SUM(cd."Qty") AS "Qty",
   ii."itmCategory",
   ii."itmUOM",
-  cm."ClientCode",
+  cust."Code" AS "ClientCode",
   cd."Rate" AS "Price",
   SUM(cd."Disc") AS "Discount",
   SUM(cd."vat") AS "Vat",
@@ -49,8 +49,9 @@ SELECT
 FROM "CSMaster" cm
 INNER JOIN "CSDetail" cd ON cm."InvNo" = cd."InvNo"
 INNER JOIN "Item_Information" ii ON CAST(cd."ItemOId" AS uuid) = ii."ID"
+LEFT JOIN "Customer" cust ON cust."ID" = cm."CustomerID"
 GROUP BY ii."itmCode", ii."itmName", ii."itmCategory", ii."itmUOM",
-  cm."ClientCode", cd."Rate", cm."InvDate", cm."InvNo",
+  cust."Code", cd."Rate", cm."InvDate", cm."InvNo",
   cm."BranchId", cm."IsActive", cm."CreateDate";
 
 CREATE OR REPLACE VIEW "vSODaily" AS
@@ -272,22 +273,24 @@ GROUP BY "Date", "BranchId", "IsActive";
 
 CREATE OR REPLACE VIEW "Relazitation" AS
 SELECT
-  "ClientCode",
-  "PaymentDate" AS "TDate",
-  SUM("PaymentAmount") AS "Reliazation",
+  c."Code" AS "ClientCode",
+  t."ReceiveDate" AS "TDate",
+  SUM(t."ReceiveAmount") AS "Reliazation",
   0 AS "SaleAmount"
-FROM "Client_Transaction"
-GROUP BY "ClientCode", "PaymentDate";
+FROM "Customer_Transaction" t
+JOIN "Customer" c ON c."ID" = t."CustomerID"
+GROUP BY c."Code", t."ReceiveDate";
 
 CREATE OR REPLACE VIEW "SaleAmount" AS
 SELECT
-  "ClientCode",
-  "InvDate" AS "TDate",
+  c."Code" AS "ClientCode",
+  cm."InvDate" AS "TDate",
   0 AS "Reliazation",
-  "TotalAmount" - "TotalDiscount" AS "SaleAmount",
-  "IsActive"
-FROM "CSMaster"
-GROUP BY "ClientCode", "InvDate", "TotalAmount" - "TotalDiscount", "IsActive";
+  cm."TotalAmount" - cm."TotalDiscount" AS "SaleAmount",
+  cm."IsActive"
+FROM "CSMaster" cm
+LEFT JOIN "Customer" c ON c."ID" = cm."CustomerID"
+GROUP BY c."Code", cm."InvDate", cm."TotalAmount" - cm."TotalDiscount", cm."IsActive";
 
 CREATE OR REPLACE VIEW "Balance" AS
 SELECT "ClientCode", "TDate", "Reliazation", "SaleAmount",
@@ -301,20 +304,22 @@ FROM (
 CREATE OR REPLACE VIEW "NetPaid" AS
 SELECT
   0 AS "SaleAmount",
-  "ClientCode",
-  "PaymentDate" AS "InvDate",
-  SUM("PaymentAmount") AS "PaidAmount"
-FROM "Client_Transaction"
-GROUP BY "ClientCode", "PaymentDate";
+  c."Code" AS "ClientCode",
+  t."ReceiveDate" AS "InvDate",
+  SUM(t."ReceiveAmount") AS "PaidAmount"
+FROM "Customer_Transaction" t
+JOIN "Customer" c ON c."ID" = t."CustomerID"
+GROUP BY c."Code", t."ReceiveDate";
 
 CREATE OR REPLACE VIEW "NetSale" AS
 SELECT
-  SUM("TotalAmount" - "TotalDiscount") AS "SaleAmount",
-  "ClientCode",
-  "InvDate",
+  SUM(cm."TotalAmount" - cm."TotalDiscount") AS "SaleAmount",
+  c."Code" AS "ClientCode",
+  cm."InvDate",
   0 AS "PaidAmount"
-FROM "CSMaster"
-GROUP BY "ClientCode", "InvDate";
+FROM "CSMaster" cm
+LEFT JOIN "Customer" c ON c."ID" = cm."CustomerID"
+GROUP BY c."Code", cm."InvDate";
 
 CREATE OR REPLACE VIEW "vCSVDaily" AS
 SELECT

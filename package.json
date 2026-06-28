@@ -13,7 +13,8 @@
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
-    "db:seed": "ts-node --project tsconfig.seed.json prisma/seed.ts"
+    "db:seed": "ts-node --project tsconfig.seed.json prisma/seed.ts",
+    "gen:openapi": "ts-node --transpile-only --project tsconfig.json scripts/generate-openapi.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

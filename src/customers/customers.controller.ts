@@ -75,7 +75,7 @@ export class CustomersController {
   @ApiParam({ name: 'code', description: 'Customer code' })
   @ApiResponse({ status: 201, description: 'Payment recorded successfully' })
   addPayment(@Param('code') code: string, @Body() body: any, @CurrentUser('branchId') branchId: string) {
-    return this.customersService.addPayment({ ...body, clientCode: code, branchId });
+    return this.customersService.addPayment({ ...body, code, branchId });
   }
 
   @Get(':code/payments')

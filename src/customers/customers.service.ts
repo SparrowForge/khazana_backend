@@ -99,7 +99,7 @@ export class CustomersService {
   async getLedger(code: string) {
     const [sales, vatSales, payments] = await this.prisma.$transaction([
       this.prisma.cSMaster.findMany({
-        where: { clientCode: code, isActive: 1 },
+        where: { customer: { code }, isActive: 1 },
         include: { details: true },
         orderBy: { invDate: 'asc' },
       }),
@@ -108,9 +108,9 @@ export class CustomersService {
         include: { details: true },
         orderBy: { invDate: 'asc' },
       }),
-      this.prisma.client_Transaction.findMany({
-        where: { clientCode: code },
-        orderBy: { paymentDate: 'asc' },
+      this.prisma.customer_Transaction.findMany({
+        where: { customer: { code } },
+        orderBy: { receiveDate: 'asc' },
       }),
     ]);
     return { sales, vatSales, payments };
@@ -119,35 +119,45 @@ export class CustomersService {
   async getBalance(code: string) {
     const customer = await this.findOne(code);
     const salesTotal = await this.prisma.cSMaster.aggregate({
-      where: { clientCode: code, isActive: 1 },
+      where: { customer: { code }, isActive: 1 },
       _sum: { totalAmount: true },
     });
-    const paidTotal = await this.prisma.client_Transaction.aggregate({
-      where: { clientCode: code },
-      _sum: { paymentAmount: true },
+    const paidTotal = await this.prisma.customer_Transaction.aggregate({
+      where: { customer: { code } },
+      _sum: { receiveAmount: true },
     });
     return {
       customer,
       totalSales: salesTotal._sum.totalAmount ?? 0,
-      totalPaid: paidTotal._sum.paymentAmount ?? 0,
+      totalPaid: paidTotal._sum.receiveAmount ?? 0,
     };
   }
 
   async addPayment(dto: {
-    clientCode: string;
-    paymentDate: string;
-    paymentAmount: number;
+    customerId?: string;
+    code?: string;
+    receiveDate: string;
+    receiveAmount: number;
     tType?: string;
     moneyReceptNo?: string;
     bankName?: string;
     bankNo?: string;
     branchId?: string;
   }) {
-    return this.prisma.client_Transaction.create({
+    // The /:code/payments route supplies a customer code; resolve it to the id.
+    let customerId = dto.customerId;
+    if (!customerId && dto.code) {
+      const c = await this.prisma.customer.findUnique({
+        where: { code: dto.code },
+        select: { id: true },
+      });
+      customerId = c?.id;
+    }
+    return this.prisma.customer_Transaction.create({
       data: {
-        clientCode: dto.clientCode,
-        paymentDate: new Date(dto.paymentDate),
-        paymentAmount: dto.paymentAmount,
+        customerId,
+        receiveDate: new Date(dto.receiveDate),
+        receiveAmount: dto.receiveAmount,
         tType: dto.tType,
         moneyReceptNo: dto.moneyReceptNo,
         bankName: dto.bankName,
@@ -157,23 +167,23 @@ export class CustomersService {
     });
   }
 
-  findPayments(clientCode: string) {
-    return this.prisma.client_Transaction.findMany({
-      where: { clientCode },
-      orderBy: { paymentDate: 'desc' },
+  findPayments(code: string) {
+    return this.prisma.customer_Transaction.findMany({
+      where: { customer: { code } },
+      orderBy: { receiveDate: 'desc' },
     });
   }
 
   async findAllPayments(query: PaginationQueryDto) {
     const { page, limit } = query;
     const [payments, total] = await Promise.all([
-      this.prisma.client_Transaction.findMany({
-        include: { customer: { select: { name: true } } },
-        orderBy: { paymentDate: 'desc' },
+      this.prisma.customer_Transaction.findMany({
+        include: { customer: { select: { code: true, name: true } } },
+        orderBy: { receiveDate: 'desc' },
         skip: (page - 1) * limit,
         take: limit,
       }),
-      this.prisma.client_Transaction.count(),
+      this.prisma.customer_Transaction.count(),
     ]);
     return { items: payments, meta: buildPaginationMeta(total, page, limit) };
   }

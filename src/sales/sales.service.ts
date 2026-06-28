@@ -87,7 +87,7 @@ export class SalesService {
       data: {
         invNo,
         invDate: new Date(dto.invDate),
-        clientCode: dto.clientCode,
+        customerId: dto.customerId,
         poNo: dto.poNo,
         branchId,
         totalAmount: dto.totalAmount,
