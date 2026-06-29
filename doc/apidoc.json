@@ -3429,6 +3429,45 @@
         ]
       }
     },
+    "/reports/daily-final": {
+      "get": {
+        "operationId": "ReportsController_getDailyFinalReport",
+        "parameters": [
+          {
+            "name": "date",
+            "required": true,
+            "in": "query",
+            "description": "Date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": true,
+            "in": "query",
+            "description": "Branch ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Daily final report (categories, payments, breakdowns, hourwise)"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get the full end-of-day \"Daily Final Report\" for a branch",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
     "/reports/stock": {
       "get": {
         "operationId": "ReportsController_getStockReport",
@@ -3444,6 +3483,45 @@
           }
         ],
         "summary": "Get current stock report for all items",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/reports/stock-analysis": {
+      "get": {
+        "operationId": "ReportsController_getStockAnalysis",
+        "parameters": [
+          {
+            "name": "date",
+            "required": true,
+            "in": "query",
+            "description": "Date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": true,
+            "in": "query",
+            "description": "Branch ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stock analysis rows + sales summary footer"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get the per-item Stock Analysis report for a branch + day",
         "tags": [
           "Reports"
         ]
@@ -3877,6 +3955,73 @@
           }
         ],
         "summary": "Create a new bank",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/admin/banks/{id}": {
+      "patch": {
+        "operationId": "AdminController_updateBank",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Bank UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bank updated successfully"
+          },
+          "404": {
+            "description": "Bank not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Update bank by ID",
+        "tags": [
+          "Admin"
+        ]
+      },
+      "delete": {
+        "operationId": "AdminController_removeBank",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Bank UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bank deleted successfully"
+          },
+          "404": {
+            "description": "Bank not found"
+          },
+          "409": {
+            "description": "Bank is referenced by sales"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete bank by ID",
         "tags": [
           "Admin"
         ]
@@ -5661,6 +5806,11 @@
             "example": "Cash",
             "description": "Payment type: Cash | Card"
           },
+          "bankId": {
+            "type": "string",
+            "description": "Bank UUID for card payments (t_SOMstr.soMstrMBank). Optional; set when salesType is Card.",
+            "format": "uuid"
+          },
           "branchId": {
             "type": "string",
             "description": "Branch UUID for this sale. Optional — defaults to the authenticated session branch.",
@@ -5706,6 +5856,11 @@
             "type": "string",
             "example": "Cash",
             "description": "Payment type: Cash | Card"
+          },
+          "bankId": {
+            "type": "string",
+            "description": "Bank UUID for card payments (t_SOMstr.soMstrMBank). Optional; set when salesType is Card.",
+            "format": "uuid"
           },
           "branchId": {
             "type": "string",
@@ -5762,6 +5917,11 @@
             "type": "string",
             "example": "Cash",
             "description": "Cash | Card"
+          },
+          "bankId": {
+            "type": "string",
+            "description": "Bank UUID for card payments, captured at sale time.",
+            "format": "uuid"
           },
           "branchId": {
             "type": "string",
