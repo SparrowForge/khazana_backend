@@ -364,10 +364,14 @@ export class ReportsService {
       .map((s) => ({ invNo: s.somstrCode ?? '', name: s.soMstrModifyRemarks ?? '', chgAmt: num(s.somstrNetAmt) }));
 
     // ── Hourwise curve (cash running sales) ──────────────────────────────
+    // Timestamps are stored as UTC; the counter reports in Bangladesh time
+    // (GMT+6), so shift +6h and read the UTC hour to get the local hour-of-day
+    // regardless of the server's timezone.
+    const BD_OFFSET_MS = 6 * 60 * 60 * 1000;
     const hours = new Map<number, { qty: number; amount: number }>();
     for (const s of cash) {
       if (!s.somstrDate) continue;
-      const h = s.somstrDate.getHours();
+      const h = new Date(s.somstrDate.getTime() + BD_OFFSET_MS).getUTCHours();
       const cur = hours.get(h) ?? { qty: 0, amount: 0 };
       cur.qty += s.details.reduce((t, d) => t + num(d.sodetQTY), 0);
       cur.amount += num(s.somstrNetAmt);
