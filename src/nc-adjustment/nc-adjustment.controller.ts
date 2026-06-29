@@ -33,8 +33,12 @@ export class NcAdjustmentController {
   @RequiredPermission({ control: 'NCAdjustment', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new NC adjustment' })
   @ApiResponse({ status: 201, description: 'NC adjustment created successfully' })
-  create(@Body() dto: CreateNcAdjustmentDto, @CurrentUser('userName') userName: string) {
-    return this.ncService.create(dto, userName);
+  create(
+    @Body() dto: CreateNcAdjustmentDto,
+    @CurrentUser('userName') userName: string,
+    @CurrentUser('branchId') branchId: string,
+  ) {
+    return this.ncService.create(dto, userName, branchId);
   }
 
   @Patch(':id')
@@ -48,8 +52,9 @@ export class NcAdjustmentController {
     @Param('id') id: string,
     @Body() dto: UpdateNcAdjustmentDto,
     @CurrentUser('userName') userName: string,
+    @CurrentUser('branchId') branchId: string,
   ) {
-    return this.ncService.update(id, dto, userName);
+    return this.ncService.update(id, dto, userName, branchId);
   }
 
   @Delete(':id')

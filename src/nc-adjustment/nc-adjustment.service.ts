@@ -126,7 +126,11 @@ export class NcAdjustmentService {
     return nc;
   }
 
-  async create(dto: CreateNcAdjustmentDto, userName: string) {
+  async create(dto: CreateNcAdjustmentDto, userName: string, sessionBranchId?: string) {
+    // branchId is session-authoritative: prefer the logged-in user's branch so
+    // NC entries always carry a branch (and thus appear in the Daily Final
+    // Report); fall back to the payload only if the session lacks one.
+    const branchId = sessionBranchId ?? dto.branchId;
     const nc = await this.prisma.t_NCMstr.create({
       data: {
         ncmstrCode: dto.code,
@@ -134,7 +138,7 @@ export class NcAdjustmentService {
         ncmstrName: dto.name,
         ncmstrContactNo: dto.contactNo,
         ncmstrReference: dto.reference,
-        branchId: dto.branchId,
+        branchId,
         ncmstrIsActive: true,
         ncmstrCreator: userName,
         ncmstrCreationDate: new Date(),
@@ -150,7 +154,7 @@ export class NcAdjustmentService {
             ncdetVATAmount: item.vatAmount ?? 0,
             ncdetDiscount: item.discount ?? 0,
             ncdetNetAmount: item.netAmount ?? 0,
-            branchId: dto.branchId,
+            branchId,
           })),
         },
       },
@@ -163,7 +167,7 @@ export class NcAdjustmentService {
     return nc;
   }
 
-  async update(id: string, dto: UpdateNcAdjustmentDto, userName: string) {
+  async update(id: string, dto: UpdateNcAdjustmentDto, userName: string, sessionBranchId?: string) {
     const existing = await this.prisma.t_NCMstr.findUnique({
       where: { id },
       include: { details: true },
@@ -171,6 +175,10 @@ export class NcAdjustmentService {
     if (!existing || existing.ncmstrIsActive === false) {
       throw new NotFoundException('NC adjustment not found');
     }
+
+    // Keep branchId session-authoritative and backfill it on edit so any older
+    // record saved without a branch is repaired.
+    const branchId = existing.branchId ?? sessionBranchId ?? null;
 
     // When the lines change, reverse the previous stock additions and drop the
     // old detail rows before writing the new ones.
@@ -184,6 +192,7 @@ export class NcAdjustmentService {
     const data: Record<string, unknown> = {
       ncmstrUpdateBy: userName,
       ncmstrUpdateDate: new Date(),
+      branchId,
     };
     if (dto.code !== undefined) data.ncmstrCode = dto.code;
     if (dto.date !== undefined) data.ncmstrDate = new Date(dto.date);
@@ -203,7 +212,7 @@ export class NcAdjustmentService {
           ncdetVATAmount: item.vatAmount ?? 0,
           ncdetDiscount: item.discount ?? 0,
           ncdetNetAmount: item.netAmount ?? 0,
-          branchId: existing.branchId,
+          branchId,
         })),
       };
     }
