@@ -45,6 +45,15 @@ export class ReportsController {
     return this.reportsService.getDailySummary(date, branchId || undefined);
   }
 
+  @Get('daily-final')
+  @ApiOperation({ summary: 'Get the full end-of-day "Daily Final Report" for a branch' })
+  @ApiQuery({ name: 'date', required: true, description: 'Date (ISO 8601)' })
+  @ApiQuery({ name: 'branchId', required: true, description: 'Branch ID' })
+  @ApiResponse({ status: 200, description: 'Daily final report (categories, payments, breakdowns, hourwise)' })
+  getDailyFinalReport(@Query('date') date: string, @Query('branchId') branchId: string) {
+    return this.reportsService.getDailyFinalReport(date, branchId);
+  }
+
   @Get('stock')
   @ApiOperation({ summary: 'Get current stock report for all items' })
   @ApiResponse({ status: 200, description: 'Stock levels for all items' })

@@ -210,6 +210,196 @@ export class ReportsService {
     return { creditRows, orderCollection };
   }
 
+  // ── Daily Final Report (full end-of-day counter report) ──────────────
+  // Reproduces the legacy "Daily Final Report": per-category Qty (Kg/Pcs) and
+  // amount, payment-mode split, card-bank split, discount/NC/credit breakdown,
+  // sales corrections and an hourwise curve — all for a single branch + day.
+  // The frontend always supplies `date` and `branchId`.
+  //
+  // Category sources (confirmed with the business):
+  //   Regular  → t_SOMstr   (non-VAT cash running sales)
+  //   Assorted → AsstMsrt   (assortment sales)
+  //   Issue    → Item_Issue (stock issued to other branches, valued at unit price)
+  //   Credit   → CSMaster   (non-VAT credit sales)
+  // The VAT number is a header field only (Branch.vatNo); VAT sale tables are
+  // out of scope for this report.
+  async getDailyFinalReport(date: string, branchId: string) {
+    const day = new Date(date);
+    if (isNaN(day.getTime())) throw new BadRequestException('Valid `date` is required');
+    if (!branchId) throw new BadRequestException('`branchId` is required');
+    const nextDay = new Date(day);
+    nextDay.setDate(nextDay.getDate() + 1);
+
+    const window = { gte: day, lt: nextDay };
+
+    const [branch, cash, assorted, issues, credit, nc] = await Promise.all([
+      this.prisma.branch.findUnique({ where: { id: branchId }, select: { branchName: true, address: true, vatNo: true } }),
+      this.prisma.t_SOMstr.findMany({
+        where: { somstrDate: window, somstrIsActive: true, branchId },
+        include: {
+          bank: { select: { name: true } },
+          details: { select: { sodetQTY: true, item: { select: { itmUOM: true } } } },
+        },
+        orderBy: { somstrDate: 'asc' },
+      }),
+      this.prisma.asstMsrt.findMany({
+        where: { date: window, isActive: true, branchId },
+        include: { details: { select: { qty: true, item: { select: { itmUOM: true } } } } },
+      }),
+      this.prisma.item_Issue.findMany({
+        // Issue Sale = stock issued OUT of this branch to other branches.
+        where: { issueDate: window, isActive: 1, issueBranchId: branchId },
+        include: { item: { select: { itmUOM: true } } },
+      }),
+      this.prisma.cSMaster.findMany({
+        where: { invDate: window, isActive: 1, branchId },
+        include: {
+          customer: { select: { name: true, mobile: true } },
+          details: { select: { qty: true, itemOId: true } },
+        },
+        orderBy: { invDate: 'asc' },
+      }),
+      this.prisma.t_NCMstr.findMany({
+        where: { ncmstrDate: window, ncmstrIsActive: true, branchId },
+        include: { details: { select: { ncdetNetAmount: true } } },
+      }),
+    ]);
+
+    // Credit detail lines reference items by id but carry no UOM, so resolve
+    // UOM in one batched lookup to bucket their qty into Kg/Pcs.
+    const creditItemIds = [...new Set(credit.flatMap((c) => c.details.map((d) => d.itemOId).filter((x): x is string => !!x)))];
+    const creditItems = creditItemIds.length
+      ? await this.prisma.item_Information.findMany({ where: { id: { in: creditItemIds } }, select: { id: true, itmUOM: true } })
+      : [];
+    const uomById = new Map(creditItems.map((i) => [i.id, i.itmUOM]));
+
+    const isKg = (uom?: string | null) => /kg/i.test(uom ?? '');
+    const qtyByUom = (lines: { qty: number; uom?: string | null }[]) =>
+      lines.reduce(
+        (acc, l) => {
+          if (isKg(l.uom)) acc.kg += l.qty;
+          else acc.pcs += l.qty;
+          return acc;
+        },
+        { kg: 0, pcs: 0 },
+      );
+
+    // ── Category Qty (Kg/Pcs) + Sale amount ──────────────────────────────
+    const regularQty = qtyByUom(cash.flatMap((s) => s.details.map((d) => ({ qty: num(d.sodetQTY), uom: d.item?.itmUOM }))));
+    const regularAmt = cash.reduce((t, s) => t + num(s.somstrNetAmt), 0);
+
+    const assortedQty = qtyByUom(assorted.flatMap((s) => s.details.map((d) => ({ qty: num(d.qty), uom: d.item?.itmUOM }))));
+    const assortedAmt = assorted.reduce((t, s) => t + num(s.netAmt), 0);
+
+    const issueQty = qtyByUom(issues.map((i) => ({ qty: num(i.qty), uom: i.item?.itmUOM })));
+    const issueAmt = issues.reduce((t, i) => t + num(i.qty) * num(i.unitPrice), 0);
+
+    const creditNet = (s: (typeof credit)[number]) => num(s.totalAmount) - num(s.totalDiscount);
+    const creditQty = qtyByUom(credit.flatMap((s) => s.details.map((d) => ({ qty: num(d.qty), uom: uomById.get(d.itemOId ?? '') }))));
+    const creditAmt = credit.reduce((t, s) => t + creditNet(s), 0);
+
+    // ── Payment-mode split (cash running sales by mtype) ─────────────────
+    const bucket = (mtype?: string | null, hasBank?: boolean) => {
+      const m = (mtype ?? '').toLowerCase();
+      if (/bkash|nagad|rocket|mfs/.test(m)) return 'bkash';
+      if (/card|bank/.test(m) || hasBank) return 'card';
+      return 'cash';
+    };
+    const payments = { bkash: 0, card: 0, cash: 0, credit: creditAmt };
+    const cardBank = new Map<string, number>();
+    for (const s of cash) {
+      const amt = num(s.somstrNetAmt);
+      const b = bucket(s.mtype, !!s.soMstrMBank);
+      payments[b] += amt;
+      if (b === 'card') cardBank.set(s.bank?.name ?? 'Unknown', (cardBank.get(s.bank?.name ?? 'Unknown') ?? 0) + amt);
+    }
+
+    // ── Totals ───────────────────────────────────────────────────────────
+    const ncRows = nc.map((n) => ({
+      name: n.ncmstrName ?? '',
+      contact: n.ncmstrContactNo ?? '',
+      amount: n.details.reduce((t, d) => t + num(d.ncdetNetAmount), 0),
+    }));
+    const ncSale = ncRows.reduce((t, r) => t + r.amount, 0);
+
+    const discount =
+      cash.reduce((t, s) => t + num(s.somstrDiscAmt), 0) +
+      assorted.reduce((t, s) => t + num(s.discAmt), 0) +
+      credit.reduce((t, s) => t + num(s.totalDiscount), 0);
+
+    const totalSale = payments.bkash + payments.card + payments.cash + payments.credit;
+    const grandTotal = totalSale + ncSale + discount;
+
+    // ── Discount & NC breakdown lists ────────────────────────────────────
+    // A discount row reproduces the legacy "(gross x pct%) = amount" detail.
+    const pct = (amount: number, gross: number) => (gross > 0 ? Math.round((amount / gross) * 100) : 0);
+    const discRow = (name: string, contact: string, amount: number, gross: number) => ({
+      name,
+      contact,
+      amount,
+      detail: `(${gross.toFixed(0)}x${pct(amount, gross)}%)=${amount.toFixed(0)}`,
+    });
+
+    const creditBreakdown = credit.map((s) => ({
+      name: s.customer?.name ?? '',
+      contact: s.customer?.mobile ?? '',
+      amount: creditNet(s),
+    }));
+
+    const discountBreakdown = [
+      ...cash
+        .filter((s) => num(s.somstrDiscAmt) > 0)
+        .map((s) => discRow(s.soMstrDiscountRemarks ?? '', s.soMstrDiscountContact ?? '', num(s.somstrDiscAmt), num(s.somstrTotalAmt))),
+      ...credit
+        .filter((s) => num(s.totalDiscount) > 0)
+        .map((s) => discRow(s.customer?.name ?? s.discountRemarks ?? '', s.customer?.mobile ?? '', num(s.totalDiscount), num(s.totalAmount))),
+      ...assorted
+        .filter((s) => num(s.discAmt) > 0)
+        .map((s) => discRow(s.discountRemarks ?? '', '', num(s.discAmt), num(s.totalAmt))),
+    ];
+
+    // ── Sales correction (cash sales carrying a modify remark) ───────────
+    const salesCorrection = cash
+      .filter((s) => !!s.soMstrModifyRemarks)
+      .map((s) => ({ invNo: s.somstrCode ?? '', name: s.soMstrModifyRemarks ?? '', chgAmt: num(s.somstrNetAmt) }));
+
+    // ── Hourwise curve (cash running sales) ──────────────────────────────
+    const hours = new Map<number, { qty: number; amount: number }>();
+    for (const s of cash) {
+      if (!s.somstrDate) continue;
+      const h = s.somstrDate.getHours();
+      const cur = hours.get(h) ?? { qty: 0, amount: 0 };
+      cur.qty += s.details.reduce((t, d) => t + num(d.sodetQTY), 0);
+      cur.amount += num(s.somstrNetAmt);
+      hours.set(h, cur);
+    }
+    const label = (h: number) => `${h % 12 || 12} ${h < 12 ? 'am' : 'pm'}`;
+    const hourwise = [...hours.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([h, v]) => ({ hour: h, label: label(h), qty: v.qty, amount: v.amount }));
+
+    return {
+      date,
+      branch: {
+        name: branch?.branchName ?? '',
+        address: branch?.address ?? '',
+        vatNo: branch?.vatNo ?? '',
+      },
+      categories: {
+        regular: { ...regularQty, amount: regularAmt },
+        assorted: { ...assortedQty, amount: assortedAmt },
+        issue: { ...issueQty, amount: issueAmt },
+        credit: { ...creditQty, amount: creditAmt },
+      },
+      payments,
+      totals: { totalSale, ncSale, discount, grandTotal },
+      breakdown: { credit: creditBreakdown, discount: discountBreakdown, nc: ncRows },
+      cardBank: [...cardBank.entries()].map(([bank, amount]) => ({ bank, amount })),
+      salesCorrection,
+      hourwise,
+    };
+  }
+
   // ── Stock Report ──────────────────────────────────────────────
   // Returns per-item movement summary: all-time receives vs all-time issues,
   // with the current quantity as the closing balance.
