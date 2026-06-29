@@ -56,3 +56,7 @@ export class CreatePosSaleDto {
   @IsOptional()
   discountValue?: number;
 }
+
+/** Full-replace edit payload — same shape as create (items are re-priced and the
+ *  detail rows are purged & re-inserted). `branchId` is ignored (branch is kept). */
+export class UpdatePosSaleDto extends CreatePosSaleDto {}

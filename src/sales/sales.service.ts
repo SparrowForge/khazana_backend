@@ -5,6 +5,7 @@ import { CreateCreditSaleDto } from './dto/create-credit-sale.dto';
 import { CreateVatCashSaleDto } from './dto/create-vat-cash-sale.dto';
 import { CreateVatCreditSaleDto } from './dto/create-vat-credit-sale.dto';
 import { SalesQueryDto } from './dto/sales-query.dto';
+import { UpdateSalesDto } from './dto/update-sales.dto';
 import { buildPaginationMeta, toBranchUuid } from '../common/helpers';
 import type { PaginationMeta } from '../common/helpers';
 
@@ -266,6 +267,120 @@ export class SalesService {
     const skip = (page - 1) * limit;
     const items = rows.slice(skip, skip + limit);
     return { items, meta: buildPaginationMeta(total, page, limit) };
+  }
+
+  // ── Cash sale edit / delete (t_SOMstr + t_SODet, stock keyed by item id) ──
+
+  async updateCashSale(id: string, dto: UpdateSalesDto, userName: string) {
+    if (!dto.items?.length) throw new BadRequestException('At least one item is required');
+    const existing = await this.prisma.t_SOMstr.findUnique({ where: { id }, include: { details: true } });
+    if (!existing) throw new BadRequestException('Cash sale not found');
+    const branchId = toBranchUuid(existing.branchId);
+
+    // Stock delta (sale deducts): increment by (oldQty − newQty) per item id.
+    const delta = new Map<string, number>();
+    for (const d of existing.details) if (d.sodetItemOID) delta.set(d.sodetItemOID, (delta.get(d.sodetItemOID) ?? 0) + Number(d.sodetQTY ?? 0));
+    for (const it of dto.items) if (it.itemId) delta.set(it.itemId, (delta.get(it.itemId) ?? 0) - it.qty);
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.t_SODet.deleteMany({ where: { t_SOMstr_id: id } });
+      await tx.t_SOMstr.update({
+        where: { id },
+        data: {
+          somstrDate: dto.invoiceDate ? new Date(dto.invoiceDate) : undefined,
+          somstrTotalAmt: dto.totalAmount,
+          somstrDiscAmt: dto.totalDiscount,
+          somstrNetAmt: dto.netAmount,
+          somstrCustomerpay: dto.paidAmount,
+          somstrChange: dto.changeAmount,
+          mtype: dto.paymentMethod ?? undefined,
+          somstrUpdateBy: userName,
+          somstrUpdateDate: new Date(),
+          details: {
+            create: dto.items.map((it, i) => ({
+              sodetItemSLNum: String(i + 1),
+              sodetItemOID: it.itemId!,
+              sodetQTY: it.qty,
+              sodetPrice: it.rate ?? 0,
+              sodetAmount: (it.rate ?? 0) * it.qty,
+              sodetDiscount: it.discount ?? 0,
+              sodetVATValue: it.vat ?? 0,
+              sodetNetAmount: it.total ?? 0,
+              branchId,
+            })),
+          },
+        },
+      });
+      for (const [itemId, q] of delta) if (q) await tx.inventory.updateMany({ where: { item: { id: itemId } }, data: { quantity: { increment: q } } });
+    });
+    return this.prisma.t_SOMstr.findUnique({ where: { id }, include: { details: true } });
+  }
+
+  async removeCashSale(id: string) {
+    const existing = await this.prisma.t_SOMstr.findUnique({ where: { id }, include: { details: true } });
+    if (!existing) throw new BadRequestException('Cash sale not found');
+    await this.prisma.$transaction(async (tx) => {
+      for (const d of existing.details) {
+        const q = Number(d.sodetQTY ?? 0);
+        if (q && d.sodetItemOID) await tx.inventory.updateMany({ where: { item: { id: d.sodetItemOID } }, data: { quantity: { increment: q } } });
+      }
+      await tx.t_SODet.deleteMany({ where: { t_SOMstr_id: id } });
+      await tx.t_SOMstr.delete({ where: { id } });
+    });
+    return { message: 'Cash sale deleted successfully' };
+  }
+
+  // ── Credit sale edit / delete (cSMaster + cSDetail, stock keyed by item code) ──
+
+  async updateCreditSale(id: string, dto: UpdateSalesDto) {
+    if (!dto.items?.length) throw new BadRequestException('At least one item is required');
+    const existing = await this.prisma.cSMaster.findUnique({ where: { id }, include: { details: true } });
+    if (!existing) throw new BadRequestException('Credit sale not found');
+
+    // Stock delta (sale deducts): increment by (oldQty − newQty) per item code.
+    const delta = new Map<string, number>();
+    for (const d of existing.details) if (d.itemOId) delta.set(d.itemOId, (delta.get(d.itemOId) ?? 0) + Number(d.qty ?? 0));
+    for (const it of dto.items) if (it.itemCode) delta.set(it.itemCode, (delta.get(it.itemCode) ?? 0) - it.qty);
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.cSDetail.deleteMany({ where: { invNo: existing.invNo } });
+      await tx.cSMaster.update({
+        where: { id },
+        data: {
+          invDate: dto.invoiceDate ? new Date(dto.invoiceDate) : undefined,
+          totalAmount: dto.totalAmount,
+          totalDiscount: dto.totalDiscount,
+          totalVat: dto.totalVat,
+          details: {
+            create: dto.items.map((it) => ({
+              itemOId: it.itemCode!,
+              rate: it.rate ?? 0,
+              qty: it.qty,
+              value: (it.rate ?? 0) * it.qty,
+              disc: it.discount ?? 0,
+              vat: it.vat ?? 0,
+              total: it.total ?? 0,
+            })),
+          },
+        },
+      });
+      for (const [code, q] of delta) if (q) await tx.inventory.updateMany({ where: { itemCode: code }, data: { quantity: { increment: q } } });
+    });
+    return this.prisma.cSMaster.findUnique({ where: { id }, include: { details: true } });
+  }
+
+  async removeCreditSale(id: string) {
+    const existing = await this.prisma.cSMaster.findUnique({ where: { id }, include: { details: true } });
+    if (!existing) throw new BadRequestException('Credit sale not found');
+    await this.prisma.$transaction(async (tx) => {
+      for (const d of existing.details) {
+        const q = Number(d.qty ?? 0);
+        if (q && d.itemOId) await tx.inventory.updateMany({ where: { itemCode: d.itemOId }, data: { quantity: { increment: q } } });
+      }
+      await tx.cSDetail.deleteMany({ where: { invNo: existing.invNo } });
+      await tx.cSMaster.delete({ where: { id } });
+    });
+    return { message: 'Credit sale deleted successfully' };
   }
 
   // ── Helpers ───────────────────────────────────────────────────

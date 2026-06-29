@@ -1326,6 +1326,138 @@
         ]
       }
     },
+    "/sales/cash/{id}": {
+      "patch": {
+        "operationId": "SalesController_updateCashSale",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSalesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "403": {
+            "description": "No edit permission for Cash Sales"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Edit a cash sale (purge-replace lines, delta-adjust stock)",
+        "tags": [
+          "Sales"
+        ]
+      },
+      "delete": {
+        "operationId": "SalesController_removeCashSale",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "No delete permission for Cash Sales"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete a cash sale (cascade master + details, restore stock)",
+        "tags": [
+          "Sales"
+        ]
+      }
+    },
+    "/sales/credit/{id}": {
+      "patch": {
+        "operationId": "SalesController_updateCreditSale",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSalesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "403": {
+            "description": "No edit permission for Credit Sales"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Edit a credit sale (purge-replace lines, delta-adjust stock)",
+        "tags": [
+          "Sales"
+        ]
+      },
+      "delete": {
+        "operationId": "SalesController_removeCreditSale",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "No delete permission for Credit Sales"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete a credit sale (cascade master + details, restore stock)",
+        "tags": [
+          "Sales"
+        ]
+      }
+    },
     "/inventory": {
       "get": {
         "operationId": "InventoryController_findAll",
@@ -3991,6 +4123,70 @@
         "tags": [
           "POS Sales"
         ]
+      },
+      "patch": {
+        "operationId": "PosSalesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePosSaleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "403": {
+            "description": "No edit permission for POS Sales"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Edit a POS sale (purge-replace lines, re-price, delta-adjust stock)",
+        "tags": [
+          "POS Sales"
+        ]
+      },
+      "delete": {
+        "operationId": "PosSalesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "No delete permission for POS Sales"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete a POS sale (cascade master + details, restore stock)",
+        "tags": [
+          "POS Sales"
+        ]
       }
     },
     "/pos/sync-offline": {
@@ -5053,6 +5249,89 @@
           "items"
         ]
       },
+      "UpdateSalesItemDto": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "description": "Item UUID (cash/POS sales)"
+          },
+          "itemCode": {
+            "type": "string",
+            "description": "Item code (credit sales)"
+          },
+          "qty": {
+            "type": "number",
+            "example": 2
+          },
+          "rate": {
+            "type": "number",
+            "example": 150
+          },
+          "discount": {
+            "type": "number",
+            "example": 0
+          },
+          "vat": {
+            "type": "number",
+            "example": 0
+          },
+          "total": {
+            "type": "number",
+            "example": 300
+          }
+        },
+        "required": [
+          "qty"
+        ]
+      },
+      "UpdateSalesDto": {
+        "type": "object",
+        "properties": {
+          "invoiceDate": {
+            "type": "string",
+            "example": "2026-06-29"
+          },
+          "paymentMethod": {
+            "type": "string",
+            "example": "Cash"
+          },
+          "totalAmount": {
+            "type": "number",
+            "example": 1000
+          },
+          "totalDiscount": {
+            "type": "number",
+            "example": 50
+          },
+          "totalVat": {
+            "type": "number",
+            "example": 30
+          },
+          "netAmount": {
+            "type": "number",
+            "example": 980
+          },
+          "paidAmount": {
+            "type": "number",
+            "example": 1000
+          },
+          "changeAmount": {
+            "type": "number",
+            "example": 20
+          },
+          "items": {
+            "description": "Replacement line items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UpdateSalesItemDto"
+            }
+          }
+        },
+        "required": [
+          "items"
+        ]
+      },
       "CreateItemDto": {
         "type": "object",
         "properties": {
@@ -5358,6 +5637,52 @@
         ]
       },
       "CreatePosSaleDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "Cart items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PosCartItemDto"
+            }
+          },
+          "paidAmount": {
+            "type": "number",
+            "example": 500,
+            "description": "Amount paid by customer"
+          },
+          "servedBy": {
+            "type": "string",
+            "example": "Ahmed",
+            "description": "Staff name (defaults to logged-in user)"
+          },
+          "salesType": {
+            "type": "string",
+            "example": "Cash",
+            "description": "Payment type: Cash | Card"
+          },
+          "branchId": {
+            "type": "string",
+            "description": "Branch UUID for this sale. Optional — defaults to the authenticated session branch.",
+            "format": "uuid"
+          },
+          "discountType": {
+            "type": "string",
+            "example": "fixed",
+            "description": "Discount type: fixed | percentage"
+          },
+          "discountValue": {
+            "type": "number",
+            "example": 50,
+            "description": "Discount value — flat amount or percentage (0–100)"
+          }
+        },
+        "required": [
+          "items",
+          "paidAmount"
+        ]
+      },
+      "UpdatePosSaleDto": {
         "type": "object",
         "properties": {
           "items": {

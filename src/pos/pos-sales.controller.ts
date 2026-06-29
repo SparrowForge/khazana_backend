@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { PosSalesService } from './pos-sales.service';
-import { CreatePosSaleDto } from './dto/create-pos-sale.dto';
+import { CreatePosSaleDto, UpdatePosSaleDto } from './dto/create-pos-sale.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { CurrentUser, RequiredPermission } from '../common/decorators';
@@ -34,5 +34,25 @@ export class PosSalesController {
   @ApiOperation({ summary: 'Get a POS sale by ID for invoice print' })
   findOne(@Param('id') id: string) {
     return this.service.findOne(id);
+  }
+
+  @Patch(':id')
+  @RequiredPermission({ control: 'POSSales', action: 'editAccess' })
+  @ApiOperation({ summary: 'Edit a POS sale (purge-replace lines, re-price, delta-adjust stock)' })
+  @ApiResponse({ status: 403, description: 'No edit permission for POS Sales' })
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdatePosSaleDto,
+    @CurrentUser('userName') userName: string,
+  ) {
+    return this.service.update(id, dto, userName);
+  }
+
+  @Delete(':id')
+  @RequiredPermission({ control: 'POSSales', action: 'deleteAccess' })
+  @ApiOperation({ summary: 'Delete a POS sale (cascade master + details, restore stock)' })
+  @ApiResponse({ status: 403, description: 'No delete permission for POS Sales' })
+  remove(@Param('id') id: string) {
+    return this.service.remove(id);
   }
 }
