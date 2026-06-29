@@ -66,7 +66,7 @@ export class AdminController {
   }
 
   @Post('banks')
-  @RequiredPermission({ control: 'Admin', action: 'addAccess' })
+  @RequiredPermission({ control: 'Bank', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new bank' })
   @ApiResponse({ status: 201, description: 'Bank created successfully' })
   createBank(@Body('name') name: string, @CurrentUser('userName') userName: string) {
@@ -74,7 +74,7 @@ export class AdminController {
   }
 
   @Patch('banks/:id')
-  @RequiredPermission({ control: 'Admin', action: 'editAccess' })
+  @RequiredPermission({ control: 'Bank', action: 'editAccess' })
   @ApiOperation({ summary: 'Update bank by ID' })
   @ApiParam({ name: 'id', description: 'Bank UUID' })
   @ApiResponse({ status: 200, description: 'Bank updated successfully' })
@@ -84,7 +84,7 @@ export class AdminController {
   }
 
   @Delete('banks/:id')
-  @RequiredPermission({ control: 'Admin', action: 'deleteAccess' })
+  @RequiredPermission({ control: 'Bank', action: 'deleteAccess' })
   @ApiOperation({ summary: 'Delete bank by ID' })
   @ApiParam({ name: 'id', description: 'Bank UUID' })
   @ApiResponse({ status: 200, description: 'Bank deleted successfully' })

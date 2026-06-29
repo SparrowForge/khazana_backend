@@ -38,6 +38,14 @@ export class CreatePosSaleDto {
   salesType?: string;
 
   @ApiPropertyOptional({
+    description: 'Bank UUID for card payments (t_SOMstr.soMstrMBank). Optional; set when salesType is Card.',
+    format: 'uuid',
+  })
+  @IsOptional()
+  @IsUUID()
+  bankId?: string;
+
+  @ApiPropertyOptional({
     description: 'Branch UUID for this sale. Optional — defaults to the authenticated session branch.',
     format: 'uuid',
   })

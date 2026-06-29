@@ -81,6 +81,7 @@ export class PosSyncService {
           paidAmount: order.paidAmount,
           servedBy: order.servedBy,
           salesType: order.salesType,
+          bankId: order.bankId ?? null,
           branchId: order.branchId ?? null,
           discountType: order.discountType,
           discountValue: order.discountValue,

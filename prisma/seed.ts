@@ -69,6 +69,7 @@ async function main() {
     { menuName: 'Users', controlName: 'Users', order: 1, parentMenu: 'Admin', module: null },
     { menuName: 'Roles & Permissions', controlName: 'RolesPermissions', order: 2, parentMenu: 'Admin', module: null },
     { menuName: 'User Role Permission', controlName: 'UserRolePermission', order: 3, parentMenu: 'Admin', module: null },
+    { menuName: 'Bank', controlName: 'Bank', order: 4, parentMenu: 'Admin', module: null },
   ];
 
   for (const menu of menus) {

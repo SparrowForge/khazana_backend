@@ -39,6 +39,11 @@ export class OfflineSaleDto {
   @IsOptional()
   salesType?: string;
 
+  @ApiPropertyOptional({ description: 'Bank UUID for card payments, captured at sale time.', format: 'uuid' })
+  @IsOptional()
+  @IsUUID()
+  bankId?: string;
+
   @ApiPropertyOptional({
     description: 'Originating branch UUID captured at sale time.',
     format: 'uuid',

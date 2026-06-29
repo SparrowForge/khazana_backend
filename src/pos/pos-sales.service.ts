@@ -84,6 +84,7 @@ export class PosSalesService {
       paidAmount: dto.paidAmount,
       servedBy: dto.servedBy,
       salesType: dto.salesType,
+      bankId: dto.bankId,
       branchId,
       discountType: dto.discountType,
       discountValue: dto.discountValue,
@@ -106,6 +107,7 @@ export class PosSalesService {
     paidAmount: number;
     servedBy?: string;
     salesType?: string;
+    bankId?: string | null;
     branchId?: string | null;
     discountType?: 'fixed' | 'percentage';
     discountValue?: number;
@@ -168,6 +170,7 @@ export class PosSalesService {
         somstrCustomerpay: this.r2(p.paidAmount),
         somstrChange: changeAmount,
         mtype: p.salesType ?? 'Cash',
+        soMstrMBank: p.bankId ?? null,
         somstrCreator: p.servedBy || p.createdBy,
         somstrCreationDate: new Date(),
         somstrIsActive: true,
@@ -313,6 +316,7 @@ export class PosSalesService {
           somstrCustomerpay: this.r2(dto.paidAmount),
           somstrChange: changeAmount,
           mtype: dto.salesType ?? existing.mtype,
+          soMstrMBank: dto.bankId ?? existing.soMstrMBank,
           somstrUpdateBy: userName,
           somstrUpdateDate: new Date(),
           details: {
