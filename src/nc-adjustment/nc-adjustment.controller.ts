@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
-import { NcAdjustmentService, CreateNcAdjustmentDto } from './nc-adjustment.service';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import { NcAdjustmentService, CreateNcAdjustmentDto, UpdateNcAdjustmentDto } from './nc-adjustment.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { CurrentUser, RequiredPermission } from '../common/decorators';
@@ -35,5 +35,31 @@ export class NcAdjustmentController {
   @ApiResponse({ status: 201, description: 'NC adjustment created successfully' })
   create(@Body() dto: CreateNcAdjustmentDto, @CurrentUser('userName') userName: string) {
     return this.ncService.create(dto, userName);
+  }
+
+  @Patch(':id')
+  @RequiredPermission({ control: 'NCAdjustment', action: 'editAccess' })
+  @ApiOperation({ summary: 'Update an NC adjustment (header, or replace lines + re-reconcile stock)' })
+  @ApiParam({ name: 'id', description: 'NC adjustment UUID' })
+  @ApiResponse({ status: 200, description: 'NC adjustment updated successfully' })
+  @ApiResponse({ status: 403, description: 'No edit permission for NC Adjustment' })
+  @ApiResponse({ status: 404, description: 'NC adjustment not found' })
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdateNcAdjustmentDto,
+    @CurrentUser('userName') userName: string,
+  ) {
+    return this.ncService.update(id, dto, userName);
+  }
+
+  @Delete(':id')
+  @RequiredPermission({ control: 'NCAdjustment', action: 'deleteAccess' })
+  @ApiOperation({ summary: 'Delete an NC adjustment (master + details) and reverse its stock additions' })
+  @ApiParam({ name: 'id', description: 'NC adjustment UUID' })
+  @ApiResponse({ status: 200, description: 'NC adjustment deleted successfully' })
+  @ApiResponse({ status: 403, description: 'No delete permission for NC Adjustment' })
+  @ApiResponse({ status: 404, description: 'NC adjustment not found' })
+  remove(@Param('id') id: string) {
+    return this.ncService.remove(id);
   }
 }

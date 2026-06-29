@@ -2999,6 +2999,84 @@
         "tags": [
           "NC Adjustment"
         ]
+      },
+      "patch": {
+        "operationId": "NcAdjustmentController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "NC adjustment UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNcAdjustmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "NC adjustment updated successfully"
+          },
+          "403": {
+            "description": "No edit permission for NC Adjustment"
+          },
+          "404": {
+            "description": "NC adjustment not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Update an NC adjustment (header, or replace lines + re-reconcile stock)",
+        "tags": [
+          "NC Adjustment"
+        ]
+      },
+      "delete": {
+        "operationId": "NcAdjustmentController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "NC adjustment UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "NC adjustment deleted successfully"
+          },
+          "403": {
+            "description": "No delete permission for NC Adjustment"
+          },
+          "404": {
+            "description": "NC adjustment not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete an NC adjustment (master + details) and reverse its stock additions",
+        "tags": [
+          "NC Adjustment"
+        ]
       }
     },
     "/assortment": {
@@ -5241,6 +5319,10 @@
         "properties": {}
       },
       "CreateNcAdjustmentDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateNcAdjustmentDto": {
         "type": "object",
         "properties": {}
       },
