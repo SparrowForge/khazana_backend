@@ -49,6 +49,7 @@ export class PosSalesService {
       invoiceNo: sale.somstrCode ?? '',
       dateTime: (sale.somstrDate ?? sale.somstrCreationDate ?? new Date()).toISOString(),
       salesType: sale.mtype ?? 'Cash',
+      bankId: sale.soMstrMBank ?? null,
       totalAmount: Number(sale.somstrTotalAmt ?? 0),
       discountAmount: Number(sale.somstrDiscAmt ?? 0),
       vatAmount: this.r2(vatAmount),
@@ -316,7 +317,12 @@ export class PosSalesService {
           somstrCustomerpay: this.r2(dto.paidAmount),
           somstrChange: changeAmount,
           mtype: dto.salesType ?? existing.mtype,
-          soMstrMBank: dto.bankId ?? existing.soMstrMBank,
+          // Bank only applies to Card sales; clear it when the (resolved) pay
+          // mode is not Card so switching Card→Cash doesn't leave a stale bank.
+          soMstrMBank:
+            (dto.salesType ?? existing.mtype) === 'Card'
+              ? (dto.bankId ?? existing.soMstrMBank)
+              : null,
           somstrUpdateBy: userName,
           somstrUpdateDate: new Date(),
           details: {
