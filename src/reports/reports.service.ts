@@ -400,6 +400,230 @@ export class ReportsService {
     };
   }
 
+  // ── Stock Analysis Report (per-item, single branch + day) ───────────
+  // Reproduces the legacy "Stock Analysis" sheet: per item it shows opening
+  // stock, the day's goods-receive, sales, and adjustments (assorted / NC /
+  // reject / issue / short / excess), and the derived closing stock — plus a
+  // sales-summary footer identical in spirit to the Daily Final Report.
+  //
+  // Stock is global in `Inventory`, so per-branch quantities are DERIVED from
+  // movement records (confirmed with the business):
+  //   Open Stock = (receives − issues − sales − assorted − NC − reject − short
+  //                 + excess) over everything dated BEFORE the day, for the branch.
+  //   Closing    = (Open + G.Receive) − sales − assorted − NC − reject − issue
+  //                 − short + excess  (the day's movements).
+  // Sources: G.Receive ← Item_Receive (receiveBranchID), Issue ← Item_Issue
+  //   (issueBranchId), Sales ← t_SODet, NC ← t_NCDet, and assorted/reject/short/
+  //   excess ← ItemReject.{assort,reject,short,excess}.
+  async getStockAnalysis(date: string, branchId: string) {
+    const day = new Date(date);
+    if (isNaN(day.getTime())) throw new BadRequestException('Valid `date` is required');
+    if (!branchId) throw new BadRequestException('`branchId` is required');
+    const nextDay = new Date(day);
+    nextDay.setDate(nextDay.getDate() + 1);
+    const before = { lt: day };
+    const during = { gte: day, lt: nextDay };
+
+    // ── Catalog + as-of-date rate ────────────────────────────────────────
+    const items = await this.prisma.item_Information.findMany({
+      orderBy: { itmName: 'asc' },
+      select: {
+        id: true, itmCode: true, itmName: true, itmUOM: true,
+        prices: {
+          where: { priceIsActive: 1 },
+          orderBy: { priceFromDate: 'desc' },
+          select: { priceListPrice: true, priceFromDate: true, priceToDate: true },
+        },
+      },
+    });
+    const idByCode = new Map(items.map((i) => [i.itmCode, i.id]));
+    const rateOf = (i: (typeof items)[number]) => {
+      const p =
+        i.prices.find((pr) => (!pr.priceFromDate || pr.priceFromDate <= day) && (!pr.priceToDate || pr.priceToDate >= day)) ??
+        i.prices[0];
+      return num(p?.priceListPrice);
+    };
+
+    // ── Movement aggregates (before-day for opening, during-day for columns) ──
+    const recvWhere = (w: object) => ({ receiveBranchID: branchId, isActive: 1, purDate: w });
+    const issueWhere = (w: object) => ({ issueBranchId: branchId, isActive: 1, issueDate: w });
+    const saleWhere = (w: object) => ({ sale: { branchId, somstrIsActive: true, somstrDate: w } });
+    const ncWhere = (w: object) => ({ sale: { branchId, ncmstrIsActive: true, ncmstrDate: w } });
+    const rejWhere = (w: object) => ({ branchId, isActive: 1, date: w });
+
+    const [
+      recvBefore, recvDuring, issueBefore, issueDuring,
+      saleBefore, saleDuring, ncBefore, ncDuring, rejBefore, rejDuring,
+    ] = await Promise.all([
+      this.prisma.item_Receive.groupBy({ by: ['itemCode'], where: recvWhere(before), _sum: { qty: true } }),
+      this.prisma.item_Receive.groupBy({ by: ['itemCode'], where: recvWhere(during), _sum: { qty: true } }),
+      this.prisma.item_Issue.groupBy({ by: ['itemCode'], where: issueWhere(before), _sum: { qty: true } }),
+      this.prisma.item_Issue.groupBy({ by: ['itemCode'], where: issueWhere(during), _sum: { qty: true } }),
+      this.prisma.t_SODet.groupBy({ by: ['sodetItemOID'], where: saleWhere(before), _sum: { sodetQTY: true, sodetNetAmount: true } }),
+      this.prisma.t_SODet.groupBy({ by: ['sodetItemOID'], where: saleWhere(during), _sum: { sodetQTY: true, sodetNetAmount: true } }),
+      this.prisma.t_NCDet.groupBy({ by: ['ncdetItemOID'], where: ncWhere(before), _sum: { ncdetQTY: true } }),
+      this.prisma.t_NCDet.groupBy({ by: ['ncdetItemOID'], where: ncWhere(during), _sum: { ncdetQTY: true } }),
+      this.prisma.itemReject.groupBy({ by: ['itmOId'], where: rejWhere(before), _sum: { assort: true, reject: true, short: true, excess: true } }),
+      this.prisma.itemReject.groupBy({ by: ['itmOId'], where: rejWhere(during), _sum: { assort: true, reject: true, short: true, excess: true } }),
+    ]);
+
+    // Index every aggregate by item UUID (receives/issues come keyed by code).
+    const byId = (rows: { sodetItemOID?: string; ncdetItemOID?: string; itmOId?: string | null }[], pick: (r: never) => number) => {
+      const m = new Map<string, number>();
+      for (const r of rows as never[]) {
+        const id = (r as { sodetItemOID?: string; ncdetItemOID?: string; itmOId?: string | null }).sodetItemOID
+          ?? (r as { ncdetItemOID?: string }).ncdetItemOID
+          ?? (r as { itmOId?: string | null }).itmOId;
+        if (id) m.set(id, (m.get(id) ?? 0) + pick(r as never));
+      }
+      return m;
+    };
+    const byCodeToId = (rows: { itemCode: string | null; _sum: { qty: unknown } }[]) => {
+      const m = new Map<string, number>();
+      for (const r of rows) {
+        const id = r.itemCode ? idByCode.get(r.itemCode) : undefined;
+        if (id) m.set(id, (m.get(id) ?? 0) + num(r._sum.qty));
+      }
+      return m;
+    };
+
+    const recvB = byCodeToId(recvBefore), recvD = byCodeToId(recvDuring);
+    const issB = byCodeToId(issueBefore), issD = byCodeToId(issueDuring);
+    const salB = byId(saleBefore, (r: { _sum: { sodetQTY: number | null } }) => num(r._sum.sodetQTY));
+    const salD = byId(saleDuring, (r: { _sum: { sodetQTY: number | null } }) => num(r._sum.sodetQTY));
+    const salAmtD = byId(saleDuring, (r: { _sum: { sodetNetAmount: number | null } }) => num(r._sum.sodetNetAmount));
+    const ncB = byId(ncBefore, (r: { _sum: { ncdetQTY: number | null } }) => num(r._sum.ncdetQTY));
+    const ncD = byId(ncDuring, (r: { _sum: { ncdetQTY: number | null } }) => num(r._sum.ncdetQTY));
+    const rej = (rows: typeof rejBefore, field: 'assort' | 'reject' | 'short' | 'excess') =>
+      byId(rows, (r: { _sum: Record<string, number | null> }) => num(r._sum[field]));
+    const assortB = rej(rejBefore, 'assort'), assortD = rej(rejDuring, 'assort');
+    const rejectB = rej(rejBefore, 'reject'), rejectD = rej(rejDuring, 'reject');
+    const shortB = rej(rejBefore, 'short'), shortD = rej(rejDuring, 'short');
+    const excessB = rej(rejBefore, 'excess'), excessD = rej(rejDuring, 'excess');
+
+    const g = (m: Map<string, number>, id: string) => m.get(id) ?? 0;
+
+    // ── Per-item rows ────────────────────────────────────────────────────
+    const rows = items.map((it, idx) => {
+      const id = it.id;
+      const openStock =
+        g(recvB, id) - g(issB, id) - g(salB, id) - g(assortB, id) - g(ncB, id) - g(rejectB, id) - g(shortB, id) + g(excessB, id);
+      const gReceive = g(recvD, id);
+      const totalStock = openStock + gReceive;
+      const salesQty = g(salD, id);
+      const salesAmt = g(salAmtD, id);
+      const assorted = g(assortD, id);
+      const nc = g(ncD, id);
+      const reject = g(rejectD, id);
+      const issueQty = g(issD, id);
+      const short = g(shortD, id);
+      const excess = g(excessD, id);
+      const closing = totalStock - salesQty - assorted - nc - reject - issueQty - short + excess;
+      return {
+        sl: idx + 1,
+        itemCode: it.itmCode,
+        itemName: it.itmName ?? '',
+        uom: it.itmUOM ?? '',
+        rate: rateOf(it),
+        openStock, gReceive, totalStock, salesQty, salesAmt,
+        assorted, nc, reject, issueQty, short, excess, closing,
+      };
+    });
+
+    const sum = (k: keyof (typeof rows)[number]) => rows.reduce((s, r) => s + (r[k] as number), 0);
+    const totals = {
+      openStock: sum('openStock'), gReceive: sum('gReceive'), totalStock: sum('totalStock'),
+      salesQty: sum('salesQty'), salesAmt: sum('salesAmt'), assorted: sum('assorted'),
+      nc: sum('nc'), reject: sum('reject'), issueQty: sum('issueQty'),
+      short: sum('short'), excess: sum('excess'), closing: sum('closing'),
+    };
+
+    const [branch, footer] = await Promise.all([
+      this.prisma.branch.findUnique({ where: { id: branchId }, select: { branchName: true, address: true, vatNo: true } }),
+      this.stockAnalysisFooter(day, nextDay, branchId),
+    ]);
+
+    return {
+      date,
+      branch: { name: branch?.branchName ?? '', address: branch?.address ?? '', vatNo: branch?.vatNo ?? '' },
+      items: rows,
+      totals,
+      ...footer,
+    };
+  }
+
+  /** Sales-summary footer for the Stock Analysis sheet: cash/card/credit totals
+   *  plus the Regular/Assorted/Issue/Credit Qty (Kg/Pcs/Amount) block. "Card
+   *  Sale" here means every non-cash counter payment (card + mobile wallets). */
+  private async stockAnalysisFooter(day: Date, nextDay: Date, branchId: string) {
+    const window = { gte: day, lt: nextDay };
+    const [cash, assorted, issues, credit, nc] = await Promise.all([
+      this.prisma.t_SOMstr.findMany({
+        where: { somstrDate: window, somstrIsActive: true, branchId },
+        include: { details: { select: { sodetQTY: true, item: { select: { itmUOM: true } } } } },
+      }),
+      this.prisma.asstMsrt.findMany({
+        where: { date: window, isActive: true, branchId },
+        include: { details: { select: { qty: true, item: { select: { itmUOM: true } } } } },
+      }),
+      this.prisma.item_Issue.findMany({
+        where: { issueDate: window, isActive: 1, issueBranchId: branchId },
+        include: { item: { select: { itmUOM: true } } },
+      }),
+      this.prisma.cSMaster.findMany({
+        where: { invDate: window, isActive: 1, branchId },
+        include: { details: { select: { qty: true, itemOId: true } } },
+      }),
+      this.prisma.t_NCMstr.findMany({
+        where: { ncmstrDate: window, ncmstrIsActive: true, branchId },
+        include: { details: { select: { ncdetNetAmount: true } } },
+      }),
+    ]);
+
+    const creditItemIds = [...new Set(credit.flatMap((c) => c.details.map((d) => d.itemOId).filter((x): x is string => !!x)))];
+    const creditItems = creditItemIds.length
+      ? await this.prisma.item_Information.findMany({ where: { id: { in: creditItemIds } }, select: { id: true, itmUOM: true } })
+      : [];
+    const uomById = new Map(creditItems.map((i) => [i.id, i.itmUOM]));
+
+    const isKg = (uom?: string | null) => /kg/i.test(uom ?? '');
+    const qtyByUom = (lines: { qty: number; uom?: string | null }[]) =>
+      lines.reduce((acc, l) => { if (isKg(l.uom)) acc.kg += l.qty; else acc.pcs += l.qty; return acc; }, { kg: 0, pcs: 0 });
+
+    // Sales buckets: cash vs card (= every non-cash tender) vs credit.
+    const isCashMode = (m?: string | null) => !m || /^cash$/i.test(m.trim());
+    let cashSale = 0, cardSale = 0;
+    for (const s of cash) {
+      const amt = num(s.somstrNetAmt);
+      if (isCashMode(s.mtype)) cashSale += amt; else cardSale += amt;
+    }
+    const creditNet = (s: (typeof credit)[number]) => num(s.totalAmount) - num(s.totalDiscount);
+    const creditSale = credit.reduce((t, s) => t + creditNet(s), 0);
+    const totalSale = cashSale + cardSale + creditSale;
+
+    const ncSale = nc.reduce((t, n) => t + n.details.reduce((x, d) => x + num(d.ncdetNetAmount), 0), 0);
+    const discount =
+      cash.reduce((t, s) => t + num(s.somstrDiscAmt), 0) +
+      assorted.reduce((t, s) => t + num(s.discAmt), 0) +
+      credit.reduce((t, s) => t + num(s.totalDiscount), 0);
+    const grandTotal = totalSale + ncSale + discount;
+
+    const regularQty = qtyByUom(cash.flatMap((s) => s.details.map((d) => ({ qty: num(d.sodetQTY), uom: d.item?.itmUOM }))));
+    const assortedQty = qtyByUom(assorted.flatMap((s) => s.details.map((d) => ({ qty: num(d.qty), uom: d.item?.itmUOM }))));
+    const issueQty = qtyByUom(issues.map((i) => ({ qty: num(i.qty), uom: i.item?.itmUOM })));
+    const creditQty = qtyByUom(credit.flatMap((s) => s.details.map((d) => ({ qty: num(d.qty), uom: uomById.get(d.itemOId ?? '') }))));
+
+    return {
+      summary: { cashSale, cardSale, creditSale, totalSale, ncSale, discount, grandTotal },
+      categories: {
+        regular: { ...regularQty, amount: cash.reduce((t, s) => t + num(s.somstrNetAmt), 0) },
+        assorted: { ...assortedQty, amount: assorted.reduce((t, s) => t + num(s.netAmt), 0) },
+        issue: { ...issueQty, amount: issues.reduce((t, i) => t + num(i.qty) * num(i.unitPrice), 0) },
+        credit: { ...creditQty, amount: creditSale },
+      },
+    };
+  }
+
   // ── Stock Report ──────────────────────────────────────────────
   // Returns per-item movement summary: all-time receives vs all-time issues,
   // with the current quantity as the closing balance.

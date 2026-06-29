@@ -58,6 +58,7 @@ export class PosSalesService {
       servedBy: sale.somstrCreator ?? '',
       items: sale.details.map((d) => ({
         id: d.id,
+        itemId: d.sodetItemOID,
         productName: d.item?.itmName ?? d.item?.itmCode ?? '',
         qty: Number(d.sodetQTY ?? 0),
         rate: Number(d.sodetPrice ?? 0),

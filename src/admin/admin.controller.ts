@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { AdminService, CreateBranchDto, UpdateSystemDto } from './admin.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
@@ -71,5 +71,26 @@ export class AdminController {
   @ApiResponse({ status: 201, description: 'Bank created successfully' })
   createBank(@Body('name') name: string, @CurrentUser('userName') userName: string) {
     return this.adminService.createBank(name, userName);
+  }
+
+  @Patch('banks/:id')
+  @RequiredPermission({ control: 'Admin', action: 'editAccess' })
+  @ApiOperation({ summary: 'Update bank by ID' })
+  @ApiParam({ name: 'id', description: 'Bank UUID' })
+  @ApiResponse({ status: 200, description: 'Bank updated successfully' })
+  @ApiResponse({ status: 404, description: 'Bank not found' })
+  updateBank(@Param('id') id: string, @Body('name') name: string) {
+    return this.adminService.updateBank(id, name);
+  }
+
+  @Delete('banks/:id')
+  @RequiredPermission({ control: 'Admin', action: 'deleteAccess' })
+  @ApiOperation({ summary: 'Delete bank by ID' })
+  @ApiParam({ name: 'id', description: 'Bank UUID' })
+  @ApiResponse({ status: 200, description: 'Bank deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Bank not found' })
+  @ApiResponse({ status: 409, description: 'Bank is referenced by sales' })
+  removeBank(@Param('id') id: string) {
+    return this.adminService.removeBank(id);
   }
 }

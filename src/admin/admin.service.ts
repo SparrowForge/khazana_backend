@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { PaginationQueryDto } from '../common/dto';
@@ -95,13 +95,34 @@ export class AdminService {
   async findAllBanks(query: PaginationQueryDto) {
     const { page, limit } = query;
     const [banks, total] = await Promise.all([
-      this.prisma.bank.findMany({ skip: (page - 1) * limit, take: limit }),
+      this.prisma.bank.findMany({ orderBy: { name: 'asc' }, skip: (page - 1) * limit, take: limit }),
       this.prisma.bank.count(),
     ]);
     return { items: banks, meta: buildPaginationMeta(total, page, limit) };
   }
 
+  private async findOneBank(id: string) {
+    const bank = await this.prisma.bank.findUnique({ where: { id } });
+    if (!bank) throw new NotFoundException('Bank not found');
+    return bank;
+  }
+
   createBank(name: string, createBy: string) {
     return this.prisma.bank.create({ data: { name, createBy, createDate: new Date() } });
+  }
+
+  async updateBank(id: string, name: string) {
+    await this.findOneBank(id);
+    return this.prisma.bank.update({ where: { id }, data: { name } });
+  }
+
+  async removeBank(id: string) {
+    await this.findOneBank(id);
+    // Bank is referenced by card sales (t_SOMstr.soMstrMBank) — block the delete
+    // rather than letting the FK constraint surface as an opaque 500.
+    const linked = await this.prisma.t_SOMstr.count({ where: { soMstrMBank: id } });
+    if (linked > 0) throw new ConflictException(`Cannot delete — bank is used by ${linked} sale(s)`);
+    await this.prisma.bank.delete({ where: { id } });
+    return { message: 'Bank deleted successfully' };
   }
 }

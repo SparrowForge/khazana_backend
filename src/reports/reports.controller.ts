@@ -59,6 +59,15 @@ export class ReportsController {
   @ApiResponse({ status: 200, description: 'Stock levels for all items' })
   getStockReport() { return this.reportsService.getStockReport(); }
 
+  @Get('stock-analysis')
+  @ApiOperation({ summary: 'Get the per-item Stock Analysis report for a branch + day' })
+  @ApiQuery({ name: 'date', required: true, description: 'Date (ISO 8601)' })
+  @ApiQuery({ name: 'branchId', required: true, description: 'Branch ID' })
+  @ApiResponse({ status: 200, description: 'Stock analysis rows + sales summary footer' })
+  getStockAnalysis(@Query('date') date: string, @Query('branchId') branchId: string) {
+    return this.reportsService.getStockAnalysis(date, branchId);
+  }
+
   @Get('item-sales')
   @ApiOperation({ summary: 'Get item-wise sales report for a date range' })
   @ApiQuery({ name: 'from', required: true, description: 'Start date (ISO 8601)' })
