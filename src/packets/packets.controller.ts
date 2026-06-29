@@ -2,13 +2,14 @@ import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } f
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { PacketsService, CreatePacketDto } from './packets.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { CurrentUser } from '../common/decorators';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { CurrentUser, RequiredPermission } from '../common/decorators';
 import { PaginationQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Packets')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('packets')
 export class PacketsController {
   constructor(private packetsService: PacketsService) {}
@@ -35,6 +36,7 @@ export class PacketsController {
   findOne(@Param('code') code: string) { return this.packetsService.findOne(code); }
 
   @Post()
+  @RequiredPermission({ control: 'Packets', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new packet' })
   @ApiResponse({ status: 201, description: 'Packet created successfully' })
   create(@Body() dto: CreatePacketDto, @CurrentUser('userName') userName: string) {
@@ -42,6 +44,7 @@ export class PacketsController {
   }
 
   @Patch(':code')
+  @RequiredPermission({ control: 'Packets', action: 'editAccess' })
   @ApiOperation({ summary: 'Update packet by code' })
   @ApiParam({ name: 'code', description: 'Packet code' })
   @ApiResponse({ status: 200, description: 'Packet updated successfully' })
@@ -50,6 +53,7 @@ export class PacketsController {
   }
 
   @Delete(':code')
+  @RequiredPermission({ control: 'Packets', action: 'deleteAccess' })
   @ApiOperation({ summary: 'Delete (deactivate) packet by code' })
   @ApiParam({ name: 'code', description: 'Packet code' })
   @ApiResponse({ status: 200, description: 'Packet deleted successfully' })
@@ -59,6 +63,7 @@ export class PacketsController {
   }
 
   @Post('receive')
+  @RequiredPermission({ control: 'Packets', action: 'addAccess' })
   @ApiOperation({ summary: 'Receive packets into stock' })
   @ApiResponse({ status: 201, description: 'Packets received successfully' })
   receive(@Body() dto: any, @CurrentUser('userName') userName: string) {
@@ -66,6 +71,7 @@ export class PacketsController {
   }
 
   @Post('issue')
+  @RequiredPermission({ control: 'Packets', action: 'addAccess' })
   @ApiOperation({ summary: 'Issue packets from stock' })
   @ApiResponse({ status: 201, description: 'Packets issued successfully' })
   issue(@Body() dto: any, @CurrentUser('userName') userName: string) {

@@ -2,12 +2,14 @@ import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } f
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { MenusService, CreateMenuDto } from './menus.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { RequiredPermission } from '../common/decorators';
 import { PaginationQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Menus')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('menus')
 export class MenusController {
   constructor(private menusService: MenusService) {}
@@ -34,11 +36,13 @@ export class MenusController {
   findOne(@Param('id') id: string) { return this.menusService.findOne(id); }
 
   @Post()
+  @RequiredPermission({ control: 'Admin', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new menu item' })
   @ApiResponse({ status: 201, description: 'Menu created successfully' })
   create(@Body() dto: CreateMenuDto) { return this.menusService.create(dto); }
 
   @Patch(':id')
+  @RequiredPermission({ control: 'Admin', action: 'editAccess' })
   @ApiOperation({ summary: 'Update menu by ID' })
   @ApiParam({ name: 'id', description: 'Menu UUID' })
   @ApiResponse({ status: 200, description: 'Menu updated successfully' })
@@ -47,6 +51,7 @@ export class MenusController {
   }
 
   @Delete(':id')
+  @RequiredPermission({ control: 'Admin', action: 'deleteAccess' })
   @ApiOperation({ summary: 'Delete menu by ID' })
   @ApiParam({ name: 'id', description: 'Menu UUID' })
   @ApiResponse({ status: 200, description: 'Menu deleted successfully' })

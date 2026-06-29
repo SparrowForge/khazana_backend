@@ -6,10 +6,12 @@ import {
   SyncPermissionsDto,
 } from './permissions.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { RequiredPermission } from '../common/decorators';
 
 @ApiTags('Permissions')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('permissions')
 export class PermissionsController {
   constructor(private permissionsService: PermissionsService) {}
@@ -31,6 +33,7 @@ export class PermissionsController {
 
   /** Canonical save — deletes all existing entries for the role then batch-inserts the new set. */
   @Put('role/:roleId')
+  @RequiredPermission({ control: 'RolesPermissions', action: 'editAccess' })
   @ApiOperation({ summary: 'Save permissions for a role (sync/overwrite — delete-then-insert)' })
   @ApiParam({ name: 'roleId', description: 'Role UUID' })
   @ApiResponse({ status: 200, description: 'Role permissions replaced successfully' })
@@ -39,6 +42,7 @@ export class PermissionsController {
   }
 
   @Delete('role/:roleId')
+  @RequiredPermission({ control: 'RolesPermissions', action: 'deleteAccess' })
   @ApiOperation({ summary: 'Delete all permissions for a role' })
   @ApiParam({ name: 'roleId', description: 'Role UUID' })
   @ApiResponse({ status: 200, description: 'All permissions for the role deleted' })
@@ -47,6 +51,7 @@ export class PermissionsController {
   }
 
   @Post()
+  @RequiredPermission({ control: 'RolesPermissions', action: 'addAccess' })
   @ApiOperation({ summary: 'Create or update a single permission' })
   @ApiResponse({ status: 201, description: 'Permission upserted successfully' })
   upsert(@Body() dto: UpsertPermissionDto) {
@@ -54,6 +59,7 @@ export class PermissionsController {
   }
 
   @Delete(':id')
+  @RequiredPermission({ control: 'RolesPermissions', action: 'deleteAccess' })
   @ApiOperation({ summary: 'Delete a single permission by ID' })
   @ApiParam({ name: 'id', description: 'Permission UUID' })
   @ApiResponse({ status: 200, description: 'Permission deleted' })

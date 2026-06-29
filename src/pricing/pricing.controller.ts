@@ -2,13 +2,14 @@ import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@ne
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery, ApiParam } from '@nestjs/swagger';
 import { PricingService } from './pricing.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { CurrentUser } from '../common/decorators';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { CurrentUser, RequiredPermission } from '../common/decorators';
 import { PriceQueryDto } from './dto/price-query.dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Pricing')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('pricing')
 export class PricingController {
   constructor(private pricingService: PricingService) {}
@@ -31,6 +32,7 @@ export class PricingController {
   }
 
   @Post('prices')
+  @RequiredPermission({ control: 'Pricing', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new sale price' })
   @ApiResponse({ status: 201, description: 'Sale price created successfully' })
   createPrice(@Body() body: any, @CurrentUser('userName') userName: string) {
@@ -38,6 +40,7 @@ export class PricingController {
   }
 
   @Patch('prices/:id')
+  @RequiredPermission({ control: 'Pricing', action: 'editAccess' })
   @ApiOperation({ summary: 'Update a sale price by ID' })
   @ApiParam({ name: 'id', description: 'Price record UUID' })
   @ApiResponse({ status: 200, description: 'Sale price updated successfully' })
@@ -54,6 +57,7 @@ export class PricingController {
   }
 
   @Post('cost-prices')
+  @RequiredPermission({ control: 'Pricing', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new cost price' })
   @ApiResponse({ status: 201, description: 'Cost price created successfully' })
   createCostPrice(@Body() body: any, @CurrentUser('userName') userName: string) {
@@ -61,6 +65,7 @@ export class PricingController {
   }
 
   @Patch('cost-prices/:id')
+  @RequiredPermission({ control: 'Pricing', action: 'editAccess' })
   @ApiOperation({ summary: 'Update a cost price by ID' })
   @ApiParam({ name: 'id', description: 'Cost price record UUID' })
   @ApiResponse({ status: 200, description: 'Cost price updated successfully' })

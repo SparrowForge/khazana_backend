@@ -2,12 +2,14 @@ import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } f
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { RolesService, CreateRoleDto } from './roles.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { RequiredPermission } from '../common/decorators';
 import { PaginationQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Roles')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('roles')
 export class RolesController {
   constructor(private rolesService: RolesService) {}
@@ -28,12 +30,14 @@ export class RolesController {
   findOne(@Param('id') id: string) { return this.rolesService.findOne(id); }
 
   @Post()
+  @RequiredPermission({ control: 'RolesPermissions', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new role' })
   @ApiResponse({ status: 201, description: 'Role created successfully' })
   @ApiResponse({ status: 409, description: 'Role name already exists' })
   create(@Body() dto: CreateRoleDto) { return this.rolesService.create(dto); }
 
   @Patch(':id')
+  @RequiredPermission({ control: 'RolesPermissions', action: 'editAccess' })
   @ApiOperation({ summary: 'Update role by ID' })
   @ApiParam({ name: 'id', description: 'Role UUID' })
   @ApiResponse({ status: 200, description: 'Role updated successfully' })
@@ -42,6 +46,7 @@ export class RolesController {
   }
 
   @Delete(':id')
+  @RequiredPermission({ control: 'RolesPermissions', action: 'deleteAccess' })
   @ApiOperation({ summary: 'Delete role by ID' })
   @ApiParam({ name: 'id', description: 'Role UUID' })
   @ApiResponse({ status: 200, description: 'Role deleted successfully' })

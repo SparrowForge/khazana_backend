@@ -3,16 +3,18 @@ import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { PosSalesService } from './pos-sales.service';
 import { CreatePosSaleDto } from './dto/create-pos-sale.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { CurrentUser } from '../common/decorators';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { CurrentUser, RequiredPermission } from '../common/decorators';
 
 @ApiTags('POS Sales')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('pos/sales')
 export class PosSalesController {
   constructor(private service: PosSalesService) {}
 
   @Post()
+  @RequiredPermission({ control: 'POSTerminal', action: 'addAccess' })
   @ApiOperation({ summary: 'Create POS sale — calculates VAT from t_Price, writes t_SOMstr + t_SODet' })
   create(
     @Body() dto: CreatePosSaleDto,

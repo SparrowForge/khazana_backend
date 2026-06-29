@@ -6,13 +6,14 @@ import { IssueStockDto } from './dto/issue-stock.dto';
 import { CreateItemDto, UpdateItemDto } from './dto/create-item.dto';
 import { ItemQueryDto } from './dto/item-query.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { CurrentUser } from '../common/decorators';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { CurrentUser, RequiredPermission } from '../common/decorators';
 import { PaginationQueryDto, BranchPaginationQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Inventory')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('inventory')
 export class InventoryController {
   constructor(private inventoryService: InventoryService) {}
@@ -43,31 +44,38 @@ export class InventoryController {
   }
 
   @Post('items')
+  @RequiredPermission({ control: 'Items', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new item' })
   @ApiResponse({ status: 201, description: 'Item created successfully' })
+  @ApiResponse({ status: 403, description: 'No create permission for Items' })
   @ApiResponse({ status: 409, description: 'Item code already exists' })
   createItem(@Body() dto: CreateItemDto) {
     return this.inventoryService.createItem(dto);
   }
 
   @Patch('items/:id')
+  @RequiredPermission({ control: 'Items', action: 'editAccess' })
   @ApiOperation({ summary: 'Update item by ID' })
   @ApiParam({ name: 'id', description: 'Item UUID' })
   @ApiResponse({ status: 200, description: 'Item updated successfully' })
+  @ApiResponse({ status: 403, description: 'No edit permission for Items' })
   updateItem(@Param('id') id: string, @Body() dto: UpdateItemDto) {
     return this.inventoryService.updateItem(id, dto);
   }
 
   @Delete('items/:id')
+  @RequiredPermission({ control: 'Items', action: 'deleteAccess' })
   @ApiOperation({ summary: 'Delete (deactivate) item by ID' })
   @ApiParam({ name: 'id', description: 'Item UUID' })
   @ApiResponse({ status: 200, description: 'Item deleted successfully' })
+  @ApiResponse({ status: 403, description: 'No delete permission for Items' })
   @ApiResponse({ status: 404, description: 'Item not found' })
   deleteItem(@Param('id') id: string) {
     return this.inventoryService.deleteItem(id);
   }
 
   @Post('transfer')
+  @RequiredPermission({ control: 'StockTransfer', action: 'addAccess' })
   @ApiOperation({ summary: 'Transfer stock between branches' })
   @ApiResponse({ status: 201, description: 'Stock transferred successfully' })
   transferStock(@Body() body: any, @CurrentUser('userName') userName: string) {
@@ -83,6 +91,7 @@ export class InventoryController {
   }
 
   @Post('receive')
+  @RequiredPermission({ control: 'StockReceive', action: 'addAccess' })
   @ApiOperation({ summary: 'Receive stock (goods inward)' })
   @ApiResponse({ status: 201, description: 'Stock received successfully' })
   receiveStock(
@@ -94,6 +103,7 @@ export class InventoryController {
   }
 
   @Post('issue')
+  @RequiredPermission({ control: 'StockIssue', action: 'addAccess' })
   @ApiOperation({ summary: 'Issue stock (transfer out)' })
   @ApiResponse({ status: 201, description: 'Stock issued successfully' })
   issueStock(@Body() dto: IssueStockDto, @CurrentUser('userName') userName: string) {
@@ -101,6 +111,7 @@ export class InventoryController {
   }
 
   @Post('adjust')
+  @RequiredPermission({ control: 'StockAdjustment', action: 'addAccess' })
   @ApiOperation({ summary: 'Adjust stock (reject / excess / short / assort)' })
   @ApiResponse({ status: 201, description: 'Stock adjusted successfully' })
   adjustStock(@Body() body: any) {

@@ -2,13 +2,14 @@ import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/co
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { NcAdjustmentService, CreateNcAdjustmentDto } from './nc-adjustment.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { CurrentUser } from '../common/decorators';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { CurrentUser, RequiredPermission } from '../common/decorators';
 import { BranchPaginationQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('NC Adjustment')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('nc-adjustment')
 export class NcAdjustmentController {
   constructor(private ncService: NcAdjustmentService) {}
@@ -29,6 +30,7 @@ export class NcAdjustmentController {
   findOne(@Param('id') id: string) { return this.ncService.findOne(id); }
 
   @Post()
+  @RequiredPermission({ control: 'NCAdjustment', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new NC adjustment' })
   @ApiResponse({ status: 201, description: 'NC adjustment created successfully' })
   create(@Body() dto: CreateNcAdjustmentDto, @CurrentUser('userName') userName: string) {

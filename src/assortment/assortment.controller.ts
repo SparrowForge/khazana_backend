@@ -2,13 +2,14 @@ import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/co
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { AssortmentService, CreateAssortmentDto } from './assortment.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { CurrentUser } from '../common/decorators';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { CurrentUser, RequiredPermission } from '../common/decorators';
 import { BranchPaginationQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Assortment')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('assortment')
 export class AssortmentController {
   constructor(private assortmentService: AssortmentService) {}
@@ -29,6 +30,7 @@ export class AssortmentController {
   findOne(@Param('id') id: string) { return this.assortmentService.findOne(id); }
 
   @Post()
+  @RequiredPermission({ control: 'Assortment', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new assortment record' })
   @ApiResponse({ status: 201, description: 'Assortment created successfully' })
   create(@Body() dto: CreateAssortmentDto, @CurrentUser('userName') userName: string) {

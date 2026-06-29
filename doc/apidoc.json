@@ -609,7 +609,7 @@
             "access-token": []
           }
         ],
-        "summary": "Reset user password",
+        "summary": "Reset user password (no Users permission required)",
         "tags": [
           "Users"
         ]
@@ -1449,6 +1449,9 @@
           "201": {
             "description": "Item created successfully"
           },
+          "403": {
+            "description": "No create permission for Items"
+          },
           "409": {
             "description": "Item code already exists"
           }
@@ -1522,6 +1525,9 @@
         "responses": {
           "200": {
             "description": "Item updated successfully"
+          },
+          "403": {
+            "description": "No edit permission for Items"
           }
         },
         "security": [
@@ -1550,6 +1556,9 @@
         "responses": {
           "200": {
             "description": "Item deleted successfully"
+          },
+          "403": {
+            "description": "No delete permission for Items"
           },
           "404": {
             "description": "Item not found"

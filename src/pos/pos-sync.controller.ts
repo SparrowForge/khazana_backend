@@ -3,16 +3,18 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagg
 import { PosSyncService } from './pos-sync.service';
 import { SyncOfflineDto } from './dto/sync-offline.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { CurrentUser } from '../common/decorators';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { CurrentUser, RequiredPermission } from '../common/decorators';
 
 @ApiTags('POS Sales')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('pos')
 export class PosSyncController {
   constructor(private service: PosSyncService) {}
 
   @Post('sync-offline')
+  @RequiredPermission({ control: 'POSTerminal', action: 'addAccess' })
   @ApiOperation({
     summary: 'Batch-replay offline POS sales onto the central DB',
     description:

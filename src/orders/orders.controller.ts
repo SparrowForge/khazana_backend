@@ -2,13 +2,14 @@ import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@ne
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { OrdersService, CreateOrderDto } from './orders.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { CurrentUser } from '../common/decorators';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { CurrentUser, RequiredPermission } from '../common/decorators';
 import { BranchPaginationQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Orders')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('orders')
 export class OrdersController {
   constructor(private ordersService: OrdersService) {}
@@ -29,6 +30,7 @@ export class OrdersController {
   findOne(@Param('id') id: string) { return this.ordersService.findOne(id); }
 
   @Post()
+  @RequiredPermission({ control: 'Orders', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new order' })
   @ApiResponse({ status: 201, description: 'Order created successfully' })
   create(@Body() dto: CreateOrderDto, @CurrentUser('userName') userName: string) {
@@ -36,6 +38,7 @@ export class OrdersController {
   }
 
   @Patch(':id')
+  @RequiredPermission({ control: 'Orders', action: 'editAccess' })
   @ApiOperation({ summary: 'Update order by ID' })
   @ApiParam({ name: 'id', description: 'Order UUID' })
   @ApiResponse({ status: 200, description: 'Order updated successfully' })
@@ -56,6 +59,7 @@ export class OrdersController {
   }
 
   @Post('vat')
+  @RequiredPermission({ control: 'Orders', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a VAT order' })
   @ApiResponse({ status: 201, description: 'VAT order created successfully' })
   createVat(@Body() dto: any, @CurrentUser('userName') userName: string) {

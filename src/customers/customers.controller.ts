@@ -2,13 +2,14 @@ import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } f
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { CustomersService, CreateCustomerDto, UpdateCustomerDto } from './customers.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { CurrentUser } from '../common/decorators';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { CurrentUser, RequiredPermission } from '../common/decorators';
 import { PaginationQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Customers')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('customers')
 export class CustomersController {
   constructor(private customersService: CustomersService) {}
@@ -31,6 +32,7 @@ export class CustomersController {
   }
 
   @Post('payments')
+  @RequiredPermission({ control: 'Customers', action: 'addAccess' })
   @ApiOperation({ summary: 'Record a payment (client code in body)' })
   @ApiResponse({ status: 201, description: 'Payment recorded successfully' })
   createPayment(@Body() body: any, @CurrentUser('branchId') branchId: string) {
@@ -45,12 +47,14 @@ export class CustomersController {
   findOne(@Param('code') code: string) { return this.customersService.findOne(code); }
 
   @Post()
+  @RequiredPermission({ control: 'Customers', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new customer' })
   @ApiResponse({ status: 201, description: 'Customer created successfully' })
   @ApiResponse({ status: 409, description: 'Customer code already exists' })
   create(@Body() dto: CreateCustomerDto) { return this.customersService.create(dto); }
 
   @Patch(':code')
+  @RequiredPermission({ control: 'Customers', action: 'editAccess' })
   @ApiOperation({ summary: 'Update customer by code' })
   @ApiParam({ name: 'code', description: 'Customer code' })
   @ApiResponse({ status: 200, description: 'Customer updated successfully' })
@@ -71,6 +75,7 @@ export class CustomersController {
   getBalance(@Param('code') code: string) { return this.customersService.getBalance(code); }
 
   @Post(':code/payments')
+  @RequiredPermission({ control: 'Customers', action: 'addAccess' })
   @ApiOperation({ summary: 'Record a payment from customer' })
   @ApiParam({ name: 'code', description: 'Customer code' })
   @ApiResponse({ status: 201, description: 'Payment recorded successfully' })
@@ -85,6 +90,7 @@ export class CustomersController {
   findPayments(@Param('code') code: string) { return this.customersService.findPayments(code); }
 
   @Delete(':code')
+  @RequiredPermission({ control: 'Customers', action: 'deleteAccess' })
   @ApiOperation({ summary: 'Delete customer by code' })
   @ApiParam({ name: 'code', description: 'Customer code' })
   @ApiResponse({ status: 200, description: 'Customer deleted successfully' })

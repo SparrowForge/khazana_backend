@@ -7,12 +7,13 @@ import { CreateVatCashSaleDto } from './dto/create-vat-cash-sale.dto';
 import { CreateVatCreditSaleDto } from './dto/create-vat-credit-sale.dto';
 import { SalesQueryDto } from './dto/sales-query.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { CurrentUser } from '../common/decorators';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { CurrentUser, RequiredPermission } from '../common/decorators';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Sales')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('sales')
 export class SalesController {
   constructor(private salesService: SalesService) {}
@@ -28,6 +29,7 @@ export class SalesController {
   }
 
   @Post('cash')
+  @RequiredPermission({ control: 'CashSales', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a cash sale' })
   @ApiResponse({ status: 201, description: 'Cash sale created successfully' })
   @ApiResponse({ status: 400, description: 'Invalid sale data' })
@@ -40,6 +42,7 @@ export class SalesController {
   }
 
   @Post('credit')
+  @RequiredPermission({ control: 'CreditSales', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a credit sale' })
   @ApiResponse({ status: 201, description: 'Credit sale created successfully' })
   createCreditSale(
@@ -51,6 +54,7 @@ export class SalesController {
   }
 
   @Post('vat/cash')
+  @RequiredPermission({ control: 'VatCashSales', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a VAT cash sale' })
   @ApiResponse({ status: 201, description: 'VAT cash sale created successfully' })
   createVatCashSale(
@@ -62,6 +66,7 @@ export class SalesController {
   }
 
   @Post('vat/credit')
+  @RequiredPermission({ control: 'VatCreditSales', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a VAT credit sale' })
   @ApiResponse({ status: 201, description: 'VAT credit sale created successfully' })
   createVatCreditSale(

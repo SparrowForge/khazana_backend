@@ -16,13 +16,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SetUserRolesDto, BatchUserPermissionsDto } from './dto/set-user-roles.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { CurrentUser } from '../common/decorators';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { CurrentUser, RequiredPermission } from '../common/decorators';
 import { PaginationQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Users')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
@@ -45,6 +46,7 @@ export class UsersController {
   }
 
   @Post()
+  @RequiredPermission({ control: 'Users', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({ status: 201, description: 'User created successfully' })
   @ApiResponse({ status: 409, description: 'Username already exists' })
@@ -53,6 +55,7 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @RequiredPermission({ control: 'Users', action: 'editAccess' })
   @ApiOperation({ summary: 'Update user by ID' })
   @ApiParam({ name: 'id', description: 'User UUID' })
   @ApiResponse({ status: 200, description: 'User updated successfully' })
@@ -65,6 +68,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @RequiredPermission({ control: 'Users', action: 'deleteAccess' })
   @ApiOperation({ summary: 'Delete user by ID' })
   @ApiParam({ name: 'id', description: 'User UUID' })
   @ApiResponse({ status: 200, description: 'User deleted successfully' })
@@ -73,6 +77,7 @@ export class UsersController {
   }
 
   @Post(':userName/roles')
+  @RequiredPermission({ control: 'UserRolePermission', action: 'editAccess' })
   @ApiOperation({ summary: 'Set roles for a user' })
   @ApiParam({ name: 'userName', description: 'Username' })
   @ApiResponse({ status: 201, description: 'Roles assigned successfully' })
@@ -89,6 +94,7 @@ export class UsersController {
   }
 
   @Put(':userName/permissions')
+  @RequiredPermission({ control: 'UserRolePermission', action: 'editAccess' })
   @ApiOperation({ summary: 'Save menu permissions for a user (sync/overwrite — delete-then-insert)' })
   @ApiParam({ name: 'userName', description: 'Username' })
   @ApiResponse({ status: 200, description: 'User permissions updated' })
@@ -97,6 +103,7 @@ export class UsersController {
   }
 
   @Put('permissions/batch')
+  @RequiredPermission({ control: 'UserRolePermission', action: 'editAccess' })
   @ApiOperation({ summary: 'Apply one permission grid to many users (sync/overwrite — delete-then-insert)' })
   @ApiResponse({ status: 200, description: 'Permissions updated for all target users' })
   syncBatch(@Body() dto: BatchUserPermissionsDto) {
@@ -104,7 +111,7 @@ export class UsersController {
   }
 
   @Patch(':id/reset-password')
-  @ApiOperation({ summary: 'Reset user password' })
+  @ApiOperation({ summary: 'Reset user password (no Users permission required)' })
   @ApiParam({ name: 'id', description: 'User UUID' })
   @ApiResponse({ status: 200, description: 'Password reset successfully' })
   resetPassword(@Param('id') id: string, @Body('password') password: string) {

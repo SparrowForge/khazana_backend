@@ -2,13 +2,14 @@ import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@ne
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { AdminService, CreateBranchDto, UpdateSystemDto } from './admin.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
-import { CurrentUser, Public } from '../common/decorators';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { CurrentUser, Public, RequiredPermission } from '../common/decorators';
 import { PaginationQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Admin')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('admin')
 export class AdminController {
   constructor(private adminService: AdminService) {}
@@ -23,11 +24,13 @@ export class AdminController {
   }
 
   @Post('branches')
+  @RequiredPermission({ control: 'Admin', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new branch' })
   @ApiResponse({ status: 201, description: 'Branch created successfully' })
   createBranch(@Body() dto: CreateBranchDto) { return this.adminService.createBranch(dto); }
 
   @Patch('branches/:id')
+  @RequiredPermission({ control: 'Admin', action: 'editAccess' })
   @ApiOperation({ summary: 'Update branch by ID' })
   @ApiParam({ name: 'id', description: 'Branch UUID' })
   @ApiResponse({ status: 200, description: 'Branch updated successfully' })
@@ -41,6 +44,7 @@ export class AdminController {
   getSettings() { return this.adminService.getSystemSettings(); }
 
   @Patch('settings')
+  @RequiredPermission({ control: 'Admin', action: 'editAccess' })
   @ApiOperation({ summary: 'Update system settings' })
   @ApiResponse({ status: 200, description: 'Settings updated successfully' })
   updateSettings(@Body() dto: UpdateSystemDto) { return this.adminService.updateSystemSettings(dto); }
@@ -62,6 +66,7 @@ export class AdminController {
   }
 
   @Post('banks')
+  @RequiredPermission({ control: 'Admin', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new bank' })
   @ApiResponse({ status: 201, description: 'Bank created successfully' })
   createBank(@Body('name') name: string, @CurrentUser('userName') userName: string) {
