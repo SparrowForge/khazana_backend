@@ -5220,6 +5220,7 @@ export namespace Prisma {
   export type Item_InformationCountOutputType = {
     runningSaleDetails: number
     runningSaleVatDetails: number
+    creditSaleDetails: number
     ncDetails: number
     asstDetails: number
     itemRejects: number
@@ -5232,6 +5233,7 @@ export namespace Prisma {
   export type Item_InformationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     runningSaleDetails?: boolean | Item_InformationCountOutputTypeCountRunningSaleDetailsArgs
     runningSaleVatDetails?: boolean | Item_InformationCountOutputTypeCountRunningSaleVatDetailsArgs
+    creditSaleDetails?: boolean | Item_InformationCountOutputTypeCountCreditSaleDetailsArgs
     ncDetails?: boolean | Item_InformationCountOutputTypeCountNcDetailsArgs
     asstDetails?: boolean | Item_InformationCountOutputTypeCountAsstDetailsArgs
     itemRejects?: boolean | Item_InformationCountOutputTypeCountItemRejectsArgs
@@ -5264,6 +5266,13 @@ export namespace Prisma {
    */
   export type Item_InformationCountOutputTypeCountRunningSaleVatDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: t_SODeVWhereInput
+  }
+
+  /**
+   * Item_InformationCountOutputType without action
+   */
+  export type Item_InformationCountOutputTypeCountCreditSaleDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CSDetailWhereInput
   }
 
   /**
@@ -22565,6 +22574,7 @@ export namespace Prisma {
     image?: boolean | Item_Information$imageArgs<ExtArgs>
     runningSaleDetails?: boolean | Item_Information$runningSaleDetailsArgs<ExtArgs>
     runningSaleVatDetails?: boolean | Item_Information$runningSaleVatDetailsArgs<ExtArgs>
+    creditSaleDetails?: boolean | Item_Information$creditSaleDetailsArgs<ExtArgs>
     ncDetails?: boolean | Item_Information$ncDetailsArgs<ExtArgs>
     asstDetails?: boolean | Item_Information$asstDetailsArgs<ExtArgs>
     itemRejects?: boolean | Item_Information$itemRejectsArgs<ExtArgs>
@@ -22625,6 +22635,7 @@ export namespace Prisma {
     image?: boolean | Item_Information$imageArgs<ExtArgs>
     runningSaleDetails?: boolean | Item_Information$runningSaleDetailsArgs<ExtArgs>
     runningSaleVatDetails?: boolean | Item_Information$runningSaleVatDetailsArgs<ExtArgs>
+    creditSaleDetails?: boolean | Item_Information$creditSaleDetailsArgs<ExtArgs>
     ncDetails?: boolean | Item_Information$ncDetailsArgs<ExtArgs>
     asstDetails?: boolean | Item_Information$asstDetailsArgs<ExtArgs>
     itemRejects?: boolean | Item_Information$itemRejectsArgs<ExtArgs>
@@ -22648,6 +22659,7 @@ export namespace Prisma {
       image: Prisma.$MediaFilePayload<ExtArgs> | null
       runningSaleDetails: Prisma.$t_SODetPayload<ExtArgs>[]
       runningSaleVatDetails: Prisma.$t_SODeVPayload<ExtArgs>[]
+      creditSaleDetails: Prisma.$CSDetailPayload<ExtArgs>[]
       ncDetails: Prisma.$t_NCDetPayload<ExtArgs>[]
       asstDetails: Prisma.$AsstDetPayload<ExtArgs>[]
       itemRejects: Prisma.$ItemRejectPayload<ExtArgs>[]
@@ -23066,6 +23078,7 @@ export namespace Prisma {
     image<T extends Item_Information$imageArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$imageArgs<ExtArgs>>): Prisma__MediaFileClient<$Result.GetResult<Prisma.$MediaFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     runningSaleDetails<T extends Item_Information$runningSaleDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$runningSaleDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_SODetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     runningSaleVatDetails<T extends Item_Information$runningSaleVatDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$runningSaleVatDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_SODeVPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    creditSaleDetails<T extends Item_Information$creditSaleDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$creditSaleDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CSDetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ncDetails<T extends Item_Information$ncDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$ncDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_NCDetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     asstDetails<T extends Item_Information$asstDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$asstDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AsstDetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     itemRejects<T extends Item_Information$itemRejectsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$itemRejectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemRejectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -23574,6 +23587,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: T_SODeVScalarFieldEnum | T_SODeVScalarFieldEnum[]
+  }
+
+  /**
+   * Item_Information.creditSaleDetails
+   */
+  export type Item_Information$creditSaleDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CSDetail
+     */
+    select?: CSDetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CSDetail
+     */
+    omit?: CSDetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CSDetailInclude<ExtArgs> | null
+    where?: CSDetailWhereInput
+    orderBy?: CSDetailOrderByWithRelationInput | CSDetailOrderByWithRelationInput[]
+    cursor?: CSDetailWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CSDetailScalarFieldEnum | CSDetailScalarFieldEnum[]
   }
 
   /**
@@ -30820,6 +30857,7 @@ export namespace Prisma {
     vat?: boolean
     total?: boolean
     sale?: boolean | CSDetail$saleArgs<ExtArgs>
+    item?: boolean | CSDetail$itemArgs<ExtArgs>
   }, ExtArgs["result"]["cSDetail"]>
 
   export type CSDetailSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -30833,6 +30871,7 @@ export namespace Prisma {
     vat?: boolean
     total?: boolean
     sale?: boolean | CSDetail$saleArgs<ExtArgs>
+    item?: boolean | CSDetail$itemArgs<ExtArgs>
   }, ExtArgs["result"]["cSDetail"]>
 
   export type CSDetailSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -30846,6 +30885,7 @@ export namespace Prisma {
     vat?: boolean
     total?: boolean
     sale?: boolean | CSDetail$saleArgs<ExtArgs>
+    item?: boolean | CSDetail$itemArgs<ExtArgs>
   }, ExtArgs["result"]["cSDetail"]>
 
   export type CSDetailSelectScalar = {
@@ -30863,18 +30903,22 @@ export namespace Prisma {
   export type CSDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invNo" | "itemOId" | "rate" | "qty" | "value" | "disc" | "vat" | "total", ExtArgs["result"]["cSDetail"]>
   export type CSDetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sale?: boolean | CSDetail$saleArgs<ExtArgs>
+    item?: boolean | CSDetail$itemArgs<ExtArgs>
   }
   export type CSDetailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sale?: boolean | CSDetail$saleArgs<ExtArgs>
+    item?: boolean | CSDetail$itemArgs<ExtArgs>
   }
   export type CSDetailIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sale?: boolean | CSDetail$saleArgs<ExtArgs>
+    item?: boolean | CSDetail$itemArgs<ExtArgs>
   }
 
   export type $CSDetailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CSDetail"
     objects: {
       sale: Prisma.$CSMasterPayload<ExtArgs> | null
+      item: Prisma.$Item_InformationPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -31281,6 +31325,7 @@ export namespace Prisma {
   export interface Prisma__CSDetailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     sale<T extends CSDetail$saleArgs<ExtArgs> = {}>(args?: Subset<T, CSDetail$saleArgs<ExtArgs>>): Prisma__CSMasterClient<$Result.GetResult<Prisma.$CSMasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    item<T extends CSDetail$itemArgs<ExtArgs> = {}>(args?: Subset<T, CSDetail$itemArgs<ExtArgs>>): Prisma__Item_InformationClient<$Result.GetResult<Prisma.$Item_InformationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -31731,6 +31776,25 @@ export namespace Prisma {
      */
     include?: CSMasterInclude<ExtArgs> | null
     where?: CSMasterWhereInput
+  }
+
+  /**
+   * CSDetail.item
+   */
+  export type CSDetail$itemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_Information
+     */
+    select?: Item_InformationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_Information
+     */
+    omit?: Item_InformationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Item_InformationInclude<ExtArgs> | null
+    where?: Item_InformationWhereInput
   }
 
   /**
@@ -62319,6 +62383,7 @@ export namespace Prisma {
     image?: XOR<MediaFileNullableScalarRelationFilter, MediaFileWhereInput> | null
     runningSaleDetails?: T_SODetListRelationFilter
     runningSaleVatDetails?: T_SODeVListRelationFilter
+    creditSaleDetails?: CSDetailListRelationFilter
     ncDetails?: T_NCDetListRelationFilter
     asstDetails?: AsstDetListRelationFilter
     itemRejects?: ItemRejectListRelationFilter
@@ -62344,6 +62409,7 @@ export namespace Prisma {
     image?: MediaFileOrderByWithRelationInput
     runningSaleDetails?: t_SODetOrderByRelationAggregateInput
     runningSaleVatDetails?: t_SODeVOrderByRelationAggregateInput
+    creditSaleDetails?: CSDetailOrderByRelationAggregateInput
     ncDetails?: t_NCDetOrderByRelationAggregateInput
     asstDetails?: AsstDetOrderByRelationAggregateInput
     itemRejects?: ItemRejectOrderByRelationAggregateInput
@@ -62372,6 +62438,7 @@ export namespace Prisma {
     image?: XOR<MediaFileNullableScalarRelationFilter, MediaFileWhereInput> | null
     runningSaleDetails?: T_SODetListRelationFilter
     runningSaleVatDetails?: T_SODeVListRelationFilter
+    creditSaleDetails?: CSDetailListRelationFilter
     ncDetails?: T_NCDetListRelationFilter
     asstDetails?: AsstDetListRelationFilter
     itemRejects?: ItemRejectListRelationFilter
@@ -62861,7 +62928,7 @@ export namespace Prisma {
     NOT?: CSDetailWhereInput | CSDetailWhereInput[]
     id?: UuidFilter<"CSDetail"> | string
     invNo?: StringNullableFilter<"CSDetail"> | string | null
-    itemOId?: StringNullableFilter<"CSDetail"> | string | null
+    itemOId?: UuidNullableFilter<"CSDetail"> | string | null
     rate?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     value?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
@@ -62869,6 +62936,7 @@ export namespace Prisma {
     vat?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     total?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     sale?: XOR<CSMasterNullableScalarRelationFilter, CSMasterWhereInput> | null
+    item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }
 
   export type CSDetailOrderByWithRelationInput = {
@@ -62882,6 +62950,7 @@ export namespace Prisma {
     vat?: SortOrderInput | SortOrder
     total?: SortOrderInput | SortOrder
     sale?: CSMasterOrderByWithRelationInput
+    item?: Item_InformationOrderByWithRelationInput
   }
 
   export type CSDetailWhereUniqueInput = Prisma.AtLeast<{
@@ -62890,7 +62959,7 @@ export namespace Prisma {
     OR?: CSDetailWhereInput[]
     NOT?: CSDetailWhereInput | CSDetailWhereInput[]
     invNo?: StringNullableFilter<"CSDetail"> | string | null
-    itemOId?: StringNullableFilter<"CSDetail"> | string | null
+    itemOId?: UuidNullableFilter<"CSDetail"> | string | null
     rate?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     value?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
@@ -62898,6 +62967,7 @@ export namespace Prisma {
     vat?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     total?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     sale?: XOR<CSMasterNullableScalarRelationFilter, CSMasterWhereInput> | null
+    item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }, "id">
 
   export type CSDetailOrderByWithAggregationInput = {
@@ -62923,7 +62993,7 @@ export namespace Prisma {
     NOT?: CSDetailScalarWhereWithAggregatesInput | CSDetailScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"CSDetail"> | string
     invNo?: StringNullableWithAggregatesFilter<"CSDetail"> | string | null
-    itemOId?: StringNullableWithAggregatesFilter<"CSDetail"> | string | null
+    itemOId?: UuidNullableWithAggregatesFilter<"CSDetail"> | string | null
     rate?: DecimalNullableWithAggregatesFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableWithAggregatesFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     value?: DecimalNullableWithAggregatesFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
@@ -66534,6 +66604,7 @@ export namespace Prisma {
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
@@ -66558,6 +66629,7 @@ export namespace Prisma {
     isActive?: string | null
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
@@ -66582,6 +66654,7 @@ export namespace Prisma {
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
@@ -66606,6 +66679,7 @@ export namespace Prisma {
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
@@ -67135,7 +67209,6 @@ export namespace Prisma {
 
   export type CSDetailCreateInput = {
     id?: string
-    itemOId?: string | null
     rate?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     value?: Decimal | DecimalJsLike | number | string | null
@@ -67143,6 +67216,7 @@ export namespace Prisma {
     vat?: Decimal | DecimalJsLike | number | string | null
     total?: Decimal | DecimalJsLike | number | string | null
     sale?: CSMasterCreateNestedOneWithoutDetailsInput
+    item?: Item_InformationCreateNestedOneWithoutCreditSaleDetailsInput
   }
 
   export type CSDetailUncheckedCreateInput = {
@@ -67159,7 +67233,6 @@ export namespace Prisma {
 
   export type CSDetailUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    itemOId?: NullableStringFieldUpdateOperationsInput | string | null
     rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -67167,6 +67240,7 @@ export namespace Prisma {
     vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sale?: CSMasterUpdateOneWithoutDetailsNestedInput
+    item?: Item_InformationUpdateOneWithoutCreditSaleDetailsNestedInput
   }
 
   export type CSDetailUncheckedUpdateInput = {
@@ -67195,7 +67269,6 @@ export namespace Prisma {
 
   export type CSDetailUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    itemOId?: NullableStringFieldUpdateOperationsInput | string | null
     rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -70990,6 +71063,12 @@ export namespace Prisma {
     none?: t_SODeVWhereInput
   }
 
+  export type CSDetailListRelationFilter = {
+    every?: CSDetailWhereInput
+    some?: CSDetailWhereInput
+    none?: CSDetailWhereInput
+  }
+
   export type T_NCDetListRelationFilter = {
     every?: t_NCDetWhereInput
     some?: t_NCDetWhereInput
@@ -71042,6 +71121,10 @@ export namespace Prisma {
   }
 
   export type t_SODeVOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CSDetailOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -71388,16 +71471,6 @@ export namespace Prisma {
     priceVatPrice?: SortOrder
     priceDiscPrice?: SortOrder
     priceIsActive?: SortOrder
-  }
-
-  export type CSDetailListRelationFilter = {
-    every?: CSDetailWhereInput
-    some?: CSDetailWhereInput
-    none?: CSDetailWhereInput
-  }
-
-  export type CSDetailOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type CSMasterCountOrderByAggregateInput = {
@@ -73861,6 +73934,13 @@ export namespace Prisma {
     connect?: t_SODeVWhereUniqueInput | t_SODeVWhereUniqueInput[]
   }
 
+  export type CSDetailCreateNestedManyWithoutItemInput = {
+    create?: XOR<CSDetailCreateWithoutItemInput, CSDetailUncheckedCreateWithoutItemInput> | CSDetailCreateWithoutItemInput[] | CSDetailUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: CSDetailCreateOrConnectWithoutItemInput | CSDetailCreateOrConnectWithoutItemInput[]
+    createMany?: CSDetailCreateManyItemInputEnvelope
+    connect?: CSDetailWhereUniqueInput | CSDetailWhereUniqueInput[]
+  }
+
   export type t_NCDetCreateNestedManyWithoutItemInput = {
     create?: XOR<t_NCDetCreateWithoutItemInput, t_NCDetUncheckedCreateWithoutItemInput> | t_NCDetCreateWithoutItemInput[] | t_NCDetUncheckedCreateWithoutItemInput[]
     connectOrCreate?: t_NCDetCreateOrConnectWithoutItemInput | t_NCDetCreateOrConnectWithoutItemInput[]
@@ -73928,6 +74008,13 @@ export namespace Prisma {
     connectOrCreate?: t_SODeVCreateOrConnectWithoutItemInput | t_SODeVCreateOrConnectWithoutItemInput[]
     createMany?: t_SODeVCreateManyItemInputEnvelope
     connect?: t_SODeVWhereUniqueInput | t_SODeVWhereUniqueInput[]
+  }
+
+  export type CSDetailUncheckedCreateNestedManyWithoutItemInput = {
+    create?: XOR<CSDetailCreateWithoutItemInput, CSDetailUncheckedCreateWithoutItemInput> | CSDetailCreateWithoutItemInput[] | CSDetailUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: CSDetailCreateOrConnectWithoutItemInput | CSDetailCreateOrConnectWithoutItemInput[]
+    createMany?: CSDetailCreateManyItemInputEnvelope
+    connect?: CSDetailWhereUniqueInput | CSDetailWhereUniqueInput[]
   }
 
   export type t_NCDetUncheckedCreateNestedManyWithoutItemInput = {
@@ -74021,6 +74108,20 @@ export namespace Prisma {
     update?: t_SODeVUpdateWithWhereUniqueWithoutItemInput | t_SODeVUpdateWithWhereUniqueWithoutItemInput[]
     updateMany?: t_SODeVUpdateManyWithWhereWithoutItemInput | t_SODeVUpdateManyWithWhereWithoutItemInput[]
     deleteMany?: t_SODeVScalarWhereInput | t_SODeVScalarWhereInput[]
+  }
+
+  export type CSDetailUpdateManyWithoutItemNestedInput = {
+    create?: XOR<CSDetailCreateWithoutItemInput, CSDetailUncheckedCreateWithoutItemInput> | CSDetailCreateWithoutItemInput[] | CSDetailUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: CSDetailCreateOrConnectWithoutItemInput | CSDetailCreateOrConnectWithoutItemInput[]
+    upsert?: CSDetailUpsertWithWhereUniqueWithoutItemInput | CSDetailUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: CSDetailCreateManyItemInputEnvelope
+    set?: CSDetailWhereUniqueInput | CSDetailWhereUniqueInput[]
+    disconnect?: CSDetailWhereUniqueInput | CSDetailWhereUniqueInput[]
+    delete?: CSDetailWhereUniqueInput | CSDetailWhereUniqueInput[]
+    connect?: CSDetailWhereUniqueInput | CSDetailWhereUniqueInput[]
+    update?: CSDetailUpdateWithWhereUniqueWithoutItemInput | CSDetailUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: CSDetailUpdateManyWithWhereWithoutItemInput | CSDetailUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: CSDetailScalarWhereInput | CSDetailScalarWhereInput[]
   }
 
   export type t_NCDetUpdateManyWithoutItemNestedInput = {
@@ -74157,6 +74258,20 @@ export namespace Prisma {
     update?: t_SODeVUpdateWithWhereUniqueWithoutItemInput | t_SODeVUpdateWithWhereUniqueWithoutItemInput[]
     updateMany?: t_SODeVUpdateManyWithWhereWithoutItemInput | t_SODeVUpdateManyWithWhereWithoutItemInput[]
     deleteMany?: t_SODeVScalarWhereInput | t_SODeVScalarWhereInput[]
+  }
+
+  export type CSDetailUncheckedUpdateManyWithoutItemNestedInput = {
+    create?: XOR<CSDetailCreateWithoutItemInput, CSDetailUncheckedCreateWithoutItemInput> | CSDetailCreateWithoutItemInput[] | CSDetailUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: CSDetailCreateOrConnectWithoutItemInput | CSDetailCreateOrConnectWithoutItemInput[]
+    upsert?: CSDetailUpsertWithWhereUniqueWithoutItemInput | CSDetailUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: CSDetailCreateManyItemInputEnvelope
+    set?: CSDetailWhereUniqueInput | CSDetailWhereUniqueInput[]
+    disconnect?: CSDetailWhereUniqueInput | CSDetailWhereUniqueInput[]
+    delete?: CSDetailWhereUniqueInput | CSDetailWhereUniqueInput[]
+    connect?: CSDetailWhereUniqueInput | CSDetailWhereUniqueInput[]
+    update?: CSDetailUpdateWithWhereUniqueWithoutItemInput | CSDetailUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: CSDetailUpdateManyWithWhereWithoutItemInput | CSDetailUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: CSDetailScalarWhereInput | CSDetailScalarWhereInput[]
   }
 
   export type t_NCDetUncheckedUpdateManyWithoutItemNestedInput = {
@@ -74393,6 +74508,12 @@ export namespace Prisma {
     connect?: CSMasterWhereUniqueInput
   }
 
+  export type Item_InformationCreateNestedOneWithoutCreditSaleDetailsInput = {
+    create?: XOR<Item_InformationCreateWithoutCreditSaleDetailsInput, Item_InformationUncheckedCreateWithoutCreditSaleDetailsInput>
+    connectOrCreate?: Item_InformationCreateOrConnectWithoutCreditSaleDetailsInput
+    connect?: Item_InformationWhereUniqueInput
+  }
+
   export type CSMasterUpdateOneWithoutDetailsNestedInput = {
     create?: XOR<CSMasterCreateWithoutDetailsInput, CSMasterUncheckedCreateWithoutDetailsInput>
     connectOrCreate?: CSMasterCreateOrConnectWithoutDetailsInput
@@ -74401,6 +74522,16 @@ export namespace Prisma {
     delete?: CSMasterWhereInput | boolean
     connect?: CSMasterWhereUniqueInput
     update?: XOR<XOR<CSMasterUpdateToOneWithWhereWithoutDetailsInput, CSMasterUpdateWithoutDetailsInput>, CSMasterUncheckedUpdateWithoutDetailsInput>
+  }
+
+  export type Item_InformationUpdateOneWithoutCreditSaleDetailsNestedInput = {
+    create?: XOR<Item_InformationCreateWithoutCreditSaleDetailsInput, Item_InformationUncheckedCreateWithoutCreditSaleDetailsInput>
+    connectOrCreate?: Item_InformationCreateOrConnectWithoutCreditSaleDetailsInput
+    upsert?: Item_InformationUpsertWithoutCreditSaleDetailsInput
+    disconnect?: Item_InformationWhereInput | boolean
+    delete?: Item_InformationWhereInput | boolean
+    connect?: Item_InformationWhereUniqueInput
+    update?: XOR<XOR<Item_InformationUpdateToOneWithWhereWithoutCreditSaleDetailsInput, Item_InformationUpdateWithoutCreditSaleDetailsInput>, Item_InformationUncheckedUpdateWithoutCreditSaleDetailsInput>
   }
 
   export type CustomerCreateNestedOneWithoutSalesVatInput = {
@@ -75568,6 +75699,7 @@ export namespace Prisma {
     isActive?: string | null
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
@@ -75591,6 +75723,7 @@ export namespace Prisma {
     isActive?: string | null
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
@@ -77094,6 +77227,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CSDetailCreateWithoutItemInput = {
+    id?: string
+    rate?: Decimal | DecimalJsLike | number | string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    value?: Decimal | DecimalJsLike | number | string | null
+    disc?: Decimal | DecimalJsLike | number | string | null
+    vat?: Decimal | DecimalJsLike | number | string | null
+    total?: Decimal | DecimalJsLike | number | string | null
+    sale?: CSMasterCreateNestedOneWithoutDetailsInput
+  }
+
+  export type CSDetailUncheckedCreateWithoutItemInput = {
+    id?: string
+    invNo?: string | null
+    rate?: Decimal | DecimalJsLike | number | string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    value?: Decimal | DecimalJsLike | number | string | null
+    disc?: Decimal | DecimalJsLike | number | string | null
+    vat?: Decimal | DecimalJsLike | number | string | null
+    total?: Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type CSDetailCreateOrConnectWithoutItemInput = {
+    where: CSDetailWhereUniqueInput
+    create: XOR<CSDetailCreateWithoutItemInput, CSDetailUncheckedCreateWithoutItemInput>
+  }
+
+  export type CSDetailCreateManyItemInputEnvelope = {
+    data: CSDetailCreateManyItemInput | CSDetailCreateManyItemInput[]
+    skipDuplicates?: boolean
+  }
+
   export type t_NCDetCreateWithoutItemInput = {
     id?: string
     ncdetItemSLNum?: string | null
@@ -77508,6 +77673,37 @@ export namespace Prisma {
     branchId?: UuidNullableFilter<"t_SODeV"> | string | null
   }
 
+  export type CSDetailUpsertWithWhereUniqueWithoutItemInput = {
+    where: CSDetailWhereUniqueInput
+    update: XOR<CSDetailUpdateWithoutItemInput, CSDetailUncheckedUpdateWithoutItemInput>
+    create: XOR<CSDetailCreateWithoutItemInput, CSDetailUncheckedCreateWithoutItemInput>
+  }
+
+  export type CSDetailUpdateWithWhereUniqueWithoutItemInput = {
+    where: CSDetailWhereUniqueInput
+    data: XOR<CSDetailUpdateWithoutItemInput, CSDetailUncheckedUpdateWithoutItemInput>
+  }
+
+  export type CSDetailUpdateManyWithWhereWithoutItemInput = {
+    where: CSDetailScalarWhereInput
+    data: XOR<CSDetailUpdateManyMutationInput, CSDetailUncheckedUpdateManyWithoutItemInput>
+  }
+
+  export type CSDetailScalarWhereInput = {
+    AND?: CSDetailScalarWhereInput | CSDetailScalarWhereInput[]
+    OR?: CSDetailScalarWhereInput[]
+    NOT?: CSDetailScalarWhereInput | CSDetailScalarWhereInput[]
+    id?: UuidFilter<"CSDetail"> | string
+    invNo?: StringNullableFilter<"CSDetail"> | string | null
+    itemOId?: UuidNullableFilter<"CSDetail"> | string | null
+    rate?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
+    qty?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
+    value?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
+    disc?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
+    vat?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
+    total?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type t_NCDetUpsertWithWhereUniqueWithoutItemInput = {
     where: t_NCDetWhereUniqueInput
     update: XOR<t_NCDetUpdateWithoutItemInput, t_NCDetUncheckedUpdateWithoutItemInput>
@@ -77788,6 +77984,7 @@ export namespace Prisma {
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
@@ -77811,6 +78008,7 @@ export namespace Prisma {
     isActive?: string | null
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
@@ -77850,6 +78048,7 @@ export namespace Prisma {
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
@@ -77873,6 +78072,7 @@ export namespace Prisma {
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
@@ -77896,6 +78096,7 @@ export namespace Prisma {
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
@@ -77919,6 +78120,7 @@ export namespace Prisma {
     isActive?: string | null
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
@@ -77958,6 +78160,7 @@ export namespace Prisma {
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
@@ -77981,6 +78184,7 @@ export namespace Prisma {
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
@@ -78004,6 +78208,7 @@ export namespace Prisma {
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
@@ -78027,6 +78232,7 @@ export namespace Prisma {
     isActive?: string | null
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
@@ -78066,6 +78272,7 @@ export namespace Prisma {
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
@@ -78089,6 +78296,7 @@ export namespace Prisma {
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
@@ -78129,13 +78337,13 @@ export namespace Prisma {
 
   export type CSDetailCreateWithoutSaleInput = {
     id?: string
-    itemOId?: string | null
     rate?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     value?: Decimal | DecimalJsLike | number | string | null
     disc?: Decimal | DecimalJsLike | number | string | null
     vat?: Decimal | DecimalJsLike | number | string | null
     total?: Decimal | DecimalJsLike | number | string | null
+    item?: Item_InformationCreateNestedOneWithoutCreditSaleDetailsInput
   }
 
   export type CSDetailUncheckedCreateWithoutSaleInput = {
@@ -78210,21 +78418,6 @@ export namespace Prisma {
     data: XOR<CSDetailUpdateManyMutationInput, CSDetailUncheckedUpdateManyWithoutSaleInput>
   }
 
-  export type CSDetailScalarWhereInput = {
-    AND?: CSDetailScalarWhereInput | CSDetailScalarWhereInput[]
-    OR?: CSDetailScalarWhereInput[]
-    NOT?: CSDetailScalarWhereInput | CSDetailScalarWhereInput[]
-    id?: UuidFilter<"CSDetail"> | string
-    invNo?: StringNullableFilter<"CSDetail"> | string | null
-    itemOId?: StringNullableFilter<"CSDetail"> | string | null
-    rate?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
-    qty?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
-    value?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
-    disc?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
-    vat?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
-    total?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type CSMasterCreateWithoutDetailsInput = {
     id?: string
     invNo: string
@@ -78262,6 +78455,59 @@ export namespace Prisma {
   export type CSMasterCreateOrConnectWithoutDetailsInput = {
     where: CSMasterWhereUniqueInput
     create: XOR<CSMasterCreateWithoutDetailsInput, CSMasterUncheckedCreateWithoutDetailsInput>
+  }
+
+  export type Item_InformationCreateWithoutCreditSaleDetailsInput = {
+    id?: string
+    itmCode: string
+    itmName?: string | null
+    itmCategory?: string | null
+    itmType?: string | null
+    itmUOM?: string | null
+    itmRemarks?: string | null
+    itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: string | null
+    isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
+    runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
+    runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
+    asstDetails?: AsstDetCreateNestedManyWithoutItemInput
+    itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
+    itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
+    itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
+    prices?: t_PriceCreateNestedManyWithoutItemInput
+    costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+  }
+
+  export type Item_InformationUncheckedCreateWithoutCreditSaleDetailsInput = {
+    id?: string
+    itmCode: string
+    itmName?: string | null
+    itmCategory?: string | null
+    itmType?: string | null
+    itmUOM?: string | null
+    itmRemarks?: string | null
+    imageId?: string | null
+    itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: string | null
+    isActive?: string | null
+    runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
+    runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
+    asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
+    itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
+    itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
+    itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
+    prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
+    costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+  }
+
+  export type Item_InformationCreateOrConnectWithoutCreditSaleDetailsInput = {
+    where: Item_InformationWhereUniqueInput
+    create: XOR<Item_InformationCreateWithoutCreditSaleDetailsInput, Item_InformationUncheckedCreateWithoutCreditSaleDetailsInput>
   }
 
   export type CSMasterUpsertWithoutDetailsInput = {
@@ -78307,6 +78553,65 @@ export namespace Prisma {
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Item_InformationUpsertWithoutCreditSaleDetailsInput = {
+    update: XOR<Item_InformationUpdateWithoutCreditSaleDetailsInput, Item_InformationUncheckedUpdateWithoutCreditSaleDetailsInput>
+    create: XOR<Item_InformationCreateWithoutCreditSaleDetailsInput, Item_InformationUncheckedCreateWithoutCreditSaleDetailsInput>
+    where?: Item_InformationWhereInput
+  }
+
+  export type Item_InformationUpdateToOneWithWhereWithoutCreditSaleDetailsInput = {
+    where?: Item_InformationWhereInput
+    data: XOR<Item_InformationUpdateWithoutCreditSaleDetailsInput, Item_InformationUncheckedUpdateWithoutCreditSaleDetailsInput>
+  }
+
+  export type Item_InformationUpdateWithoutCreditSaleDetailsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itmCode?: StringFieldUpdateOperationsInput | string
+    itmName?: NullableStringFieldUpdateOperationsInput | string | null
+    itmCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    itmType?: NullableStringFieldUpdateOperationsInput | string | null
+    itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
+    runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
+    runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
+    asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
+    itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
+    itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
+    itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
+    prices?: t_PriceUpdateManyWithoutItemNestedInput
+    costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+  }
+
+  export type Item_InformationUncheckedUpdateWithoutCreditSaleDetailsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itmCode?: StringFieldUpdateOperationsInput | string
+    itmName?: NullableStringFieldUpdateOperationsInput | string | null
+    itmCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    itmType?: NullableStringFieldUpdateOperationsInput | string | null
+    itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
+    itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
+    runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
+    asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
+    itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
+    itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
+    itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
+    prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
+    costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type CustomerCreateWithoutSalesVatInput = {
@@ -78684,6 +78989,7 @@ export namespace Prisma {
     isActive?: string | null
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
@@ -78707,6 +79013,7 @@ export namespace Prisma {
     orderLevelUOM?: string | null
     isActive?: string | null
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
@@ -78807,6 +79114,7 @@ export namespace Prisma {
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
@@ -78830,6 +79138,7 @@ export namespace Prisma {
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
@@ -78966,6 +79275,7 @@ export namespace Prisma {
     isActive?: string | null
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
@@ -78989,6 +79299,7 @@ export namespace Prisma {
     orderLevelUOM?: string | null
     isActive?: string | null
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
@@ -79087,6 +79398,7 @@ export namespace Prisma {
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
@@ -79110,6 +79422,7 @@ export namespace Prisma {
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
@@ -79192,6 +79505,7 @@ export namespace Prisma {
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
@@ -79215,6 +79529,7 @@ export namespace Prisma {
     isActive?: string | null
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
@@ -79303,6 +79618,7 @@ export namespace Prisma {
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
@@ -79326,6 +79642,7 @@ export namespace Prisma {
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
@@ -79499,6 +79816,7 @@ export namespace Prisma {
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
@@ -79522,6 +79840,7 @@ export namespace Prisma {
     isActive?: string | null
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
@@ -79602,6 +79921,7 @@ export namespace Prisma {
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
@@ -79625,6 +79945,7 @@ export namespace Prisma {
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
@@ -79648,6 +79969,7 @@ export namespace Prisma {
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
@@ -79671,6 +79993,7 @@ export namespace Prisma {
     isActive?: string | null
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
@@ -79710,6 +80033,7 @@ export namespace Prisma {
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
@@ -79733,6 +80057,7 @@ export namespace Prisma {
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
@@ -79756,6 +80081,7 @@ export namespace Prisma {
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
@@ -79779,6 +80105,7 @@ export namespace Prisma {
     isActive?: string | null
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
@@ -79818,6 +80145,7 @@ export namespace Prisma {
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
@@ -79841,6 +80169,7 @@ export namespace Prisma {
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
@@ -79864,6 +80193,7 @@ export namespace Prisma {
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
@@ -79887,6 +80217,7 @@ export namespace Prisma {
     isActive?: string | null
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
@@ -79926,6 +80257,7 @@ export namespace Prisma {
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
@@ -79949,6 +80281,7 @@ export namespace Prisma {
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
@@ -80689,6 +81022,7 @@ export namespace Prisma {
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
@@ -80712,6 +81046,7 @@ export namespace Prisma {
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
@@ -81259,6 +81594,17 @@ export namespace Prisma {
     branchId?: string | null
   }
 
+  export type CSDetailCreateManyItemInput = {
+    id?: string
+    invNo?: string | null
+    rate?: Decimal | DecimalJsLike | number | string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    value?: Decimal | DecimalJsLike | number | string | null
+    disc?: Decimal | DecimalJsLike | number | string | null
+    vat?: Decimal | DecimalJsLike | number | string | null
+    total?: Decimal | DecimalJsLike | number | string | null
+  }
+
   export type t_NCDetCreateManyItemInput = {
     id?: string
     t_NCMstr_id?: string | null
@@ -81466,6 +81812,39 @@ export namespace Prisma {
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CSDetailUpdateWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    disc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    sale?: CSMasterUpdateOneWithoutDetailsNestedInput
+  }
+
+  export type CSDetailUncheckedUpdateWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invNo?: NullableStringFieldUpdateOperationsInput | string | null
+    rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    disc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type CSDetailUncheckedUpdateManyWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    invNo?: NullableStringFieldUpdateOperationsInput | string | null
+    rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    disc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type t_NCDetUpdateWithoutItemInput = {
@@ -81802,13 +82181,13 @@ export namespace Prisma {
 
   export type CSDetailUpdateWithoutSaleInput = {
     id?: StringFieldUpdateOperationsInput | string
-    itemOId?: NullableStringFieldUpdateOperationsInput | string | null
     rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     disc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    item?: Item_InformationUpdateOneWithoutCreditSaleDetailsNestedInput
   }
 
   export type CSDetailUncheckedUpdateWithoutSaleInput = {

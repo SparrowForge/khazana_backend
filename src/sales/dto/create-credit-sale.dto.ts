@@ -8,7 +8,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 export class CreditSaleItemDto {
   @ApiProperty({ example: 'ITM-001', description: 'Item code' })
   @IsString()
-  itemCode: string;
+  itemId: string;
 
   @ApiProperty({ example: 5, description: 'Quantity (must be > 0)' })
   @IsNumber()

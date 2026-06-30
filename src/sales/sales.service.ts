@@ -84,6 +84,7 @@ export class SalesService {
     const existing = await this.prisma.cSMaster.findUnique({ where: { invNo } });
     if (existing) throw new BadRequestException('Invoice number already exists');
 
+   
     const sale = await this.prisma.cSMaster.create({
       data: {
         invNo,
@@ -100,7 +101,7 @@ export class SalesService {
         createDate: new Date(),
         details: {
           create: dto.items.map((item) => ({
-            itemOId: item.itemCode,
+            itemOId: item.itemId,
             rate: item.rate,
             qty: item.qty,
             value: item.rate * item.qty,
@@ -112,8 +113,7 @@ export class SalesService {
       },
       include: { details: true },
     });
-
-    await this.deductStockByCode(dto.items.map((i) => ({ itemCode: i.itemCode, qty: i.qty })));
+    
     return sale;
   }
 
@@ -182,7 +182,7 @@ export class SalesService {
         invoiceBy: userName,
         details: {
           create: dto.items.map((item) => ({
-            itemOId: item.itemCode,
+            itemOId: item.itemId,
             rate: item.rate,
             qty: item.qty,
             value: item.rate * item.qty,
@@ -195,7 +195,6 @@ export class SalesService {
       include: { details: true },
     });
 
-    await this.deductStockByCode(dto.items.map((i) => ({ itemCode: i.itemCode, qty: i.qty })));
     return sale;
   }
 
@@ -330,17 +329,23 @@ export class SalesService {
     return { message: 'Cash sale deleted successfully' };
   }
 
-  // ── Credit sale edit / delete (cSMaster + cSDetail, stock keyed by item code) ──
+  // ── Credit sale edit / delete (cSMaster + cSDetail; itemOId is a uuid FK) ──
 
   async updateCreditSale(id: string, dto: UpdateSalesDto) {
     if (!dto.items?.length) throw new BadRequestException('At least one item is required');
     const existing = await this.prisma.cSMaster.findUnique({ where: { id }, include: { details: true } });
     if (!existing) throw new BadRequestException('Credit sale not found');
 
-    // Stock delta (sale deducts): increment by (oldQty − newQty) per item code.
+    // CSDetail.itemOId is a uuid FK now — resolve new lines' code→id.
+    const idByCode = await this.itemIdByCode(dto.items.map((i) => i.itemCode));
+
+    // Stock delta (sale deducts): increment by (oldQty − newQty) per item UUID.
     const delta = new Map<string, number>();
     for (const d of existing.details) if (d.itemOId) delta.set(d.itemOId, (delta.get(d.itemOId) ?? 0) + Number(d.qty ?? 0));
-    for (const it of dto.items) if (it.itemCode) delta.set(it.itemCode, (delta.get(it.itemCode) ?? 0) - it.qty);
+    for (const it of dto.items) {
+      const iid = it.itemCode ? idByCode.get(it.itemCode) : undefined;
+      if (iid) delta.set(iid, (delta.get(iid) ?? 0) - it.qty);
+    }
 
     await this.prisma.$transaction(async (tx) => {
       await tx.cSDetail.deleteMany({ where: { invNo: existing.invNo } });
@@ -353,7 +358,7 @@ export class SalesService {
           totalVat: dto.totalVat,
           details: {
             create: dto.items.map((it) => ({
-              itemOId: it.itemCode!,
+              itemOId: it.itemCode ? idByCode.get(it.itemCode) ?? null : null,
               rate: it.rate ?? 0,
               qty: it.qty,
               value: (it.rate ?? 0) * it.qty,
@@ -364,7 +369,7 @@ export class SalesService {
           },
         },
       });
-      for (const [code, q] of delta) if (q) await tx.inventory.updateMany({ where: { itemCode: code }, data: { quantity: { increment: q } } });
+      for (const [iid, q] of delta) if (q) await tx.inventory.updateMany({ where: { item: { id: iid } }, data: { quantity: { increment: q } } });
     });
     return this.prisma.cSMaster.findUnique({ where: { id }, include: { details: true } });
   }
@@ -375,7 +380,7 @@ export class SalesService {
     await this.prisma.$transaction(async (tx) => {
       for (const d of existing.details) {
         const q = Number(d.qty ?? 0);
-        if (q && d.itemOId) await tx.inventory.updateMany({ where: { itemCode: d.itemOId }, data: { quantity: { increment: q } } });
+        if (q && d.itemOId) await tx.inventory.updateMany({ where: { item: { id: d.itemOId } }, data: { quantity: { increment: q } } });
       }
       await tx.cSDetail.deleteMany({ where: { invNo: existing.invNo } });
       await tx.cSMaster.delete({ where: { id } });
@@ -395,14 +400,16 @@ export class SalesService {
     await this.prisma.$transaction(ops);
   }
 
-  private async deductStockByCode(items: { itemCode: string; qty: number }[]) {
-    const ops = items.map((i) =>
-      this.prisma.inventory.updateMany({
-        where: { itemCode: i.itemCode },
-        data: { quantity: { decrement: i.qty } },
-      }),
-    );
-    await this.prisma.$transaction(ops);
+  /** Resolve item codes → Item_Information UUIDs (for storing CSDetail.itemOId,
+   *  which is now a uuid FK). Codes with no matching item are simply absent. */
+  private async itemIdByCode(codes: (string | null | undefined)[]): Promise<Map<string, string>> {
+    const unique = [...new Set(codes.filter((c): c is string => !!c))];
+    if (!unique.length) return new Map();
+    const rows = await this.prisma.item_Information.findMany({
+      where: { itmCode: { in: unique } },
+      select: { id: true, itmCode: true },
+    });
+    return new Map(rows.map((r) => [r.itmCode, r.id]));
   }
 
   /** Resolve the session branch (a Branch UUID) to its sanitized branch code for

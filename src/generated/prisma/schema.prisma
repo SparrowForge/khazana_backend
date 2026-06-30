@@ -264,6 +264,7 @@ model Item_Information {
   // Relations using Item_Information.ID (uuid)
   runningSaleDetails    t_SODet[]
   runningSaleVatDetails t_SODeV[]
+  creditSaleDetails     CSDetail[]
   ncDetails             t_NCDet[]
   asstDetails           AsstDet[]
   itemRejects           ItemReject[]
@@ -367,16 +368,17 @@ model CSMaster {
 }
 
 model CSDetail {
-  id      String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  invNo   String?   @map("InvNo")
-  itemOId String?   @map("ItemOId")
-  rate    Decimal?  @map("Rate") @db.Decimal(8, 2)
-  qty     Decimal?  @map("Qty") @db.Decimal(8, 2)
-  value   Decimal?  @map("Value") @db.Decimal(8, 2)
-  disc    Decimal?  @map("Disc") @db.Decimal(8, 2)
-  vat     Decimal?  @map("vat") @db.Decimal(8, 2)
-  total   Decimal?  @map("total") @db.Decimal(18, 2)
-  sale    CSMaster? @relation(fields: [invNo], references: [invNo])
+  id      String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  invNo   String?           @map("InvNo")
+  itemOId String?           @map("ItemOId") @db.Uuid
+  rate    Decimal?          @map("Rate") @db.Decimal(8, 2)
+  qty     Decimal?          @map("Qty") @db.Decimal(8, 2)
+  value   Decimal?          @map("Value") @db.Decimal(8, 2)
+  disc    Decimal?          @map("Disc") @db.Decimal(8, 2)
+  vat     Decimal?          @map("vat") @db.Decimal(8, 2)
+  total   Decimal?          @map("total") @db.Decimal(18, 2)
+  sale    CSMaster?         @relation(fields: [invNo], references: [invNo])
+  item    Item_Information? @relation(fields: [itemOId], references: [id])
 
   @@map("CSDetail")
 }
