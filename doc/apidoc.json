@@ -3493,10 +3493,19 @@
         "operationId": "ReportsController_getStockAnalysis",
         "parameters": [
           {
-            "name": "date",
+            "name": "fromDate",
             "required": true,
             "in": "query",
-            "description": "Date (ISO 8601)",
+            "description": "Range start date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end date, inclusive (ISO 8601); defaults to fromDate",
             "schema": {
               "type": "string"
             }
@@ -3521,7 +3530,7 @@
             "access-token": []
           }
         ],
-        "summary": "Get the per-item Stock Analysis report for a branch + day",
+        "summary": "Get the per-item Stock Analysis report for a branch + date range",
         "tags": [
           "Reports"
         ]

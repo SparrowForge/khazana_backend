@@ -60,12 +60,17 @@ export class ReportsController {
   getStockReport() { return this.reportsService.getStockReport(); }
 
   @Get('stock-analysis')
-  @ApiOperation({ summary: 'Get the per-item Stock Analysis report for a branch + day' })
-  @ApiQuery({ name: 'date', required: true, description: 'Date (ISO 8601)' })
+  @ApiOperation({ summary: 'Get the per-item Stock Analysis report for a branch + date range' })
+  @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
+  @ApiQuery({ name: 'toDate', required: false, description: 'Range end date, inclusive (ISO 8601); defaults to fromDate' })
   @ApiQuery({ name: 'branchId', required: false, description: 'Branch ID — omit to aggregate all branches' })
   @ApiResponse({ status: 200, description: 'Stock analysis rows + sales summary footer' })
-  getStockAnalysis(@Query('date') date: string, @Query('branchId') branchId?: string) {
-    return this.reportsService.getStockAnalysis(date, branchId || undefined);
+  getStockAnalysis(
+    @Query('fromDate') fromDate: string,
+    @Query('toDate') toDate: string,
+    @Query('branchId') branchId?: string,
+  ) {
+    return this.reportsService.getStockAnalysis(fromDate, toDate, branchId || undefined);
   }
 
   @Get('item-sales')

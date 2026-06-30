@@ -426,13 +426,20 @@ export class ReportsService {
   //   excess ← ItemReject.{assort,reject,short,excess}.
   // `branchId` omitted ⇒ aggregate ALL branches together (the "All Branches"
   // checkbox); a value scopes every movement query to that branch.
-  async getStockAnalysis(date: string, branchId?: string) {
-    const day = new Date(date);
-    if (isNaN(day.getTime())) throw new BadRequestException('Valid `date` is required');
-    const nextDay = new Date(day);
-    nextDay.setDate(nextDay.getDate() + 1);
-    const before = { lt: day };
-    const during = { gte: day, lt: nextDay };
+  async getStockAnalysis(fromDate: string, toDate: string, branchId?: string) {
+    const from = new Date(fromDate);
+    if (isNaN(from.getTime())) throw new BadRequestException('Valid `fromDate` is required');
+    // `toDate` defaults to `fromDate` (single-day report) when omitted.
+    const to = toDate ? new Date(toDate) : new Date(fromDate);
+    if (isNaN(to.getTime())) throw new BadRequestException('Valid `toDate` is required');
+    // Inclusive end: roll the window to the start of the day AFTER `to`.
+    const toNext = new Date(to);
+    toNext.setDate(toNext.getDate() + 1);
+    // Opening = balance BEFORE the range start; "during" spans the whole range.
+    const day = from;
+    const nextDay = toNext;
+    const before = { lt: from };
+    const during = { gte: from, lt: toNext };
 
     // ── Catalog + as-of-date rate ────────────────────────────────────────
     const items = await this.prisma.item_Information.findMany({
@@ -568,7 +575,8 @@ export class ReportsService {
     ]);
 
     return {
-      date,
+      fromDate,
+      toDate: toDate || fromDate,
       branch: branchId
         ? { name: branch?.branchName ?? '', address: branch?.address ?? '', vatNo: branch?.vatNo ?? '' }
         : { name: 'All Branches', address: '', vatNo: '' },
