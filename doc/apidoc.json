@@ -3503,9 +3503,9 @@
           },
           {
             "name": "branchId",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "Branch ID",
+            "description": "Branch ID — omit to aggregate all branches",
             "schema": {
               "type": "string"
             }

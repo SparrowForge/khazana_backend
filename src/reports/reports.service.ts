@@ -424,10 +424,11 @@ export class ReportsService {
   // Sources: G.Receive ← Item_Receive (receiveBranchID), Issue ← Item_Issue
   //   (issueBranchId), Sales ← t_SODet, NC ← t_NCDet, and assorted/reject/short/
   //   excess ← ItemReject.{assort,reject,short,excess}.
-  async getStockAnalysis(date: string, branchId: string) {
+  // `branchId` omitted ⇒ aggregate ALL branches together (the "All Branches"
+  // checkbox); a value scopes every movement query to that branch.
+  async getStockAnalysis(date: string, branchId?: string) {
     const day = new Date(date);
     if (isNaN(day.getTime())) throw new BadRequestException('Valid `date` is required');
-    if (!branchId) throw new BadRequestException('`branchId` is required');
     const nextDay = new Date(day);
     nextDay.setDate(nextDay.getDate() + 1);
     const before = { lt: day };
@@ -454,11 +455,12 @@ export class ReportsService {
     };
 
     // ── Movement aggregates (before-day for opening, during-day for columns) ──
-    const recvWhere = (w: object) => ({ receiveBranchID: branchId, isActive: 1, purDate: w });
-    const issueWhere = (w: object) => ({ issueBranchId: branchId, isActive: 1, issueDate: w });
-    const saleWhere = (w: object) => ({ sale: { branchId, somstrIsActive: true, somstrDate: w } });
-    const ncWhere = (w: object) => ({ sale: { branchId, ncmstrIsActive: true, ncmstrDate: w } });
-    const rejWhere = (w: object) => ({ branchId, isActive: 1, date: w });
+    // When a branch is selected, scope by it; otherwise aggregate all branches.
+    const recvWhere = (w: object) => ({ ...(branchId ? { receiveBranchID: branchId } : {}), isActive: 1, purDate: w });
+    const issueWhere = (w: object) => ({ ...(branchId ? { issueBranchId: branchId } : {}), isActive: 1, issueDate: w });
+    const saleWhere = (w: object) => ({ sale: { ...(branchId ? { branchId } : {}), somstrIsActive: true, somstrDate: w } });
+    const ncWhere = (w: object) => ({ sale: { ...(branchId ? { branchId } : {}), ncmstrIsActive: true, ncmstrDate: w } });
+    const rejWhere = (w: object) => ({ ...(branchId ? { branchId } : {}), isActive: 1, date: w });
 
     const [
       recvBefore, recvDuring, issueBefore, issueDuring,
@@ -559,13 +561,17 @@ export class ReportsService {
     };
 
     const [branch, footer] = await Promise.all([
-      this.prisma.branch.findUnique({ where: { id: branchId }, select: { branchName: true, address: true, vatNo: true } }),
+      branchId
+        ? this.prisma.branch.findUnique({ where: { id: branchId }, select: { branchName: true, address: true, vatNo: true } })
+        : Promise.resolve(null),
       this.stockAnalysisFooter(day, nextDay, branchId),
     ]);
 
     return {
       date,
-      branch: { name: branch?.branchName ?? '', address: branch?.address ?? '', vatNo: branch?.vatNo ?? '' },
+      branch: branchId
+        ? { name: branch?.branchName ?? '', address: branch?.address ?? '', vatNo: branch?.vatNo ?? '' }
+        : { name: 'All Branches', address: '', vatNo: '' },
       items: rows,
       totals,
       ...footer,
@@ -575,27 +581,28 @@ export class ReportsService {
   /** Sales-summary footer for the Stock Analysis sheet: cash/card/credit totals
    *  plus the Regular/Assorted/Issue/Credit Qty (Kg/Pcs/Amount) block. "Card
    *  Sale" here means every non-cash counter payment (card + mobile wallets). */
-  private async stockAnalysisFooter(day: Date, nextDay: Date, branchId: string) {
+  private async stockAnalysisFooter(day: Date, nextDay: Date, branchId?: string) {
     const window = { gte: day, lt: nextDay };
+    const branchFilter = branchId ? { branchId } : {};
     const [cash, assorted, issues, credit, nc] = await Promise.all([
       this.prisma.t_SOMstr.findMany({
-        where: { somstrDate: window, somstrIsActive: true, branchId },
+        where: { somstrDate: window, somstrIsActive: true, ...branchFilter },
         include: { details: { select: { sodetQTY: true, item: { select: { itmUOM: true } } } } },
       }),
       this.prisma.asstMsrt.findMany({
-        where: { date: window, isActive: true, branchId },
+        where: { date: window, isActive: true, ...branchFilter },
         include: { details: { select: { qty: true, item: { select: { itmUOM: true } } } } },
       }),
       this.prisma.item_Issue.findMany({
-        where: { issueDate: window, isActive: 1, issueBranchId: branchId },
+        where: { issueDate: window, isActive: 1, ...(branchId ? { issueBranchId: branchId } : {}) },
         include: { item: { select: { itmUOM: true } } },
       }),
       this.prisma.cSMaster.findMany({
-        where: { invDate: window, isActive: 1, branchId },
+        where: { invDate: window, isActive: 1, ...branchFilter },
         include: { details: { select: { qty: true, itemOId: true } } },
       }),
       this.prisma.t_NCMstr.findMany({
-        where: { ncmstrDate: window, ncmstrIsActive: true, branchId },
+        where: { ncmstrDate: window, ncmstrIsActive: true, ...branchFilter },
         include: { details: { select: { ncdetNetAmount: true } } },
       }),
     ]);

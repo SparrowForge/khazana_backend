@@ -62,10 +62,10 @@ export class ReportsController {
   @Get('stock-analysis')
   @ApiOperation({ summary: 'Get the per-item Stock Analysis report for a branch + day' })
   @ApiQuery({ name: 'date', required: true, description: 'Date (ISO 8601)' })
-  @ApiQuery({ name: 'branchId', required: true, description: 'Branch ID' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch ID — omit to aggregate all branches' })
   @ApiResponse({ status: 200, description: 'Stock analysis rows + sales summary footer' })
-  getStockAnalysis(@Query('date') date: string, @Query('branchId') branchId: string) {
-    return this.reportsService.getStockAnalysis(date, branchId);
+  getStockAnalysis(@Query('date') date: string, @Query('branchId') branchId?: string) {
+    return this.reportsService.getStockAnalysis(date, branchId || undefined);
   }
 
   @Get('item-sales')
