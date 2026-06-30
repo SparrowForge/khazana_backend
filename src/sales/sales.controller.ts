@@ -96,6 +96,14 @@ export class SalesController {
   }
 
   // ── Credit sale edit / delete ─────────────────────────────────
+  @Get('credit/:id')
+  @RequiredPermission({ control: 'CreditSales', action: 'editAccess' })
+  @ApiOperation({ summary: 'Get a single credit sale (prefill the edit form)' })
+  @ApiResponse({ status: 404, description: 'Credit sale not found' })
+  getCreditSale(@Param('id') id: string) {
+    return this.salesService.getCreditSale(id);
+  }
+
   @Patch('credit/:id')
   @RequiredPermission({ control: 'CreditSales', action: 'editAccess' })
   @ApiOperation({ summary: 'Edit a credit sale (purge-replace lines, delta-adjust stock)' })

@@ -48,6 +48,16 @@ export class UpdateSalesDto {
   @IsOptional()
   invoiceDate?: string;
 
+  @ApiPropertyOptional({ description: 'Customer UUID (credit sales)' })
+  @IsString()
+  @IsOptional()
+  customerId?: string;
+
+  @ApiPropertyOptional({ description: 'Purchase order number (credit sales)' })
+  @IsString()
+  @IsOptional()
+  poNo?: string;
+
   @ApiPropertyOptional({ example: 'Cash' })
   @IsString()
   @IsOptional()

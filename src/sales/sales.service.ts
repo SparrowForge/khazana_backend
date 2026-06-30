@@ -331,34 +331,62 @@ export class SalesService {
 
   // ── Credit sale edit / delete (cSMaster + cSDetail; itemOId is a uuid FK) ──
 
+  /** Load a single credit sale shaped for the edit form (master + customer +
+   *  detail lines with their item code/name resolved through the uuid FK). */
+  async getCreditSale(id: string) {
+    const sale = await this.prisma.cSMaster.findUnique({
+      where: { id },
+      include: {
+        customer: { select: { id: true, code: true, name: true } },
+        details: { include: { item: { select: { id: true, itmCode: true, itmName: true } } } },
+      },
+    });
+    if (!sale) throw new BadRequestException('Credit sale not found');
+    return {
+      id: sale.id,
+      invoiceNo: sale.invNo,
+      invoiceDate: sale.invDate,
+      customerId: sale.customerId,
+      customerName: sale.customer?.name ?? null,
+      poNo: sale.poNo,
+      totalAmount: Number(sale.totalAmount ?? 0),
+      totalDiscount: Number(sale.totalDiscount ?? 0),
+      totalVat: Number(sale.totalVat ?? 0),
+      items: sale.details.map((d) => ({
+        itemId: d.itemOId,
+        itemCode: d.item?.itmCode ?? '',
+        itemName: d.item?.itmName ?? '',
+        quantity: Number(d.qty ?? 0),
+        rate: Number(d.rate ?? 0),
+        discount: Number(d.disc ?? 0),
+        vat: Number(d.vat ?? 0),
+        total: Number(d.total ?? 0),
+      })),
+    };
+  }
+
   async updateCreditSale(id: string, dto: UpdateSalesDto) {
     if (!dto.items?.length) throw new BadRequestException('At least one item is required');
-    const existing = await this.prisma.cSMaster.findUnique({ where: { id }, include: { details: true } });
+    const existing = await this.prisma.cSMaster.findUnique({ where: { id }, select: { id: true, invNo: true } });
     if (!existing) throw new BadRequestException('Credit sale not found');
 
-    // CSDetail.itemOId is a uuid FK now — resolve new lines' code→id.
-    const idByCode = await this.itemIdByCode(dto.items.map((i) => i.itemCode));
-
-    // Stock delta (sale deducts): increment by (oldQty − newQty) per item UUID.
-    const delta = new Map<string, number>();
-    for (const d of existing.details) if (d.itemOId) delta.set(d.itemOId, (delta.get(d.itemOId) ?? 0) + Number(d.qty ?? 0));
-    for (const it of dto.items) {
-      const iid = it.itemCode ? idByCode.get(it.itemCode) : undefined;
-      if (iid) delta.set(iid, (delta.get(iid) ?? 0) - it.qty);
-    }
-
+    // Purge-and-replace: master fields are updated in place; detail lines are
+    // dropped and recreated. CSDetail.itemOId is a uuid FK — the UI sends each
+    // line's Item_Information UUID in itemId, stored straight through.
     await this.prisma.$transaction(async (tx) => {
       await tx.cSDetail.deleteMany({ where: { invNo: existing.invNo } });
       await tx.cSMaster.update({
         where: { id },
         data: {
           invDate: dto.invoiceDate ? new Date(dto.invoiceDate) : undefined,
+          customerId: dto.customerId ?? undefined,
+          poNo: dto.poNo ?? undefined,
           totalAmount: dto.totalAmount,
           totalDiscount: dto.totalDiscount,
           totalVat: dto.totalVat,
           details: {
             create: dto.items.map((it) => ({
-              itemOId: it.itemCode ? idByCode.get(it.itemCode) ?? null : null,
+              itemOId: it.itemId ?? null,
               rate: it.rate ?? 0,
               qty: it.qty,
               value: (it.rate ?? 0) * it.qty,
@@ -369,7 +397,6 @@ export class SalesService {
           },
         },
       });
-      for (const [iid, q] of delta) if (q) await tx.inventory.updateMany({ where: { item: { id: iid } }, data: { quantity: { increment: q } } });
     });
     return this.prisma.cSMaster.findUnique({ where: { id }, include: { details: true } });
   }
@@ -398,18 +425,6 @@ export class SalesService {
       }),
     );
     await this.prisma.$transaction(ops);
-  }
-
-  /** Resolve item codes → Item_Information UUIDs (for storing CSDetail.itemOId,
-   *  which is now a uuid FK). Codes with no matching item are simply absent. */
-  private async itemIdByCode(codes: (string | null | undefined)[]): Promise<Map<string, string>> {
-    const unique = [...new Set(codes.filter((c): c is string => !!c))];
-    if (!unique.length) return new Map();
-    const rows = await this.prisma.item_Information.findMany({
-      where: { itmCode: { in: unique } },
-      select: { id: true, itmCode: true },
-    });
-    return new Map(rows.map((r) => [r.itmCode, r.id]));
   }
 
   /** Resolve the session branch (a Branch UUID) to its sanitized branch code for
