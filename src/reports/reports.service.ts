@@ -433,12 +433,12 @@ export class ReportsService {
     const to = toDate ? new Date(toDate) : new Date(fromDate);
     if (isNaN(to.getTime())) throw new BadRequestException('Valid `toDate` is required');
     // Inclusive end: roll the window to the start of the day AFTER `to`.
-    const toPrevious = new Date(from);
-    toPrevious.setDate(toPrevious.getDate() - 1);
+    const toExclusive = new Date(to);
+    toExclusive.setDate(toExclusive.getDate() + 1);
     // Opening = balance BEFORE the range start; "during" spans the whole range.
     const day = from;
     const before = { lt: from };
-    const during = { gte: from, lt: to };
+    const during = { gte: from, lt: toExclusive };
 
     // ── Catalog + as-of-date rate ────────────────────────────────────────
     const items = await this.prisma.item_Information.findMany({
@@ -570,7 +570,7 @@ export class ReportsService {
       branchId
         ? this.prisma.branch.findUnique({ where: { id: branchId }, select: { branchName: true, address: true, vatNo: true } })
         : Promise.resolve(null),
-      this.stockAnalysisFooter(from, to, branchId),
+      this.stockAnalysisFooter(from, toExclusive, branchId),
     ]);
 
     return {
