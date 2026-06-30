@@ -85,6 +85,8 @@ export class PosSyncService {
           branchId: order.branchId ?? null,
           discountType: order.discountType,
           discountValue: order.discountValue,
+          discountRemarks: order.discountRemarks,
+          discountContact: order.discountContact,
           createdBy: dto.userName,
         });
 

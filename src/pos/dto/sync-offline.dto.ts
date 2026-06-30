@@ -62,6 +62,16 @@ export class OfflineSaleDto {
   @Min(0)
   @IsOptional()
   discountValue?: number;
+
+  @ApiPropertyOptional({ example: 'Manager Karim', description: 'Discount authoriser name → SoMstr_DiscountRemarks.' })
+  @IsString()
+  @IsOptional()
+  discountRemarks?: string;
+
+  @ApiPropertyOptional({ example: '01700000000', description: 'Discount authoriser contact no → SoMstr_DiscountContact.' })
+  @IsString()
+  @IsOptional()
+  discountContact?: string;
 }
 
 /** Batch payload uploaded by one cashier session when connectivity is restored. */

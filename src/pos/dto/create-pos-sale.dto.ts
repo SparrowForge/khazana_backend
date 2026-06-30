@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import {
-  IsString, IsNumber, IsArray, ValidateNested, IsPositive, Min, IsOptional, IsIn, IsUUID,
+  IsString, IsNumber, IsArray, ValidateNested, IsPositive, Min, IsOptional, IsIn, IsUUID, IsNotEmpty,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -63,8 +63,33 @@ export class CreatePosSaleDto {
   @Min(0)
   @IsOptional()
   discountValue?: number;
+
+  @ApiPropertyOptional({
+    example: 'Manager Karim',
+    description: 'Discount authoriser name → t_SOMstr.SoMstr_DiscountRemarks. Mandatory (UI) when a discount is applied.',
+  })
+  @IsString()
+  @IsOptional()
+  discountRemarks?: string;
+
+  @ApiPropertyOptional({
+    example: '01700000000',
+    description: 'Discount authoriser contact no → t_SOMstr.SoMstr_DiscountContact.',
+  })
+  @IsString()
+  @IsOptional()
+  discountContact?: string;
 }
 
 /** Full-replace edit payload — same shape as create (items are re-priced and the
- *  detail rows are purged & re-inserted). `branchId` is ignored (branch is kept). */
-export class UpdatePosSaleDto extends CreatePosSaleDto {}
+ *  detail rows are purged & re-inserted). `branchId` is ignored (branch is kept).
+ *  A modify reason is mandatory on every update for audit (Sales Correction). */
+export class UpdatePosSaleDto extends CreatePosSaleDto {
+  @ApiProperty({
+    example: 'Customer returned 1 item',
+    description: 'Reason for modifying the sale → t_SOMstr.SoMstr_ModifyRemarks. Surfaced in the Daily Final Report Sales Correction breakdown.',
+  })
+  @IsString()
+  @IsNotEmpty()
+  modifyRemarks: string;
+}

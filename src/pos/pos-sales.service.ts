@@ -6,6 +6,7 @@ import type { t_SOMstr, t_SODet, Item_Information } from '../generated/prisma';
 
 type SaleWithDetails = t_SOMstr & {
   details: (t_SODet & { item: Item_Information | null })[];
+  bank?: { name: string | null } | null;
 };
 
 @Injectable()
@@ -50,6 +51,10 @@ export class PosSalesService {
       dateTime: (sale.somstrDate ?? sale.somstrCreationDate ?? new Date()).toISOString(),
       salesType: sale.mtype ?? 'Cash',
       bankId: sale.soMstrMBank ?? null,
+      bankName: sale.bank?.name ?? null,
+      discountRemarks: sale.soMstrDiscountRemarks ?? null,
+      discountContact: sale.soMstrDiscountContact ?? null,
+      modifyRemarks: sale.soMstrModifyRemarks ?? null,
       totalAmount: Number(sale.somstrTotalAmt ?? 0),
       discountAmount: Number(sale.somstrDiscAmt ?? 0),
       vatAmount: this.r2(vatAmount),
@@ -89,6 +94,8 @@ export class PosSalesService {
       branchId,
       discountType: dto.discountType,
       discountValue: dto.discountValue,
+      discountRemarks: dto.discountRemarks,
+      discountContact: dto.discountContact,
       createdBy: userName,
     });
   }
@@ -112,6 +119,8 @@ export class PosSalesService {
     branchId?: string | null;
     discountType?: 'fixed' | 'percentage';
     discountValue?: number;
+    discountRemarks?: string;
+    discountContact?: string;
     createdBy: string;
   }) {
     if (!p.items.length) throw new BadRequestException('Cart is empty');
@@ -172,6 +181,9 @@ export class PosSalesService {
         somstrChange: changeAmount,
         mtype: p.salesType ?? 'Cash',
         soMstrMBank: p.bankId ?? null,
+        // Discount authoriser audit (only meaningful when a discount applied).
+        soMstrDiscountRemarks: discountAmount > 0 ? (p.discountRemarks ?? null) : null,
+        soMstrDiscountContact: discountAmount > 0 ? (p.discountContact ?? null) : null,
         somstrCreator: p.servedBy || p.createdBy,
         somstrCreationDate: new Date(),
         somstrIsActive: true,
@@ -192,7 +204,7 @@ export class PosSalesService {
           })),
         },
       },
-      include: { details: { include: { item: true } } },
+      include: { details: { include: { item: true } }, bank: { select: { name: true } } },
     });
 
     await this.deductStock(lines.map((l) => ({ itemId: l.itemId, qty: l.sodetQTY })));
@@ -204,7 +216,7 @@ export class PosSalesService {
     const sales = await this.prisma.t_SOMstr.findMany({
       where: { somstrCode: { startsWith: 'DS-' } },
       orderBy: { somstrDate: 'desc' },
-      include: { details: { include: { item: true } } },
+      include: { details: { include: { item: true } }, bank: { select: { name: true } } },
     });
     return sales.map((s) => this.toResponse(s as SaleWithDetails));
   }
@@ -212,7 +224,7 @@ export class PosSalesService {
   async findOne(id: string) {
     const sale = await this.prisma.t_SOMstr.findUnique({
       where: { id },
-      include: { details: { include: { item: true } } },
+      include: { details: { include: { item: true } }, bank: { select: { name: true } } },
     });
     if (!sale) throw new NotFoundException(`Invoice ${id} not found`);
     return this.toResponse(sale as SaleWithDetails);
@@ -323,6 +335,11 @@ export class PosSalesService {
             (dto.salesType ?? existing.mtype) === 'Card'
               ? (dto.bankId ?? existing.soMstrMBank)
               : null,
+          // Mandatory audit trail for the Daily Final Report Sales Correction section.
+          soMstrModifyRemarks: dto.modifyRemarks,
+          // Discount authoriser audit — kept in step with the (re-applied) discount.
+          soMstrDiscountRemarks: discountAmount > 0 ? (dto.discountRemarks ?? null) : null,
+          soMstrDiscountContact: discountAmount > 0 ? (dto.discountContact ?? null) : null,
           somstrUpdateBy: userName,
           somstrUpdateDate: new Date(),
           details: {

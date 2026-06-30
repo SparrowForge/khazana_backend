@@ -5825,6 +5825,16 @@
             "type": "number",
             "example": 50,
             "description": "Discount value — flat amount or percentage (0–100)"
+          },
+          "discountRemarks": {
+            "type": "string",
+            "example": "Manager Karim",
+            "description": "Discount authoriser name → t_SOMstr.SoMstr_DiscountRemarks. Mandatory (UI) when a discount is applied."
+          },
+          "discountContact": {
+            "type": "string",
+            "example": "01700000000",
+            "description": "Discount authoriser contact no → t_SOMstr.SoMstr_DiscountContact."
           }
         },
         "required": [
@@ -5876,11 +5886,27 @@
             "type": "number",
             "example": 50,
             "description": "Discount value — flat amount or percentage (0–100)"
+          },
+          "discountRemarks": {
+            "type": "string",
+            "example": "Manager Karim",
+            "description": "Discount authoriser name → t_SOMstr.SoMstr_DiscountRemarks. Mandatory (UI) when a discount is applied."
+          },
+          "discountContact": {
+            "type": "string",
+            "example": "01700000000",
+            "description": "Discount authoriser contact no → t_SOMstr.SoMstr_DiscountContact."
+          },
+          "modifyRemarks": {
+            "type": "string",
+            "example": "Customer returned 1 item",
+            "description": "Reason for modifying the sale → t_SOMstr.SoMstr_ModifyRemarks. Surfaced in the Daily Final Report Sales Correction breakdown."
           }
         },
         "required": [
           "items",
-          "paidAmount"
+          "paidAmount",
+          "modifyRemarks"
         ]
       },
       "OfflineSaleDto": {
@@ -5940,6 +5966,16 @@
             "type": "number",
             "example": 50,
             "description": "Discount value — flat ৳ amount or percentage (0–100)"
+          },
+          "discountRemarks": {
+            "type": "string",
+            "example": "Manager Karim",
+            "description": "Discount authoriser name → SoMstr_DiscountRemarks."
+          },
+          "discountContact": {
+            "type": "string",
+            "example": "01700000000",
+            "description": "Discount authoriser contact no → SoMstr_DiscountContact."
           }
         },
         "required": [
