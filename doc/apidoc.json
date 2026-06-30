@@ -3494,9 +3494,9 @@
         "parameters": [
           {
             "name": "fromDate",
-            "required": true,
+            "required": false,
             "in": "query",
-            "description": "Range start date (ISO 8601)",
+            "description": "Range start date (ISO 8601). Falls back to legacy `date`.",
             "schema": {
               "type": "string"
             }
@@ -3506,6 +3506,15 @@
             "required": false,
             "in": "query",
             "description": "Range end date, inclusive (ISO 8601); defaults to fromDate",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "required": false,
+            "in": "query",
+            "description": "Legacy single-day param (ISO 8601); used when fromDate/toDate are absent",
             "schema": {
               "type": "string"
             }
