@@ -9,6 +9,11 @@ export interface DateRangeQuery {
 
 const num = (d: unknown): number => (d == null ? 0 : Number(d));
 
+// Round to 2dp WITHOUT collapsing sign — a balance of -1 must stay -1.00, not
+// become 0/abs. Used by the stock ledger roll-forward so opening/closing carry
+// clean signed values free of float noise (e.g. -0.999999 → -1.00).
+const r2signed = (n: number): number => Math.round(n * 100) / 100;
+
 @Injectable()
 export class ReportsService {
   constructor(private prisma: PrismaService) {}
@@ -510,10 +515,17 @@ export class ReportsService {
     // ── Per-item rows ────────────────────────────────────────────────────
     const rows = items.map((it, idx) => {
       const id = it.id;
-      const openStock =
-        g(recvB, id) - g(issB, id) - g(salB, id) - g(assortB, id) - g(ncB, id) - g(rejectB, id) - g(shortB, id) + g(excessB, id);
+      // Opening = the previous day's raw closing = the SIGNED roll-forward of all
+      // movements dated BEFORE the day, for this branch:
+      //   Received + Excess − (Sales + Assorted + NC + Reject + Issue + Short)
+      // Deficits are real: if the item closed yesterday at -1.00 it MUST open at
+      // -1.00. Never clamp/abs/default-to-0 — r2signed only trims float noise.
+      const openStock = r2signed(
+        g(recvB, id) + g(excessB, id)
+        - (g(issB, id) + g(salB, id) + g(assortB, id) + g(ncB, id) + g(rejectB, id) + g(shortB, id)),
+      );
       const gReceive = g(recvD, id);
-      const totalStock = openStock + gReceive;
+      const totalStock = r2signed(openStock + gReceive);
       const salesQty = g(salD, id);
       const salesAmt = g(salAmtD, id);
       const assorted = g(assortD, id);
@@ -522,7 +534,10 @@ export class ReportsService {
       const issueQty = g(issD, id);
       const short = g(shortD, id);
       const excess = g(excessD, id);
-      const closing = totalStock - salesQty - assorted - nc - reject - issueQty - short + excess;
+      // Same signed formula applied to the day's movements; may be negative.
+      const closing = r2signed(
+        totalStock + excess - (salesQty + assorted + nc + reject + issueQty + short),
+      );
       return {
         sl: idx + 1,
         itemCode: it.itmCode,
@@ -534,7 +549,8 @@ export class ReportsService {
       };
     });
 
-    const sum = (k: keyof (typeof rows)[number]) => rows.reduce((s, r) => s + (r[k] as number), 0);
+    // Column totals are signed too — r2signed keeps a net deficit negative.
+    const sum = (k: keyof (typeof rows)[number]) => r2signed(rows.reduce((s, r) => s + (r[k] as number), 0));
     const totals = {
       openStock: sum('openStock'), gReceive: sum('gReceive'), totalStock: sum('totalStock'),
       salesQty: sum('salesQty'), salesAmt: sum('salesAmt'), assorted: sum('assorted'),
