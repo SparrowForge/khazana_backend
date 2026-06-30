@@ -227,7 +227,23 @@ export class PosSalesService {
       include: { details: { include: { item: true } }, bank: { select: { name: true } } },
     });
     if (!sale) throw new NotFoundException(`Invoice ${id} not found`);
-    return this.toResponse(sale as SaleWithDetails);
+    // Branch header for the printed invoice (VAT Reg No + Tel). t_SOMstr.branchId
+    // has no Prisma relation to Branch, so resolve it with a separate lookup.
+    const branch = sale.branchId
+      ? await this.prisma.branch.findUnique({
+          where: { id: sale.branchId },
+          select: { branchName: true, address: true, vatNo: true, mobileNo: true },
+        })
+      : null;
+    return {
+      ...this.toResponse(sale as SaleWithDetails),
+      branch: {
+        name: branch?.branchName ?? '',
+        address: branch?.address ?? '',
+        vatNo: branch?.vatNo ?? '',
+        mobileNo: branch?.mobileNo ?? '',
+      },
+    };
   }
 
   private async deductStock(items: { itemId: string; qty: number }[]) {
