@@ -77,7 +77,7 @@ export class UsersController {
   }
 
   @Post(':userName/roles')
-  @RequiredPermission({ control: 'UserRolePermission', action: 'editAccess' })
+  @RequiredPermission({ control: 'UserRoleAssignment', action: 'editAccess' })
   @ApiOperation({ summary: 'Set roles for a user' })
   @ApiParam({ name: 'userName', description: 'Username' })
   @ApiResponse({ status: 201, description: 'Roles assigned successfully' })
@@ -94,7 +94,7 @@ export class UsersController {
   }
 
   @Put(':userName/permissions')
-  @RequiredPermission({ control: 'UserRolePermission', action: 'editAccess' })
+  @RequiredPermission({ control: 'UserMenuPermission', action: 'editAccess' })
   @ApiOperation({ summary: 'Save menu permissions for a user (sync/overwrite — delete-then-insert)' })
   @ApiParam({ name: 'userName', description: 'Username' })
   @ApiResponse({ status: 200, description: 'User permissions updated' })
@@ -103,7 +103,7 @@ export class UsersController {
   }
 
   @Put('permissions/batch')
-  @RequiredPermission({ control: 'UserRolePermission', action: 'editAccess' })
+  @RequiredPermission({ control: 'UserRoleAssignment', action: 'editAccess' })
   @ApiOperation({ summary: 'Apply one permission grid to many users (sync/overwrite — delete-then-insert)' })
   @ApiResponse({ status: 200, description: 'Permissions updated for all target users' })
   syncBatch(@Body() dto: BatchUserPermissionsDto) {

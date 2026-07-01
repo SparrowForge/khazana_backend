@@ -33,7 +33,7 @@ export class PermissionsController {
 
   /** Canonical save — deletes all existing entries for the role then batch-inserts the new set. */
   @Put('role/:roleId')
-  @RequiredPermission({ control: 'RolesPermissions', action: 'editAccess' })
+  @RequiredPermission({ control: 'Permissions', action: 'editAccess' })
   @ApiOperation({ summary: 'Save permissions for a role (sync/overwrite — delete-then-insert)' })
   @ApiParam({ name: 'roleId', description: 'Role UUID' })
   @ApiResponse({ status: 200, description: 'Role permissions replaced successfully' })
@@ -42,7 +42,7 @@ export class PermissionsController {
   }
 
   @Delete('role/:roleId')
-  @RequiredPermission({ control: 'RolesPermissions', action: 'deleteAccess' })
+  @RequiredPermission({ control: 'Permissions', action: 'deleteAccess' })
   @ApiOperation({ summary: 'Delete all permissions for a role' })
   @ApiParam({ name: 'roleId', description: 'Role UUID' })
   @ApiResponse({ status: 200, description: 'All permissions for the role deleted' })
@@ -51,7 +51,7 @@ export class PermissionsController {
   }
 
   @Post()
-  @RequiredPermission({ control: 'RolesPermissions', action: 'addAccess' })
+  @RequiredPermission({ control: 'Permissions', action: 'addAccess' })
   @ApiOperation({ summary: 'Create or update a single permission' })
   @ApiResponse({ status: 201, description: 'Permission upserted successfully' })
   upsert(@Body() dto: UpsertPermissionDto) {
@@ -59,7 +59,7 @@ export class PermissionsController {
   }
 
   @Delete(':id')
-  @RequiredPermission({ control: 'RolesPermissions', action: 'deleteAccess' })
+  @RequiredPermission({ control: 'Permissions', action: 'deleteAccess' })
   @ApiOperation({ summary: 'Delete a single permission by ID' })
   @ApiParam({ name: 'id', description: 'Permission UUID' })
   @ApiResponse({ status: 200, description: 'Permission deleted' })

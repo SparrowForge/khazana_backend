@@ -23,21 +23,21 @@ export class CategoriesController {
   }
 
   @Post()
-  @RequiredPermission({ control: 'Items', action: 'addAccess' })
+  @RequiredPermission({ control: 'Categories', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new category' })
   @ApiResponse({ status: 201, description: 'Category created successfully' })
   @ApiResponse({ status: 409, description: 'Category code already exists' })
   create(@Body() body: any) { return this.categoriesService.create(body); }
 
   @Patch(':id')
-  @RequiredPermission({ control: 'Items', action: 'editAccess' })
+  @RequiredPermission({ control: 'Categories', action: 'editAccess' })
   @ApiOperation({ summary: 'Update category by ID' })
   @ApiParam({ name: 'id', description: 'Category UUID' })
   @ApiResponse({ status: 200, description: 'Category updated successfully' })
   update(@Param('id') id: string, @Body() body: any) { return this.categoriesService.update(id, body); }
 
   @Delete(':id')
-  @RequiredPermission({ control: 'Items', action: 'deleteAccess' })
+  @RequiredPermission({ control: 'Categories', action: 'deleteAccess' })
   @ApiOperation({ summary: 'Delete category by ID' })
   @ApiParam({ name: 'id', description: 'Category UUID' })
   @ApiResponse({ status: 200, description: 'Category deleted successfully' })

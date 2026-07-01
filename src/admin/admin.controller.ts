@@ -24,13 +24,13 @@ export class AdminController {
   }
 
   @Post('branches')
-  @RequiredPermission({ control: 'Admin', action: 'addAccess' })
+  @RequiredPermission({ control: 'Branches', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new branch' })
   @ApiResponse({ status: 201, description: 'Branch created successfully' })
   createBranch(@Body() dto: CreateBranchDto) { return this.adminService.createBranch(dto); }
 
   @Patch('branches/:id')
-  @RequiredPermission({ control: 'Admin', action: 'editAccess' })
+  @RequiredPermission({ control: 'Branches', action: 'editAccess' })
   @ApiOperation({ summary: 'Update branch by ID' })
   @ApiParam({ name: 'id', description: 'Branch UUID' })
   @ApiResponse({ status: 200, description: 'Branch updated successfully' })
@@ -44,7 +44,7 @@ export class AdminController {
   getSettings() { return this.adminService.getSystemSettings(); }
 
   @Patch('settings')
-  @RequiredPermission({ control: 'Admin', action: 'editAccess' })
+  @RequiredPermission({ control: 'SystemSettings', action: 'editAccess' })
   @ApiOperation({ summary: 'Update system settings' })
   @ApiResponse({ status: 200, description: 'Settings updated successfully' })
   updateSettings(@Body() dto: UpdateSystemDto) { return this.adminService.updateSystemSettings(dto); }
