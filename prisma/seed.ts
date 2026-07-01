@@ -70,6 +70,53 @@ async function main() {
     { menuName: 'Roles & Permissions', controlName: 'RolesPermissions', order: 2, parentMenu: 'Admin', module: null },
     { menuName: 'User Role Permission', controlName: 'UserRolePermission', order: 3, parentMenu: 'Admin', module: null },
     { menuName: 'Bank', controlName: 'Bank', order: 4, parentMenu: 'Admin', module: null },
+
+    // ---- Per-page leaf menus: every navigable page is its own menu row so it
+    // can be permission-controlled individually (mirrors frontend navRegistry).
+    // Sales
+    { menuName: 'Sales List', controlName: 'SalesList', order: 5, parentMenu: 'Sales', module: 'Sale' },
+    // NC Adjustment
+    { menuName: 'New NC', controlName: 'NCNew', order: 1, parentMenu: 'NCAdjustment', module: 'Sale' },
+    { menuName: 'NC List', controlName: 'NCList', order: 2, parentMenu: 'NCAdjustment', module: 'Sale' },
+    // Assortment
+    { menuName: 'New Assortment', controlName: 'AssortmentNew', order: 1, parentMenu: 'Assortment', module: 'Sale' },
+    { menuName: 'Assortment List', controlName: 'AssortmentList', order: 2, parentMenu: 'Assortment', module: 'Sale' },
+    // Inventory
+    { menuName: 'Categories', controlName: 'Categories', order: 7, parentMenu: 'Inventory', module: 'Inventory' },
+    // Packets
+    { menuName: 'Packet Info', controlName: 'PacketInfo', order: 1, parentMenu: 'Packets', module: 'Sale' },
+    { menuName: 'Packet Receive', controlName: 'PacketReceive', order: 2, parentMenu: 'Packets', module: 'Sale' },
+    { menuName: 'Packet Issue', controlName: 'PacketIssue', order: 3, parentMenu: 'Packets', module: 'Sale' },
+    { menuName: 'Packet Stock', controlName: 'PacketStock', order: 4, parentMenu: 'Packets', module: 'Sale' },
+    // Customers
+    { menuName: 'Customer List', controlName: 'CustomerList', order: 1, parentMenu: 'Customers', module: 'Sale' },
+    { menuName: 'Customer Money Receipt', controlName: 'CustomerPayments', order: 2, parentMenu: 'Customers', module: 'Sale' },
+    // Orders
+    { menuName: 'Orders List', controlName: 'OrdersList', order: 1, parentMenu: 'Orders', module: 'Sale' },
+    { menuName: 'VAT Orders', controlName: 'VatOrders', order: 2, parentMenu: 'Orders', module: 'Sale' },
+    // Pricing
+    { menuName: 'Price Setup', controlName: 'PriceSetup', order: 1, parentMenu: 'Pricing', module: 'Sale' },
+    { menuName: 'Cost Price Setup', controlName: 'CostPriceSetup', order: 2, parentMenu: 'Pricing', module: 'Sale' },
+    // Finance
+    { menuName: 'Cash Purchase', controlName: 'CashPurchase', order: 1, parentMenu: 'Finance', module: null },
+    // Reports
+    { menuName: 'Sales Report', controlName: 'SalesReport', order: 1, parentMenu: 'Reports', module: null },
+    { menuName: 'Stock Report', controlName: 'StockReport', order: 2, parentMenu: 'Reports', module: null },
+    { menuName: 'Stock Analysis', controlName: 'StockAnalysis', order: 3, parentMenu: 'Reports', module: null },
+    { menuName: 'Customer Statement', controlName: 'CustomerStatement', order: 4, parentMenu: 'Reports', module: null },
+    { menuName: 'Daily Summary', controlName: 'DailySummary', order: 5, parentMenu: 'Reports', module: null },
+    { menuName: 'Daily Final Report', controlName: 'DailyFinalReport', order: 6, parentMenu: 'Reports', module: null },
+    { menuName: 'Item-wise Sales', controlName: 'ItemSales', order: 7, parentMenu: 'Reports', module: null },
+    { menuName: 'Packet Analysis', controlName: 'PacketAnalysis', order: 8, parentMenu: 'Reports', module: null },
+    // Administration (leaf pages; group-level Admin/RolesPermissions/UserRolePermission
+    // rows are kept above because backend @RequiredPermission guards still use them)
+    { menuName: 'Roles', controlName: 'Roles', order: 5, parentMenu: 'Admin', module: null },
+    { menuName: 'Permissions', controlName: 'Permissions', order: 6, parentMenu: 'Admin', module: null },
+    { menuName: 'User Menu Permission', controlName: 'UserMenuPermission', order: 7, parentMenu: 'Admin', module: null },
+    { menuName: 'User Role Assignment', controlName: 'UserRoleAssignment', order: 8, parentMenu: 'Admin', module: null },
+    { menuName: 'Branches', controlName: 'Branches', order: 9, parentMenu: 'Admin', module: null },
+    { menuName: 'Audit Log', controlName: 'AuditLog', order: 10, parentMenu: 'Admin', module: null },
+    { menuName: 'System Settings', controlName: 'SystemSettings', order: 11, parentMenu: 'Admin', module: null },
   ];
 
   for (const menu of menus) {
