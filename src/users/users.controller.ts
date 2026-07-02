@@ -14,6 +14,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@ne
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ResetUserPasswordDto } from './dto/reset-user-password.dto';
 import { SetUserRolesDto, BatchUserPermissionsDto } from './dto/set-user-roles.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
@@ -114,7 +115,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Reset user password (no Users permission required)' })
   @ApiParam({ name: 'id', description: 'User UUID' })
   @ApiResponse({ status: 200, description: 'Password reset successfully' })
-  resetPassword(@Param('id') id: string, @Body('password') password: string) {
-    return this.usersService.resetPassword(id, password);
+  resetPassword(@Param('id') id: string, @Body() dto: ResetUserPasswordDto) {
+    return this.usersService.resetPassword(id, dto.password);
   }
 }

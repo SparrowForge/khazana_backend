@@ -599,6 +599,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetUserPasswordDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Password reset successfully"
@@ -1393,6 +1403,33 @@
       }
     },
     "/sales/credit/{id}": {
+      "get": {
+        "operationId": "SalesController_getCreditSale",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Credit sale not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get a single credit sale (prefill the edit form)",
+        "tags": [
+          "Sales"
+        ]
+      },
       "patch": {
         "operationId": "SalesController_updateCreditSale",
         "parameters": [
@@ -4619,9 +4656,9 @@
           },
           "newPassword": {
             "type": "string",
-            "example": "newPassword123",
-            "description": "New password (min 6 characters)",
-            "minLength": 6
+            "example": "NewSecure@123",
+            "description": "New password (min 8 chars, with uppercase, lowercase, and a number)",
+            "minLength": 8
           }
         },
         "required": [
@@ -4701,7 +4738,8 @@
           "newPassword": {
             "type": "string",
             "example": "NewSecure@123",
-            "description": "New password (min 8 chars)"
+            "description": "New password (min 8 chars, with uppercase, lowercase, and a number)",
+            "minLength": 8
           }
         },
         "required": [
@@ -4720,9 +4758,9 @@
           },
           "password": {
             "type": "string",
-            "example": "secret123",
-            "description": "Password (min 6 characters)",
-            "minLength": 6
+            "example": "NewSecure@123",
+            "description": "Password (min 8 chars, with uppercase, lowercase, and a number)",
+            "minLength": 8
           },
           "email": {
             "type": "string",
@@ -4849,6 +4887,20 @@
         "required": [
           "userNames",
           "permissions"
+        ]
+      },
+      "ResetUserPasswordDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "example": "NewSecure@123",
+            "description": "New password (min 8 chars, with uppercase, lowercase, and a number)",
+            "minLength": 8
+          }
+        },
+        "required": [
+          "password"
         ]
       },
       "CreateRoleDto": {
@@ -5080,7 +5132,7 @@
       "CreditSaleItemDto": {
         "type": "object",
         "properties": {
-          "itemCode": {
+          "itemId": {
             "type": "string",
             "example": "ITM-001",
             "description": "Item code"
@@ -5112,7 +5164,7 @@
           }
         },
         "required": [
-          "itemCode",
+          "itemId",
           "qty",
           "rate",
           "total"
@@ -5308,7 +5360,7 @@
       "VatCreditItemDto": {
         "type": "object",
         "properties": {
-          "itemCode": {
+          "itemId": {
             "type": "string",
             "example": "ITM-001",
             "description": "Item code"
@@ -5345,7 +5397,7 @@
           }
         },
         "required": [
-          "itemCode",
+          "itemId",
           "qty",
           "rate",
           "vatValue",
@@ -5454,6 +5506,14 @@
           "invoiceDate": {
             "type": "string",
             "example": "2026-06-29"
+          },
+          "customerId": {
+            "type": "string",
+            "description": "Customer UUID (credit sales)"
+          },
+          "poNo": {
+            "type": "string",
+            "description": "Purchase order number (credit sales)"
           },
           "paymentMethod": {
             "type": "string",

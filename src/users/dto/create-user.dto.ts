@@ -3,13 +3,13 @@ import {
   IsNotEmpty,
   IsOptional,
   IsDateString,
-  MinLength,
   IsEmail,
   IsArray,
   IsUUID,
   ArrayMinSize,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsStrongPassword } from '../../common/decorators';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'john.doe', description: 'Unique username for login' })
@@ -17,10 +17,13 @@ export class CreateUserDto {
   @IsNotEmpty()
   userName: string;
 
-  @ApiProperty({ example: 'secret123', description: 'Password (min 6 characters)', minLength: 6 })
-  @IsString()
+  @ApiProperty({
+    example: 'NewSecure@123',
+    description: 'Password (min 8 chars, with uppercase, lowercase, and a number)',
+    minLength: 8,
+  })
   @IsNotEmpty()
-  @MinLength(6)
+  @IsStrongPassword()
   password: string;
 
   @ApiProperty({ example: 'john@example.com', description: 'Email address (used for verification and password reset)' })
