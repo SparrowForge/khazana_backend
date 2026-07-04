@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
-import { AssortmentService, CreateAssortmentDto } from './assortment.service';
+import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import { AssortmentService, CreateAssortmentDto, UpdateAssortmentDto } from './assortment.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { CurrentUser, RequiredPermission } from '../common/decorators';
@@ -35,5 +35,15 @@ export class AssortmentController {
   @ApiResponse({ status: 201, description: 'Assortment created successfully' })
   create(@Body() dto: CreateAssortmentDto, @CurrentUser('userName') userName: string) {
     return this.assortmentService.create(dto, userName);
+  }
+
+  @Patch(':id')
+  @RequiredPermission({ control: 'Assortment', action: 'editAccess' })
+  @ApiOperation({ summary: 'Update an assortment record' })
+  @ApiParam({ name: 'id', description: 'Assortment UUID' })
+  @ApiResponse({ status: 200, description: 'Assortment updated successfully' })
+  @ApiResponse({ status: 404, description: 'Assortment not found' })
+  update(@Param('id') id: string, @Body() dto: UpdateAssortmentDto, @CurrentUser('userName') userName: string) {
+    return this.assortmentService.update(id, dto, userName);
   }
 }
