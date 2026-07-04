@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { AssortmentService, CreateAssortmentDto, UpdateAssortmentDto } from './assortment.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
@@ -45,5 +45,16 @@ export class AssortmentController {
   @ApiResponse({ status: 404, description: 'Assortment not found' })
   update(@Param('id') id: string, @Body() dto: UpdateAssortmentDto, @CurrentUser('userName') userName: string) {
     return this.assortmentService.update(id, dto, userName);
+  }
+
+  @Delete(':id')
+  @RequiredPermission({ control: 'Assortment', action: 'deleteAccess' })
+  @ApiOperation({ summary: 'Delete an assortment (master + details) and restore its deducted stock' })
+  @ApiParam({ name: 'id', description: 'Assortment UUID' })
+  @ApiResponse({ status: 200, description: 'Assortment deleted successfully' })
+  @ApiResponse({ status: 403, description: 'No delete permission for Assortment' })
+  @ApiResponse({ status: 404, description: 'Assortment not found' })
+  remove(@Param('id') id: string) {
+    return this.assortmentService.remove(id);
   }
 }

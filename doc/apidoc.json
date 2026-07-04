@@ -3361,6 +3361,81 @@
         "tags": [
           "Assortment"
         ]
+      },
+      "patch": {
+        "operationId": "AssortmentController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Assortment UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAssortmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assortment updated successfully"
+          },
+          "404": {
+            "description": "Assortment not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Update an assortment record",
+        "tags": [
+          "Assortment"
+        ]
+      },
+      "delete": {
+        "operationId": "AssortmentController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Assortment UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Assortment deleted successfully"
+          },
+          "403": {
+            "description": "No delete permission for Assortment"
+          },
+          "404": {
+            "description": "Assortment not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete an assortment (master + details) and restore its deducted stock",
+        "tags": [
+          "Assortment"
+        ]
       }
     },
     "/reports/sales": {
@@ -5829,6 +5904,10 @@
         "properties": {}
       },
       "CreateAssortmentDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateAssortmentDto": {
         "type": "object",
         "properties": {}
       },

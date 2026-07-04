@@ -155,10 +155,38 @@ export class AssortmentService {
     return assort;
   }
 
+  private async resolveBranchCode(branchId?: string | null): Promise<string> {
+    if (branchId == null) return '';
+    const id = String(branchId);
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+    if (!isUuid) return '';
+    const branch = await this.prisma.branch
+      .findUnique({ where: { id }, select: { branchCode: true } })
+      .catch(() => null);
+    return (branch?.branchCode ?? '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+  }
+
+  private ddmmyy(d = new Date()): string {
+    return `${String(d.getDate()).padStart(2, '0')}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getFullYear()).slice(-2)}`;
+  }
+
+  // Auto-generates the assorted-sales (AS) code: AS-<FactoryCode>-<DDMMYY>-<001>.
+  // The sequence resets per branch-code + day, derived from existing rows.
+  private async generateAsCode(branchId?: string | null): Promise<string> {
+    const code = await this.resolveBranchCode(branchId);
+    const datePart = this.ddmmyy();
+    const prefix = ['AS', code, datePart].filter(Boolean).join('-');
+    const count = await this.prisma.asstMsrt.count({
+      where: { code: { startsWith: `${prefix}-` } },
+    });
+    return `${prefix}-${String(count + 1).padStart(3, '0')}`;
+  }
+
   async create(dto: CreateAssortmentDto, userName: string) {
+    const code = dto.code || (await this.generateAsCode(dto.branchId));
     const assort = await this.prisma.asstMsrt.create({
       data: {
-        code: dto.code,
+        code,
         date: new Date(dto.date),
         type: dto.type,
         branchId: dto.branchId,
@@ -273,5 +301,32 @@ export class AssortmentService {
     });
 
     return this.prisma.asstMsrt.findUnique({ where: { id }, include: { details: { include: { item: true } } } });
+  }
+
+  async remove(id: string) {
+    const existing = await this.prisma.asstMsrt.findUnique({
+      where: { id },
+      include: { details: true },
+    });
+    if (!existing) throw new NotFoundException('Assortment not found');
+
+    // Restore the stock this assortment deducted, then delete master + details.
+    await this.prisma.$transaction(async (tx) => {
+      for (const d of existing.details) {
+        const itemInfo = await tx.item_Information.findUnique({ where: { id: d.itemOID } });
+        const q = Number(d.qty ?? 0);
+        if (itemInfo?.itmCode && q) {
+          await tx.inventory.updateMany({
+            where: { itemCode: itemInfo.itmCode },
+            data: { quantity: { increment: q } },
+          });
+        }
+      }
+
+      await tx.asstDet.deleteMany({ where: { AsstMsrt_id: id } });
+      await tx.asstMsrt.delete({ where: { id } });
+    });
+
+    return { message: 'Assortment deleted successfully' };
   }
 }
