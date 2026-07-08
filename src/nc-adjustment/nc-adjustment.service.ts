@@ -131,9 +131,12 @@ export class NcAdjustmentService {
     // NC entries always carry a branch (and thus appear in the Daily Final
     // Report); fall back to the payload only if the session lacks one.
     const branchId = sessionBranchId ?? dto.branchId;
+    // Treat a blank code as "auto-generate" (the UI sends "" to mean that),
+    // mirroring the sales invoice-number convention.
+    const code = dto.code || (await this.generateNcCode(branchId));
     const nc = await this.prisma.t_NCMstr.create({
       data: {
-        ncmstrCode: dto.code,
+        ncmstrCode: code,
         ncmstrDate: new Date(dto.date),
         ncmstrName: dto.name,
         ncmstrContactNo: dto.contactNo,
@@ -194,7 +197,10 @@ export class NcAdjustmentService {
       ncmstrUpdateDate: new Date(),
       branchId,
     };
-    if (dto.code !== undefined) data.ncmstrCode = dto.code;
+    if (dto.code) data.ncmstrCode = dto.code;
+    // Backfill the code on edit so older records saved without one are repaired
+    // (same approach as the branchId backfill above).
+    else if (!existing.ncmstrCode) data.ncmstrCode = await this.generateNcCode(branchId);
     if (dto.date !== undefined) data.ncmstrDate = new Date(dto.date);
     if (dto.name !== undefined) data.ncmstrName = dto.name;
     if (dto.contactNo !== undefined) data.ncmstrContactNo = dto.contactNo;
@@ -250,6 +256,30 @@ export class NcAdjustmentService {
     ]);
 
     return { message: 'NC adjustment deleted successfully' };
+  }
+
+  /** Resolve the branch UUID to its sanitized branch code for embedding in NC
+   *  codes. Returns '' when the branch can't be resolved, so the number simply
+   *  omits the code. Mirrors the sales invoice-number helpers. */
+  private async resolveBranchCode(branchId?: string | null): Promise<string> {
+    if (branchId == null) return '';
+    const id = String(branchId);
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+    if (!isUuid) return '';
+    const branch = await this.prisma.branch
+      .findUnique({ where: { id }, select: { branchCode: true } })
+      .catch(() => null);
+    return (branch?.branchCode ?? '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+  }
+
+  private yyyymm(d = new Date()): string {
+    return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  private async generateNcCode(branchId?: string | null): Promise<string> {
+    const code = await this.resolveBranchCode(branchId);
+    const count = await this.prisma.t_NCMstr.count();
+    return ['NC', code, this.yyyymm(), String(count + 1).padStart(5, '0')].filter(Boolean).join('-');
   }
 
   /** Apply stock deltas keyed by item id (inventory is keyed by itemCode).
