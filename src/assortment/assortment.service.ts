@@ -182,14 +182,20 @@ export class AssortmentService {
     return `${prefix}-${String(count + 1).padStart(3, '0')}`;
   }
 
-  async create(dto: CreateAssortmentDto, userName: string) {
-    const code = dto.code || (await this.generateAsCode(dto.branchId));
+  async create(dto: CreateAssortmentDto, userName: string, sessionBranchId?: string) {
+    // branchId is session-authoritative (same as NC adjustment): prefer the
+    // logged-in user's branch so the generated AS code always carries the
+    // factory code; fall back to the payload only if the session lacks one.
+    const branchId = sessionBranchId ?? dto.branchId;
+    // A blank code means "auto-generate" (the UI sends "" for that),
+    // mirroring the sales invoice-number convention.
+    const code = dto.code || (await this.generateAsCode(branchId));
     const assort = await this.prisma.asstMsrt.create({
       data: {
         code,
         date: new Date(dto.date),
         type: dto.type,
-        branchId: dto.branchId,
+        branchId,
         totalAmt: dto.totalAmt,
         discAmt: dto.discAmt,
         netAmt: dto.netAmt,
@@ -231,13 +237,19 @@ export class AssortmentService {
     return assort;
   }
 
-  async update(id: string, dto: UpdateAssortmentDto, userName: string) {
+  async update(id: string, dto: UpdateAssortmentDto, userName: string, sessionBranchId?: string) {
     if (!dto.items?.length) throw new BadRequestException('At least one item is required');
     const existing = await this.prisma.asstMsrt.findUnique({
       where: { id },
       include: { details: true },
     });
     if (!existing) throw new NotFoundException('Assortment not found');
+
+    // Keep branchId session-authoritative and backfill it on edit so any older
+    // record saved without a branch is repaired (same as NC adjustment).
+    const branchId = dto.branchId ?? existing.branchId ?? sessionBranchId ?? undefined;
+    // Backfill the code on edit so older records saved without one are repaired.
+    const code = existing.code || (await this.generateAsCode(branchId));
 
     // Purge-and-replace: master fields update in place; detail lines are dropped
     // and recreated. Stock is reconciled by restoring every old line then
@@ -260,9 +272,10 @@ export class AssortmentService {
       await tx.asstMsrt.update({
         where: { id },
         data: {
+          code,
           date: dto.date ? new Date(dto.date) : undefined,
           type: dto.type,
-          branchId: dto.branchId ?? undefined,
+          branchId,
           totalAmt: dto.totalAmt,
           discAmt: dto.discAmt,
           netAmt: dto.netAmt,

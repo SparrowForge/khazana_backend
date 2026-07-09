@@ -33,8 +33,12 @@ export class AssortmentController {
   @RequiredPermission({ control: 'Assortment', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new assortment record' })
   @ApiResponse({ status: 201, description: 'Assortment created successfully' })
-  create(@Body() dto: CreateAssortmentDto, @CurrentUser('userName') userName: string) {
-    return this.assortmentService.create(dto, userName);
+  create(
+    @Body() dto: CreateAssortmentDto,
+    @CurrentUser('userName') userName: string,
+    @CurrentUser('branchId') branchId: string,
+  ) {
+    return this.assortmentService.create(dto, userName, branchId);
   }
 
   @Patch(':id')
@@ -43,8 +47,13 @@ export class AssortmentController {
   @ApiParam({ name: 'id', description: 'Assortment UUID' })
   @ApiResponse({ status: 200, description: 'Assortment updated successfully' })
   @ApiResponse({ status: 404, description: 'Assortment not found' })
-  update(@Param('id') id: string, @Body() dto: UpdateAssortmentDto, @CurrentUser('userName') userName: string) {
-    return this.assortmentService.update(id, dto, userName);
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdateAssortmentDto,
+    @CurrentUser('userName') userName: string,
+    @CurrentUser('branchId') branchId: string,
+  ) {
+    return this.assortmentService.update(id, dto, userName, branchId);
   }
 
   @Delete(':id')
