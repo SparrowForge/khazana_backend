@@ -146,13 +146,14 @@ export class InventoryService {
     const issueDate = dto.issueDate ? new Date(dto.issueDate) : new Date();
     const branchCode = await this.resolveBranchCode(dto.issueBranchId);
     const baseCount = await this.prisma.item_Issue.count();
+    // Every line in this request shares one serial number so the whole
+    // document can be looked up / edited / deleted together later.
+    const serialNo = this.buildSerialNo('TRF', branchCode, baseCount + 1);
 
     return this.prisma.$transaction(
-      dto.items.flatMap((line, i) => {
-        // Both legs of one transfer line share the same id + serial number so
-        // they can be looked up / edited / deleted together later.
+      dto.items.flatMap((line) => {
+        // Both legs of one transfer line share the same id so they stay paired.
         const id = randomUUID();
-        const serialNo = this.buildSerialNo('TRF', branchCode, baseCount + i + 1);
         return [
           // Stock leaves the issuing branch
           this.prisma.item_Issue.create({
@@ -194,73 +195,130 @@ export class InventoryService {
   async findTransferHistory(query: BranchPaginationQueryDto) {
     const { page, limit, branchId } = query;
     const where = { isActive: 1, ...(branchId && { issueBranchId: branchId }) };
-    const [rows, total] = await Promise.all([
-      this.prisma.item_Issue.findMany({ where, orderBy: { createDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
-      this.prisma.item_Issue.count({ where }),
-    ]);
-    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
+    const rows = await this.prisma.item_Issue.findMany({ where, orderBy: { createDate: 'desc' } });
+    return this.groupBySerial(rows, page, limit);
   }
 
-  async findOneTransfer(id: string) {
-    const row = await this.prisma.item_Issue.findUnique({ where: { id } });
-    if (!row) throw new NotFoundException('Transfer record not found');
-    return row;
+  /** Rows sharing one serialNo were all created in the same request, so header
+   *  fields (voucher/date/branches) are identical — only qty differs per line.
+   *  Groups in app code (rather than a DB groupBy) to keep header fields intact
+   *  and dodge the DB's groupBy/distinct + skip/take edge cases. */
+  private groupBySerial<T extends { serialNo?: string | null; id: string; qty?: unknown }>(
+    rows: T[],
+    page: number,
+    limit: number,
+  ) {
+    const groups = new Map<string, T & { qty: number }>();
+    for (const row of rows) {
+      const key = row.serialNo || row.id;
+      const existing = groups.get(key);
+      if (existing) {
+        existing.qty += Number(row.qty ?? 0);
+      } else {
+        groups.set(key, { ...row, serialNo: key, qty: Number(row.qty ?? 0) });
+      }
+    }
+    const all = Array.from(groups.values());
+    const start = (page - 1) * limit;
+    const items = all.slice(start, start + limit);
+    return { items, meta: buildPaginationMeta(all.length, page, limit) };
   }
 
-  async updateTransfer(
-    id: string,
+  async findOneTransferBySerial(serialNo: string) {
+    const rows = await this.findTransferRows(serialNo);
+    const [first] = rows;
+    return {
+      serialNo: first.serialNo || first.id,
+      voucherNo: first.voucharNo,
+      issueDate: first.issueDate,
+      issueBranchId: first.issueBranchId,
+      receiveBranchId: first.receiveBranchId,
+      items: rows.map((r) => ({ itemCode: r.itemCode, qty: Number(r.qty ?? 0) })),
+    };
+  }
+
+  async updateTransferBySerial(
+    serialNo: string,
     dto: {
       voucherNo?: string;
       issueDate?: string;
       issueBranchId?: string;
       receiveBranchId?: string;
-      itemCode?: string;
-      qty?: number;
+      items: { itemCode: string; qty: number }[];
     },
     updatedBy: string,
   ) {
-    await this.findOneTransfer(id);
-    const issueDate = dto.issueDate ? new Date(dto.issueDate) : undefined;
-    const [row] = await this.prisma.$transaction([
-      this.prisma.item_Issue.update({
-        where: { id },
-        data: {
-          voucharNo: dto.voucherNo,
-          issueDate,
-          issueBranchId: dto.issueBranchId,
-          receiveBranchId: dto.receiveBranchId,
-          itemCode: dto.itemCode,
-          qty: dto.qty,
-          updateBy: updatedBy,
-          updateDate: new Date(),
-        },
-      }),
-      // The paired receive leg shares the same id; updateMany no-ops for legacy
-      // rows created before the two legs were linked.
-      this.prisma.item_Receive.updateMany({
-        where: { id },
-        data: {
-          voucharNo: dto.voucherNo,
-          purDate: issueDate,
-          branchId: dto.issueBranchId,
-          receiveBranchID: dto.receiveBranchId,
-          itemCode: dto.itemCode,
-          qty: dto.qty,
-          updateBy: updatedBy,
-          updateDate: new Date(),
-        },
-      }),
-    ]);
-    return row;
+    const existing = await this.findTransferRows(serialNo);
+    const issueDate = dto.issueDate ? new Date(dto.issueDate) : new Date();
+    const key = existing[0].serialNo || existing[0].id;
+
+    return this.prisma.$transaction(async (tx) => {
+      await tx.item_Issue.deleteMany({ where: { serialNo: key } });
+      await tx.item_Receive.deleteMany({ where: { serialNo: key } });
+
+      const rows = [];
+      for (const line of dto.items) {
+        const id = randomUUID();
+        const issue = await tx.item_Issue.create({
+          data: {
+            id,
+            serialNo: key,
+            itemCode: line.itemCode,
+            qty: line.qty,
+            issueDate,
+            issueBranchId: dto.issueBranchId ?? existing[0].issueBranchId,
+            receiveBranchId: dto.receiveBranchId ?? existing[0].receiveBranchId,
+            voucharNo: dto.voucherNo,
+            isActive: 1,
+            createBy: existing[0].createBy,
+            createDate: existing[0].createDate,
+            updateBy: updatedBy,
+            updateDate: new Date(),
+          },
+        });
+        await tx.item_Receive.create({
+          data: {
+            id,
+            serialNo: key,
+            itemCode: line.itemCode,
+            qty: line.qty,
+            purDate: issueDate,
+            branchId: dto.issueBranchId ?? existing[0].issueBranchId,
+            receiveBranchID: dto.receiveBranchId ?? existing[0].receiveBranchId,
+            voucharNo: dto.voucherNo,
+            isActive: 1,
+            createBy: existing[0].createBy,
+            createDate: existing[0].createDate,
+            updateBy: updatedBy,
+            updateDate: new Date(),
+          },
+        });
+        rows.push(issue);
+      }
+      return rows;
+    });
   }
 
-  async removeTransfer(id: string) {
-    await this.findOneTransfer(id);
+  async removeTransferBySerial(serialNo: string) {
+    const existing = await this.findTransferRows(serialNo);
+    const key = existing[0].serialNo || existing[0].id;
     await this.prisma.$transaction([
-      this.prisma.item_Receive.deleteMany({ where: { id } }),
-      this.prisma.item_Issue.delete({ where: { id } }),
+      this.prisma.item_Receive.deleteMany({ where: { serialNo: key } }),
+      this.prisma.item_Issue.deleteMany({ where: { serialNo: key } }),
     ]);
     return { message: 'Transfer deleted successfully' };
+  }
+
+  /** Looks up transfer rows by serialNo, falling back to a single row by id
+   *  for any pre-existing record that has a blank serialNo. */
+  private async findTransferRows(serialNo: string) {
+    let rows = await this.prisma.item_Issue.findMany({ where: { serialNo }, orderBy: { createDate: 'asc' } });
+    if (!rows.length && this.isUuid(serialNo)) {
+      const fallback = await this.prisma.item_Issue.findUnique({ where: { id: serialNo } });
+      if (fallback) rows = [fallback];
+    }
+    if (!rows.length) throw new NotFoundException('Transfer record not found');
+    return rows;
   }
 
   // ── Receive ───────────────────────────────────────────────────
@@ -275,12 +333,13 @@ export class InventoryService {
     const fromBranchId = toBranchUuid(dto.fromBranchId, receiveBranchId);
     const branchCode = await this.resolveBranchCode(receiveBranchId);
     const baseCount = await this.prisma.item_Receive.count();
+    // Every line in this request shares one serial number so the whole
+    // document can be looked up / edited / deleted together later.
+    const serialNo = dto.serialNo || this.buildSerialNo('GRN', branchCode, baseCount + 1);
 
     const results = await this.prisma.$transaction(async (tx) => {
       const receives = [];
-      for (let i = 0; i < dto.items.length; i++) {
-        const line = dto.items[i];
-        const serialNo = dto.serialNo || this.buildSerialNo('GRN', branchCode, baseCount + i + 1);
+      for (const line of dto.items) {
         const receive = await tx.item_Receive.create({
           data: {
             itemCode: line.itemCode,
@@ -314,66 +373,91 @@ export class InventoryService {
   async findReceiveHistory(query: BranchPaginationQueryDto) {
     const { page, limit, branchId } = query;
     const where = { isActive: 1, ...(branchId && { receiveBranchID: branchId }) };
-    const [rows, total] = await Promise.all([
-      this.prisma.item_Receive.findMany({ where, orderBy: { createDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
-      this.prisma.item_Receive.count({ where }),
-    ]);
-    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
+    const rows = await this.prisma.item_Receive.findMany({ where, orderBy: { createDate: 'desc' } });
+    return this.groupBySerial(rows, page, limit);
   }
 
-  async findOneReceive(id: string) {
-    const row = await this.prisma.item_Receive.findUnique({ where: { id } });
-    if (!row) throw new NotFoundException('Receive record not found');
-    return row;
+  /** Looks up receive rows by serialNo, falling back to a single row by id
+   *  for any pre-existing record that has a blank serialNo. */
+  private async findReceiveRows(serialNo: string) {
+    let rows = await this.prisma.item_Receive.findMany({ where: { serialNo }, orderBy: { createDate: 'asc' } });
+    if (!rows.length && this.isUuid(serialNo)) {
+      const fallback = await this.prisma.item_Receive.findUnique({ where: { id: serialNo } });
+      if (fallback) rows = [fallback];
+    }
+    if (!rows.length) throw new NotFoundException('Receive record not found');
+    return rows;
   }
 
-  async updateReceive(id: string, dto: UpdateReceiveStockDto, updatedBy: string) {
-    const existing = await this.findOneReceive(id);
-    const oldItemCode = existing.itemCode!;
-    const oldQty = Number(existing.qty ?? 0);
-    const newItemCode = dto.itemCode ?? oldItemCode;
-    const newQty = dto.qty ?? oldQty;
+  async findOneReceive(serialNo: string) {
+    const rows = await this.findReceiveRows(serialNo);
+    const [first] = rows;
+    return {
+      serialNo: first.serialNo || first.id,
+      voucherNo: first.voucharNo,
+      purDate: first.purDate,
+      branchId: first.receiveBranchID,
+      fromBranchId: first.branchId,
+      items: rows.map((r) => ({ itemCode: r.itemCode, itemName: r.itemName, qty: Number(r.qty ?? 0) })),
+    };
+  }
+
+  async updateReceive(serialNo: string, dto: UpdateReceiveStockDto, updatedBy: string, userBranchId: string) {
+    const existing = await this.findReceiveRows(serialNo);
+    const key = existing[0].serialNo || existing[0].id;
+    const purDate = new Date(dto.purDate);
+    const receiveBranchId = toBranchUuid(dto.branchId ?? existing[0].receiveBranchID ?? userBranchId);
+    const fromBranchId = toBranchUuid(dto.fromBranchId, existing[0].branchId ?? receiveBranchId);
 
     return this.prisma.$transaction(async (tx) => {
-      const row = await tx.item_Receive.update({
-        where: { id },
-        data: {
-          serialNo: dto.serialNo,
-          voucharNo: dto.voucherNo,
-          itemCode: dto.itemCode,
-          itemName: dto.itemName,
-          qty: dto.qty,
-          purDate: dto.purDate ? new Date(dto.purDate) : undefined,
-          branchId: dto.fromBranchId,
-          receiveBranchID: dto.branchId,
-          updateBy: updatedBy,
-          updateDate: new Date(),
-        },
-      });
-
-      // Keep the aggregate stock table in sync with whatever changed.
-      if (oldItemCode !== newItemCode) {
-        await tx.inventory.updateMany({ where: { itemCode: oldItemCode }, data: { quantity: { decrement: oldQty } } });
-        await tx.inventory.upsert({
-          where: { itemCode: newItemCode },
-          create: { itemCode: newItemCode, quantity: newQty },
-          update: { quantity: { increment: newQty } },
-        });
-      } else if (newQty !== oldQty) {
-        await tx.inventory.updateMany({ where: { itemCode: newItemCode }, data: { quantity: { increment: newQty - oldQty } } });
+      // Revert the stock this document previously added, then wipe its lines.
+      for (const row of existing) {
+        if (row.itemCode) {
+          await tx.inventory.updateMany({ where: { itemCode: row.itemCode }, data: { quantity: { decrement: Number(row.qty ?? 0) } } });
+        }
       }
+      await tx.item_Receive.deleteMany({ where: { serialNo: key } });
 
-      return row;
+      const receives = [];
+      for (const line of dto.items) {
+        const receive = await tx.item_Receive.create({
+          data: {
+            itemCode: line.itemCode,
+            itemName: line.itemName,
+            qty: line.qty,
+            purDate,
+            branchId: fromBranchId,
+            receiveBranchID: receiveBranchId,
+            serialNo: key,
+            voucharNo: dto.voucherNo,
+            isActive: 1,
+            createBy: existing[0].createBy,
+            createDate: existing[0].createDate,
+            updateBy: updatedBy,
+            updateDate: new Date(),
+          },
+        });
+        await tx.inventory.upsert({
+          where: { itemCode: line.itemCode },
+          create: { itemCode: line.itemCode, quantity: line.qty },
+          update: { quantity: { increment: line.qty } },
+        });
+        receives.push(receive);
+      }
+      return receives;
     });
   }
 
-  async removeReceive(id: string) {
-    const existing = await this.findOneReceive(id);
+  async removeReceive(serialNo: string) {
+    const existing = await this.findReceiveRows(serialNo);
+    const key = existing[0].serialNo || existing[0].id;
     await this.prisma.$transaction(async (tx) => {
-      if (existing.itemCode) {
-        await tx.inventory.updateMany({ where: { itemCode: existing.itemCode }, data: { quantity: { decrement: Number(existing.qty ?? 0) } } });
+      for (const row of existing) {
+        if (row.itemCode) {
+          await tx.inventory.updateMany({ where: { itemCode: row.itemCode }, data: { quantity: { decrement: Number(row.qty ?? 0) } } });
+        }
       }
-      await tx.item_Receive.delete({ where: { id } });
+      await tx.item_Receive.deleteMany({ where: { serialNo: key } });
     });
     return { message: 'Stock receive deleted successfully' };
   }
@@ -392,12 +476,13 @@ export class InventoryService {
     const issueDate = new Date(dto.issueDate);
     const branchCode = await this.resolveBranchCode(dto.issueBranchId);
     const baseCount = await this.prisma.item_Issue.count();
+    // Every line in this request shares one serial number so the whole
+    // document can be looked up / edited / deleted together later.
+    const serialNo = dto.serialNo || this.buildSerialNo('ISS', branchCode, baseCount + 1);
 
     return this.prisma.$transaction(async (tx) => {
       const issues = [];
-      for (let i = 0; i < dto.items.length; i++) {
-        const line = dto.items[i];
-        const serialNo = dto.serialNo || this.buildSerialNo('ISS', branchCode, baseCount + i + 1);
+      for (const line of dto.items) {
         const issue = await tx.item_Issue.create({
           data: {
             itemCode: line.itemCode,
@@ -424,63 +509,94 @@ export class InventoryService {
   async findAllIssues(query: BranchPaginationQueryDto) {
     const { page, limit, branchId } = query;
     const where = { isActive: 1, ...(branchId && { issueBranchId: branchId }) };
-    const [rows, total] = await Promise.all([
-      this.prisma.item_Issue.findMany({ where, orderBy: { createDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
-      this.prisma.item_Issue.count({ where }),
-    ]);
-    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
+    const rows = await this.prisma.item_Issue.findMany({ where, orderBy: { createDate: 'desc' } });
+    return this.groupBySerial(rows, page, limit);
   }
 
-  async findOneIssue(id: string) {
-    const row = await this.prisma.item_Issue.findUnique({ where: { id } });
-    if (!row) throw new NotFoundException('Issue record not found');
-    return row;
+  /** Looks up issue rows by serialNo, falling back to a single row by id
+   *  for any pre-existing record that has a blank serialNo. */
+  private async findIssueRows(serialNo: string) {
+    let rows = await this.prisma.item_Issue.findMany({ where: { serialNo }, orderBy: { createDate: 'asc' } });
+    if (!rows.length && this.isUuid(serialNo)) {
+      const fallback = await this.prisma.item_Issue.findUnique({ where: { id: serialNo } });
+      if (fallback) rows = [fallback];
+    }
+    if (!rows.length) throw new NotFoundException('Issue record not found');
+    return rows;
   }
 
-  async updateIssue(id: string, dto: UpdateIssueStockDto, updatedBy: string) {
-    const existing = await this.findOneIssue(id);
-    const oldItemCode = existing.itemCode!;
-    const oldQty = Number(existing.qty ?? 0);
-    const newItemCode = dto.itemCode ?? oldItemCode;
-    const newQty = dto.qty ?? oldQty;
+  async findOneIssue(serialNo: string) {
+    const rows = await this.findIssueRows(serialNo);
+    const [first] = rows;
+    return {
+      serialNo: first.serialNo || first.id,
+      voucherNo: first.voucharNo,
+      issueDate: first.issueDate,
+      issueBranchId: first.issueBranchId,
+      receiveBranchId: first.receiveBranchId,
+      items: rows.map((r) => ({ itemCode: r.itemCode, qty: Number(r.qty ?? 0), unitPrice: Number(r.unitPrice ?? 0) })),
+    };
+  }
+
+  async updateIssue(serialNo: string, dto: UpdateIssueStockDto, updatedBy: string) {
+    const existing = await this.findIssueRows(serialNo);
+    const key = existing[0].serialNo || existing[0].id;
+    for (const line of dto.items) {
+      const stillHeld = existing
+        .filter((r) => r.itemCode === line.itemCode)
+        .reduce((sum, r) => sum + Number(r.qty ?? 0), 0);
+      const inventory = await this.prisma.inventory.findUnique({ where: { itemCode: line.itemCode } });
+      const available = Number(inventory?.quantity ?? 0) + stillHeld;
+      if (available < line.qty) throw new BadRequestException(`Insufficient stock for item ${line.itemCode}`);
+    }
+    const issueDate = new Date(dto.issueDate);
 
     return this.prisma.$transaction(async (tx) => {
-      const row = await tx.item_Issue.update({
-        where: { id },
-        data: {
-          serialNo: dto.serialNo,
-          voucharNo: dto.voucherNo,
-          itemCode: dto.itemCode,
-          qty: dto.qty,
-          unitPrice: dto.unitPrice,
-          issueDate: dto.issueDate ? new Date(dto.issueDate) : undefined,
-          issueBranchId: dto.issueBranchId,
-          receiveBranchId: dto.receiveBranchId,
-          updateBy: updatedBy,
-          updateDate: new Date(),
-        },
-      });
-
-      // Issuing decrements stock, so a bigger/changed line needs the extra
-      // deducted and a smaller one needs the difference restored.
-      if (oldItemCode !== newItemCode) {
-        await tx.inventory.updateMany({ where: { itemCode: oldItemCode }, data: { quantity: { increment: oldQty } } });
-        await tx.inventory.updateMany({ where: { itemCode: newItemCode }, data: { quantity: { decrement: newQty } } });
-      } else if (newQty !== oldQty) {
-        await tx.inventory.updateMany({ where: { itemCode: newItemCode }, data: { quantity: { decrement: newQty - oldQty } } });
+      // Issuing decrements stock; restore what this document previously took
+      // out, then wipe its lines.
+      for (const row of existing) {
+        if (row.itemCode) {
+          await tx.inventory.updateMany({ where: { itemCode: row.itemCode }, data: { quantity: { increment: Number(row.qty ?? 0) } } });
+        }
       }
+      await tx.item_Issue.deleteMany({ where: { serialNo: key } });
 
-      return row;
+      const issues = [];
+      for (const line of dto.items) {
+        const issue = await tx.item_Issue.create({
+          data: {
+            itemCode: line.itemCode,
+            qty: line.qty,
+            unitPrice: line.unitPrice,
+            issueDate,
+            issueBranchId: dto.issueBranchId ?? existing[0].issueBranchId,
+            receiveBranchId: dto.receiveBranchId ?? existing[0].receiveBranchId,
+            serialNo: key,
+            voucharNo: dto.voucherNo,
+            isActive: 1,
+            createBy: existing[0].createBy,
+            createDate: existing[0].createDate,
+            updateBy: updatedBy,
+            updateDate: new Date(),
+          },
+        });
+        await tx.inventory.update({ where: { itemCode: line.itemCode }, data: { quantity: { decrement: line.qty } } });
+        issues.push(issue);
+      }
+      return issues;
     });
   }
 
-  async removeIssue(id: string) {
-    const existing = await this.findOneIssue(id);
+  async removeIssue(serialNo: string) {
+    const existing = await this.findIssueRows(serialNo);
+    const key = existing[0].serialNo || existing[0].id;
     await this.prisma.$transaction(async (tx) => {
-      if (existing.itemCode) {
-        await tx.inventory.updateMany({ where: { itemCode: existing.itemCode }, data: { quantity: { increment: Number(existing.qty ?? 0) } } });
+      for (const row of existing) {
+        if (row.itemCode) {
+          await tx.inventory.updateMany({ where: { itemCode: row.itemCode }, data: { quantity: { increment: Number(row.qty ?? 0) } } });
+        }
       }
-      await tx.item_Issue.delete({ where: { id } });
+      await tx.item_Issue.deleteMany({ where: { serialNo: key } });
     });
     return { message: 'Stock issue deleted successfully' };
   }
@@ -632,15 +748,16 @@ export class InventoryService {
 
   // ── Serial number helpers ───────────────────────────────────────
 
+  private isUuid(value: string): boolean {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+  }
+
   /** Resolve the session branch (a Branch UUID) to its sanitized branch code for
    *  embedding in generated serial numbers. Returns '' when the branch can't be
    *  resolved, so the number simply omits the code. */
   private async resolveBranchCode(branchId?: string | null): Promise<string> {
-    if (branchId == null) return '';
-    const id = String(branchId);
-    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
-    if (!isUuid) return '';
-    const branch = await this.prisma.branch.findUnique({ where: { id }, select: { branchCode: true } }).catch(() => null);
+    if (branchId == null || !this.isUuid(String(branchId))) return '';
+    const branch = await this.prisma.branch.findUnique({ where: { id: String(branchId) }, select: { branchCode: true } }).catch(() => null);
     return (branch?.branchCode ?? '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
   }
 

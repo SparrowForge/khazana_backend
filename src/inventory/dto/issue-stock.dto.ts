@@ -49,44 +49,26 @@ export class IssueStockDto {
 }
 
 export class UpdateIssueStockDto {
-  @ApiPropertyOptional({ example: 'ISS-001' })
-  @IsString()
-  @IsOptional()
-  serialNo?: string;
-
   @ApiPropertyOptional({ example: 'VCHR-001' })
   @IsString()
   @IsOptional()
   voucherNo?: string;
 
-  @ApiPropertyOptional({ example: 'ITM-001' })
-  @IsString()
-  @IsOptional()
-  itemCode?: string;
-
-  @ApiPropertyOptional({ example: 10 })
-  @IsNumber()
-  @IsPositive()
-  @IsOptional()
-  qty?: number;
-
-  @ApiPropertyOptional({ example: 120.0 })
-  @IsNumber()
-  @IsOptional()
-  unitPrice?: number;
-
-  @ApiPropertyOptional({ example: '2024-01-15' })
+  @ApiProperty({ example: '2024-01-15', description: 'Issue date (ISO 8601)' })
   @IsDateString()
-  @IsOptional()
-  issueDate?: string;
+  issueDate: string;
 
-  @ApiPropertyOptional({ format: 'uuid' })
+  @ApiProperty({ format: 'uuid', description: 'Branch UUID issuing the stock' })
   @IsUUID()
-  @IsOptional()
-  issueBranchId?: string;
+  issueBranchId: string;
 
-  @ApiPropertyOptional({ format: 'uuid' })
+  @ApiProperty({ format: 'uuid', description: 'Branch UUID receiving the issued stock' })
   @IsUUID()
-  @IsOptional()
-  receiveBranchId?: string;
+  receiveBranchId: string;
+
+  @ApiProperty({ type: [IssueStockLineDto], description: 'Full replacement set of lines for this serial number' })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => IssueStockLineDto)
+  items: IssueStockLineDto[];
 }

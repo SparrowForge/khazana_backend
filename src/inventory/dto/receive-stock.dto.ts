@@ -51,36 +51,14 @@ export class ReceiveStockDto {
 }
 
 export class UpdateReceiveStockDto {
-  @ApiPropertyOptional({ example: 'GRN-001' })
-  @IsString()
-  @IsOptional()
-  serialNo?: string;
-
   @ApiPropertyOptional({ example: 'VCHR-001' })
   @IsString()
   @IsOptional()
   voucherNo?: string;
 
-  @ApiPropertyOptional({ example: 'ITM-001' })
-  @IsString()
-  @IsOptional()
-  itemCode?: string;
-
-  @ApiPropertyOptional({ example: 'Widget A' })
-  @IsString()
-  @IsOptional()
-  itemName?: string;
-
-  @ApiPropertyOptional({ example: 10 })
-  @IsNumber()
-  @IsPositive()
-  @IsOptional()
-  qty?: number;
-
-  @ApiPropertyOptional({ example: '2024-01-15' })
+  @ApiProperty({ example: '2024-01-15' })
   @IsDateString()
-  @IsOptional()
-  purDate?: string;
+  purDate: string;
 
   @ApiPropertyOptional({ format: 'uuid', description: 'Receiving branch UUID' })
   @IsUUID()
@@ -91,4 +69,10 @@ export class UpdateReceiveStockDto {
   @IsUUID()
   @IsOptional()
   fromBranchId?: string;
+
+  @ApiProperty({ type: [ReceiveStockLineDto], description: 'Full replacement set of lines for this serial number' })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ReceiveStockLineDto)
+  items: ReceiveStockLineDto[];
 }

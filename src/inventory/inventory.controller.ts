@@ -90,32 +90,32 @@ export class InventoryController {
     return paginatedResponse(items, meta, 'Transfer');
   }
 
-  @Get('transfer/:id')
-  @ApiOperation({ summary: 'Get a single stock transfer by ID' })
-  @ApiParam({ name: 'id', description: 'Transfer (Item_Issue) UUID' })
+  @Get('transfer/:serialNo')
+  @ApiOperation({ summary: 'Get a single stock transfer (all lines) by serial number' })
+  @ApiParam({ name: 'serialNo', description: 'Transfer serial number' })
   @ApiResponse({ status: 200, description: 'Transfer found' })
   @ApiResponse({ status: 404, description: 'Transfer not found' })
-  findOneTransfer(@Param('id') id: string) {
-    return this.inventoryService.findOneTransfer(id);
+  findOneTransfer(@Param('serialNo') serialNo: string) {
+    return this.inventoryService.findOneTransferBySerial(serialNo);
   }
 
-  @Patch('transfer/:id')
+  @Patch('transfer/:serialNo')
   @RequiredPermission({ control: 'StockTransfer', action: 'editAccess' })
-  @ApiOperation({ summary: 'Update a stock transfer by ID' })
-  @ApiParam({ name: 'id', description: 'Transfer (Item_Issue) UUID' })
+  @ApiOperation({ summary: 'Replace all lines of a stock transfer by serial number' })
+  @ApiParam({ name: 'serialNo', description: 'Transfer serial number' })
   @ApiResponse({ status: 200, description: 'Transfer updated successfully' })
-  updateTransfer(@Param('id') id: string, @Body() body: any, @CurrentUser('userName') userName: string) {
-    return this.inventoryService.updateTransfer(id, body, userName);
+  updateTransfer(@Param('serialNo') serialNo: string, @Body() body: any, @CurrentUser('userName') userName: string) {
+    return this.inventoryService.updateTransferBySerial(serialNo, body, userName);
   }
 
-  @Delete('transfer/:id')
+  @Delete('transfer/:serialNo')
   @RequiredPermission({ control: 'StockTransfer', action: 'deleteAccess' })
-  @ApiOperation({ summary: 'Delete a stock transfer by ID' })
-  @ApiParam({ name: 'id', description: 'Transfer (Item_Issue) UUID' })
+  @ApiOperation({ summary: 'Delete a stock transfer (all lines) by serial number' })
+  @ApiParam({ name: 'serialNo', description: 'Transfer serial number' })
   @ApiResponse({ status: 200, description: 'Transfer deleted successfully' })
   @ApiResponse({ status: 404, description: 'Transfer not found' })
-  removeTransfer(@Param('id') id: string) {
-    return this.inventoryService.removeTransfer(id);
+  removeTransfer(@Param('serialNo') serialNo: string) {
+    return this.inventoryService.removeTransferBySerial(serialNo);
   }
 
   @Get('stock/:itemCode')
@@ -198,32 +198,37 @@ export class InventoryController {
     return paginatedResponse(items, meta, 'Receive');
   }
 
-  @Get('receive/:id')
-  @ApiOperation({ summary: 'Get a single stock receive by ID' })
-  @ApiParam({ name: 'id', description: 'Item_Receive UUID' })
+  @Get('receive/:serialNo')
+  @ApiOperation({ summary: 'Get a single stock receive (all lines) by serial number' })
+  @ApiParam({ name: 'serialNo', description: 'Receive serial number' })
   @ApiResponse({ status: 200, description: 'Receive record found' })
   @ApiResponse({ status: 404, description: 'Receive record not found' })
-  findOneReceive(@Param('id') id: string) {
-    return this.inventoryService.findOneReceive(id);
+  findOneReceive(@Param('serialNo') serialNo: string) {
+    return this.inventoryService.findOneReceive(serialNo);
   }
 
-  @Patch('receive/:id')
+  @Patch('receive/:serialNo')
   @RequiredPermission({ control: 'StockReceive', action: 'editAccess' })
-  @ApiOperation({ summary: 'Update a stock receive by ID' })
-  @ApiParam({ name: 'id', description: 'Item_Receive UUID' })
+  @ApiOperation({ summary: 'Replace all lines of a stock receive by serial number' })
+  @ApiParam({ name: 'serialNo', description: 'Receive serial number' })
   @ApiResponse({ status: 200, description: 'Receive record updated successfully' })
-  updateReceive(@Param('id') id: string, @Body() dto: UpdateReceiveStockDto, @CurrentUser('userName') userName: string) {
-    return this.inventoryService.updateReceive(id, dto, userName);
+  updateReceive(
+    @Param('serialNo') serialNo: string,
+    @Body() dto: UpdateReceiveStockDto,
+    @CurrentUser('userName') userName: string,
+    @CurrentUser('branchId') branchId: string,
+  ) {
+    return this.inventoryService.updateReceive(serialNo, dto, userName, branchId);
   }
 
-  @Delete('receive/:id')
+  @Delete('receive/:serialNo')
   @RequiredPermission({ control: 'StockReceive', action: 'deleteAccess' })
-  @ApiOperation({ summary: 'Delete a stock receive by ID' })
-  @ApiParam({ name: 'id', description: 'Item_Receive UUID' })
+  @ApiOperation({ summary: 'Delete a stock receive (all lines) by serial number' })
+  @ApiParam({ name: 'serialNo', description: 'Receive serial number' })
   @ApiResponse({ status: 200, description: 'Receive record deleted successfully' })
   @ApiResponse({ status: 404, description: 'Receive record not found' })
-  removeReceive(@Param('id') id: string) {
-    return this.inventoryService.removeReceive(id);
+  removeReceive(@Param('serialNo') serialNo: string) {
+    return this.inventoryService.removeReceive(serialNo);
   }
 
   @Get('issue/history')
@@ -234,31 +239,31 @@ export class InventoryController {
     return paginatedResponse(items, meta, 'Issue');
   }
 
-  @Get('issue/:id')
-  @ApiOperation({ summary: 'Get a single stock issue by ID' })
-  @ApiParam({ name: 'id', description: 'Item_Issue UUID' })
+  @Get('issue/:serialNo')
+  @ApiOperation({ summary: 'Get a single stock issue (all lines) by serial number' })
+  @ApiParam({ name: 'serialNo', description: 'Issue serial number' })
   @ApiResponse({ status: 200, description: 'Issue record found' })
   @ApiResponse({ status: 404, description: 'Issue record not found' })
-  findOneIssue(@Param('id') id: string) {
-    return this.inventoryService.findOneIssue(id);
+  findOneIssue(@Param('serialNo') serialNo: string) {
+    return this.inventoryService.findOneIssue(serialNo);
   }
 
-  @Patch('issue/:id')
+  @Patch('issue/:serialNo')
   @RequiredPermission({ control: 'StockIssue', action: 'editAccess' })
-  @ApiOperation({ summary: 'Update a stock issue by ID' })
-  @ApiParam({ name: 'id', description: 'Item_Issue UUID' })
+  @ApiOperation({ summary: 'Replace all lines of a stock issue by serial number' })
+  @ApiParam({ name: 'serialNo', description: 'Issue serial number' })
   @ApiResponse({ status: 200, description: 'Issue record updated successfully' })
-  updateIssue(@Param('id') id: string, @Body() dto: UpdateIssueStockDto, @CurrentUser('userName') userName: string) {
-    return this.inventoryService.updateIssue(id, dto, userName);
+  updateIssue(@Param('serialNo') serialNo: string, @Body() dto: UpdateIssueStockDto, @CurrentUser('userName') userName: string) {
+    return this.inventoryService.updateIssue(serialNo, dto, userName);
   }
 
-  @Delete('issue/:id')
+  @Delete('issue/:serialNo')
   @RequiredPermission({ control: 'StockIssue', action: 'deleteAccess' })
-  @ApiOperation({ summary: 'Delete a stock issue by ID' })
-  @ApiParam({ name: 'id', description: 'Item_Issue UUID' })
+  @ApiOperation({ summary: 'Delete a stock issue (all lines) by serial number' })
+  @ApiParam({ name: 'serialNo', description: 'Issue serial number' })
   @ApiResponse({ status: 200, description: 'Issue record deleted successfully' })
   @ApiResponse({ status: 404, description: 'Issue record not found' })
-  removeIssue(@Param('id') id: string) {
-    return this.inventoryService.removeIssue(id);
+  removeIssue(@Param('serialNo') serialNo: string) {
+    return this.inventoryService.removeIssue(serialNo);
   }
 }

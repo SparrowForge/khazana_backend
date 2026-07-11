@@ -1816,15 +1816,15 @@
         ]
       }
     },
-    "/inventory/transfer/{id}": {
+    "/inventory/transfer/{serialNo}": {
       "get": {
         "operationId": "InventoryController_findOneTransfer",
         "parameters": [
           {
-            "name": "id",
+            "name": "serialNo",
             "required": true,
             "in": "path",
-            "description": "Transfer (Item_Issue) UUID",
+            "description": "Transfer serial number",
             "schema": {
               "type": "string"
             }
@@ -1843,7 +1843,7 @@
             "access-token": []
           }
         ],
-        "summary": "Get a single stock transfer by ID",
+        "summary": "Get a single stock transfer (all lines) by serial number",
         "tags": [
           "Inventory"
         ]
@@ -1852,10 +1852,10 @@
         "operationId": "InventoryController_updateTransfer",
         "parameters": [
           {
-            "name": "id",
+            "name": "serialNo",
             "required": true,
             "in": "path",
-            "description": "Transfer (Item_Issue) UUID",
+            "description": "Transfer serial number",
             "schema": {
               "type": "string"
             }
@@ -1871,7 +1871,7 @@
             "access-token": []
           }
         ],
-        "summary": "Update a stock transfer by ID",
+        "summary": "Replace all lines of a stock transfer by serial number",
         "tags": [
           "Inventory"
         ]
@@ -1880,10 +1880,10 @@
         "operationId": "InventoryController_removeTransfer",
         "parameters": [
           {
-            "name": "id",
+            "name": "serialNo",
             "required": true,
             "in": "path",
-            "description": "Transfer (Item_Issue) UUID",
+            "description": "Transfer serial number",
             "schema": {
               "type": "string"
             }
@@ -1902,7 +1902,7 @@
             "access-token": []
           }
         ],
-        "summary": "Delete a stock transfer by ID",
+        "summary": "Delete a stock transfer (all lines) by serial number",
         "tags": [
           "Inventory"
         ]
@@ -2218,15 +2218,15 @@
         ]
       }
     },
-    "/inventory/receive/{id}": {
+    "/inventory/receive/{serialNo}": {
       "get": {
         "operationId": "InventoryController_findOneReceive",
         "parameters": [
           {
-            "name": "id",
+            "name": "serialNo",
             "required": true,
             "in": "path",
-            "description": "Item_Receive UUID",
+            "description": "Receive serial number",
             "schema": {
               "type": "string"
             }
@@ -2245,7 +2245,7 @@
             "access-token": []
           }
         ],
-        "summary": "Get a single stock receive by ID",
+        "summary": "Get a single stock receive (all lines) by serial number",
         "tags": [
           "Inventory"
         ]
@@ -2254,10 +2254,10 @@
         "operationId": "InventoryController_updateReceive",
         "parameters": [
           {
-            "name": "id",
+            "name": "serialNo",
             "required": true,
             "in": "path",
-            "description": "Item_Receive UUID",
+            "description": "Receive serial number",
             "schema": {
               "type": "string"
             }
@@ -2283,7 +2283,7 @@
             "access-token": []
           }
         ],
-        "summary": "Update a stock receive by ID",
+        "summary": "Replace all lines of a stock receive by serial number",
         "tags": [
           "Inventory"
         ]
@@ -2292,10 +2292,10 @@
         "operationId": "InventoryController_removeReceive",
         "parameters": [
           {
-            "name": "id",
+            "name": "serialNo",
             "required": true,
             "in": "path",
-            "description": "Item_Receive UUID",
+            "description": "Receive serial number",
             "schema": {
               "type": "string"
             }
@@ -2314,7 +2314,7 @@
             "access-token": []
           }
         ],
-        "summary": "Delete a stock receive by ID",
+        "summary": "Delete a stock receive (all lines) by serial number",
         "tags": [
           "Inventory"
         ]
@@ -2374,15 +2374,15 @@
         ]
       }
     },
-    "/inventory/issue/{id}": {
+    "/inventory/issue/{serialNo}": {
       "get": {
         "operationId": "InventoryController_findOneIssue",
         "parameters": [
           {
-            "name": "id",
+            "name": "serialNo",
             "required": true,
             "in": "path",
-            "description": "Item_Issue UUID",
+            "description": "Issue serial number",
             "schema": {
               "type": "string"
             }
@@ -2401,7 +2401,7 @@
             "access-token": []
           }
         ],
-        "summary": "Get a single stock issue by ID",
+        "summary": "Get a single stock issue (all lines) by serial number",
         "tags": [
           "Inventory"
         ]
@@ -2410,10 +2410,10 @@
         "operationId": "InventoryController_updateIssue",
         "parameters": [
           {
-            "name": "id",
+            "name": "serialNo",
             "required": true,
             "in": "path",
-            "description": "Item_Issue UUID",
+            "description": "Issue serial number",
             "schema": {
               "type": "string"
             }
@@ -2439,7 +2439,7 @@
             "access-token": []
           }
         ],
-        "summary": "Update a stock issue by ID",
+        "summary": "Replace all lines of a stock issue by serial number",
         "tags": [
           "Inventory"
         ]
@@ -2448,10 +2448,10 @@
         "operationId": "InventoryController_removeIssue",
         "parameters": [
           {
-            "name": "id",
+            "name": "serialNo",
             "required": true,
             "in": "path",
-            "description": "Item_Issue UUID",
+            "description": "Issue serial number",
             "schema": {
               "type": "string"
             }
@@ -2470,7 +2470,7 @@
             "access-token": []
           }
         ],
-        "summary": "Delete a stock issue by ID",
+        "summary": "Delete a stock issue (all lines) by serial number",
         "tags": [
           "Inventory"
         ]
@@ -6413,25 +6413,9 @@
       "UpdateReceiveStockDto": {
         "type": "object",
         "properties": {
-          "serialNo": {
-            "type": "string",
-            "example": "GRN-001"
-          },
           "voucherNo": {
             "type": "string",
             "example": "VCHR-001"
-          },
-          "itemCode": {
-            "type": "string",
-            "example": "ITM-001"
-          },
-          "itemName": {
-            "type": "string",
-            "example": "Widget A"
-          },
-          "qty": {
-            "type": "number",
-            "example": 10
           },
           "purDate": {
             "type": "string",
@@ -6446,45 +6430,56 @@
             "type": "string",
             "format": "uuid",
             "description": "Source branch UUID the stock is received FROM"
+          },
+          "items": {
+            "description": "Full replacement set of lines for this serial number",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReceiveStockLineDto"
+            }
           }
-        }
+        },
+        "required": [
+          "purDate",
+          "items"
+        ]
       },
       "UpdateIssueStockDto": {
         "type": "object",
         "properties": {
-          "serialNo": {
-            "type": "string",
-            "example": "ISS-001"
-          },
           "voucherNo": {
             "type": "string",
             "example": "VCHR-001"
           },
-          "itemCode": {
-            "type": "string",
-            "example": "ITM-001"
-          },
-          "qty": {
-            "type": "number",
-            "example": 10
-          },
-          "unitPrice": {
-            "type": "number",
-            "example": 120
-          },
           "issueDate": {
             "type": "string",
-            "example": "2024-01-15"
+            "example": "2024-01-15",
+            "description": "Issue date (ISO 8601)"
           },
           "issueBranchId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Branch UUID issuing the stock"
           },
           "receiveBranchId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Branch UUID receiving the issued stock"
+          },
+          "items": {
+            "description": "Full replacement set of lines for this serial number",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IssueStockLineDto"
+            }
           }
-        }
+        },
+        "required": [
+          "issueDate",
+          "issueBranchId",
+          "receiveBranchId",
+          "items"
+        ]
       },
       "CreateCustomerDto": {
         "type": "object",
