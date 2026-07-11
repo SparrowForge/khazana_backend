@@ -102,11 +102,12 @@ export class OrdersService {
     return order;
   }
 
-  async create(dto: CreateOrderDto, createdBy: string) {
+  async create(dto: CreateOrderDto, createdBy: string, userBranchId?: string) {
+    const serialNo = dto.serialNo || (await this.generateSerialNo('ORD', dto.branchId ?? userBranchId));
     return this.prisma.orderReceive_Master.create({
       data: {
         clientCode: dto.clientCode,
-        serialNo: dto.serialNo,
+        serialNo,
         advance: dto.advance,
         orderDate: dto.orderDate ? new Date(dto.orderDate) : new Date(),
         totalPrice: dto.totalPrice,
@@ -126,7 +127,7 @@ export class OrdersService {
             unitPrice: item.unitPrice,
             vatPrice: item.vatPrice,
             amount: item.amount,
-            serialNo: dto.serialNo,
+            serialNo,
           })),
         },
       },
@@ -179,5 +180,29 @@ export class OrdersService {
       },
       include: { details: true },
     });
+  }
+
+  /** Resolve the session branch (a Branch UUID) to its sanitized branch code for
+   *  embedding in order numbers. Returns '' when the branch can't be resolved,
+   *  so the number simply omits the code. */
+  private async resolveBranchCode(branchId?: string | null): Promise<string> {
+    if (branchId == null) return '';
+    const id = String(branchId);
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+    if (!isUuid) return '';
+    const branch = await this.prisma.branch
+      .findUnique({ where: { id }, select: { branchCode: true } })
+      .catch(() => null);
+    return (branch?.branchCode ?? '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+  }
+
+  private yyyymm(d = new Date()): string {
+    return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  private async generateSerialNo(prefix: string, branchId?: string | null): Promise<string> {
+    const code = await this.resolveBranchCode(branchId);
+    const count = await this.prisma.orderReceive_Master.count();
+    return [prefix, code, this.yyyymm(), String(count + 1).padStart(5, '0')].filter(Boolean).join('-');
   }
 }

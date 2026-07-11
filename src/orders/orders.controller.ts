@@ -33,8 +33,12 @@ export class OrdersController {
   @RequiredPermission({ control: 'Orders', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new order' })
   @ApiResponse({ status: 201, description: 'Order created successfully' })
-  create(@Body() dto: CreateOrderDto, @CurrentUser('userName') userName: string) {
-    return this.ordersService.create(dto, userName);
+  create(
+    @Body() dto: CreateOrderDto,
+    @CurrentUser('userName') userName: string,
+    @CurrentUser('branchId') branchId: string,
+  ) {
+    return this.ordersService.create(dto, userName, branchId);
   }
 
   @Patch(':id')
