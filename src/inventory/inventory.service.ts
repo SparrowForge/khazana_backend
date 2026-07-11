@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { PrismaService } from '../database/prisma.service';
-import { ReceiveStockDto } from './dto/receive-stock.dto';
+import { ReceiveStockDto, UpdateReceiveStockDto } from './dto/receive-stock.dto';
 import { IssueStockDto } from './dto/issue-stock.dto';
 import { BranchPaginationQueryDto } from '../common/dto';
 import { ItemQueryDto } from './dto/item-query.dto';
@@ -145,37 +146,116 @@ export class InventoryService {
     const issueDate = dto.issueDate ? new Date(dto.issueDate) : new Date();
 
     return this.prisma.$transaction(
-      dto.items.flatMap((line) => [
-        // Stock leaves the issuing branch
-        this.prisma.item_Issue.create({
-          data: {
-            itemCode: line.itemCode,
-            qty: line.qty,
-            issueDate,
-            issueBranchId: dto.issueBranchId,
-            receiveBranchId: dto.receiveBranchId,
-            voucharNo: dto.voucherNo,
-            isActive: 1,
-            createBy: createdBy,
-            createDate: new Date(),
-          },
-        }),
-        // Stock arrives at the receiving branch
-        this.prisma.item_Receive.create({
-          data: {
-            itemCode: line.itemCode,
-            qty: line.qty,
-            purDate: issueDate,
-            branchId: dto.receiveBranchId,
-            receiveBranchID: dto.receiveBranchId,
-            voucharNo: dto.voucherNo,
-            isActive: 1,
-            createBy: createdBy,
-            createDate: new Date(),
-          },
-        }),
-      ]),
+      dto.items.flatMap((line) => {
+        // Both legs of one transfer line share the same id so they can be
+        // looked up / edited / deleted together later.
+        const id = randomUUID();
+        return [
+          // Stock leaves the issuing branch
+          this.prisma.item_Issue.create({
+            data: {
+              id,
+              itemCode: line.itemCode,
+              qty: line.qty,
+              issueDate,
+              issueBranchId: dto.issueBranchId,
+              receiveBranchId: dto.receiveBranchId,
+              voucharNo: dto.voucherNo,
+              isActive: 1,
+              createBy: createdBy,
+              createDate: new Date(),
+            },
+          }),
+          // Stock arrives at the receiving branch
+          this.prisma.item_Receive.create({
+            data: {
+              id,
+              itemCode: line.itemCode,
+              qty: line.qty,
+              purDate: issueDate,
+              branchId: dto.issueBranchId,
+              receiveBranchID: dto.receiveBranchId,
+              voucharNo: dto.voucherNo,
+              isActive: 1,
+              createBy: createdBy,
+              createDate: new Date(),
+            },
+          }),
+        ];
+      }),
     );
+  }
+
+  async findTransferHistory(query: BranchPaginationQueryDto) {
+    const { page, limit, branchId } = query;
+    const where = { isActive: 1, ...(branchId && { issueBranchId: branchId }) };
+    const [rows, total] = await Promise.all([
+      this.prisma.item_Issue.findMany({ where, orderBy: { createDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.item_Issue.count({ where }),
+    ]);
+    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
+  }
+
+  async findOneTransfer(id: string) {
+    const row = await this.prisma.item_Issue.findUnique({ where: { id } });
+    if (!row) throw new NotFoundException('Transfer record not found');
+    return row;
+  }
+
+  async updateTransfer(
+    id: string,
+    dto: {
+      voucherNo?: string;
+      issueDate?: string;
+      issueBranchId?: string;
+      receiveBranchId?: string;
+      itemCode?: string;
+      qty?: number;
+    },
+    updatedBy: string,
+  ) {
+    await this.findOneTransfer(id);
+    const issueDate = dto.issueDate ? new Date(dto.issueDate) : undefined;
+    const [row] = await this.prisma.$transaction([
+      this.prisma.item_Issue.update({
+        where: { id },
+        data: {
+          voucharNo: dto.voucherNo,
+          issueDate,
+          issueBranchId: dto.issueBranchId,
+          receiveBranchId: dto.receiveBranchId,
+          itemCode: dto.itemCode,
+          qty: dto.qty,
+          updateBy: updatedBy,
+          updateDate: new Date(),
+        },
+      }),
+      // The paired receive leg shares the same id; updateMany no-ops for legacy
+      // rows created before the two legs were linked.
+      this.prisma.item_Receive.updateMany({
+        where: { id },
+        data: {
+          voucharNo: dto.voucherNo,
+          purDate: issueDate,
+          branchId: dto.issueBranchId,
+          receiveBranchID: dto.receiveBranchId,
+          itemCode: dto.itemCode,
+          qty: dto.qty,
+          updateBy: updatedBy,
+          updateDate: new Date(),
+        },
+      }),
+    ]);
+    return row;
+  }
+
+  async removeTransfer(id: string) {
+    await this.findOneTransfer(id);
+    await this.prisma.$transaction([
+      this.prisma.item_Receive.deleteMany({ where: { id } }),
+      this.prisma.item_Issue.delete({ where: { id } }),
+    ]);
+    return { message: 'Transfer deleted successfully' };
   }
 
   // ── Receive ───────────────────────────────────────────────────
@@ -220,6 +300,73 @@ export class InventoryService {
     });
 
     return results;
+  }
+
+  async findReceiveHistory(query: BranchPaginationQueryDto) {
+    const { page, limit, branchId } = query;
+    const where = { isActive: 1, ...(branchId && { receiveBranchID: branchId }) };
+    const [rows, total] = await Promise.all([
+      this.prisma.item_Receive.findMany({ where, orderBy: { createDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.item_Receive.count({ where }),
+    ]);
+    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
+  }
+
+  async findOneReceive(id: string) {
+    const row = await this.prisma.item_Receive.findUnique({ where: { id } });
+    if (!row) throw new NotFoundException('Receive record not found');
+    return row;
+  }
+
+  async updateReceive(id: string, dto: UpdateReceiveStockDto, updatedBy: string) {
+    const existing = await this.findOneReceive(id);
+    const oldItemCode = existing.itemCode!;
+    const oldQty = Number(existing.qty ?? 0);
+    const newItemCode = dto.itemCode ?? oldItemCode;
+    const newQty = dto.qty ?? oldQty;
+
+    return this.prisma.$transaction(async (tx) => {
+      const row = await tx.item_Receive.update({
+        where: { id },
+        data: {
+          serialNo: dto.serialNo,
+          voucharNo: dto.voucherNo,
+          itemCode: dto.itemCode,
+          itemName: dto.itemName,
+          qty: dto.qty,
+          purDate: dto.purDate ? new Date(dto.purDate) : undefined,
+          branchId: dto.fromBranchId,
+          receiveBranchID: dto.branchId,
+          updateBy: updatedBy,
+          updateDate: new Date(),
+        },
+      });
+
+      // Keep the aggregate stock table in sync with whatever changed.
+      if (oldItemCode !== newItemCode) {
+        await tx.inventory.updateMany({ where: { itemCode: oldItemCode }, data: { quantity: { decrement: oldQty } } });
+        await tx.inventory.upsert({
+          where: { itemCode: newItemCode },
+          create: { itemCode: newItemCode, quantity: newQty },
+          update: { quantity: { increment: newQty } },
+        });
+      } else if (newQty !== oldQty) {
+        await tx.inventory.updateMany({ where: { itemCode: newItemCode }, data: { quantity: { increment: newQty - oldQty } } });
+      }
+
+      return row;
+    });
+  }
+
+  async removeReceive(id: string) {
+    const existing = await this.findOneReceive(id);
+    await this.prisma.$transaction(async (tx) => {
+      if (existing.itemCode) {
+        await tx.inventory.updateMany({ where: { itemCode: existing.itemCode }, data: { quantity: { decrement: Number(existing.qty ?? 0) } } });
+      }
+      await tx.item_Receive.delete({ where: { id } });
+    });
+    return { message: 'Stock receive deleted successfully' };
   }
 
   // ── Issue / Transfer ──────────────────────────────────────────
@@ -307,14 +454,6 @@ export class InventoryService {
     }
 
     return results;
-  }
-
-  async findReceiveHistory(branchId?: string) {
-    return this.prisma.item_Receive.findMany({
-      where: { isActive: 1, ...(branchId && { branchId }) },
-      orderBy: { createDate: 'desc' },
-      take: 100,
-    });
   }
 
   async findIssueHistory(branchId?: string) {

@@ -49,3 +49,46 @@ export class ReceiveStockDto {
   @Type(() => ReceiveStockLineDto)
   items: ReceiveStockLineDto[];
 }
+
+export class UpdateReceiveStockDto {
+  @ApiPropertyOptional({ example: 'GRN-001' })
+  @IsString()
+  @IsOptional()
+  serialNo?: string;
+
+  @ApiPropertyOptional({ example: 'VCHR-001' })
+  @IsString()
+  @IsOptional()
+  voucherNo?: string;
+
+  @ApiPropertyOptional({ example: 'ITM-001' })
+  @IsString()
+  @IsOptional()
+  itemCode?: string;
+
+  @ApiPropertyOptional({ example: 'Widget A' })
+  @IsString()
+  @IsOptional()
+  itemName?: string;
+
+  @ApiPropertyOptional({ example: 10 })
+  @IsNumber()
+  @IsPositive()
+  @IsOptional()
+  qty?: number;
+
+  @ApiPropertyOptional({ example: '2024-01-15' })
+  @IsDateString()
+  @IsOptional()
+  purDate?: string;
+
+  @ApiPropertyOptional({ format: 'uuid', description: 'Receiving branch UUID' })
+  @IsUUID()
+  @IsOptional()
+  branchId?: string;
+
+  @ApiPropertyOptional({ format: 'uuid', description: 'Source branch UUID the stock is received FROM' })
+  @IsUUID()
+  @IsOptional()
+  fromBranchId?: string;
+}

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { OrdersService, CreateOrderDto } from './orders.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
@@ -52,6 +52,16 @@ export class OrdersController {
     @CurrentUser('userName') userName: string,
   ) {
     return this.ordersService.update(id, dto, userName);
+  }
+
+  @Delete(':id')
+  @RequiredPermission({ control: 'Orders', action: 'deleteAccess' })
+  @ApiOperation({ summary: 'Delete order by ID' })
+  @ApiParam({ name: 'id', description: 'Order UUID' })
+  @ApiResponse({ status: 200, description: 'Order deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Order not found' })
+  remove(@Param('id') id: string) {
+    return this.ordersService.remove(id);
   }
 
   @Get('vat/list')

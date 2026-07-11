@@ -136,12 +136,43 @@ export class OrdersService {
   }
 
   async update(id: string, dto: Partial<CreateOrderDto>, updatedBy: string) {
-    await this.findOne(id);
-    const { items, ...rest } = dto;
+    const existing = await this.findOne(id);
+    const { items, orderDate, deliveryDate, deliveryTime, ...rest } = dto;
     return this.prisma.orderReceive_Master.update({
       where: { id },
-      data: { ...rest, updateBy: updatedBy, updateDate: new Date() },
+      data: {
+        ...rest,
+        orderDate: orderDate ? new Date(orderDate) : undefined,
+        deliveryDate: deliveryDate ? new Date(deliveryDate) : undefined,
+        deliveryTime: deliveryTime ? new Date(deliveryTime) : undefined,
+        updateBy: updatedBy,
+        updateDate: new Date(),
+        // Purge-and-replace: detail lines are dropped and recreated when items are sent.
+        ...(items && {
+          details: {
+            deleteMany: {},
+            create: items.map((item) => ({
+              itemCode: item.itemCode,
+              qty: item.qty,
+              unitPrice: item.unitPrice,
+              vatPrice: item.vatPrice,
+              amount: item.amount,
+              serialNo: existing.serialNo,
+            })),
+          },
+        }),
+      },
+      include: { details: true },
     });
+  }
+
+  async remove(id: string) {
+    await this.findOne(id);
+    await this.prisma.$transaction([
+      this.prisma.orderReceive_Detail.deleteMany({ where: { masterId: id } }),
+      this.prisma.orderReceive_Master.delete({ where: { id } }),
+    ]);
+    return { message: 'Order deleted successfully' };
   }
 
   // ── VAT Orders ────────────────────────────────────────────────

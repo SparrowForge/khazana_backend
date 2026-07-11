@@ -1762,6 +1762,150 @@
         "tags": [
           "Inventory"
         ]
+      },
+      "get": {
+        "operationId": "InventoryController_findAllTransfers",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by branch UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of stock transfers"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get paginated stock transfer history",
+        "tags": [
+          "Inventory"
+        ]
+      }
+    },
+    "/inventory/transfer/{id}": {
+      "get": {
+        "operationId": "InventoryController_findOneTransfer",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Transfer (Item_Issue) UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transfer found"
+          },
+          "404": {
+            "description": "Transfer not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get a single stock transfer by ID",
+        "tags": [
+          "Inventory"
+        ]
+      },
+      "patch": {
+        "operationId": "InventoryController_updateTransfer",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Transfer (Item_Issue) UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transfer updated successfully"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Update a stock transfer by ID",
+        "tags": [
+          "Inventory"
+        ]
+      },
+      "delete": {
+        "operationId": "InventoryController_removeTransfer",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Transfer (Item_Issue) UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transfer deleted successfully"
+          },
+          "404": {
+            "description": "Transfer not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete a stock transfer by ID",
+        "tags": [
+          "Inventory"
+        ]
       }
     },
     "/inventory/stock/{itemCode}": {
@@ -1879,18 +2023,42 @@
         "operationId": "InventoryController_receiveHistory",
         "parameters": [
           {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
             "name": "branchId",
             "required": false,
             "in": "query",
-            "description": "Filter by branch ID",
+            "description": "Filter by branch UUID",
             "schema": {
+              "format": "uuid",
               "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Receive history"
+            "description": "Paginated list of stock receives"
           }
         },
         "security": [
@@ -1898,7 +2066,109 @@
             "access-token": []
           }
         ],
-        "summary": "Get stock receive history",
+        "summary": "Get paginated stock receive history",
+        "tags": [
+          "Inventory"
+        ]
+      }
+    },
+    "/inventory/receive/{id}": {
+      "get": {
+        "operationId": "InventoryController_findOneReceive",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Item_Receive UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Receive record found"
+          },
+          "404": {
+            "description": "Receive record not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get a single stock receive by ID",
+        "tags": [
+          "Inventory"
+        ]
+      },
+      "patch": {
+        "operationId": "InventoryController_updateReceive",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Item_Receive UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateReceiveStockDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Receive record updated successfully"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Update a stock receive by ID",
+        "tags": [
+          "Inventory"
+        ]
+      },
+      "delete": {
+        "operationId": "InventoryController_removeReceive",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Item_Receive UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Receive record deleted successfully"
+          },
+          "404": {
+            "description": "Receive record not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete a stock receive by ID",
         "tags": [
           "Inventory"
         ]
@@ -2429,6 +2699,37 @@
           }
         ],
         "summary": "Update order by ID",
+        "tags": [
+          "Orders"
+        ]
+      },
+      "delete": {
+        "operationId": "OrdersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Order UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order deleted successfully"
+          },
+          "404": {
+            "description": "Order not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete order by ID",
         "tags": [
           "Orders"
         ]
@@ -5822,6 +6123,45 @@
           "issueBranchId",
           "receiveBranchId"
         ]
+      },
+      "UpdateReceiveStockDto": {
+        "type": "object",
+        "properties": {
+          "serialNo": {
+            "type": "string",
+            "example": "GRN-001"
+          },
+          "voucherNo": {
+            "type": "string",
+            "example": "VCHR-001"
+          },
+          "itemCode": {
+            "type": "string",
+            "example": "ITM-001"
+          },
+          "itemName": {
+            "type": "string",
+            "example": "Widget A"
+          },
+          "qty": {
+            "type": "number",
+            "example": 10
+          },
+          "purDate": {
+            "type": "string",
+            "example": "2024-01-15"
+          },
+          "branchId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Receiving branch UUID"
+          },
+          "fromBranchId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Source branch UUID the stock is received FROM"
+          }
+        }
       },
       "CreateCustomerDto": {
         "type": "object",

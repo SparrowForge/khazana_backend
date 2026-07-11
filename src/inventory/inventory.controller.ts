@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { InventoryService } from './inventory.service';
-import { ReceiveStockDto } from './dto/receive-stock.dto';
+import { ReceiveStockDto, UpdateReceiveStockDto } from './dto/receive-stock.dto';
 import { IssueStockDto } from './dto/issue-stock.dto';
 import { CreateItemDto, UpdateItemDto } from './dto/create-item.dto';
 import { ItemQueryDto } from './dto/item-query.dto';
@@ -82,6 +82,42 @@ export class InventoryController {
     return this.inventoryService.transferStock(body, userName);
   }
 
+  @Get('transfer')
+  @ApiOperation({ summary: 'Get paginated stock transfer history' })
+  @ApiResponse({ status: 200, description: 'Paginated list of stock transfers' })
+  async findAllTransfers(@Query() query: BranchPaginationQueryDto) {
+    const { items, meta } = await this.inventoryService.findTransferHistory(query);
+    return paginatedResponse(items, meta, 'Transfer');
+  }
+
+  @Get('transfer/:id')
+  @ApiOperation({ summary: 'Get a single stock transfer by ID' })
+  @ApiParam({ name: 'id', description: 'Transfer (Item_Issue) UUID' })
+  @ApiResponse({ status: 200, description: 'Transfer found' })
+  @ApiResponse({ status: 404, description: 'Transfer not found' })
+  findOneTransfer(@Param('id') id: string) {
+    return this.inventoryService.findOneTransfer(id);
+  }
+
+  @Patch('transfer/:id')
+  @RequiredPermission({ control: 'StockTransfer', action: 'editAccess' })
+  @ApiOperation({ summary: 'Update a stock transfer by ID' })
+  @ApiParam({ name: 'id', description: 'Transfer (Item_Issue) UUID' })
+  @ApiResponse({ status: 200, description: 'Transfer updated successfully' })
+  updateTransfer(@Param('id') id: string, @Body() body: any, @CurrentUser('userName') userName: string) {
+    return this.inventoryService.updateTransfer(id, body, userName);
+  }
+
+  @Delete('transfer/:id')
+  @RequiredPermission({ control: 'StockTransfer', action: 'deleteAccess' })
+  @ApiOperation({ summary: 'Delete a stock transfer by ID' })
+  @ApiParam({ name: 'id', description: 'Transfer (Item_Issue) UUID' })
+  @ApiResponse({ status: 200, description: 'Transfer deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Transfer not found' })
+  removeTransfer(@Param('id') id: string) {
+    return this.inventoryService.removeTransfer(id);
+  }
+
   @Get('stock/:itemCode')
   @ApiOperation({ summary: 'Get stock balance for an item' })
   @ApiParam({ name: 'itemCode', description: 'Item code' })
@@ -119,11 +155,39 @@ export class InventoryController {
   }
 
   @Get('receive/history')
-  @ApiOperation({ summary: 'Get stock receive history' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Filter by branch ID' })
-  @ApiResponse({ status: 200, description: 'Receive history' })
-  receiveHistory(@Query('branchId') branchId?: string) {
-    return this.inventoryService.findReceiveHistory(branchId || undefined);
+  @ApiOperation({ summary: 'Get paginated stock receive history' })
+  @ApiResponse({ status: 200, description: 'Paginated list of stock receives' })
+  async receiveHistory(@Query() query: BranchPaginationQueryDto) {
+    const { items, meta } = await this.inventoryService.findReceiveHistory(query);
+    return paginatedResponse(items, meta, 'Receive');
+  }
+
+  @Get('receive/:id')
+  @ApiOperation({ summary: 'Get a single stock receive by ID' })
+  @ApiParam({ name: 'id', description: 'Item_Receive UUID' })
+  @ApiResponse({ status: 200, description: 'Receive record found' })
+  @ApiResponse({ status: 404, description: 'Receive record not found' })
+  findOneReceive(@Param('id') id: string) {
+    return this.inventoryService.findOneReceive(id);
+  }
+
+  @Patch('receive/:id')
+  @RequiredPermission({ control: 'StockReceive', action: 'editAccess' })
+  @ApiOperation({ summary: 'Update a stock receive by ID' })
+  @ApiParam({ name: 'id', description: 'Item_Receive UUID' })
+  @ApiResponse({ status: 200, description: 'Receive record updated successfully' })
+  updateReceive(@Param('id') id: string, @Body() dto: UpdateReceiveStockDto, @CurrentUser('userName') userName: string) {
+    return this.inventoryService.updateReceive(id, dto, userName);
+  }
+
+  @Delete('receive/:id')
+  @RequiredPermission({ control: 'StockReceive', action: 'deleteAccess' })
+  @ApiOperation({ summary: 'Delete a stock receive by ID' })
+  @ApiParam({ name: 'id', description: 'Item_Receive UUID' })
+  @ApiResponse({ status: 200, description: 'Receive record deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Receive record not found' })
+  removeReceive(@Param('id') id: string) {
+    return this.inventoryService.removeReceive(id);
   }
 
   @Get('issue/history')
