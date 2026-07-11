@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, BadRequestException, ConflictException }
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../database/prisma.service';
 import { ReceiveStockDto, UpdateReceiveStockDto } from './dto/receive-stock.dto';
-import { IssueStockDto } from './dto/issue-stock.dto';
+import { IssueStockDto, UpdateIssueStockDto } from './dto/issue-stock.dto';
 import { BranchPaginationQueryDto } from '../common/dto';
 import { ItemQueryDto } from './dto/item-query.dto';
 import { buildPaginationMeta, toBranchUuid } from '../common/helpers';
@@ -144,17 +144,21 @@ export class InventoryService {
   ) {
     if (!dto.items?.length) throw new BadRequestException('No items to transfer');
     const issueDate = dto.issueDate ? new Date(dto.issueDate) : new Date();
+    const branchCode = await this.resolveBranchCode(dto.issueBranchId);
+    const baseCount = await this.prisma.item_Issue.count();
 
     return this.prisma.$transaction(
-      dto.items.flatMap((line) => {
-        // Both legs of one transfer line share the same id so they can be
-        // looked up / edited / deleted together later.
+      dto.items.flatMap((line, i) => {
+        // Both legs of one transfer line share the same id + serial number so
+        // they can be looked up / edited / deleted together later.
         const id = randomUUID();
+        const serialNo = this.buildSerialNo('TRF', branchCode, baseCount + i + 1);
         return [
           // Stock leaves the issuing branch
           this.prisma.item_Issue.create({
             data: {
               id,
+              serialNo,
               itemCode: line.itemCode,
               qty: line.qty,
               issueDate,
@@ -170,6 +174,7 @@ export class InventoryService {
           this.prisma.item_Receive.create({
             data: {
               id,
+              serialNo,
               itemCode: line.itemCode,
               qty: line.qty,
               purDate: issueDate,
@@ -268,10 +273,14 @@ export class InventoryService {
     // source ("from") branch.
     const receiveBranchId = toBranchUuid(dto.branchId ?? userBranchId);
     const fromBranchId = toBranchUuid(dto.fromBranchId, receiveBranchId);
+    const branchCode = await this.resolveBranchCode(receiveBranchId);
+    const baseCount = await this.prisma.item_Receive.count();
 
     const results = await this.prisma.$transaction(async (tx) => {
       const receives = [];
-      for (const line of dto.items) {
+      for (let i = 0; i < dto.items.length; i++) {
+        const line = dto.items[i];
+        const serialNo = dto.serialNo || this.buildSerialNo('GRN', branchCode, baseCount + i + 1);
         const receive = await tx.item_Receive.create({
           data: {
             itemCode: line.itemCode,
@@ -280,7 +289,7 @@ export class InventoryService {
             purDate,
             branchId: fromBranchId,
             receiveBranchID: receiveBranchId,
-            serialNo: dto.serialNo,
+            serialNo,
             voucharNo: dto.voucherNo,
             isActive: 1,
             createBy: createdBy,
@@ -369,36 +378,111 @@ export class InventoryService {
     return { message: 'Stock receive deleted successfully' };
   }
 
-  // ── Issue / Transfer ──────────────────────────────────────────
+  // ── Issue ─────────────────────────────────────────────────────
 
   async issueStock(dto: IssueStockDto, createdBy: string) {
-    const inventory = await this.prisma.inventory.findUnique({ where: { itemCode: dto.itemCode } });
-    if (!inventory || Number(inventory.quantity) < dto.qty) {
-      throw new BadRequestException('Insufficient stock');
+    if (!dto.items?.length) throw new BadRequestException('No items to issue');
+    for (const line of dto.items) {
+      const inventory = await this.prisma.inventory.findUnique({ where: { itemCode: line.itemCode } });
+      if (!inventory || Number(inventory.quantity) < line.qty) {
+        throw new BadRequestException(`Insufficient stock for item ${line.itemCode}`);
+      }
     }
 
-    const issue = await this.prisma.item_Issue.create({
-      data: {
-        itemCode: dto.itemCode,
-        qty: dto.qty,
-        unitPrice: dto.unitPrice,
-        issueDate: new Date(dto.issueDate),
-        issueBranchId: dto.issueBranchId,
-        receiveBranchId: dto.receiveBranchId,
-        serialNo: dto.serialNo,
-        voucharNo: dto.voucharNo,
-        isActive: 1,
-        createBy: createdBy,
-        createDate: new Date(),
-      },
-    });
+    const issueDate = new Date(dto.issueDate);
+    const branchCode = await this.resolveBranchCode(dto.issueBranchId);
+    const baseCount = await this.prisma.item_Issue.count();
 
-    await this.prisma.inventory.update({
-      where: { itemCode: dto.itemCode },
-      data: { quantity: { decrement: dto.qty } },
-    });
+    return this.prisma.$transaction(async (tx) => {
+      const issues = [];
+      for (let i = 0; i < dto.items.length; i++) {
+        const line = dto.items[i];
+        const serialNo = dto.serialNo || this.buildSerialNo('ISS', branchCode, baseCount + i + 1);
+        const issue = await tx.item_Issue.create({
+          data: {
+            itemCode: line.itemCode,
+            qty: line.qty,
+            unitPrice: line.unitPrice,
+            issueDate,
+            issueBranchId: dto.issueBranchId,
+            receiveBranchId: dto.receiveBranchId,
+            serialNo,
+            voucharNo: dto.voucharNo,
+            isActive: 1,
+            createBy: createdBy,
+            createDate: new Date(),
+          },
+        });
 
-    return issue;
+        await tx.inventory.update({ where: { itemCode: line.itemCode }, data: { quantity: { decrement: line.qty } } });
+        issues.push(issue);
+      }
+      return issues;
+    });
+  }
+
+  async findAllIssues(query: BranchPaginationQueryDto) {
+    const { page, limit, branchId } = query;
+    const where = { isActive: 1, ...(branchId && { issueBranchId: branchId }) };
+    const [rows, total] = await Promise.all([
+      this.prisma.item_Issue.findMany({ where, orderBy: { createDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.item_Issue.count({ where }),
+    ]);
+    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
+  }
+
+  async findOneIssue(id: string) {
+    const row = await this.prisma.item_Issue.findUnique({ where: { id } });
+    if (!row) throw new NotFoundException('Issue record not found');
+    return row;
+  }
+
+  async updateIssue(id: string, dto: UpdateIssueStockDto, updatedBy: string) {
+    const existing = await this.findOneIssue(id);
+    const oldItemCode = existing.itemCode!;
+    const oldQty = Number(existing.qty ?? 0);
+    const newItemCode = dto.itemCode ?? oldItemCode;
+    const newQty = dto.qty ?? oldQty;
+
+    return this.prisma.$transaction(async (tx) => {
+      const row = await tx.item_Issue.update({
+        where: { id },
+        data: {
+          serialNo: dto.serialNo,
+          voucharNo: dto.voucherNo,
+          itemCode: dto.itemCode,
+          qty: dto.qty,
+          unitPrice: dto.unitPrice,
+          issueDate: dto.issueDate ? new Date(dto.issueDate) : undefined,
+          issueBranchId: dto.issueBranchId,
+          receiveBranchId: dto.receiveBranchId,
+          updateBy: updatedBy,
+          updateDate: new Date(),
+        },
+      });
+
+      // Issuing decrements stock, so a bigger/changed line needs the extra
+      // deducted and a smaller one needs the difference restored.
+      if (oldItemCode !== newItemCode) {
+        await tx.inventory.updateMany({ where: { itemCode: oldItemCode }, data: { quantity: { increment: oldQty } } });
+        await tx.inventory.updateMany({ where: { itemCode: newItemCode }, data: { quantity: { decrement: newQty } } });
+      } else if (newQty !== oldQty) {
+        await tx.inventory.updateMany({ where: { itemCode: newItemCode }, data: { quantity: { decrement: newQty - oldQty } } });
+      }
+
+      return row;
+    });
+  }
+
+  async removeIssue(id: string) {
+    const existing = await this.findOneIssue(id);
+    await this.prisma.$transaction(async (tx) => {
+      if (existing.itemCode) {
+        await tx.inventory.updateMany({ where: { itemCode: existing.itemCode }, data: { quantity: { increment: Number(existing.qty ?? 0) } } });
+      }
+      await tx.item_Issue.delete({ where: { id } });
+    });
+    return { message: 'Stock issue deleted successfully' };
   }
 
   // ── Adjust ────────────────────────────────────────────────────
@@ -456,11 +540,115 @@ export class InventoryService {
     return results;
   }
 
-  async findIssueHistory(branchId?: string) {
-    return this.prisma.item_Issue.findMany({
-      where: { isActive: 1, ...(branchId && { issueBranchId: branchId }) },
-      orderBy: { createDate: 'desc' },
-      take: 100,
+  async findAllAdjustments(query: BranchPaginationQueryDto) {
+    const { page, limit, branchId } = query;
+    const where = { isActive: 1, ...(branchId && { branchId }) };
+    const [rows, total] = await Promise.all([
+      this.prisma.itemReject.findMany({
+        where,
+        include: { item: { select: { itmCode: true, itmName: true } } },
+        orderBy: { date: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.itemReject.count({ where }),
+    ]);
+    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
+  }
+
+  async findOneAdjustment(id: string) {
+    const row = await this.prisma.itemReject.findUnique({
+      where: { id },
+      include: { item: { select: { itmCode: true, itmName: true } } },
     });
+    if (!row) throw new NotFoundException('Adjustment record not found');
+    return row;
+  }
+
+  async updateAdjustment(
+    id: string,
+    dto: {
+      invNo?: string;
+      date?: string;
+      branchId?: string;
+      itmOId?: string;
+      reject?: number;
+      excess?: number;
+      short?: number;
+      assort?: number;
+    },
+  ) {
+    const existing = await this.findOneAdjustment(id);
+    const oldNet =
+      Number(existing.excess ?? 0) - (Number(existing.reject ?? 0) + Number(existing.short ?? 0) + Number(existing.assort ?? 0));
+    const newItmOId = dto.itmOId ?? existing.itmOId!;
+    const newNet =
+      (dto.excess ?? Number(existing.excess ?? 0)) -
+      ((dto.reject ?? Number(existing.reject ?? 0)) + (dto.short ?? Number(existing.short ?? 0)) + (dto.assort ?? Number(existing.assort ?? 0)));
+
+    return this.prisma.$transaction(async (tx) => {
+      const row = await tx.itemReject.update({
+        where: { id },
+        data: {
+          invNo: dto.invNo,
+          date: dto.date ? new Date(dto.date) : undefined,
+          branchId: dto.branchId,
+          itmOId: dto.itmOId,
+          reject: dto.reject,
+          excess: dto.excess,
+          short: dto.short,
+          assort: dto.assort,
+        },
+      });
+
+      // Reverse the old net stock change and apply the new one (handles an
+      // item-code swap by moving the adjustment from one item's stock to another).
+      const oldItem = await tx.item_Information.findUnique({ where: { id: existing.itmOId! } });
+      if (existing.itmOId !== newItmOId) {
+        const newItem = await tx.item_Information.findUnique({ where: { id: newItmOId } });
+        if (oldItem?.itmCode) await tx.inventory.updateMany({ where: { itemCode: oldItem.itmCode }, data: { quantity: { decrement: oldNet } } });
+        if (newItem?.itmCode) await tx.inventory.updateMany({ where: { itemCode: newItem.itmCode }, data: { quantity: { increment: newNet } } });
+      } else if (newNet !== oldNet && oldItem?.itmCode) {
+        await tx.inventory.updateMany({ where: { itemCode: oldItem.itmCode }, data: { quantity: { increment: newNet - oldNet } } });
+      }
+
+      return row;
+    });
+  }
+
+  async removeAdjustment(id: string) {
+    const existing = await this.findOneAdjustment(id);
+    const netChange =
+      Number(existing.excess ?? 0) - (Number(existing.reject ?? 0) + Number(existing.short ?? 0) + Number(existing.assort ?? 0));
+    await this.prisma.$transaction(async (tx) => {
+      if (existing.itmOId && netChange !== 0) {
+        const item = await tx.item_Information.findUnique({ where: { id: existing.itmOId } });
+        if (item?.itmCode) await tx.inventory.updateMany({ where: { itemCode: item.itmCode }, data: { quantity: { decrement: netChange } } });
+      }
+      await tx.itemReject.delete({ where: { id } });
+    });
+    return { message: 'Adjustment deleted successfully' };
+  }
+
+  // ── Serial number helpers ───────────────────────────────────────
+
+  /** Resolve the session branch (a Branch UUID) to its sanitized branch code for
+   *  embedding in generated serial numbers. Returns '' when the branch can't be
+   *  resolved, so the number simply omits the code. */
+  private async resolveBranchCode(branchId?: string | null): Promise<string> {
+    if (branchId == null) return '';
+    const id = String(branchId);
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+    if (!isUuid) return '';
+    const branch = await this.prisma.branch.findUnique({ where: { id }, select: { branchCode: true } }).catch(() => null);
+    return (branch?.branchCode ?? '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+  }
+
+  private yyyymm(d = new Date()): string {
+    return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  private buildSerialNo(prefix: string, branchCode: string, seq: number): string {
+    return [prefix, branchCode, this.yyyymm(), String(seq).padStart(5, '0')].filter(Boolean).join('-');
   }
 }

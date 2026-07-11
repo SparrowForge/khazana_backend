@@ -2018,6 +2018,152 @@
         ]
       }
     },
+    "/inventory/adjust/history": {
+      "get": {
+        "operationId": "InventoryController_adjustmentHistory",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by branch UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of stock adjustments"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get paginated stock adjustment history",
+        "tags": [
+          "Inventory"
+        ]
+      }
+    },
+    "/inventory/adjust/{id}": {
+      "get": {
+        "operationId": "InventoryController_findOneAdjustment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ItemReject UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Adjustment record found"
+          },
+          "404": {
+            "description": "Adjustment record not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get a single stock adjustment by ID",
+        "tags": [
+          "Inventory"
+        ]
+      },
+      "patch": {
+        "operationId": "InventoryController_updateAdjustment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ItemReject UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Adjustment record updated successfully"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Update a stock adjustment by ID",
+        "tags": [
+          "Inventory"
+        ]
+      },
+      "delete": {
+        "operationId": "InventoryController_removeAdjustment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ItemReject UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Adjustment record deleted successfully"
+          },
+          "404": {
+            "description": "Adjustment record not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete a stock adjustment by ID",
+        "tags": [
+          "Inventory"
+        ]
+      }
+    },
     "/inventory/receive/history": {
       "get": {
         "operationId": "InventoryController_receiveHistory",
@@ -2179,18 +2325,42 @@
         "operationId": "InventoryController_issueHistory",
         "parameters": [
           {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
             "name": "branchId",
             "required": false,
             "in": "query",
-            "description": "Filter by branch ID",
+            "description": "Filter by branch UUID",
             "schema": {
+              "format": "uuid",
               "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Issue history"
+            "description": "Paginated list of stock issues"
           }
         },
         "security": [
@@ -2198,7 +2368,109 @@
             "access-token": []
           }
         ],
-        "summary": "Get stock issue history",
+        "summary": "Get paginated stock issue history",
+        "tags": [
+          "Inventory"
+        ]
+      }
+    },
+    "/inventory/issue/{id}": {
+      "get": {
+        "operationId": "InventoryController_findOneIssue",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Item_Issue UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Issue record found"
+          },
+          "404": {
+            "description": "Issue record not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get a single stock issue by ID",
+        "tags": [
+          "Inventory"
+        ]
+      },
+      "patch": {
+        "operationId": "InventoryController_updateIssue",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Item_Issue UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateIssueStockDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Issue record updated successfully"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Update a stock issue by ID",
+        "tags": [
+          "Inventory"
+        ]
+      },
+      "delete": {
+        "operationId": "InventoryController_removeIssue",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Item_Issue UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Issue record deleted successfully"
+          },
+          "404": {
+            "description": "Issue record not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete a stock issue by ID",
         "tags": [
           "Inventory"
         ]
@@ -6072,19 +6344,9 @@
           "items"
         ]
       },
-      "IssueStockDto": {
+      "IssueStockLineDto": {
         "type": "object",
         "properties": {
-          "serialNo": {
-            "type": "string",
-            "example": "ISS-001",
-            "description": "Serial number"
-          },
-          "voucharNo": {
-            "type": "string",
-            "example": "VCHR-001",
-            "description": "Voucher number"
-          },
           "itemCode": {
             "type": "string",
             "example": "ITM-001",
@@ -6099,6 +6361,25 @@
             "type": "number",
             "example": 120,
             "description": "Unit cost price"
+          }
+        },
+        "required": [
+          "itemCode",
+          "qty"
+        ]
+      },
+      "IssueStockDto": {
+        "type": "object",
+        "properties": {
+          "serialNo": {
+            "type": "string",
+            "example": "ISS-001",
+            "description": "Serial number"
+          },
+          "voucharNo": {
+            "type": "string",
+            "example": "VCHR-001",
+            "description": "Voucher number"
           },
           "issueDate": {
             "type": "string",
@@ -6114,14 +6395,19 @@
             "type": "string",
             "format": "uuid",
             "description": "Branch UUID receiving the issued stock"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IssueStockLineDto"
+            }
           }
         },
         "required": [
-          "itemCode",
-          "qty",
           "issueDate",
           "issueBranchId",
-          "receiveBranchId"
+          "receiveBranchId",
+          "items"
         ]
       },
       "UpdateReceiveStockDto": {
@@ -6160,6 +6446,43 @@
             "type": "string",
             "format": "uuid",
             "description": "Source branch UUID the stock is received FROM"
+          }
+        }
+      },
+      "UpdateIssueStockDto": {
+        "type": "object",
+        "properties": {
+          "serialNo": {
+            "type": "string",
+            "example": "ISS-001"
+          },
+          "voucherNo": {
+            "type": "string",
+            "example": "VCHR-001"
+          },
+          "itemCode": {
+            "type": "string",
+            "example": "ITM-001"
+          },
+          "qty": {
+            "type": "number",
+            "example": 10
+          },
+          "unitPrice": {
+            "type": "number",
+            "example": 120
+          },
+          "issueDate": {
+            "type": "string",
+            "example": "2024-01-15"
+          },
+          "issueBranchId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "receiveBranchId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },

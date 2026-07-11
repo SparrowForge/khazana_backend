@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { InventoryService } from './inventory.service';
 import { ReceiveStockDto, UpdateReceiveStockDto } from './dto/receive-stock.dto';
-import { IssueStockDto } from './dto/issue-stock.dto';
+import { IssueStockDto, UpdateIssueStockDto } from './dto/issue-stock.dto';
 import { CreateItemDto, UpdateItemDto } from './dto/create-item.dto';
 import { ItemQueryDto } from './dto/item-query.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
@@ -154,6 +154,42 @@ export class InventoryController {
     return this.inventoryService.adjustStock(body);
   }
 
+  @Get('adjust/history')
+  @ApiOperation({ summary: 'Get paginated stock adjustment history' })
+  @ApiResponse({ status: 200, description: 'Paginated list of stock adjustments' })
+  async adjustmentHistory(@Query() query: BranchPaginationQueryDto) {
+    const { items, meta } = await this.inventoryService.findAllAdjustments(query);
+    return paginatedResponse(items, meta, 'Adjustment');
+  }
+
+  @Get('adjust/:id')
+  @ApiOperation({ summary: 'Get a single stock adjustment by ID' })
+  @ApiParam({ name: 'id', description: 'ItemReject UUID' })
+  @ApiResponse({ status: 200, description: 'Adjustment record found' })
+  @ApiResponse({ status: 404, description: 'Adjustment record not found' })
+  findOneAdjustment(@Param('id') id: string) {
+    return this.inventoryService.findOneAdjustment(id);
+  }
+
+  @Patch('adjust/:id')
+  @RequiredPermission({ control: 'StockAdjustment', action: 'editAccess' })
+  @ApiOperation({ summary: 'Update a stock adjustment by ID' })
+  @ApiParam({ name: 'id', description: 'ItemReject UUID' })
+  @ApiResponse({ status: 200, description: 'Adjustment record updated successfully' })
+  updateAdjustment(@Param('id') id: string, @Body() body: any) {
+    return this.inventoryService.updateAdjustment(id, body);
+  }
+
+  @Delete('adjust/:id')
+  @RequiredPermission({ control: 'StockAdjustment', action: 'deleteAccess' })
+  @ApiOperation({ summary: 'Delete a stock adjustment by ID' })
+  @ApiParam({ name: 'id', description: 'ItemReject UUID' })
+  @ApiResponse({ status: 200, description: 'Adjustment record deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Adjustment record not found' })
+  removeAdjustment(@Param('id') id: string) {
+    return this.inventoryService.removeAdjustment(id);
+  }
+
   @Get('receive/history')
   @ApiOperation({ summary: 'Get paginated stock receive history' })
   @ApiResponse({ status: 200, description: 'Paginated list of stock receives' })
@@ -191,10 +227,38 @@ export class InventoryController {
   }
 
   @Get('issue/history')
-  @ApiOperation({ summary: 'Get stock issue history' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Filter by branch ID' })
-  @ApiResponse({ status: 200, description: 'Issue history' })
-  issueHistory(@Query('branchId') branchId?: string) {
-    return this.inventoryService.findIssueHistory(branchId || undefined);
+  @ApiOperation({ summary: 'Get paginated stock issue history' })
+  @ApiResponse({ status: 200, description: 'Paginated list of stock issues' })
+  async issueHistory(@Query() query: BranchPaginationQueryDto) {
+    const { items, meta } = await this.inventoryService.findAllIssues(query);
+    return paginatedResponse(items, meta, 'Issue');
+  }
+
+  @Get('issue/:id')
+  @ApiOperation({ summary: 'Get a single stock issue by ID' })
+  @ApiParam({ name: 'id', description: 'Item_Issue UUID' })
+  @ApiResponse({ status: 200, description: 'Issue record found' })
+  @ApiResponse({ status: 404, description: 'Issue record not found' })
+  findOneIssue(@Param('id') id: string) {
+    return this.inventoryService.findOneIssue(id);
+  }
+
+  @Patch('issue/:id')
+  @RequiredPermission({ control: 'StockIssue', action: 'editAccess' })
+  @ApiOperation({ summary: 'Update a stock issue by ID' })
+  @ApiParam({ name: 'id', description: 'Item_Issue UUID' })
+  @ApiResponse({ status: 200, description: 'Issue record updated successfully' })
+  updateIssue(@Param('id') id: string, @Body() dto: UpdateIssueStockDto, @CurrentUser('userName') userName: string) {
+    return this.inventoryService.updateIssue(id, dto, userName);
+  }
+
+  @Delete('issue/:id')
+  @RequiredPermission({ control: 'StockIssue', action: 'deleteAccess' })
+  @ApiOperation({ summary: 'Delete a stock issue by ID' })
+  @ApiParam({ name: 'id', description: 'Item_Issue UUID' })
+  @ApiResponse({ status: 200, description: 'Issue record deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Issue record not found' })
+  removeIssue(@Param('id') id: string) {
+    return this.inventoryService.removeIssue(id);
   }
 }
