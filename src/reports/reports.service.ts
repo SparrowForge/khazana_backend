@@ -452,7 +452,6 @@ export class ReportsService {
         },
       },
     });
-    const idByCode = new Map(items.map((i) => [i.itmCode, i.id]));
     const rateOf = (i: (typeof items)[number]) => {
       const p =
         i.prices.find((pr) => (!pr.priceFromDate || pr.priceFromDate <= day) && (!pr.priceToDate || pr.priceToDate >= day)) ??
@@ -472,10 +471,10 @@ export class ReportsService {
       recvBefore, recvDuring, issueBefore, issueDuring,
       saleBefore, saleDuring, ncBefore, ncDuring, rejBefore, rejDuring,
     ] = await Promise.all([
-      this.prisma.item_Receive.groupBy({ by: ['itemCode'], where: recvWhere(before), _sum: { qty: true } }),
-      this.prisma.item_Receive.groupBy({ by: ['itemCode'], where: recvWhere(during), _sum: { qty: true } }),
-      this.prisma.item_Issue.groupBy({ by: ['itemCode'], where: issueWhere(before), _sum: { qty: true } }),
-      this.prisma.item_Issue.groupBy({ by: ['itemCode'], where: issueWhere(during), _sum: { qty: true } }),
+      this.prisma.item_Receive.groupBy({ by: ['itemId'], where: recvWhere(before), _sum: { qty: true } }),
+      this.prisma.item_Receive.groupBy({ by: ['itemId'], where: recvWhere(during), _sum: { qty: true } }),
+      this.prisma.item_Issue.groupBy({ by: ['itemId'], where: issueWhere(before), _sum: { qty: true } }),
+      this.prisma.item_Issue.groupBy({ by: ['itemId'], where: issueWhere(during), _sum: { qty: true } }),
       this.prisma.t_SODet.groupBy({ by: ['sodetItemOID'], where: saleWhere(before), _sum: { sodetQTY: true, sodetNetAmount: true } }),
       this.prisma.t_SODet.groupBy({ by: ['sodetItemOID'], where: saleWhere(during), _sum: { sodetQTY: true, sodetNetAmount: true } }),
       this.prisma.t_NCDet.groupBy({ by: ['ncdetItemOID'], where: ncWhere(before), _sum: { ncdetQTY: true } }),
@@ -484,7 +483,7 @@ export class ReportsService {
       this.prisma.itemReject.groupBy({ by: ['itmOId'], where: rejWhere(during), _sum: { assort: true, reject: true, short: true, excess: true } }),
     ]);
 
-    // Index every aggregate by item UUID (receives/issues come keyed by code).
+    // Index every aggregate by item UUID.
     const byId = (rows: { sodetItemOID?: string; ncdetItemOID?: string; itmOId?: string | null }[], pick: (r: never) => number) => {
       const m = new Map<string, number>();
       for (const r of rows as never[]) {
@@ -495,17 +494,16 @@ export class ReportsService {
       }
       return m;
     };
-    const byCodeToId = (rows: { itemCode: string | null; _sum: { qty: unknown } }[]) => {
+    const byItemId = (rows: { itemId: string | null; _sum: { qty: unknown } }[]) => {
       const m = new Map<string, number>();
       for (const r of rows) {
-        const id = r.itemCode ? idByCode.get(r.itemCode) : undefined;
-        if (id) m.set(id, (m.get(id) ?? 0) + num(r._sum.qty));
+        if (r.itemId) m.set(r.itemId, (m.get(r.itemId) ?? 0) + num(r._sum.qty));
       }
       return m;
     };
 
-    const recvB = byCodeToId(recvBefore), recvD = byCodeToId(recvDuring);
-    const issB = byCodeToId(issueBefore), issD = byCodeToId(issueDuring);
+    const recvB = byItemId(recvBefore), recvD = byItemId(recvDuring);
+    const issB = byItemId(issueBefore), issD = byItemId(issueDuring);
     const salB = byId(saleBefore, (r: { _sum: { sodetQTY: number | null } }) => num(r._sum.sodetQTY));
     const salD = byId(saleDuring, (r: { _sum: { sodetQTY: number | null } }) => num(r._sum.sodetQTY));
     const salAmtD = byId(saleDuring, (r: { _sum: { sodetNetAmount: number | null } }) => num(r._sum.sodetNetAmount));
@@ -669,23 +667,23 @@ export class ReportsService {
         orderBy: { item: { itmName: 'asc' } },
       }),
       this.prisma.item_Receive.groupBy({
-        by: ['itemCode'],
+        by: ['itemId'],
         where: { isActive: 1 },
         _sum: { qty: true },
       }),
       this.prisma.item_Issue.groupBy({
-        by: ['itemCode'],
+        by: ['itemId'],
         where: { isActive: 1 },
         _sum: { qty: true },
       }),
     ]);
 
-    const inMap = new Map(receives.map((r) => [r.itemCode, num(r._sum.qty)]));
-    const outMap = new Map(issues.map((i) => [i.itemCode, num(i._sum.qty)]));
+    const inMap = new Map(receives.map((r) => [r.itemId, num(r._sum.qty)]));
+    const outMap = new Map(issues.map((i) => [i.itemId, num(i._sum.qty)]));
 
     return inventory.map((row) => {
-      const inwardQty = inMap.get(row.itemCode) ?? 0;
-      const outwardQty = outMap.get(row.itemCode) ?? 0;
+      const inwardQty = inMap.get(row.item?.id ?? '') ?? 0;
+      const outwardQty = outMap.get(row.item?.id ?? '') ?? 0;
       const closingQty = num(row.quantity);
       // Opening is derived: closing - in + out (what it was before all movements)
       const openingQty = closingQty - inwardQty + outwardQty;

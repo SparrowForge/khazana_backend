@@ -179,7 +179,7 @@ SELECT
   iss."IssueBranchId" AS "BranchId"
 FROM "Item_Information" ii
 INNER JOIN "vStockPrice" sp ON ii."itmCode" = sp."itmCode"
-INNER JOIN "Item_Issue" iss ON ii."itmCode" = iss."ItemCode"
+INNER JOIN "Item_Issue" iss ON ii."ID" = iss."ItemId"
 GROUP BY ii."itmCode", ii."itmName", ii."itmCategory", ii."itmUOM",
   sp."Rate" * iss."Qty", iss."IssueDate", iss."SerialNo", iss."IssueBranchId";
 
@@ -196,7 +196,7 @@ GROUP BY "itmName", "itmCode", "BranchId", "Date";
 CREATE OR REPLACE VIEW "vItemReceive" AS
 SELECT
   ii."itmName",
-  ir."ItemCode" AS "itmCode",
+  ii."itmCode",
   SUM(ir."Qty") AS "ReceiveQty",
   SUM(0) AS "SalesQty", SUM(0) AS "SalesPrice",
   SUM(0) AS "AssortQty", SUM(0) AS "IssueQty", SUM(0) AS "NcQty",
@@ -205,8 +205,8 @@ SELECT
   ir."BranchId",
   ir."IsActive"
 FROM "Item_Receive" ir
-INNER JOIN "Item_Information" ii ON ir."ItemCode" = ii."itmCode"
-GROUP BY ir."Pur_Date", ir."ItemCode", ii."itmName", ir."BranchId", ir."IsActive";
+INNER JOIN "Item_Information" ii ON ir."ItemId" = ii."ID"
+GROUP BY ir."Pur_Date", ii."itmCode", ii."itmName", ir."BranchId", ir."IsActive";
 
 CREATE OR REPLACE VIEW "vItemReject" AS
 SELECT

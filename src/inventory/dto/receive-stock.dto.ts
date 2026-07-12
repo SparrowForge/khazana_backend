@@ -3,9 +3,9 @@ import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ReceiveStockLineDto {
-  @ApiProperty({ example: 'ITM-001' })
-  @IsString()
-  itemCode: string;
+  @ApiProperty({ format: 'uuid', description: 'Item_Information UUID' })
+  @IsUUID()
+  itemId: string;
 
   @ApiPropertyOptional({ example: 'Widget A' })
   @IsString()

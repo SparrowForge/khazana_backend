@@ -44602,7 +44602,7 @@ export namespace Prisma {
     id: string | null
     serialNo: string | null
     voucharNo: string | null
-    itemCode: string | null
+    itemId: string | null
     itemName: string | null
     qty: Decimal | null
     purDate: Date | null
@@ -44619,7 +44619,7 @@ export namespace Prisma {
     id: string | null
     serialNo: string | null
     voucharNo: string | null
-    itemCode: string | null
+    itemId: string | null
     itemName: string | null
     qty: Decimal | null
     purDate: Date | null
@@ -44636,7 +44636,7 @@ export namespace Prisma {
     id: number
     serialNo: number
     voucharNo: number
-    itemCode: number
+    itemId: number
     itemName: number
     qty: number
     purDate: number
@@ -44665,7 +44665,7 @@ export namespace Prisma {
     id?: true
     serialNo?: true
     voucharNo?: true
-    itemCode?: true
+    itemId?: true
     itemName?: true
     qty?: true
     purDate?: true
@@ -44682,7 +44682,7 @@ export namespace Prisma {
     id?: true
     serialNo?: true
     voucharNo?: true
-    itemCode?: true
+    itemId?: true
     itemName?: true
     qty?: true
     purDate?: true
@@ -44699,7 +44699,7 @@ export namespace Prisma {
     id?: true
     serialNo?: true
     voucharNo?: true
-    itemCode?: true
+    itemId?: true
     itemName?: true
     qty?: true
     purDate?: true
@@ -44803,7 +44803,7 @@ export namespace Prisma {
     id: string
     serialNo: string | null
     voucharNo: string | null
-    itemCode: string | null
+    itemId: string | null
     itemName: string | null
     qty: Decimal | null
     purDate: Date | null
@@ -44839,7 +44839,7 @@ export namespace Prisma {
     id?: boolean
     serialNo?: boolean
     voucharNo?: boolean
-    itemCode?: boolean
+    itemId?: boolean
     itemName?: boolean
     qty?: boolean
     purDate?: boolean
@@ -44857,7 +44857,7 @@ export namespace Prisma {
     id?: boolean
     serialNo?: boolean
     voucharNo?: boolean
-    itemCode?: boolean
+    itemId?: boolean
     itemName?: boolean
     qty?: boolean
     purDate?: boolean
@@ -44875,7 +44875,7 @@ export namespace Prisma {
     id?: boolean
     serialNo?: boolean
     voucharNo?: boolean
-    itemCode?: boolean
+    itemId?: boolean
     itemName?: boolean
     qty?: boolean
     purDate?: boolean
@@ -44893,7 +44893,7 @@ export namespace Prisma {
     id?: boolean
     serialNo?: boolean
     voucharNo?: boolean
-    itemCode?: boolean
+    itemId?: boolean
     itemName?: boolean
     qty?: boolean
     purDate?: boolean
@@ -44906,7 +44906,7 @@ export namespace Prisma {
     receiveBranchID?: boolean
   }
 
-  export type Item_ReceiveOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemCode" | "itemName" | "qty" | "purDate" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate" | "branchId" | "receiveBranchID", ExtArgs["result"]["item_Receive"]>
+  export type Item_ReceiveOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemId" | "itemName" | "qty" | "purDate" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate" | "branchId" | "receiveBranchID", ExtArgs["result"]["item_Receive"]>
   export type Item_ReceiveInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | Item_Receive$itemArgs<ExtArgs>
   }
@@ -44926,7 +44926,7 @@ export namespace Prisma {
       id: string
       serialNo: string | null
       voucharNo: string | null
-      itemCode: string | null
+      itemId: string | null
       itemName: string | null
       qty: Prisma.Decimal | null
       purDate: Date | null
@@ -45364,7 +45364,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Item_Receive", 'String'>
     readonly serialNo: FieldRef<"Item_Receive", 'String'>
     readonly voucharNo: FieldRef<"Item_Receive", 'String'>
-    readonly itemCode: FieldRef<"Item_Receive", 'String'>
+    readonly itemId: FieldRef<"Item_Receive", 'String'>
     readonly itemName: FieldRef<"Item_Receive", 'String'>
     readonly qty: FieldRef<"Item_Receive", 'Decimal'>
     readonly purDate: FieldRef<"Item_Receive", 'DateTime'>
@@ -45836,7 +45836,7 @@ export namespace Prisma {
     id: string | null
     serialNo: string | null
     voucharNo: string | null
-    itemCode: string | null
+    itemId: string | null
     unitPrice: Decimal | null
     qty: Decimal | null
     issueDate: Date | null
@@ -45853,7 +45853,7 @@ export namespace Prisma {
     id: string | null
     serialNo: string | null
     voucharNo: string | null
-    itemCode: string | null
+    itemId: string | null
     unitPrice: Decimal | null
     qty: Decimal | null
     issueDate: Date | null
@@ -45870,7 +45870,7 @@ export namespace Prisma {
     id: number
     serialNo: number
     voucharNo: number
-    itemCode: number
+    itemId: number
     unitPrice: number
     qty: number
     issueDate: number
@@ -45901,7 +45901,7 @@ export namespace Prisma {
     id?: true
     serialNo?: true
     voucharNo?: true
-    itemCode?: true
+    itemId?: true
     unitPrice?: true
     qty?: true
     issueDate?: true
@@ -45918,7 +45918,7 @@ export namespace Prisma {
     id?: true
     serialNo?: true
     voucharNo?: true
-    itemCode?: true
+    itemId?: true
     unitPrice?: true
     qty?: true
     issueDate?: true
@@ -45935,7 +45935,7 @@ export namespace Prisma {
     id?: true
     serialNo?: true
     voucharNo?: true
-    itemCode?: true
+    itemId?: true
     unitPrice?: true
     qty?: true
     issueDate?: true
@@ -46039,7 +46039,7 @@ export namespace Prisma {
     id: string
     serialNo: string | null
     voucharNo: string | null
-    itemCode: string | null
+    itemId: string | null
     unitPrice: Decimal | null
     qty: Decimal | null
     issueDate: Date | null
@@ -46075,7 +46075,7 @@ export namespace Prisma {
     id?: boolean
     serialNo?: boolean
     voucharNo?: boolean
-    itemCode?: boolean
+    itemId?: boolean
     unitPrice?: boolean
     qty?: boolean
     issueDate?: boolean
@@ -46093,7 +46093,7 @@ export namespace Prisma {
     id?: boolean
     serialNo?: boolean
     voucharNo?: boolean
-    itemCode?: boolean
+    itemId?: boolean
     unitPrice?: boolean
     qty?: boolean
     issueDate?: boolean
@@ -46111,7 +46111,7 @@ export namespace Prisma {
     id?: boolean
     serialNo?: boolean
     voucharNo?: boolean
-    itemCode?: boolean
+    itemId?: boolean
     unitPrice?: boolean
     qty?: boolean
     issueDate?: boolean
@@ -46129,7 +46129,7 @@ export namespace Prisma {
     id?: boolean
     serialNo?: boolean
     voucharNo?: boolean
-    itemCode?: boolean
+    itemId?: boolean
     unitPrice?: boolean
     qty?: boolean
     issueDate?: boolean
@@ -46142,7 +46142,7 @@ export namespace Prisma {
     updateDate?: boolean
   }
 
-  export type Item_IssueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemCode" | "unitPrice" | "qty" | "issueDate" | "issueBranchId" | "receiveBranchId" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["item_Issue"]>
+  export type Item_IssueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemId" | "unitPrice" | "qty" | "issueDate" | "issueBranchId" | "receiveBranchId" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["item_Issue"]>
   export type Item_IssueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | Item_Issue$itemArgs<ExtArgs>
   }
@@ -46162,7 +46162,7 @@ export namespace Prisma {
       id: string
       serialNo: string | null
       voucharNo: string | null
-      itemCode: string | null
+      itemId: string | null
       unitPrice: Prisma.Decimal | null
       qty: Prisma.Decimal | null
       issueDate: Date | null
@@ -46600,7 +46600,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Item_Issue", 'String'>
     readonly serialNo: FieldRef<"Item_Issue", 'String'>
     readonly voucharNo: FieldRef<"Item_Issue", 'String'>
-    readonly itemCode: FieldRef<"Item_Issue", 'String'>
+    readonly itemId: FieldRef<"Item_Issue", 'String'>
     readonly unitPrice: FieldRef<"Item_Issue", 'Decimal'>
     readonly qty: FieldRef<"Item_Issue", 'Decimal'>
     readonly issueDate: FieldRef<"Item_Issue", 'DateTime'>
@@ -60880,7 +60880,7 @@ export namespace Prisma {
     id: 'id',
     serialNo: 'serialNo',
     voucharNo: 'voucharNo',
-    itemCode: 'itemCode',
+    itemId: 'itemId',
     itemName: 'itemName',
     qty: 'qty',
     purDate: 'purDate',
@@ -60900,7 +60900,7 @@ export namespace Prisma {
     id: 'id',
     serialNo: 'serialNo',
     voucharNo: 'voucharNo',
-    itemCode: 'itemCode',
+    itemId: 'itemId',
     unitPrice: 'unitPrice',
     qty: 'qty',
     issueDate: 'issueDate',
@@ -64115,7 +64115,7 @@ export namespace Prisma {
     id?: UuidFilter<"Item_Receive"> | string
     serialNo?: StringNullableFilter<"Item_Receive"> | string | null
     voucharNo?: StringNullableFilter<"Item_Receive"> | string | null
-    itemCode?: StringNullableFilter<"Item_Receive"> | string | null
+    itemId?: UuidNullableFilter<"Item_Receive"> | string | null
     itemName?: StringNullableFilter<"Item_Receive"> | string | null
     qty?: DecimalNullableFilter<"Item_Receive"> | Decimal | DecimalJsLike | number | string | null
     purDate?: DateTimeNullableFilter<"Item_Receive"> | Date | string | null
@@ -64133,7 +64133,7 @@ export namespace Prisma {
     id?: SortOrder
     serialNo?: SortOrderInput | SortOrder
     voucharNo?: SortOrderInput | SortOrder
-    itemCode?: SortOrderInput | SortOrder
+    itemId?: SortOrderInput | SortOrder
     itemName?: SortOrderInput | SortOrder
     qty?: SortOrderInput | SortOrder
     purDate?: SortOrderInput | SortOrder
@@ -64154,7 +64154,7 @@ export namespace Prisma {
     NOT?: Item_ReceiveWhereInput | Item_ReceiveWhereInput[]
     serialNo?: StringNullableFilter<"Item_Receive"> | string | null
     voucharNo?: StringNullableFilter<"Item_Receive"> | string | null
-    itemCode?: StringNullableFilter<"Item_Receive"> | string | null
+    itemId?: UuidNullableFilter<"Item_Receive"> | string | null
     itemName?: StringNullableFilter<"Item_Receive"> | string | null
     qty?: DecimalNullableFilter<"Item_Receive"> | Decimal | DecimalJsLike | number | string | null
     purDate?: DateTimeNullableFilter<"Item_Receive"> | Date | string | null
@@ -64172,7 +64172,7 @@ export namespace Prisma {
     id?: SortOrder
     serialNo?: SortOrderInput | SortOrder
     voucharNo?: SortOrderInput | SortOrder
-    itemCode?: SortOrderInput | SortOrder
+    itemId?: SortOrderInput | SortOrder
     itemName?: SortOrderInput | SortOrder
     qty?: SortOrderInput | SortOrder
     purDate?: SortOrderInput | SortOrder
@@ -64197,7 +64197,7 @@ export namespace Prisma {
     id?: UuidWithAggregatesFilter<"Item_Receive"> | string
     serialNo?: StringNullableWithAggregatesFilter<"Item_Receive"> | string | null
     voucharNo?: StringNullableWithAggregatesFilter<"Item_Receive"> | string | null
-    itemCode?: StringNullableWithAggregatesFilter<"Item_Receive"> | string | null
+    itemId?: UuidNullableWithAggregatesFilter<"Item_Receive"> | string | null
     itemName?: StringNullableWithAggregatesFilter<"Item_Receive"> | string | null
     qty?: DecimalNullableWithAggregatesFilter<"Item_Receive"> | Decimal | DecimalJsLike | number | string | null
     purDate?: DateTimeNullableWithAggregatesFilter<"Item_Receive"> | Date | string | null
@@ -64217,7 +64217,7 @@ export namespace Prisma {
     id?: UuidFilter<"Item_Issue"> | string
     serialNo?: StringNullableFilter<"Item_Issue"> | string | null
     voucharNo?: StringNullableFilter<"Item_Issue"> | string | null
-    itemCode?: StringNullableFilter<"Item_Issue"> | string | null
+    itemId?: UuidNullableFilter<"Item_Issue"> | string | null
     unitPrice?: DecimalNullableFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     issueDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
@@ -64235,7 +64235,7 @@ export namespace Prisma {
     id?: SortOrder
     serialNo?: SortOrderInput | SortOrder
     voucharNo?: SortOrderInput | SortOrder
-    itemCode?: SortOrderInput | SortOrder
+    itemId?: SortOrderInput | SortOrder
     unitPrice?: SortOrderInput | SortOrder
     qty?: SortOrderInput | SortOrder
     issueDate?: SortOrderInput | SortOrder
@@ -64256,7 +64256,7 @@ export namespace Prisma {
     NOT?: Item_IssueWhereInput | Item_IssueWhereInput[]
     serialNo?: StringNullableFilter<"Item_Issue"> | string | null
     voucharNo?: StringNullableFilter<"Item_Issue"> | string | null
-    itemCode?: StringNullableFilter<"Item_Issue"> | string | null
+    itemId?: UuidNullableFilter<"Item_Issue"> | string | null
     unitPrice?: DecimalNullableFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     issueDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
@@ -64274,7 +64274,7 @@ export namespace Prisma {
     id?: SortOrder
     serialNo?: SortOrderInput | SortOrder
     voucharNo?: SortOrderInput | SortOrder
-    itemCode?: SortOrderInput | SortOrder
+    itemId?: SortOrderInput | SortOrder
     unitPrice?: SortOrderInput | SortOrder
     qty?: SortOrderInput | SortOrder
     issueDate?: SortOrderInput | SortOrder
@@ -64299,7 +64299,7 @@ export namespace Prisma {
     id?: UuidWithAggregatesFilter<"Item_Issue"> | string
     serialNo?: StringNullableWithAggregatesFilter<"Item_Issue"> | string | null
     voucharNo?: StringNullableWithAggregatesFilter<"Item_Issue"> | string | null
-    itemCode?: StringNullableWithAggregatesFilter<"Item_Issue"> | string | null
+    itemId?: UuidNullableWithAggregatesFilter<"Item_Issue"> | string | null
     unitPrice?: DecimalNullableWithAggregatesFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableWithAggregatesFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     issueDate?: DateTimeNullableWithAggregatesFilter<"Item_Issue"> | Date | string | null
@@ -68607,7 +68607,7 @@ export namespace Prisma {
     id?: string
     serialNo?: string | null
     voucharNo?: string | null
-    itemCode?: string | null
+    itemId?: string | null
     itemName?: string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     purDate?: Date | string | null
@@ -68641,7 +68641,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
-    itemCode?: NullableStringFieldUpdateOperationsInput | string | null
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
     itemName?: NullableStringFieldUpdateOperationsInput | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     purDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68658,7 +68658,7 @@ export namespace Prisma {
     id?: string
     serialNo?: string | null
     voucharNo?: string | null
-    itemCode?: string | null
+    itemId?: string | null
     itemName?: string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     purDate?: Date | string | null
@@ -68691,7 +68691,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
-    itemCode?: NullableStringFieldUpdateOperationsInput | string | null
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
     itemName?: NullableStringFieldUpdateOperationsInput | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     purDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68725,7 +68725,7 @@ export namespace Prisma {
     id?: string
     serialNo?: string | null
     voucharNo?: string | null
-    itemCode?: string | null
+    itemId?: string | null
     unitPrice?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     issueDate?: Date | string | null
@@ -68759,7 +68759,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
-    itemCode?: NullableStringFieldUpdateOperationsInput | string | null
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -68776,7 +68776,7 @@ export namespace Prisma {
     id?: string
     serialNo?: string | null
     voucharNo?: string | null
-    itemCode?: string | null
+    itemId?: string | null
     unitPrice?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     issueDate?: Date | string | null
@@ -68809,7 +68809,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
-    itemCode?: NullableStringFieldUpdateOperationsInput | string | null
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -72367,7 +72367,7 @@ export namespace Prisma {
     id?: SortOrder
     serialNo?: SortOrder
     voucharNo?: SortOrder
-    itemCode?: SortOrder
+    itemId?: SortOrder
     itemName?: SortOrder
     qty?: SortOrder
     purDate?: SortOrder
@@ -72389,7 +72389,7 @@ export namespace Prisma {
     id?: SortOrder
     serialNo?: SortOrder
     voucharNo?: SortOrder
-    itemCode?: SortOrder
+    itemId?: SortOrder
     itemName?: SortOrder
     qty?: SortOrder
     purDate?: SortOrder
@@ -72406,7 +72406,7 @@ export namespace Prisma {
     id?: SortOrder
     serialNo?: SortOrder
     voucharNo?: SortOrder
-    itemCode?: SortOrder
+    itemId?: SortOrder
     itemName?: SortOrder
     qty?: SortOrder
     purDate?: SortOrder
@@ -72428,7 +72428,7 @@ export namespace Prisma {
     id?: SortOrder
     serialNo?: SortOrder
     voucharNo?: SortOrder
-    itemCode?: SortOrder
+    itemId?: SortOrder
     unitPrice?: SortOrder
     qty?: SortOrder
     issueDate?: SortOrder
@@ -72451,7 +72451,7 @@ export namespace Prisma {
     id?: SortOrder
     serialNo?: SortOrder
     voucharNo?: SortOrder
-    itemCode?: SortOrder
+    itemId?: SortOrder
     unitPrice?: SortOrder
     qty?: SortOrder
     issueDate?: SortOrder
@@ -72468,7 +72468,7 @@ export namespace Prisma {
     id?: SortOrder
     serialNo?: SortOrder
     voucharNo?: SortOrder
-    itemCode?: SortOrder
+    itemId?: SortOrder
     unitPrice?: SortOrder
     qty?: SortOrder
     issueDate?: SortOrder
@@ -77832,7 +77832,7 @@ export namespace Prisma {
     id?: UuidFilter<"Item_Receive"> | string
     serialNo?: StringNullableFilter<"Item_Receive"> | string | null
     voucharNo?: StringNullableFilter<"Item_Receive"> | string | null
-    itemCode?: StringNullableFilter<"Item_Receive"> | string | null
+    itemId?: UuidNullableFilter<"Item_Receive"> | string | null
     itemName?: StringNullableFilter<"Item_Receive"> | string | null
     qty?: DecimalNullableFilter<"Item_Receive"> | Decimal | DecimalJsLike | number | string | null
     purDate?: DateTimeNullableFilter<"Item_Receive"> | Date | string | null
@@ -77868,7 +77868,7 @@ export namespace Prisma {
     id?: UuidFilter<"Item_Issue"> | string
     serialNo?: StringNullableFilter<"Item_Issue"> | string | null
     voucharNo?: StringNullableFilter<"Item_Issue"> | string | null
-    itemCode?: StringNullableFilter<"Item_Issue"> | string | null
+    itemId?: UuidNullableFilter<"Item_Issue"> | string | null
     unitPrice?: DecimalNullableFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableFilter<"Item_Issue"> | Decimal | DecimalJsLike | number | string | null
     issueDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null

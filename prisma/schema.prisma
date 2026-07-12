@@ -268,9 +268,9 @@ model Item_Information {
   ncDetails             t_NCDet[]
   asstDetails           AsstDet[]
   itemRejects           ItemReject[]
-  // Relations using Item_Information.itmCode (varchar)
   itemReceives          Item_Receive[]
   itemIssues            Item_Issue[]
+  // Relations using Item_Information.itmCode (varchar)
   inventory             Inventory?
   prices                t_Price[]      @relation("ItemPrices")
   costPrices            t_CostPr[]     @relation("ItemCostPrices")
@@ -619,7 +619,7 @@ model Item_Receive {
   id              String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   serialNo        String?           @map("SerialNo")
   voucharNo       String?           @map("VoucharNo")
-  itemCode        String?           @map("ItemCode")
+  itemId          String?           @map("ItemId") @db.Uuid
   itemName        String?           @map("ItemName")
   qty             Decimal?          @map("Qty") @db.Decimal(9, 2)
   purDate         DateTime?         @map("Pur_Date")
@@ -630,7 +630,7 @@ model Item_Receive {
   updateDate      DateTime?         @map("UpdateDate")
   branchId        String            @map("BranchId") @db.Uuid
   receiveBranchID String?           @map("ReceiveBranchID") @db.Uuid
-  item            Item_Information? @relation(fields: [itemCode], references: [itmCode])
+  item            Item_Information? @relation(fields: [itemId], references: [id])
 
   @@map("Item_Receive")
 }
@@ -639,7 +639,7 @@ model Item_Issue {
   id              String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   serialNo        String?           @map("SerialNo")
   voucharNo       String?           @map("VoucharNo")
-  itemCode        String?           @map("ItemCode")
+  itemId          String?           @map("ItemId") @db.Uuid
   unitPrice       Decimal?          @map("UnitPrice") @db.Decimal(18, 6)
   qty             Decimal?          @map("Qty") @db.Decimal(18, 6)
   issueDate       DateTime?         @map("IssueDate")
@@ -650,7 +650,7 @@ model Item_Issue {
   createDate      DateTime?         @map("CreateDate")
   updateBy        String?           @map("UpdateBy")
   updateDate      DateTime?         @map("UpdateDate")
-  item            Item_Information? @relation(fields: [itemCode], references: [itmCode])
+  item            Item_Information? @relation(fields: [itemId], references: [id])
 
   @@map("Item_Issue")
 }

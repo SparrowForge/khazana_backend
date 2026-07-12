@@ -6289,9 +6289,10 @@
       "ReceiveStockLineDto": {
         "type": "object",
         "properties": {
-          "itemCode": {
+          "itemId": {
             "type": "string",
-            "example": "ITM-001"
+            "format": "uuid",
+            "description": "Item_Information UUID"
           },
           "itemName": {
             "type": "string",
@@ -6303,7 +6304,7 @@
           }
         },
         "required": [
-          "itemCode",
+          "itemId",
           "qty"
         ]
       },
@@ -6347,10 +6348,10 @@
       "IssueStockLineDto": {
         "type": "object",
         "properties": {
-          "itemCode": {
+          "itemId": {
             "type": "string",
-            "example": "ITM-001",
-            "description": "Item code"
+            "format": "uuid",
+            "description": "Item_Information UUID"
           },
           "qty": {
             "type": "number",
@@ -6364,7 +6365,7 @@
           }
         },
         "required": [
-          "itemCode",
+          "itemId",
           "qty"
         ]
       },
