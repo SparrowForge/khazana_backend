@@ -104,6 +104,16 @@ export class SalesController {
     return this.salesService.getCreditSale(id);
   }
 
+  // Read-only, for printing. Deliberately not behind editAccess — a cashier who
+  // can raise a credit sale must be able to print its invoice without also
+  // holding edit rights (the guard only models add/edit/delete).
+  @Get('credit/:id/invoice')
+  @ApiOperation({ summary: 'Get a credit sale with customer + branch details, for printing' })
+  @ApiResponse({ status: 404, description: 'Credit sale not found' })
+  getCreditSaleInvoice(@Param('id') id: string) {
+    return this.salesService.getCreditSaleInvoice(id);
+  }
+
   @Patch('credit/:id')
   @RequiredPermission({ control: 'CreditSales', action: 'editAccess' })
   @ApiOperation({ summary: 'Edit a credit sale (purge-replace lines, delta-adjust stock)' })

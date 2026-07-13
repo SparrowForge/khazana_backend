@@ -51,17 +51,19 @@ export class CreateNcAdjustmentDto {
   @IsNotEmpty()
   date: string;
 
+  // Name / contact / reference identify who the non-charge goods went to and why.
+  // Mandatory: an NC with no attribution can't be audited.
   @IsString()
-  @IsOptional()
-  name?: string;
+  @IsNotEmpty({ message: 'Name is required' })
+  name: string;
 
   @IsString()
-  @IsOptional()
-  contactNo?: string;
+  @IsNotEmpty({ message: 'Contact No is required' })
+  contactNo: string;
 
   @IsString()
-  @IsOptional()
-  reference?: string;
+  @IsNotEmpty({ message: 'Reference is required' })
+  reference: string;
 
   @IsUUID()
   @IsOptional()
@@ -84,16 +86,21 @@ export class UpdateNcAdjustmentDto {
   @IsOptional()
   date?: string;
 
+  // Optional to keep header-only/partial edits working, but non-empty when sent —
+  // an edit must not be able to blank out the NC's attribution.
   @IsString()
   @IsOptional()
+  @IsNotEmpty({ message: 'Name is required' })
   name?: string;
 
   @IsString()
   @IsOptional()
+  @IsNotEmpty({ message: 'Contact No is required' })
   contactNo?: string;
 
   @IsString()
   @IsOptional()
+  @IsNotEmpty({ message: 'Reference is required' })
   reference?: string;
 
   @IsArray()

@@ -59,7 +59,13 @@ export class InventoryService {
       }),
       this.prisma.item_Information.count({ where }),
     ]);
-    const items = rows.map((row) => ({ ...row, price: Number(row.prices?.[0]?.priceListPrice ?? 0) }));
+    // vatPercentage rides along with price so sale forms (credit / NC) can compute
+    // line VAT client-side the same way the POS terminal does.
+    const items = rows.map((row) => ({
+      ...row,
+      price: Number(row.prices?.[0]?.priceListPrice ?? 0),
+      vatPercentage: Number(row.prices?.[0]?.priceVatPercent ?? 0),
+    }));
     return { items, meta: buildPaginationMeta(total, page, limit) };
   }
 

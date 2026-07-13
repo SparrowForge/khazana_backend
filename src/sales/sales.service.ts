@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { CreateCashSaleDto } from './dto/create-cash-sale.dto';
 import { CreateCreditSaleDto } from './dto/create-credit-sale.dto';
@@ -362,6 +362,74 @@ export class SalesService {
         vat: Number(d.vat ?? 0),
         total: Number(d.total ?? 0),
       })),
+    };
+  }
+
+  /** Everything a printable credit-sale invoice needs in one call: the customer's
+   *  billing details, the branch letterhead (VAT Reg No / Mushak 6.3), and the
+   *  priced lines. CSMaster.branchId has no Prisma relation, so the branch is
+   *  looked up separately. */
+  async getCreditSaleInvoice(id: string) {
+    const sale = await this.prisma.cSMaster.findUnique({
+      where: { id },
+      include: {
+        customer: {
+          select: { id: true, code: true, name: true, mobile: true, address: true },
+        },
+        details: { include: { item: { select: { id: true, itmCode: true, itmName: true, itmUOM: true } } } },
+      },
+    });
+    if (!sale) throw new NotFoundException('Credit sale not found');
+
+    const branch = sale.branchId
+      ? await this.prisma.branch.findUnique({
+          where: { id: sale.branchId },
+          select: { branchName: true, address: true, vatNo: true, mobileNo: true },
+        })
+      : null;
+
+    const items = sale.details.map((d) => ({
+      itemCode: d.item?.itmCode ?? '',
+      itemName: d.item?.itmName ?? '',
+      uom: d.item?.itmUOM ?? '',
+      quantity: Number(d.qty ?? 0),
+      rate: Number(d.rate ?? 0),
+      discount: Number(d.disc ?? 0),
+      vat: Number(d.vat ?? 0),
+      total: Number(d.total ?? 0),
+    }));
+
+    const netAmount = items.reduce((s, i) => s + i.total, 0);
+    const totalVat = Number(sale.totalVat ?? 0);
+
+    return {
+      id: sale.id,
+      invoiceNo: sale.invNo,
+      invoiceDate: sale.invDate,
+      poNo: sale.poNo,
+      invoiceBy: sale.invoiceBy,
+      customer: sale.customer
+        ? {
+            code: sale.customer.code,
+            name: sale.customer.name,
+            mobile: sale.customer.mobile,
+            address: sale.customer.address,
+          }
+        : null,
+      branch: branch
+        ? {
+            name: branch.branchName,
+            address: branch.address,
+            vatNo: branch.vatNo,
+            mobileNo: branch.mobileNo,
+          }
+        : null,
+      items,
+      totalAmount: Number(sale.totalAmount ?? 0),
+      totalDiscount: Number(sale.totalDiscount ?? 0),
+      totalVat,
+      netAmount,
+      payableAmount: netAmount + totalVat,
     };
   }
 
