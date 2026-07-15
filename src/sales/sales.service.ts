@@ -433,6 +433,85 @@ export class SalesService {
     };
   }
 
+  /** VAT credit sale invoice for printing. `CSVDetail.itemOId` has no Prisma
+   *  relation defined (unlike CSDetail), so items are resolved with a
+   *  separate batch lookup against Item_Information instead of an include. */
+  async getVatCreditSaleInvoice(id: string) {
+    const sale = await this.prisma.cSVMaster.findUnique({
+      where: { id },
+      include: {
+        customer: {
+          select: { id: true, code: true, name: true, mobile: true, address: true },
+        },
+        details: true,
+      },
+    });
+    if (!sale) throw new NotFoundException('VAT credit sale not found');
+
+    const itemIds = [...new Set(sale.details.map((d) => d.itemOId).filter((v): v is string => !!v))];
+    const itemRows = itemIds.length
+      ? await this.prisma.item_Information.findMany({
+          where: { id: { in: itemIds } },
+          select: { id: true, itmCode: true, itmName: true, itmUOM: true },
+        })
+      : [];
+    const itemById = new Map(itemRows.map((i) => [i.id, i]));
+
+    const branch = sale.branchId
+      ? await this.prisma.branch.findUnique({
+          where: { id: sale.branchId },
+          select: { branchName: true, address: true, vatNo: true, mobileNo: true },
+        })
+      : null;
+
+    const items = sale.details.map((d) => {
+      const item = d.itemOId ? itemById.get(d.itemOId) : undefined;
+      return {
+        itemCode: item?.itmCode ?? '',
+        itemName: item?.itmName ?? '',
+        uom: item?.itmUOM ?? '',
+        quantity: Number(d.qty ?? 0),
+        rate: Number(d.rate ?? 0),
+        discount: Number(d.disc ?? 0),
+        vat: Number(d.vat ?? 0),
+        total: Number(d.total ?? 0),
+      };
+    });
+
+    const netAmount = items.reduce((s, i) => s + i.total, 0);
+    const totalVat = Number(sale.totalVat ?? 0);
+
+    return {
+      id: sale.id,
+      invoiceNo: sale.invNo,
+      invoiceDate: sale.invDate,
+      poNo: sale.poNo,
+      invoiceBy: sale.invoiceBy,
+      customer: sale.customer
+        ? {
+            code: sale.customer.code,
+            name: sale.customer.name,
+            mobile: sale.customer.mobile,
+            address: sale.customer.address,
+          }
+        : null,
+      branch: branch
+        ? {
+            name: branch.branchName,
+            address: branch.address,
+            vatNo: branch.vatNo,
+            mobileNo: branch.mobileNo,
+          }
+        : null,
+      items,
+      totalAmount: Number(sale.totalAmount ?? 0),
+      totalDiscount: Number(sale.totalDiscount ?? 0),
+      totalVat,
+      netAmount,
+      payableAmount: netAmount + totalVat,
+    };
+  }
+
   async updateCreditSale(id: string, dto: UpdateSalesDto) {
     if (!dto.items?.length) throw new BadRequestException('At least one item is required');
     const existing = await this.prisma.cSMaster.findUnique({ where: { id }, select: { id: true, invNo: true } });

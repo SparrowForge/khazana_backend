@@ -129,4 +129,12 @@ export class SalesController {
   removeCreditSale(@Param('id') id: string) {
     return this.salesService.removeCreditSale(id);
   }
+
+  // Read-only, for printing — same rationale as the credit sale invoice route above.
+  @Get('vat/credit/:id/invoice')
+  @ApiOperation({ summary: 'Get a VAT credit sale with customer + branch details, for printing' })
+  @ApiResponse({ status: 404, description: 'VAT credit sale not found' })
+  getVatCreditSaleInvoice(@Param('id') id: string) {
+    return this.salesService.getVatCreditSaleInvoice(id);
+  }
 }
