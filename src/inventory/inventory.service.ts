@@ -425,13 +425,21 @@ export class InventoryService {
   async findOneReceive(serialNo: string) {
     const rows = await this.findReceiveRows(serialNo);
     const [first] = rows;
+    // Item_Receive.itemName is a denormalized column the create/update flows
+    // never populate (the frontend only ever sends itemId) — join through
+    // Item_Information for the real name instead of trusting that column.
+    const nameByItemId = await this.itemNamesByIds(rows.map((r) => r.itemId).filter((id): id is string => !!id));
     return {
       serialNo: first.serialNo || first.id,
       voucherNo: first.voucharNo,
       purDate: first.purDate,
       branchId: first.receiveBranchID,
       fromBranchId: first.branchId,
-      items: rows.map((r) => ({ itemId: r.itemId, itemName: r.itemName, qty: Number(r.qty ?? 0) })),
+      items: rows.map((r) => ({
+        itemId: r.itemId,
+        itemName: (r.itemId ? nameByItemId.get(r.itemId) : undefined) || r.itemName || undefined,
+        qty: Number(r.qty ?? 0),
+      })),
     };
   }
 
