@@ -233,13 +233,18 @@ export class InventoryService {
   async findOneTransferBySerial(serialNo: string) {
     const rows = await this.findTransferRows(serialNo);
     const [first] = rows;
+    const nameByItemId = await this.itemNamesByIds(rows.map((r) => r.itemId).filter((id): id is string => !!id));
     return {
       serialNo: first.serialNo || first.id,
       voucherNo: first.voucharNo,
       issueDate: first.issueDate,
       issueBranchId: first.issueBranchId,
       receiveBranchId: first.receiveBranchId,
-      items: rows.map((r) => ({ itemId: r.itemId, qty: Number(r.qty ?? 0) })),
+      items: rows.map((r) => ({
+        itemId: r.itemId,
+        itemName: r.itemId ? nameByItemId.get(r.itemId) : undefined,
+        qty: Number(r.qty ?? 0),
+      })),
     };
   }
 
@@ -339,6 +344,14 @@ export class InventoryService {
     const missing = uniqueIds.filter((id) => !map.has(id));
     if (missing.length) throw new BadRequestException(`Unknown item id(s): ${missing.join(', ')}`);
     return map;
+  }
+
+  /** Item_Issue doesn't store the item name denormalized (unlike Item_Receive),
+   *  so the issue report looks it up from Item_Information for display. */
+  private async itemNamesByIds(ids: string[]): Promise<Map<string, string>> {
+    const uniqueIds = [...new Set(ids)];
+    const rows = await this.prisma.item_Information.findMany({ where: { id: { in: uniqueIds } }, select: { id: true, itmName: true } });
+    return new Map(rows.map((r) => [r.id, r.itmName ?? '']));
   }
 
   async receiveStock(dto: ReceiveStockDto, createdBy: string, userBranchId: string) {
@@ -559,13 +572,19 @@ export class InventoryService {
   async findOneIssue(serialNo: string) {
     const rows = await this.findIssueRows(serialNo);
     const [first] = rows;
+    const nameByItemId = await this.itemNamesByIds(rows.map((r) => r.itemId).filter((id): id is string => !!id));
     return {
       serialNo: first.serialNo || first.id,
       voucherNo: first.voucharNo,
       issueDate: first.issueDate,
       issueBranchId: first.issueBranchId,
       receiveBranchId: first.receiveBranchId,
-      items: rows.map((r) => ({ itemId: r.itemId, qty: Number(r.qty ?? 0), unitPrice: Number(r.unitPrice ?? 0) })),
+      items: rows.map((r) => ({
+        itemId: r.itemId,
+        itemName: r.itemId ? nameByItemId.get(r.itemId) : undefined,
+        qty: Number(r.qty ?? 0),
+        unitPrice: Number(r.unitPrice ?? 0),
+      })),
     };
   }
 
@@ -643,18 +662,21 @@ export class InventoryService {
 
   // ── Adjust ────────────────────────────────────────────────────
 
-  async adjustStock(body: {
-    invNo?: string;
-    date: string;
-    branchId?: string;
-    // Either a single line (legacy) or a list of lines (frontend)
-    itmOId?: string;
-    reject?: number;
-    excess?: number;
-    short?: number;
-    assort?: number;
-    items?: { itmOId: string; reject?: number; excess?: number; short?: number; assort?: number }[];
-  }) {
+  async adjustStock(
+    body: {
+      invNo?: string;
+      date: string;
+      branchId?: string;
+      // Either a single line (legacy) or a list of lines (frontend)
+      itmOId?: string;
+      reject?: number;
+      excess?: number;
+      short?: number;
+      assort?: number;
+      items?: { itmOId: string; reject?: number; excess?: number; short?: number; assort?: number }[];
+    },
+    userBranchId?: string,
+  ) {
     const lines =
       body.items && body.items.length
         ? body.items
@@ -662,19 +684,25 @@ export class InventoryService {
 
     if (!lines.length || !lines[0].itmOId) throw new BadRequestException('No items to adjust');
     const date = body.date ? new Date(body.date) : new Date();
+    const branchId = body.branchId ?? userBranchId;
+    const branchCode = await this.resolveBranchCode(branchId);
+    const baseCount = await this.prisma.itemReject.count();
+    // Every line in this request shares one reference number so the whole
+    // document can be looked up / edited / deleted together later.
+    const invNo = body.invNo || this.buildSerialNo('ADJ', branchCode, baseCount + 1);
 
     const results = [];
     for (const line of lines) {
       const reject = await this.prisma.itemReject.create({
         data: {
-          invNo: body.invNo,
+          invNo,
           itmOId: line.itmOId,
           reject: line.reject ?? 0,
           excess: line.excess ?? 0,
           short: line.short ?? 0,
           assort: line.assort ?? 0,
           date,
-          branchId: body.branchId,
+          branchId,
           isActive: 1,
         },
       });
@@ -699,89 +727,140 @@ export class InventoryService {
   async findAllAdjustments(query: BranchPaginationQueryDto) {
     const { page, limit, branchId } = query;
     const where = { isActive: 1, ...(branchId && { branchId }) };
-    const [rows, total] = await Promise.all([
-      this.prisma.itemReject.findMany({
-        where,
-        include: { item: { select: { itmCode: true, itmName: true } } },
-        orderBy: { date: 'desc' },
-        skip: (page - 1) * limit,
-        take: limit,
-      }),
-      this.prisma.itemReject.count({ where }),
-    ]);
-    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
+    const rows = await this.prisma.itemReject.findMany({ where, orderBy: { date: 'desc' } });
+    return this.groupAdjustments(rows, page, limit);
   }
 
-  async findOneAdjustment(id: string) {
-    const row = await this.prisma.itemReject.findUnique({
-      where: { id },
-      include: { item: { select: { itmCode: true, itmName: true } } },
-    });
-    if (!row) throw new NotFoundException('Adjustment record not found');
-    return row;
+  /** Rows sharing one invNo were all created in the same request, so header
+   *  fields (date/branch) are identical — only the per-item reject/excess/
+   *  short/assort figures differ. Groups in app code and sums each figure
+   *  across lines, the same way groupBySerial sums qty for Receive/Issue/Transfer. */
+  private groupAdjustments<
+    T extends { invNo?: string | null; id: string; reject?: unknown; excess?: unknown; short?: unknown; assort?: unknown },
+  >(rows: T[], page: number, limit: number) {
+    const groups = new Map<string, T & { reject: number; excess: number; short: number; assort: number }>();
+    for (const row of rows) {
+      const key = row.invNo || row.id;
+      const existing = groups.get(key);
+      if (existing) {
+        existing.reject += Number(row.reject ?? 0);
+        existing.excess += Number(row.excess ?? 0);
+        existing.short += Number(row.short ?? 0);
+        existing.assort += Number(row.assort ?? 0);
+      } else {
+        groups.set(key, {
+          ...row,
+          invNo: key,
+          reject: Number(row.reject ?? 0),
+          excess: Number(row.excess ?? 0),
+          short: Number(row.short ?? 0),
+          assort: Number(row.assort ?? 0),
+        });
+      }
+    }
+    const all = Array.from(groups.values());
+    const start = (page - 1) * limit;
+    const items = all.slice(start, start + limit);
+    return { items, meta: buildPaginationMeta(all.length, page, limit) };
+  }
+
+  /** Looks up adjustment rows by invNo, falling back to a single row by id
+   *  for any pre-existing record that has a blank invNo. */
+  private async findAdjustmentRows(invNo: string) {
+    let rows = await this.prisma.itemReject.findMany({ where: { invNo }, orderBy: { id: 'asc' } });
+    if (!rows.length && this.isUuid(invNo)) {
+      const fallback = await this.prisma.itemReject.findUnique({ where: { id: invNo } });
+      if (fallback) rows = [fallback];
+    }
+    if (!rows.length) throw new NotFoundException('Adjustment record not found');
+    return rows;
+  }
+
+  async findOneAdjustment(invNo: string) {
+    const rows = await this.findAdjustmentRows(invNo);
+    const [first] = rows;
+    const nameByItemId = await this.itemNamesByIds(rows.map((r) => r.itmOId).filter((id): id is string => !!id));
+    return {
+      invNo: first.invNo || first.id,
+      date: first.date,
+      branchId: first.branchId,
+      items: rows.map((r) => ({
+        itmOId: r.itmOId,
+        itemName: r.itmOId ? nameByItemId.get(r.itmOId) : undefined,
+        reject: Number(r.reject ?? 0),
+        excess: Number(r.excess ?? 0),
+        short: Number(r.short ?? 0),
+        assort: Number(r.assort ?? 0),
+      })),
+    };
   }
 
   async updateAdjustment(
-    id: string,
+    invNo: string,
     dto: {
-      invNo?: string;
       date?: string;
       branchId?: string;
-      itmOId?: string;
-      reject?: number;
-      excess?: number;
-      short?: number;
-      assort?: number;
+      items: { itmOId: string; reject?: number; excess?: number; short?: number; assort?: number }[];
     },
   ) {
-    const existing = await this.findOneAdjustment(id);
-    const oldNet =
-      Number(existing.excess ?? 0) - (Number(existing.reject ?? 0) + Number(existing.short ?? 0) + Number(existing.assort ?? 0));
-    const newItmOId = dto.itmOId ?? existing.itmOId!;
-    const newNet =
-      (dto.excess ?? Number(existing.excess ?? 0)) -
-      ((dto.reject ?? Number(existing.reject ?? 0)) + (dto.short ?? Number(existing.short ?? 0)) + (dto.assort ?? Number(existing.assort ?? 0)));
+    const existing = await this.findAdjustmentRows(invNo);
+    const key = existing[0].invNo || existing[0].id;
+    const date = dto.date ? new Date(dto.date) : (existing[0].date ?? new Date());
+    const branchId = dto.branchId ?? existing[0].branchId ?? undefined;
 
     return this.prisma.$transaction(async (tx) => {
-      const row = await tx.itemReject.update({
-        where: { id },
-        data: {
-          invNo: dto.invNo,
-          date: dto.date ? new Date(dto.date) : undefined,
-          branchId: dto.branchId,
-          itmOId: dto.itmOId,
-          reject: dto.reject,
-          excess: dto.excess,
-          short: dto.short,
-          assort: dto.assort,
-        },
-      });
-
-      // Reverse the old net stock change and apply the new one (handles an
-      // item-code swap by moving the adjustment from one item's stock to another).
-      const oldItem = await tx.item_Information.findUnique({ where: { id: existing.itmOId! } });
-      if (existing.itmOId !== newItmOId) {
-        const newItem = await tx.item_Information.findUnique({ where: { id: newItmOId } });
-        if (oldItem?.itmCode) await tx.inventory.updateMany({ where: { itemCode: oldItem.itmCode }, data: { quantity: { decrement: oldNet } } });
-        if (newItem?.itmCode) await tx.inventory.updateMany({ where: { itemCode: newItem.itmCode }, data: { quantity: { increment: newNet } } });
-      } else if (newNet !== oldNet && oldItem?.itmCode) {
-        await tx.inventory.updateMany({ where: { itemCode: oldItem.itmCode }, data: { quantity: { increment: newNet - oldNet } } });
+      // Reverse the net stock effect of every line this document previously held.
+      for (const row of existing) {
+        if (row.itmOId) {
+          const netChange = Number(row.excess ?? 0) - (Number(row.reject ?? 0) + Number(row.short ?? 0) + Number(row.assort ?? 0));
+          if (netChange !== 0) {
+            const item = await tx.item_Information.findUnique({ where: { id: row.itmOId } });
+            if (item?.itmCode) await tx.inventory.updateMany({ where: { itemCode: item.itmCode }, data: { quantity: { decrement: netChange } } });
+          }
+        }
       }
+      await tx.itemReject.deleteMany({ where: { invNo: key } });
 
-      return row;
+      const rows = [];
+      for (const line of dto.items) {
+        const row = await tx.itemReject.create({
+          data: {
+            invNo: key,
+            itmOId: line.itmOId,
+            reject: line.reject ?? 0,
+            excess: line.excess ?? 0,
+            short: line.short ?? 0,
+            assort: line.assort ?? 0,
+            date,
+            branchId,
+            isActive: 1,
+          },
+        });
+        const netChange = (line.excess ?? 0) - ((line.reject ?? 0) + (line.short ?? 0) + (line.assort ?? 0));
+        if (netChange !== 0) {
+          const item = await tx.item_Information.findUnique({ where: { id: line.itmOId } });
+          if (item?.itmCode) await tx.inventory.update({ where: { itemCode: item.itmCode }, data: { quantity: { increment: netChange } } });
+        }
+        rows.push(row);
+      }
+      return rows;
     });
   }
 
-  async removeAdjustment(id: string) {
-    const existing = await this.findOneAdjustment(id);
-    const netChange =
-      Number(existing.excess ?? 0) - (Number(existing.reject ?? 0) + Number(existing.short ?? 0) + Number(existing.assort ?? 0));
+  async removeAdjustment(invNo: string) {
+    const existing = await this.findAdjustmentRows(invNo);
+    const key = existing[0].invNo || existing[0].id;
     await this.prisma.$transaction(async (tx) => {
-      if (existing.itmOId && netChange !== 0) {
-        const item = await tx.item_Information.findUnique({ where: { id: existing.itmOId } });
-        if (item?.itmCode) await tx.inventory.updateMany({ where: { itemCode: item.itmCode }, data: { quantity: { decrement: netChange } } });
+      for (const row of existing) {
+        if (row.itmOId) {
+          const netChange = Number(row.excess ?? 0) - (Number(row.reject ?? 0) + Number(row.short ?? 0) + Number(row.assort ?? 0));
+          if (netChange !== 0) {
+            const item = await tx.item_Information.findUnique({ where: { id: row.itmOId } });
+            if (item?.itmCode) await tx.inventory.updateMany({ where: { itemCode: item.itmCode }, data: { quantity: { decrement: netChange } } });
+          }
+        }
       }
-      await tx.itemReject.delete({ where: { id } });
+      await tx.itemReject.deleteMany({ where: { invNo: key } });
     });
     return { message: 'Adjustment deleted successfully' };
   }

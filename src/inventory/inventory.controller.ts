@@ -150,8 +150,8 @@ export class InventoryController {
   @RequiredPermission({ control: 'StockAdjustment', action: 'addAccess' })
   @ApiOperation({ summary: 'Adjust stock (reject / excess / short / assort)' })
   @ApiResponse({ status: 201, description: 'Stock adjusted successfully' })
-  adjustStock(@Body() body: any) {
-    return this.inventoryService.adjustStock(body);
+  adjustStock(@Body() body: any, @CurrentUser('branchId') branchId: string) {
+    return this.inventoryService.adjustStock(body, branchId);
   }
 
   @Get('adjust/history')
@@ -162,32 +162,32 @@ export class InventoryController {
     return paginatedResponse(items, meta, 'Adjustment');
   }
 
-  @Get('adjust/:id')
-  @ApiOperation({ summary: 'Get a single stock adjustment by ID' })
-  @ApiParam({ name: 'id', description: 'ItemReject UUID' })
+  @Get('adjust/:invNo')
+  @ApiOperation({ summary: 'Get a single stock adjustment (all lines) by reference number' })
+  @ApiParam({ name: 'invNo', description: 'Adjustment reference number' })
   @ApiResponse({ status: 200, description: 'Adjustment record found' })
   @ApiResponse({ status: 404, description: 'Adjustment record not found' })
-  findOneAdjustment(@Param('id') id: string) {
-    return this.inventoryService.findOneAdjustment(id);
+  findOneAdjustment(@Param('invNo') invNo: string) {
+    return this.inventoryService.findOneAdjustment(invNo);
   }
 
-  @Patch('adjust/:id')
+  @Patch('adjust/:invNo')
   @RequiredPermission({ control: 'StockAdjustment', action: 'editAccess' })
-  @ApiOperation({ summary: 'Update a stock adjustment by ID' })
-  @ApiParam({ name: 'id', description: 'ItemReject UUID' })
+  @ApiOperation({ summary: 'Replace all lines of a stock adjustment by reference number' })
+  @ApiParam({ name: 'invNo', description: 'Adjustment reference number' })
   @ApiResponse({ status: 200, description: 'Adjustment record updated successfully' })
-  updateAdjustment(@Param('id') id: string, @Body() body: any) {
-    return this.inventoryService.updateAdjustment(id, body);
+  updateAdjustment(@Param('invNo') invNo: string, @Body() body: any) {
+    return this.inventoryService.updateAdjustment(invNo, body);
   }
 
-  @Delete('adjust/:id')
+  @Delete('adjust/:invNo')
   @RequiredPermission({ control: 'StockAdjustment', action: 'deleteAccess' })
-  @ApiOperation({ summary: 'Delete a stock adjustment by ID' })
-  @ApiParam({ name: 'id', description: 'ItemReject UUID' })
+  @ApiOperation({ summary: 'Delete a stock adjustment (all lines) by reference number' })
+  @ApiParam({ name: 'invNo', description: 'Adjustment reference number' })
   @ApiResponse({ status: 200, description: 'Adjustment record deleted successfully' })
   @ApiResponse({ status: 404, description: 'Adjustment record not found' })
-  removeAdjustment(@Param('id') id: string) {
-    return this.inventoryService.removeAdjustment(id);
+  removeAdjustment(@Param('invNo') invNo: string) {
+    return this.inventoryService.removeAdjustment(invNo);
   }
 
   @Get('receive/history')

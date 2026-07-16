@@ -67,6 +67,16 @@ export class UpdateCustomerDto {
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const num = (v: unknown) => Number(v ?? 0);
 
+function yyyymm(d = new Date()): string {
+  return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+
+/** Builds a khazana-style serial: PREFIX-BRANCHCODE-YYYYMM-00001 — same rule
+ *  used for the inventory serials (GRN/ISS/TRF/ADJ) in InventoryService. */
+function buildSerialNo(prefix: string, branchCode: string, seq: number): string {
+  return [prefix, branchCode, yyyymm(), String(seq).padStart(5, '0')].filter(Boolean).join('-');
+}
+
 @Injectable()
 export class CustomersService {
   constructor(private prisma: PrismaService) {}
@@ -79,6 +89,15 @@ export class CustomersService {
     });
     if (!customer) throw new NotFoundException('Customer not found');
     return customer;
+  }
+
+  /** Resolve the session branch (a Branch UUID) to its sanitized branch code for
+   *  embedding in generated serial numbers. Returns '' when the branch can't be
+   *  resolved, so the number simply omits the code. */
+  private async resolveBranchCode(branchId?: string | null): Promise<string> {
+    if (branchId == null || !UUID_RE.test(String(branchId))) return '';
+    const branch = await this.prisma.branch.findUnique({ where: { id: String(branchId) }, select: { branchCode: true } }).catch(() => null);
+    return (branch?.branchCode ?? '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
   }
 
   async findAll(query: PaginationQueryDto) {
@@ -233,16 +252,20 @@ export class CustomersService {
       const c = await this.resolveCustomer(dto.code);
       customerId = c.id;
     }
+    const branchId = toBranchUuid(dto.branchId);
+    const branchCode = await this.resolveBranchCode(dto.branchId);
+    const baseCount = await this.prisma.customer_Transaction.count();
+    const moneyReceptNo = dto.moneyReceptNo || buildSerialNo('MR', branchCode, baseCount + 1);
     return this.prisma.customer_Transaction.create({
       data: {
         customerId,
         receiveDate: new Date(dto.receiveDate),
         receiveAmount: dto.receiveAmount,
         tType: dto.tType,
-        moneyReceptNo: dto.moneyReceptNo,
+        moneyReceptNo,
         bankName: dto.bankName,
         bankNo: dto.bankNo,
-        branchId: toBranchUuid(dto.branchId),
+        branchId,
       },
     });
   }
