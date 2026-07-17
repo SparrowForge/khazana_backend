@@ -5172,12 +5172,14 @@ export namespace Prisma {
     sales: number
     salesVat: number
     customerTransactions: number
+    orders: number
   }
 
   export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sales?: boolean | CustomerCountOutputTypeCountSalesArgs
     salesVat?: boolean | CustomerCountOutputTypeCountSalesVatArgs
     customerTransactions?: boolean | CustomerCountOutputTypeCountCustomerTransactionsArgs
+    orders?: boolean | CustomerCountOutputTypeCountOrdersArgs
   }
 
   // Custom InputTypes
@@ -5212,6 +5214,13 @@ export namespace Prisma {
     where?: Customer_TransactionWhereInput
   }
 
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderReceive_MasterWhereInput
+  }
+
 
   /**
    * Count Type Item_InformationCountOutputType
@@ -5226,6 +5235,7 @@ export namespace Prisma {
     itemRejects: number
     itemReceives: number
     itemIssues: number
+    orderDetails: number
     prices: number
     costPrices: number
   }
@@ -5239,6 +5249,7 @@ export namespace Prisma {
     itemRejects?: boolean | Item_InformationCountOutputTypeCountItemRejectsArgs
     itemReceives?: boolean | Item_InformationCountOutputTypeCountItemReceivesArgs
     itemIssues?: boolean | Item_InformationCountOutputTypeCountItemIssuesArgs
+    orderDetails?: boolean | Item_InformationCountOutputTypeCountOrderDetailsArgs
     prices?: boolean | Item_InformationCountOutputTypeCountPricesArgs
     costPrices?: boolean | Item_InformationCountOutputTypeCountCostPricesArgs
   }
@@ -5308,6 +5319,13 @@ export namespace Prisma {
    */
   export type Item_InformationCountOutputTypeCountItemIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: Item_IssueWhereInput
+  }
+
+  /**
+   * Item_InformationCountOutputType without action
+   */
+  export type Item_InformationCountOutputTypeCountOrderDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderReceive_DetailWhereInput
   }
 
   /**
@@ -19120,6 +19138,7 @@ export namespace Prisma {
     sales?: boolean | Customer$salesArgs<ExtArgs>
     salesVat?: boolean | Customer$salesVatArgs<ExtArgs>
     customerTransactions?: boolean | Customer$customerTransactionsArgs<ExtArgs>
+    orders?: boolean | Customer$ordersArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -19158,6 +19177,7 @@ export namespace Prisma {
     sales?: boolean | Customer$salesArgs<ExtArgs>
     salesVat?: boolean | Customer$salesVatArgs<ExtArgs>
     customerTransactions?: boolean | Customer$customerTransactionsArgs<ExtArgs>
+    orders?: boolean | Customer$ordersArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -19169,6 +19189,7 @@ export namespace Prisma {
       sales: Prisma.$CSMasterPayload<ExtArgs>[]
       salesVat: Prisma.$CSVMasterPayload<ExtArgs>[]
       customerTransactions: Prisma.$Customer_TransactionPayload<ExtArgs>[]
+      orders: Prisma.$OrderReceive_MasterPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -19575,6 +19596,7 @@ export namespace Prisma {
     sales<T extends Customer$salesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$salesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CSMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     salesVat<T extends Customer$salesVatArgs<ExtArgs> = {}>(args?: Subset<T, Customer$salesVatArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CSVMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     customerTransactions<T extends Customer$customerTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$customerTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    orders<T extends Customer$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Customer$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderReceive_MasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20068,6 +20090,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Customer_TransactionScalarFieldEnum | Customer_TransactionScalarFieldEnum[]
+  }
+
+  /**
+   * Customer.orders
+   */
+  export type Customer$ordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderReceive_Master
+     */
+    select?: OrderReceive_MasterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderReceive_Master
+     */
+    omit?: OrderReceive_MasterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderReceive_MasterInclude<ExtArgs> | null
+    where?: OrderReceive_MasterWhereInput
+    orderBy?: OrderReceive_MasterOrderByWithRelationInput | OrderReceive_MasterOrderByWithRelationInput[]
+    cursor?: OrderReceive_MasterWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderReceive_MasterScalarFieldEnum | OrderReceive_MasterScalarFieldEnum[]
   }
 
   /**
@@ -22580,6 +22626,7 @@ export namespace Prisma {
     itemRejects?: boolean | Item_Information$itemRejectsArgs<ExtArgs>
     itemReceives?: boolean | Item_Information$itemReceivesArgs<ExtArgs>
     itemIssues?: boolean | Item_Information$itemIssuesArgs<ExtArgs>
+    orderDetails?: boolean | Item_Information$orderDetailsArgs<ExtArgs>
     inventory?: boolean | Item_Information$inventoryArgs<ExtArgs>
     prices?: boolean | Item_Information$pricesArgs<ExtArgs>
     costPrices?: boolean | Item_Information$costPricesArgs<ExtArgs>
@@ -22641,6 +22688,7 @@ export namespace Prisma {
     itemRejects?: boolean | Item_Information$itemRejectsArgs<ExtArgs>
     itemReceives?: boolean | Item_Information$itemReceivesArgs<ExtArgs>
     itemIssues?: boolean | Item_Information$itemIssuesArgs<ExtArgs>
+    orderDetails?: boolean | Item_Information$orderDetailsArgs<ExtArgs>
     inventory?: boolean | Item_Information$inventoryArgs<ExtArgs>
     prices?: boolean | Item_Information$pricesArgs<ExtArgs>
     costPrices?: boolean | Item_Information$costPricesArgs<ExtArgs>
@@ -22665,6 +22713,7 @@ export namespace Prisma {
       itemRejects: Prisma.$ItemRejectPayload<ExtArgs>[]
       itemReceives: Prisma.$Item_ReceivePayload<ExtArgs>[]
       itemIssues: Prisma.$Item_IssuePayload<ExtArgs>[]
+      orderDetails: Prisma.$OrderReceive_DetailPayload<ExtArgs>[]
       inventory: Prisma.$InventoryPayload<ExtArgs> | null
       prices: Prisma.$t_PricePayload<ExtArgs>[]
       costPrices: Prisma.$t_CostPrPayload<ExtArgs>[]
@@ -23084,6 +23133,7 @@ export namespace Prisma {
     itemRejects<T extends Item_Information$itemRejectsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$itemRejectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemRejectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     itemReceives<T extends Item_Information$itemReceivesArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$itemReceivesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Item_ReceivePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     itemIssues<T extends Item_Information$itemIssuesArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$itemIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Item_IssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    orderDetails<T extends Item_Information$orderDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$orderDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderReceive_DetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     inventory<T extends Item_Information$inventoryArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$inventoryArgs<ExtArgs>>): Prisma__InventoryClient<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     prices<T extends Item_Information$pricesArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$pricesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_PricePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     costPrices<T extends Item_Information$costPricesArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$costPricesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_CostPrPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -23731,6 +23781,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Item_IssueScalarFieldEnum | Item_IssueScalarFieldEnum[]
+  }
+
+  /**
+   * Item_Information.orderDetails
+   */
+  export type Item_Information$orderDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderReceive_Detail
+     */
+    select?: OrderReceive_DetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderReceive_Detail
+     */
+    omit?: OrderReceive_DetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderReceive_DetailInclude<ExtArgs> | null
+    where?: OrderReceive_DetailWhereInput
+    orderBy?: OrderReceive_DetailOrderByWithRelationInput | OrderReceive_DetailOrderByWithRelationInput[]
+    cursor?: OrderReceive_DetailWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderReceive_DetailScalarFieldEnum | OrderReceive_DetailScalarFieldEnum[]
   }
 
   /**
@@ -51894,7 +51968,7 @@ export namespace Prisma {
 
   export type OrderReceive_MasterMinAggregateOutputType = {
     id: string | null
-    clientCode: string | null
+    clientId: string | null
     serialNo: string | null
     advance: Decimal | null
     orderDate: Date | null
@@ -51914,7 +51988,7 @@ export namespace Prisma {
 
   export type OrderReceive_MasterMaxAggregateOutputType = {
     id: string | null
-    clientCode: string | null
+    clientId: string | null
     serialNo: string | null
     advance: Decimal | null
     orderDate: Date | null
@@ -51934,7 +52008,7 @@ export namespace Prisma {
 
   export type OrderReceive_MasterCountAggregateOutputType = {
     id: number
-    clientCode: number
+    clientId: number
     serialNo: number
     advance: number
     orderDate: number
@@ -51970,7 +52044,7 @@ export namespace Prisma {
 
   export type OrderReceive_MasterMinAggregateInputType = {
     id?: true
-    clientCode?: true
+    clientId?: true
     serialNo?: true
     advance?: true
     orderDate?: true
@@ -51990,7 +52064,7 @@ export namespace Prisma {
 
   export type OrderReceive_MasterMaxAggregateInputType = {
     id?: true
-    clientCode?: true
+    clientId?: true
     serialNo?: true
     advance?: true
     orderDate?: true
@@ -52010,7 +52084,7 @@ export namespace Prisma {
 
   export type OrderReceive_MasterCountAggregateInputType = {
     id?: true
-    clientCode?: true
+    clientId?: true
     serialNo?: true
     advance?: true
     orderDate?: true
@@ -52117,7 +52191,7 @@ export namespace Prisma {
 
   export type OrderReceive_MasterGroupByOutputType = {
     id: string
-    clientCode: string
+    clientId: string | null
     serialNo: string | null
     advance: Decimal | null
     orderDate: Date | null
@@ -52156,7 +52230,7 @@ export namespace Prisma {
 
   export type OrderReceive_MasterSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    clientCode?: boolean
+    clientId?: boolean
     serialNo?: boolean
     advance?: boolean
     orderDate?: boolean
@@ -52172,13 +52246,14 @@ export namespace Prisma {
     createDate?: boolean
     updateBy?: boolean
     updateDate?: boolean
+    customer?: boolean | OrderReceive_Master$customerArgs<ExtArgs>
     details?: boolean | OrderReceive_Master$detailsArgs<ExtArgs>
     _count?: boolean | OrderReceive_MasterCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["orderReceive_Master"]>
 
   export type OrderReceive_MasterSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    clientCode?: boolean
+    clientId?: boolean
     serialNo?: boolean
     advance?: boolean
     orderDate?: boolean
@@ -52194,11 +52269,12 @@ export namespace Prisma {
     createDate?: boolean
     updateBy?: boolean
     updateDate?: boolean
+    customer?: boolean | OrderReceive_Master$customerArgs<ExtArgs>
   }, ExtArgs["result"]["orderReceive_Master"]>
 
   export type OrderReceive_MasterSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    clientCode?: boolean
+    clientId?: boolean
     serialNo?: boolean
     advance?: boolean
     orderDate?: boolean
@@ -52214,11 +52290,12 @@ export namespace Prisma {
     createDate?: boolean
     updateBy?: boolean
     updateDate?: boolean
+    customer?: boolean | OrderReceive_Master$customerArgs<ExtArgs>
   }, ExtArgs["result"]["orderReceive_Master"]>
 
   export type OrderReceive_MasterSelectScalar = {
     id?: boolean
-    clientCode?: boolean
+    clientId?: boolean
     serialNo?: boolean
     advance?: boolean
     orderDate?: boolean
@@ -52236,22 +52313,28 @@ export namespace Prisma {
     updateDate?: boolean
   }
 
-  export type OrderReceive_MasterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clientCode" | "serialNo" | "advance" | "orderDate" | "totalPrice" | "discount" | "deliveryDate" | "deliveryAddress" | "cType" | "branchId" | "deliveryTime" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["orderReceive_Master"]>
+  export type OrderReceive_MasterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clientId" | "serialNo" | "advance" | "orderDate" | "totalPrice" | "discount" | "deliveryDate" | "deliveryAddress" | "cType" | "branchId" | "deliveryTime" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["orderReceive_Master"]>
   export type OrderReceive_MasterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | OrderReceive_Master$customerArgs<ExtArgs>
     details?: boolean | OrderReceive_Master$detailsArgs<ExtArgs>
     _count?: boolean | OrderReceive_MasterCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type OrderReceive_MasterIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type OrderReceive_MasterIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type OrderReceive_MasterIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | OrderReceive_Master$customerArgs<ExtArgs>
+  }
+  export type OrderReceive_MasterIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | OrderReceive_Master$customerArgs<ExtArgs>
+  }
 
   export type $OrderReceive_MasterPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "OrderReceive_Master"
     objects: {
+      customer: Prisma.$CustomerPayload<ExtArgs> | null
       details: Prisma.$OrderReceive_DetailPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      clientCode: string
+      clientId: string | null
       serialNo: string | null
       advance: Prisma.Decimal | null
       orderDate: Date | null
@@ -52661,6 +52744,7 @@ export namespace Prisma {
    */
   export interface Prisma__OrderReceive_MasterClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    customer<T extends OrderReceive_Master$customerArgs<ExtArgs> = {}>(args?: Subset<T, OrderReceive_Master$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     details<T extends OrderReceive_Master$detailsArgs<ExtArgs> = {}>(args?: Subset<T, OrderReceive_Master$detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderReceive_DetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -52692,7 +52776,7 @@ export namespace Prisma {
    */
   interface OrderReceive_MasterFieldRefs {
     readonly id: FieldRef<"OrderReceive_Master", 'String'>
-    readonly clientCode: FieldRef<"OrderReceive_Master", 'String'>
+    readonly clientId: FieldRef<"OrderReceive_Master", 'String'>
     readonly serialNo: FieldRef<"OrderReceive_Master", 'String'>
     readonly advance: FieldRef<"OrderReceive_Master", 'Decimal'>
     readonly orderDate: FieldRef<"OrderReceive_Master", 'DateTime'>
@@ -52926,7 +53010,7 @@ export namespace Prisma {
     /**
      * The data needed to create a OrderReceive_Master.
      */
-    data: XOR<OrderReceive_MasterCreateInput, OrderReceive_MasterUncheckedCreateInput>
+    data?: XOR<OrderReceive_MasterCreateInput, OrderReceive_MasterUncheckedCreateInput>
   }
 
   /**
@@ -52957,6 +53041,10 @@ export namespace Prisma {
      */
     data: OrderReceive_MasterCreateManyInput | OrderReceive_MasterCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderReceive_MasterIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -53027,6 +53115,10 @@ export namespace Prisma {
      * Limit how many OrderReceive_Masters to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderReceive_MasterIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -53093,6 +53185,25 @@ export namespace Prisma {
      * Limit how many OrderReceive_Masters to delete.
      */
     limit?: number
+  }
+
+  /**
+   * OrderReceive_Master.customer
+   */
+  export type OrderReceive_Master$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Customer
+     */
+    omit?: CustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
   }
 
   /**
@@ -53167,7 +53278,7 @@ export namespace Prisma {
   export type OrderReceive_DetailMinAggregateOutputType = {
     id: string | null
     masterId: string | null
-    itemCode: string | null
+    itemId: string | null
     qty: Decimal | null
     unitPrice: Decimal | null
     serialNo: string | null
@@ -53178,7 +53289,7 @@ export namespace Prisma {
   export type OrderReceive_DetailMaxAggregateOutputType = {
     id: string | null
     masterId: string | null
-    itemCode: string | null
+    itemId: string | null
     qty: Decimal | null
     unitPrice: Decimal | null
     serialNo: string | null
@@ -53189,7 +53300,7 @@ export namespace Prisma {
   export type OrderReceive_DetailCountAggregateOutputType = {
     id: number
     masterId: number
-    itemCode: number
+    itemId: number
     qty: number
     unitPrice: number
     serialNo: number
@@ -53216,7 +53327,7 @@ export namespace Prisma {
   export type OrderReceive_DetailMinAggregateInputType = {
     id?: true
     masterId?: true
-    itemCode?: true
+    itemId?: true
     qty?: true
     unitPrice?: true
     serialNo?: true
@@ -53227,7 +53338,7 @@ export namespace Prisma {
   export type OrderReceive_DetailMaxAggregateInputType = {
     id?: true
     masterId?: true
-    itemCode?: true
+    itemId?: true
     qty?: true
     unitPrice?: true
     serialNo?: true
@@ -53238,7 +53349,7 @@ export namespace Prisma {
   export type OrderReceive_DetailCountAggregateInputType = {
     id?: true
     masterId?: true
-    itemCode?: true
+    itemId?: true
     qty?: true
     unitPrice?: true
     serialNo?: true
@@ -53336,7 +53447,7 @@ export namespace Prisma {
   export type OrderReceive_DetailGroupByOutputType = {
     id: string
     masterId: string | null
-    itemCode: string
+    itemId: string | null
     qty: Decimal
     unitPrice: Decimal | null
     serialNo: string | null
@@ -53366,43 +53477,46 @@ export namespace Prisma {
   export type OrderReceive_DetailSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     masterId?: boolean
-    itemCode?: boolean
+    itemId?: boolean
     qty?: boolean
     unitPrice?: boolean
     serialNo?: boolean
     vatPrice?: boolean
     amount?: boolean
     master?: boolean | OrderReceive_Detail$masterArgs<ExtArgs>
+    item?: boolean | OrderReceive_Detail$itemArgs<ExtArgs>
   }, ExtArgs["result"]["orderReceive_Detail"]>
 
   export type OrderReceive_DetailSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     masterId?: boolean
-    itemCode?: boolean
+    itemId?: boolean
     qty?: boolean
     unitPrice?: boolean
     serialNo?: boolean
     vatPrice?: boolean
     amount?: boolean
     master?: boolean | OrderReceive_Detail$masterArgs<ExtArgs>
+    item?: boolean | OrderReceive_Detail$itemArgs<ExtArgs>
   }, ExtArgs["result"]["orderReceive_Detail"]>
 
   export type OrderReceive_DetailSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     masterId?: boolean
-    itemCode?: boolean
+    itemId?: boolean
     qty?: boolean
     unitPrice?: boolean
     serialNo?: boolean
     vatPrice?: boolean
     amount?: boolean
     master?: boolean | OrderReceive_Detail$masterArgs<ExtArgs>
+    item?: boolean | OrderReceive_Detail$itemArgs<ExtArgs>
   }, ExtArgs["result"]["orderReceive_Detail"]>
 
   export type OrderReceive_DetailSelectScalar = {
     id?: boolean
     masterId?: boolean
-    itemCode?: boolean
+    itemId?: boolean
     qty?: boolean
     unitPrice?: boolean
     serialNo?: boolean
@@ -53410,26 +53524,30 @@ export namespace Prisma {
     amount?: boolean
   }
 
-  export type OrderReceive_DetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "masterId" | "itemCode" | "qty" | "unitPrice" | "serialNo" | "vatPrice" | "amount", ExtArgs["result"]["orderReceive_Detail"]>
+  export type OrderReceive_DetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "masterId" | "itemId" | "qty" | "unitPrice" | "serialNo" | "vatPrice" | "amount", ExtArgs["result"]["orderReceive_Detail"]>
   export type OrderReceive_DetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     master?: boolean | OrderReceive_Detail$masterArgs<ExtArgs>
+    item?: boolean | OrderReceive_Detail$itemArgs<ExtArgs>
   }
   export type OrderReceive_DetailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     master?: boolean | OrderReceive_Detail$masterArgs<ExtArgs>
+    item?: boolean | OrderReceive_Detail$itemArgs<ExtArgs>
   }
   export type OrderReceive_DetailIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     master?: boolean | OrderReceive_Detail$masterArgs<ExtArgs>
+    item?: boolean | OrderReceive_Detail$itemArgs<ExtArgs>
   }
 
   export type $OrderReceive_DetailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "OrderReceive_Detail"
     objects: {
       master: Prisma.$OrderReceive_MasterPayload<ExtArgs> | null
+      item: Prisma.$Item_InformationPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       masterId: string | null
-      itemCode: string
+      itemId: string | null
       qty: Prisma.Decimal
       unitPrice: Prisma.Decimal | null
       serialNo: string | null
@@ -53830,6 +53948,7 @@ export namespace Prisma {
   export interface Prisma__OrderReceive_DetailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     master<T extends OrderReceive_Detail$masterArgs<ExtArgs> = {}>(args?: Subset<T, OrderReceive_Detail$masterArgs<ExtArgs>>): Prisma__OrderReceive_MasterClient<$Result.GetResult<Prisma.$OrderReceive_MasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    item<T extends OrderReceive_Detail$itemArgs<ExtArgs> = {}>(args?: Subset<T, OrderReceive_Detail$itemArgs<ExtArgs>>): Prisma__Item_InformationClient<$Result.GetResult<Prisma.$Item_InformationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -53861,7 +53980,7 @@ export namespace Prisma {
   interface OrderReceive_DetailFieldRefs {
     readonly id: FieldRef<"OrderReceive_Detail", 'String'>
     readonly masterId: FieldRef<"OrderReceive_Detail", 'String'>
-    readonly itemCode: FieldRef<"OrderReceive_Detail", 'String'>
+    readonly itemId: FieldRef<"OrderReceive_Detail", 'String'>
     readonly qty: FieldRef<"OrderReceive_Detail", 'Decimal'>
     readonly unitPrice: FieldRef<"OrderReceive_Detail", 'Decimal'>
     readonly serialNo: FieldRef<"OrderReceive_Detail", 'String'>
@@ -54279,6 +54398,25 @@ export namespace Prisma {
      */
     include?: OrderReceive_MasterInclude<ExtArgs> | null
     where?: OrderReceive_MasterWhereInput
+  }
+
+  /**
+   * OrderReceive_Detail.item
+   */
+  export type OrderReceive_Detail$itemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_Information
+     */
+    select?: Item_InformationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_Information
+     */
+    omit?: Item_InformationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Item_InformationInclude<ExtArgs> | null
+    where?: Item_InformationWhereInput
   }
 
   /**
@@ -60987,7 +61125,7 @@ export namespace Prisma {
 
   export const OrderReceive_MasterScalarFieldEnum: {
     id: 'id',
-    clientCode: 'clientCode',
+    clientId: 'clientId',
     serialNo: 'serialNo',
     advance: 'advance',
     orderDate: 'orderDate',
@@ -61011,7 +61149,7 @@ export namespace Prisma {
   export const OrderReceive_DetailScalarFieldEnum: {
     id: 'id',
     masterId: 'masterId',
-    itemCode: 'itemCode',
+    itemId: 'itemId',
     qty: 'qty',
     unitPrice: 'unitPrice',
     serialNo: 'serialNo',
@@ -62149,6 +62287,7 @@ export namespace Prisma {
     sales?: CSMasterListRelationFilter
     salesVat?: CSVMasterListRelationFilter
     customerTransactions?: Customer_TransactionListRelationFilter
+    orders?: OrderReceive_MasterListRelationFilter
   }
 
   export type CustomerOrderByWithRelationInput = {
@@ -62162,6 +62301,7 @@ export namespace Prisma {
     sales?: CSMasterOrderByRelationAggregateInput
     salesVat?: CSVMasterOrderByRelationAggregateInput
     customerTransactions?: Customer_TransactionOrderByRelationAggregateInput
+    orders?: OrderReceive_MasterOrderByRelationAggregateInput
   }
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -62178,6 +62318,7 @@ export namespace Prisma {
     sales?: CSMasterListRelationFilter
     salesVat?: CSVMasterListRelationFilter
     customerTransactions?: Customer_TransactionListRelationFilter
+    orders?: OrderReceive_MasterListRelationFilter
   }, "id" | "code">
 
   export type CustomerOrderByWithAggregationInput = {
@@ -62389,6 +62530,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectListRelationFilter
     itemReceives?: Item_ReceiveListRelationFilter
     itemIssues?: Item_IssueListRelationFilter
+    orderDetails?: OrderReceive_DetailListRelationFilter
     inventory?: XOR<InventoryNullableScalarRelationFilter, InventoryWhereInput> | null
     prices?: T_PriceListRelationFilter
     costPrices?: T_CostPrListRelationFilter
@@ -62415,6 +62557,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectOrderByRelationAggregateInput
     itemReceives?: Item_ReceiveOrderByRelationAggregateInput
     itemIssues?: Item_IssueOrderByRelationAggregateInput
+    orderDetails?: OrderReceive_DetailOrderByRelationAggregateInput
     inventory?: InventoryOrderByWithRelationInput
     prices?: t_PriceOrderByRelationAggregateInput
     costPrices?: t_CostPrOrderByRelationAggregateInput
@@ -62444,6 +62587,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectListRelationFilter
     itemReceives?: Item_ReceiveListRelationFilter
     itemIssues?: Item_IssueListRelationFilter
+    orderDetails?: OrderReceive_DetailListRelationFilter
     inventory?: XOR<InventoryNullableScalarRelationFilter, InventoryWhereInput> | null
     prices?: T_PriceListRelationFilter
     costPrices?: T_CostPrListRelationFilter
@@ -64673,7 +64817,7 @@ export namespace Prisma {
     OR?: OrderReceive_MasterWhereInput[]
     NOT?: OrderReceive_MasterWhereInput | OrderReceive_MasterWhereInput[]
     id?: UuidFilter<"OrderReceive_Master"> | string
-    clientCode?: StringFilter<"OrderReceive_Master"> | string
+    clientId?: UuidNullableFilter<"OrderReceive_Master"> | string | null
     serialNo?: StringNullableFilter<"OrderReceive_Master"> | string | null
     advance?: DecimalNullableFilter<"OrderReceive_Master"> | Decimal | DecimalJsLike | number | string | null
     orderDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
@@ -64689,12 +64833,13 @@ export namespace Prisma {
     createDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
     updateBy?: StringNullableFilter<"OrderReceive_Master"> | string | null
     updateDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     details?: OrderReceive_DetailListRelationFilter
   }
 
   export type OrderReceive_MasterOrderByWithRelationInput = {
     id?: SortOrder
-    clientCode?: SortOrder
+    clientId?: SortOrderInput | SortOrder
     serialNo?: SortOrderInput | SortOrder
     advance?: SortOrderInput | SortOrder
     orderDate?: SortOrderInput | SortOrder
@@ -64710,6 +64855,7 @@ export namespace Prisma {
     createDate?: SortOrderInput | SortOrder
     updateBy?: SortOrderInput | SortOrder
     updateDate?: SortOrderInput | SortOrder
+    customer?: CustomerOrderByWithRelationInput
     details?: OrderReceive_DetailOrderByRelationAggregateInput
   }
 
@@ -64718,7 +64864,7 @@ export namespace Prisma {
     AND?: OrderReceive_MasterWhereInput | OrderReceive_MasterWhereInput[]
     OR?: OrderReceive_MasterWhereInput[]
     NOT?: OrderReceive_MasterWhereInput | OrderReceive_MasterWhereInput[]
-    clientCode?: StringFilter<"OrderReceive_Master"> | string
+    clientId?: UuidNullableFilter<"OrderReceive_Master"> | string | null
     serialNo?: StringNullableFilter<"OrderReceive_Master"> | string | null
     advance?: DecimalNullableFilter<"OrderReceive_Master"> | Decimal | DecimalJsLike | number | string | null
     orderDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
@@ -64734,12 +64880,13 @@ export namespace Prisma {
     createDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
     updateBy?: StringNullableFilter<"OrderReceive_Master"> | string | null
     updateDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     details?: OrderReceive_DetailListRelationFilter
   }, "id">
 
   export type OrderReceive_MasterOrderByWithAggregationInput = {
     id?: SortOrder
-    clientCode?: SortOrder
+    clientId?: SortOrderInput | SortOrder
     serialNo?: SortOrderInput | SortOrder
     advance?: SortOrderInput | SortOrder
     orderDate?: SortOrderInput | SortOrder
@@ -64767,7 +64914,7 @@ export namespace Prisma {
     OR?: OrderReceive_MasterScalarWhereWithAggregatesInput[]
     NOT?: OrderReceive_MasterScalarWhereWithAggregatesInput | OrderReceive_MasterScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"OrderReceive_Master"> | string
-    clientCode?: StringWithAggregatesFilter<"OrderReceive_Master"> | string
+    clientId?: UuidNullableWithAggregatesFilter<"OrderReceive_Master"> | string | null
     serialNo?: StringNullableWithAggregatesFilter<"OrderReceive_Master"> | string | null
     advance?: DecimalNullableWithAggregatesFilter<"OrderReceive_Master"> | Decimal | DecimalJsLike | number | string | null
     orderDate?: DateTimeNullableWithAggregatesFilter<"OrderReceive_Master"> | Date | string | null
@@ -64791,25 +64938,27 @@ export namespace Prisma {
     NOT?: OrderReceive_DetailWhereInput | OrderReceive_DetailWhereInput[]
     id?: UuidFilter<"OrderReceive_Detail"> | string
     masterId?: UuidNullableFilter<"OrderReceive_Detail"> | string | null
-    itemCode?: StringFilter<"OrderReceive_Detail"> | string
+    itemId?: UuidNullableFilter<"OrderReceive_Detail"> | string | null
     qty?: DecimalFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string
     unitPrice?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     serialNo?: StringNullableFilter<"OrderReceive_Detail"> | string | null
     vatPrice?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     amount?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     master?: XOR<OrderReceive_MasterNullableScalarRelationFilter, OrderReceive_MasterWhereInput> | null
+    item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }
 
   export type OrderReceive_DetailOrderByWithRelationInput = {
     id?: SortOrder
     masterId?: SortOrderInput | SortOrder
-    itemCode?: SortOrder
+    itemId?: SortOrderInput | SortOrder
     qty?: SortOrder
     unitPrice?: SortOrderInput | SortOrder
     serialNo?: SortOrderInput | SortOrder
     vatPrice?: SortOrderInput | SortOrder
     amount?: SortOrderInput | SortOrder
     master?: OrderReceive_MasterOrderByWithRelationInput
+    item?: Item_InformationOrderByWithRelationInput
   }
 
   export type OrderReceive_DetailWhereUniqueInput = Prisma.AtLeast<{
@@ -64818,19 +64967,20 @@ export namespace Prisma {
     OR?: OrderReceive_DetailWhereInput[]
     NOT?: OrderReceive_DetailWhereInput | OrderReceive_DetailWhereInput[]
     masterId?: UuidNullableFilter<"OrderReceive_Detail"> | string | null
-    itemCode?: StringFilter<"OrderReceive_Detail"> | string
+    itemId?: UuidNullableFilter<"OrderReceive_Detail"> | string | null
     qty?: DecimalFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string
     unitPrice?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     serialNo?: StringNullableFilter<"OrderReceive_Detail"> | string | null
     vatPrice?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     amount?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     master?: XOR<OrderReceive_MasterNullableScalarRelationFilter, OrderReceive_MasterWhereInput> | null
+    item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }, "id">
 
   export type OrderReceive_DetailOrderByWithAggregationInput = {
     id?: SortOrder
     masterId?: SortOrderInput | SortOrder
-    itemCode?: SortOrder
+    itemId?: SortOrderInput | SortOrder
     qty?: SortOrder
     unitPrice?: SortOrderInput | SortOrder
     serialNo?: SortOrderInput | SortOrder
@@ -64849,7 +64999,7 @@ export namespace Prisma {
     NOT?: OrderReceive_DetailScalarWhereWithAggregatesInput | OrderReceive_DetailScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"OrderReceive_Detail"> | string
     masterId?: UuidNullableWithAggregatesFilter<"OrderReceive_Detail"> | string | null
-    itemCode?: StringWithAggregatesFilter<"OrderReceive_Detail"> | string
+    itemId?: UuidNullableWithAggregatesFilter<"OrderReceive_Detail"> | string | null
     qty?: DecimalWithAggregatesFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string
     unitPrice?: DecimalNullableWithAggregatesFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     serialNo?: StringNullableWithAggregatesFilter<"OrderReceive_Detail"> | string | null
@@ -66338,6 +66488,7 @@ export namespace Prisma {
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
+    orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateInput = {
@@ -66351,6 +66502,7 @@ export namespace Prisma {
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+    orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUpdateInput = {
@@ -66364,6 +66516,7 @@ export namespace Prisma {
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
+    orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
@@ -66377,6 +66530,7 @@ export namespace Prisma {
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
+    orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateManyInput = {
@@ -66610,6 +66764,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -66635,6 +66790,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -66660,6 +66816,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -66685,6 +66842,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -69228,7 +69386,6 @@ export namespace Prisma {
 
   export type OrderReceive_MasterCreateInput = {
     id?: string
-    clientCode: string
     serialNo?: string | null
     advance?: Decimal | DecimalJsLike | number | string | null
     orderDate?: Date | string | null
@@ -69244,12 +69401,13 @@ export namespace Prisma {
     createDate?: Date | string | null
     updateBy?: string | null
     updateDate?: Date | string | null
+    customer?: CustomerCreateNestedOneWithoutOrdersInput
     details?: OrderReceive_DetailCreateNestedManyWithoutMasterInput
   }
 
   export type OrderReceive_MasterUncheckedCreateInput = {
     id?: string
-    clientCode: string
+    clientId?: string | null
     serialNo?: string | null
     advance?: Decimal | DecimalJsLike | number | string | null
     orderDate?: Date | string | null
@@ -69270,7 +69428,6 @@ export namespace Prisma {
 
   export type OrderReceive_MasterUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    clientCode?: StringFieldUpdateOperationsInput | string
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -69286,12 +69443,13 @@ export namespace Prisma {
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customer?: CustomerUpdateOneWithoutOrdersNestedInput
     details?: OrderReceive_DetailUpdateManyWithoutMasterNestedInput
   }
 
   export type OrderReceive_MasterUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    clientCode?: StringFieldUpdateOperationsInput | string
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -69312,7 +69470,7 @@ export namespace Prisma {
 
   export type OrderReceive_MasterCreateManyInput = {
     id?: string
-    clientCode: string
+    clientId?: string | null
     serialNo?: string | null
     advance?: Decimal | DecimalJsLike | number | string | null
     orderDate?: Date | string | null
@@ -69332,7 +69490,6 @@ export namespace Prisma {
 
   export type OrderReceive_MasterUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    clientCode?: StringFieldUpdateOperationsInput | string
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -69352,7 +69509,7 @@ export namespace Prisma {
 
   export type OrderReceive_MasterUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    clientCode?: StringFieldUpdateOperationsInput | string
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -69372,19 +69529,19 @@ export namespace Prisma {
 
   export type OrderReceive_DetailCreateInput = {
     id?: string
-    itemCode: string
     qty: Decimal | DecimalJsLike | number | string
     unitPrice?: Decimal | DecimalJsLike | number | string | null
     serialNo?: string | null
     vatPrice?: Decimal | DecimalJsLike | number | string | null
     amount?: Decimal | DecimalJsLike | number | string | null
     master?: OrderReceive_MasterCreateNestedOneWithoutDetailsInput
+    item?: Item_InformationCreateNestedOneWithoutOrderDetailsInput
   }
 
   export type OrderReceive_DetailUncheckedCreateInput = {
     id?: string
     masterId?: string | null
-    itemCode: string
+    itemId?: string | null
     qty: Decimal | DecimalJsLike | number | string
     unitPrice?: Decimal | DecimalJsLike | number | string | null
     serialNo?: string | null
@@ -69394,19 +69551,19 @@ export namespace Prisma {
 
   export type OrderReceive_DetailUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    itemCode?: StringFieldUpdateOperationsInput | string
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     master?: OrderReceive_MasterUpdateOneWithoutDetailsNestedInput
+    item?: Item_InformationUpdateOneWithoutOrderDetailsNestedInput
   }
 
   export type OrderReceive_DetailUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     masterId?: NullableStringFieldUpdateOperationsInput | string | null
-    itemCode?: StringFieldUpdateOperationsInput | string
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69417,7 +69574,7 @@ export namespace Prisma {
   export type OrderReceive_DetailCreateManyInput = {
     id?: string
     masterId?: string | null
-    itemCode: string
+    itemId?: string | null
     qty: Decimal | DecimalJsLike | number | string
     unitPrice?: Decimal | DecimalJsLike | number | string | null
     serialNo?: string | null
@@ -69427,7 +69584,6 @@ export namespace Prisma {
 
   export type OrderReceive_DetailUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    itemCode?: StringFieldUpdateOperationsInput | string
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69438,7 +69594,7 @@ export namespace Prisma {
   export type OrderReceive_DetailUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     masterId?: NullableStringFieldUpdateOperationsInput | string | null
-    itemCode?: StringFieldUpdateOperationsInput | string
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70891,6 +71047,12 @@ export namespace Prisma {
     none?: Customer_TransactionWhereInput
   }
 
+  export type OrderReceive_MasterListRelationFilter = {
+    every?: OrderReceive_MasterWhereInput
+    some?: OrderReceive_MasterWhereInput
+    none?: OrderReceive_MasterWhereInput
+  }
+
   export type CSMasterOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -70900,6 +71062,10 @@ export namespace Prisma {
   }
 
   export type Customer_TransactionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OrderReceive_MasterOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -71099,6 +71265,12 @@ export namespace Prisma {
     none?: Item_IssueWhereInput
   }
 
+  export type OrderReceive_DetailListRelationFilter = {
+    every?: OrderReceive_DetailWhereInput
+    some?: OrderReceive_DetailWhereInput
+    none?: OrderReceive_DetailWhereInput
+  }
+
   export type InventoryNullableScalarRelationFilter = {
     is?: InventoryWhereInput | null
     isNot?: InventoryWhereInput | null
@@ -71145,6 +71317,10 @@ export namespace Prisma {
   }
 
   export type Item_IssueOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OrderReceive_DetailOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -72731,19 +72907,9 @@ export namespace Prisma {
     isActive?: SortOrder
   }
 
-  export type OrderReceive_DetailListRelationFilter = {
-    every?: OrderReceive_DetailWhereInput
-    some?: OrderReceive_DetailWhereInput
-    none?: OrderReceive_DetailWhereInput
-  }
-
-  export type OrderReceive_DetailOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type OrderReceive_MasterCountOrderByAggregateInput = {
     id?: SortOrder
-    clientCode?: SortOrder
+    clientId?: SortOrder
     serialNo?: SortOrder
     advance?: SortOrder
     orderDate?: SortOrder
@@ -72770,7 +72936,7 @@ export namespace Prisma {
 
   export type OrderReceive_MasterMaxOrderByAggregateInput = {
     id?: SortOrder
-    clientCode?: SortOrder
+    clientId?: SortOrder
     serialNo?: SortOrder
     advance?: SortOrder
     orderDate?: SortOrder
@@ -72790,7 +72956,7 @@ export namespace Prisma {
 
   export type OrderReceive_MasterMinOrderByAggregateInput = {
     id?: SortOrder
-    clientCode?: SortOrder
+    clientId?: SortOrder
     serialNo?: SortOrder
     advance?: SortOrder
     orderDate?: SortOrder
@@ -72823,7 +72989,7 @@ export namespace Prisma {
   export type OrderReceive_DetailCountOrderByAggregateInput = {
     id?: SortOrder
     masterId?: SortOrder
-    itemCode?: SortOrder
+    itemId?: SortOrder
     qty?: SortOrder
     unitPrice?: SortOrder
     serialNo?: SortOrder
@@ -72841,7 +73007,7 @@ export namespace Prisma {
   export type OrderReceive_DetailMaxOrderByAggregateInput = {
     id?: SortOrder
     masterId?: SortOrder
-    itemCode?: SortOrder
+    itemId?: SortOrder
     qty?: SortOrder
     unitPrice?: SortOrder
     serialNo?: SortOrder
@@ -72852,7 +73018,7 @@ export namespace Prisma {
   export type OrderReceive_DetailMinOrderByAggregateInput = {
     id?: SortOrder
     masterId?: SortOrder
-    itemCode?: SortOrder
+    itemId?: SortOrder
     qty?: SortOrder
     unitPrice?: SortOrder
     serialNo?: SortOrder
@@ -73785,6 +73951,13 @@ export namespace Prisma {
     connect?: Customer_TransactionWhereUniqueInput | Customer_TransactionWhereUniqueInput[]
   }
 
+  export type OrderReceive_MasterCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<OrderReceive_MasterCreateWithoutCustomerInput, OrderReceive_MasterUncheckedCreateWithoutCustomerInput> | OrderReceive_MasterCreateWithoutCustomerInput[] | OrderReceive_MasterUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: OrderReceive_MasterCreateOrConnectWithoutCustomerInput | OrderReceive_MasterCreateOrConnectWithoutCustomerInput[]
+    createMany?: OrderReceive_MasterCreateManyCustomerInputEnvelope
+    connect?: OrderReceive_MasterWhereUniqueInput | OrderReceive_MasterWhereUniqueInput[]
+  }
+
   export type CSMasterUncheckedCreateNestedManyWithoutCustomerInput = {
     create?: XOR<CSMasterCreateWithoutCustomerInput, CSMasterUncheckedCreateWithoutCustomerInput> | CSMasterCreateWithoutCustomerInput[] | CSMasterUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: CSMasterCreateOrConnectWithoutCustomerInput | CSMasterCreateOrConnectWithoutCustomerInput[]
@@ -73804,6 +73977,13 @@ export namespace Prisma {
     connectOrCreate?: Customer_TransactionCreateOrConnectWithoutCustomerInput | Customer_TransactionCreateOrConnectWithoutCustomerInput[]
     createMany?: Customer_TransactionCreateManyCustomerInputEnvelope
     connect?: Customer_TransactionWhereUniqueInput | Customer_TransactionWhereUniqueInput[]
+  }
+
+  export type OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<OrderReceive_MasterCreateWithoutCustomerInput, OrderReceive_MasterUncheckedCreateWithoutCustomerInput> | OrderReceive_MasterCreateWithoutCustomerInput[] | OrderReceive_MasterUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: OrderReceive_MasterCreateOrConnectWithoutCustomerInput | OrderReceive_MasterCreateOrConnectWithoutCustomerInput[]
+    createMany?: OrderReceive_MasterCreateManyCustomerInputEnvelope
+    connect?: OrderReceive_MasterWhereUniqueInput | OrderReceive_MasterWhereUniqueInput[]
   }
 
   export type CSMasterUpdateManyWithoutCustomerNestedInput = {
@@ -73848,6 +74028,20 @@ export namespace Prisma {
     deleteMany?: Customer_TransactionScalarWhereInput | Customer_TransactionScalarWhereInput[]
   }
 
+  export type OrderReceive_MasterUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<OrderReceive_MasterCreateWithoutCustomerInput, OrderReceive_MasterUncheckedCreateWithoutCustomerInput> | OrderReceive_MasterCreateWithoutCustomerInput[] | OrderReceive_MasterUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: OrderReceive_MasterCreateOrConnectWithoutCustomerInput | OrderReceive_MasterCreateOrConnectWithoutCustomerInput[]
+    upsert?: OrderReceive_MasterUpsertWithWhereUniqueWithoutCustomerInput | OrderReceive_MasterUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: OrderReceive_MasterCreateManyCustomerInputEnvelope
+    set?: OrderReceive_MasterWhereUniqueInput | OrderReceive_MasterWhereUniqueInput[]
+    disconnect?: OrderReceive_MasterWhereUniqueInput | OrderReceive_MasterWhereUniqueInput[]
+    delete?: OrderReceive_MasterWhereUniqueInput | OrderReceive_MasterWhereUniqueInput[]
+    connect?: OrderReceive_MasterWhereUniqueInput | OrderReceive_MasterWhereUniqueInput[]
+    update?: OrderReceive_MasterUpdateWithWhereUniqueWithoutCustomerInput | OrderReceive_MasterUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: OrderReceive_MasterUpdateManyWithWhereWithoutCustomerInput | OrderReceive_MasterUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: OrderReceive_MasterScalarWhereInput | OrderReceive_MasterScalarWhereInput[]
+  }
+
   export type CSMasterUncheckedUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<CSMasterCreateWithoutCustomerInput, CSMasterUncheckedCreateWithoutCustomerInput> | CSMasterCreateWithoutCustomerInput[] | CSMasterUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: CSMasterCreateOrConnectWithoutCustomerInput | CSMasterCreateOrConnectWithoutCustomerInput[]
@@ -73888,6 +74082,20 @@ export namespace Prisma {
     update?: Customer_TransactionUpdateWithWhereUniqueWithoutCustomerInput | Customer_TransactionUpdateWithWhereUniqueWithoutCustomerInput[]
     updateMany?: Customer_TransactionUpdateManyWithWhereWithoutCustomerInput | Customer_TransactionUpdateManyWithWhereWithoutCustomerInput[]
     deleteMany?: Customer_TransactionScalarWhereInput | Customer_TransactionScalarWhereInput[]
+  }
+
+  export type OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<OrderReceive_MasterCreateWithoutCustomerInput, OrderReceive_MasterUncheckedCreateWithoutCustomerInput> | OrderReceive_MasterCreateWithoutCustomerInput[] | OrderReceive_MasterUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: OrderReceive_MasterCreateOrConnectWithoutCustomerInput | OrderReceive_MasterCreateOrConnectWithoutCustomerInput[]
+    upsert?: OrderReceive_MasterUpsertWithWhereUniqueWithoutCustomerInput | OrderReceive_MasterUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: OrderReceive_MasterCreateManyCustomerInputEnvelope
+    set?: OrderReceive_MasterWhereUniqueInput | OrderReceive_MasterWhereUniqueInput[]
+    disconnect?: OrderReceive_MasterWhereUniqueInput | OrderReceive_MasterWhereUniqueInput[]
+    delete?: OrderReceive_MasterWhereUniqueInput | OrderReceive_MasterWhereUniqueInput[]
+    connect?: OrderReceive_MasterWhereUniqueInput | OrderReceive_MasterWhereUniqueInput[]
+    update?: OrderReceive_MasterUpdateWithWhereUniqueWithoutCustomerInput | OrderReceive_MasterUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: OrderReceive_MasterUpdateManyWithWhereWithoutCustomerInput | OrderReceive_MasterUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: OrderReceive_MasterScalarWhereInput | OrderReceive_MasterScalarWhereInput[]
   }
 
   export type CustomerCreateNestedOneWithoutCustomerTransactionsInput = {
@@ -73976,6 +74184,13 @@ export namespace Prisma {
     connect?: Item_IssueWhereUniqueInput | Item_IssueWhereUniqueInput[]
   }
 
+  export type OrderReceive_DetailCreateNestedManyWithoutItemInput = {
+    create?: XOR<OrderReceive_DetailCreateWithoutItemInput, OrderReceive_DetailUncheckedCreateWithoutItemInput> | OrderReceive_DetailCreateWithoutItemInput[] | OrderReceive_DetailUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: OrderReceive_DetailCreateOrConnectWithoutItemInput | OrderReceive_DetailCreateOrConnectWithoutItemInput[]
+    createMany?: OrderReceive_DetailCreateManyItemInputEnvelope
+    connect?: OrderReceive_DetailWhereUniqueInput | OrderReceive_DetailWhereUniqueInput[]
+  }
+
   export type InventoryCreateNestedOneWithoutItemInput = {
     create?: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
     connectOrCreate?: InventoryCreateOrConnectWithoutItemInput
@@ -74050,6 +74265,13 @@ export namespace Prisma {
     connectOrCreate?: Item_IssueCreateOrConnectWithoutItemInput | Item_IssueCreateOrConnectWithoutItemInput[]
     createMany?: Item_IssueCreateManyItemInputEnvelope
     connect?: Item_IssueWhereUniqueInput | Item_IssueWhereUniqueInput[]
+  }
+
+  export type OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput = {
+    create?: XOR<OrderReceive_DetailCreateWithoutItemInput, OrderReceive_DetailUncheckedCreateWithoutItemInput> | OrderReceive_DetailCreateWithoutItemInput[] | OrderReceive_DetailUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: OrderReceive_DetailCreateOrConnectWithoutItemInput | OrderReceive_DetailCreateOrConnectWithoutItemInput[]
+    createMany?: OrderReceive_DetailCreateManyItemInputEnvelope
+    connect?: OrderReceive_DetailWhereUniqueInput | OrderReceive_DetailWhereUniqueInput[]
   }
 
   export type InventoryUncheckedCreateNestedOneWithoutItemInput = {
@@ -74192,6 +74414,20 @@ export namespace Prisma {
     update?: Item_IssueUpdateWithWhereUniqueWithoutItemInput | Item_IssueUpdateWithWhereUniqueWithoutItemInput[]
     updateMany?: Item_IssueUpdateManyWithWhereWithoutItemInput | Item_IssueUpdateManyWithWhereWithoutItemInput[]
     deleteMany?: Item_IssueScalarWhereInput | Item_IssueScalarWhereInput[]
+  }
+
+  export type OrderReceive_DetailUpdateManyWithoutItemNestedInput = {
+    create?: XOR<OrderReceive_DetailCreateWithoutItemInput, OrderReceive_DetailUncheckedCreateWithoutItemInput> | OrderReceive_DetailCreateWithoutItemInput[] | OrderReceive_DetailUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: OrderReceive_DetailCreateOrConnectWithoutItemInput | OrderReceive_DetailCreateOrConnectWithoutItemInput[]
+    upsert?: OrderReceive_DetailUpsertWithWhereUniqueWithoutItemInput | OrderReceive_DetailUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: OrderReceive_DetailCreateManyItemInputEnvelope
+    set?: OrderReceive_DetailWhereUniqueInput | OrderReceive_DetailWhereUniqueInput[]
+    disconnect?: OrderReceive_DetailWhereUniqueInput | OrderReceive_DetailWhereUniqueInput[]
+    delete?: OrderReceive_DetailWhereUniqueInput | OrderReceive_DetailWhereUniqueInput[]
+    connect?: OrderReceive_DetailWhereUniqueInput | OrderReceive_DetailWhereUniqueInput[]
+    update?: OrderReceive_DetailUpdateWithWhereUniqueWithoutItemInput | OrderReceive_DetailUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: OrderReceive_DetailUpdateManyWithWhereWithoutItemInput | OrderReceive_DetailUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: OrderReceive_DetailScalarWhereInput | OrderReceive_DetailScalarWhereInput[]
   }
 
   export type InventoryUpdateOneWithoutItemNestedInput = {
@@ -74342,6 +74578,20 @@ export namespace Prisma {
     update?: Item_IssueUpdateWithWhereUniqueWithoutItemInput | Item_IssueUpdateWithWhereUniqueWithoutItemInput[]
     updateMany?: Item_IssueUpdateManyWithWhereWithoutItemInput | Item_IssueUpdateManyWithWhereWithoutItemInput[]
     deleteMany?: Item_IssueScalarWhereInput | Item_IssueScalarWhereInput[]
+  }
+
+  export type OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput = {
+    create?: XOR<OrderReceive_DetailCreateWithoutItemInput, OrderReceive_DetailUncheckedCreateWithoutItemInput> | OrderReceive_DetailCreateWithoutItemInput[] | OrderReceive_DetailUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: OrderReceive_DetailCreateOrConnectWithoutItemInput | OrderReceive_DetailCreateOrConnectWithoutItemInput[]
+    upsert?: OrderReceive_DetailUpsertWithWhereUniqueWithoutItemInput | OrderReceive_DetailUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: OrderReceive_DetailCreateManyItemInputEnvelope
+    set?: OrderReceive_DetailWhereUniqueInput | OrderReceive_DetailWhereUniqueInput[]
+    disconnect?: OrderReceive_DetailWhereUniqueInput | OrderReceive_DetailWhereUniqueInput[]
+    delete?: OrderReceive_DetailWhereUniqueInput | OrderReceive_DetailWhereUniqueInput[]
+    connect?: OrderReceive_DetailWhereUniqueInput | OrderReceive_DetailWhereUniqueInput[]
+    update?: OrderReceive_DetailUpdateWithWhereUniqueWithoutItemInput | OrderReceive_DetailUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: OrderReceive_DetailUpdateManyWithWhereWithoutItemInput | OrderReceive_DetailUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: OrderReceive_DetailScalarWhereInput | OrderReceive_DetailScalarWhereInput[]
   }
 
   export type InventoryUncheckedUpdateOneWithoutItemNestedInput = {
@@ -75082,6 +75332,12 @@ export namespace Prisma {
     update?: XOR<XOR<PacketInfoUpdateToOneWithWhereWithoutIssuesInput, PacketInfoUpdateWithoutIssuesInput>, PacketInfoUncheckedUpdateWithoutIssuesInput>
   }
 
+  export type CustomerCreateNestedOneWithoutOrdersInput = {
+    create?: XOR<CustomerCreateWithoutOrdersInput, CustomerUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutOrdersInput
+    connect?: CustomerWhereUniqueInput
+  }
+
   export type OrderReceive_DetailCreateNestedManyWithoutMasterInput = {
     create?: XOR<OrderReceive_DetailCreateWithoutMasterInput, OrderReceive_DetailUncheckedCreateWithoutMasterInput> | OrderReceive_DetailCreateWithoutMasterInput[] | OrderReceive_DetailUncheckedCreateWithoutMasterInput[]
     connectOrCreate?: OrderReceive_DetailCreateOrConnectWithoutMasterInput | OrderReceive_DetailCreateOrConnectWithoutMasterInput[]
@@ -75094,6 +75350,16 @@ export namespace Prisma {
     connectOrCreate?: OrderReceive_DetailCreateOrConnectWithoutMasterInput | OrderReceive_DetailCreateOrConnectWithoutMasterInput[]
     createMany?: OrderReceive_DetailCreateManyMasterInputEnvelope
     connect?: OrderReceive_DetailWhereUniqueInput | OrderReceive_DetailWhereUniqueInput[]
+  }
+
+  export type CustomerUpdateOneWithoutOrdersNestedInput = {
+    create?: XOR<CustomerCreateWithoutOrdersInput, CustomerUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutOrdersInput
+    upsert?: CustomerUpsertWithoutOrdersInput
+    disconnect?: CustomerWhereInput | boolean
+    delete?: CustomerWhereInput | boolean
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutOrdersInput, CustomerUpdateWithoutOrdersInput>, CustomerUncheckedUpdateWithoutOrdersInput>
   }
 
   export type OrderReceive_DetailUpdateManyWithoutMasterNestedInput = {
@@ -75130,6 +75396,12 @@ export namespace Prisma {
     connect?: OrderReceive_MasterWhereUniqueInput
   }
 
+  export type Item_InformationCreateNestedOneWithoutOrderDetailsInput = {
+    create?: XOR<Item_InformationCreateWithoutOrderDetailsInput, Item_InformationUncheckedCreateWithoutOrderDetailsInput>
+    connectOrCreate?: Item_InformationCreateOrConnectWithoutOrderDetailsInput
+    connect?: Item_InformationWhereUniqueInput
+  }
+
   export type OrderReceive_MasterUpdateOneWithoutDetailsNestedInput = {
     create?: XOR<OrderReceive_MasterCreateWithoutDetailsInput, OrderReceive_MasterUncheckedCreateWithoutDetailsInput>
     connectOrCreate?: OrderReceive_MasterCreateOrConnectWithoutDetailsInput
@@ -75138,6 +75410,16 @@ export namespace Prisma {
     delete?: OrderReceive_MasterWhereInput | boolean
     connect?: OrderReceive_MasterWhereUniqueInput
     update?: XOR<XOR<OrderReceive_MasterUpdateToOneWithWhereWithoutDetailsInput, OrderReceive_MasterUpdateWithoutDetailsInput>, OrderReceive_MasterUncheckedUpdateWithoutDetailsInput>
+  }
+
+  export type Item_InformationUpdateOneWithoutOrderDetailsNestedInput = {
+    create?: XOR<Item_InformationCreateWithoutOrderDetailsInput, Item_InformationUncheckedCreateWithoutOrderDetailsInput>
+    connectOrCreate?: Item_InformationCreateOrConnectWithoutOrderDetailsInput
+    upsert?: Item_InformationUpsertWithoutOrderDetailsInput
+    disconnect?: Item_InformationWhereInput | boolean
+    delete?: Item_InformationWhereInput | boolean
+    connect?: Item_InformationWhereUniqueInput
+    update?: XOR<XOR<Item_InformationUpdateToOneWithWhereWithoutOrderDetailsInput, Item_InformationUpdateWithoutOrderDetailsInput>, Item_InformationUncheckedUpdateWithoutOrderDetailsInput>
   }
 
   export type VOrderReceive_DetailCreateNestedManyWithoutMasterInput = {
@@ -75705,6 +75987,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -75729,6 +76012,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -76936,6 +77220,56 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type OrderReceive_MasterCreateWithoutCustomerInput = {
+    id?: string
+    serialNo?: string | null
+    advance?: Decimal | DecimalJsLike | number | string | null
+    orderDate?: Date | string | null
+    totalPrice?: Decimal | DecimalJsLike | number | string | null
+    discount?: Decimal | DecimalJsLike | number | string | null
+    deliveryDate?: Date | string | null
+    deliveryAddress?: string | null
+    cType?: string | null
+    branchId?: string | null
+    deliveryTime?: Date | string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+    details?: OrderReceive_DetailCreateNestedManyWithoutMasterInput
+  }
+
+  export type OrderReceive_MasterUncheckedCreateWithoutCustomerInput = {
+    id?: string
+    serialNo?: string | null
+    advance?: Decimal | DecimalJsLike | number | string | null
+    orderDate?: Date | string | null
+    totalPrice?: Decimal | DecimalJsLike | number | string | null
+    discount?: Decimal | DecimalJsLike | number | string | null
+    deliveryDate?: Date | string | null
+    deliveryAddress?: string | null
+    cType?: string | null
+    branchId?: string | null
+    deliveryTime?: Date | string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+    details?: OrderReceive_DetailUncheckedCreateNestedManyWithoutMasterInput
+  }
+
+  export type OrderReceive_MasterCreateOrConnectWithoutCustomerInput = {
+    where: OrderReceive_MasterWhereUniqueInput
+    create: XOR<OrderReceive_MasterCreateWithoutCustomerInput, OrderReceive_MasterUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type OrderReceive_MasterCreateManyCustomerInputEnvelope = {
+    data: OrderReceive_MasterCreateManyCustomerInput | OrderReceive_MasterCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CSMasterUpsertWithWhereUniqueWithoutCustomerInput = {
     where: CSMasterWhereUniqueInput
     update: XOR<CSMasterUpdateWithoutCustomerInput, CSMasterUncheckedUpdateWithoutCustomerInput>
@@ -77038,6 +77372,45 @@ export namespace Prisma {
     branchId?: UuidNullableFilter<"Customer_Transaction"> | string | null
   }
 
+  export type OrderReceive_MasterUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: OrderReceive_MasterWhereUniqueInput
+    update: XOR<OrderReceive_MasterUpdateWithoutCustomerInput, OrderReceive_MasterUncheckedUpdateWithoutCustomerInput>
+    create: XOR<OrderReceive_MasterCreateWithoutCustomerInput, OrderReceive_MasterUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type OrderReceive_MasterUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: OrderReceive_MasterWhereUniqueInput
+    data: XOR<OrderReceive_MasterUpdateWithoutCustomerInput, OrderReceive_MasterUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type OrderReceive_MasterUpdateManyWithWhereWithoutCustomerInput = {
+    where: OrderReceive_MasterScalarWhereInput
+    data: XOR<OrderReceive_MasterUpdateManyMutationInput, OrderReceive_MasterUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type OrderReceive_MasterScalarWhereInput = {
+    AND?: OrderReceive_MasterScalarWhereInput | OrderReceive_MasterScalarWhereInput[]
+    OR?: OrderReceive_MasterScalarWhereInput[]
+    NOT?: OrderReceive_MasterScalarWhereInput | OrderReceive_MasterScalarWhereInput[]
+    id?: UuidFilter<"OrderReceive_Master"> | string
+    clientId?: UuidNullableFilter<"OrderReceive_Master"> | string | null
+    serialNo?: StringNullableFilter<"OrderReceive_Master"> | string | null
+    advance?: DecimalNullableFilter<"OrderReceive_Master"> | Decimal | DecimalJsLike | number | string | null
+    orderDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
+    totalPrice?: DecimalNullableFilter<"OrderReceive_Master"> | Decimal | DecimalJsLike | number | string | null
+    discount?: DecimalNullableFilter<"OrderReceive_Master"> | Decimal | DecimalJsLike | number | string | null
+    deliveryDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
+    deliveryAddress?: StringNullableFilter<"OrderReceive_Master"> | string | null
+    cType?: StringNullableFilter<"OrderReceive_Master"> | string | null
+    branchId?: UuidNullableFilter<"OrderReceive_Master"> | string | null
+    deliveryTime?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
+    isActive?: IntNullableFilter<"OrderReceive_Master"> | number | null
+    createBy?: StringNullableFilter<"OrderReceive_Master"> | string | null
+    createDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
+    updateBy?: StringNullableFilter<"OrderReceive_Master"> | string | null
+    updateDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
+  }
+
   export type CustomerCreateWithoutCustomerTransactionsInput = {
     id?: string
     code: string
@@ -77048,6 +77421,7 @@ export namespace Prisma {
     joiningDate?: Date | string | null
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
+    orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutCustomerTransactionsInput = {
@@ -77060,6 +77434,7 @@ export namespace Prisma {
     joiningDate?: Date | string | null
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
+    orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutCustomerTransactionsInput = {
@@ -77088,6 +77463,7 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
+    orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutCustomerTransactionsInput = {
@@ -77100,6 +77476,7 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
+    orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type MediaFileCreateWithoutItemsInput = {
@@ -77460,6 +77837,36 @@ export namespace Prisma {
 
   export type Item_IssueCreateManyItemInputEnvelope = {
     data: Item_IssueCreateManyItemInput | Item_IssueCreateManyItemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrderReceive_DetailCreateWithoutItemInput = {
+    id?: string
+    qty: Decimal | DecimalJsLike | number | string
+    unitPrice?: Decimal | DecimalJsLike | number | string | null
+    serialNo?: string | null
+    vatPrice?: Decimal | DecimalJsLike | number | string | null
+    amount?: Decimal | DecimalJsLike | number | string | null
+    master?: OrderReceive_MasterCreateNestedOneWithoutDetailsInput
+  }
+
+  export type OrderReceive_DetailUncheckedCreateWithoutItemInput = {
+    id?: string
+    masterId?: string | null
+    qty: Decimal | DecimalJsLike | number | string
+    unitPrice?: Decimal | DecimalJsLike | number | string | null
+    serialNo?: string | null
+    vatPrice?: Decimal | DecimalJsLike | number | string | null
+    amount?: Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type OrderReceive_DetailCreateOrConnectWithoutItemInput = {
+    where: OrderReceive_DetailWhereUniqueInput
+    create: XOR<OrderReceive_DetailCreateWithoutItemInput, OrderReceive_DetailUncheckedCreateWithoutItemInput>
+  }
+
+  export type OrderReceive_DetailCreateManyItemInputEnvelope = {
+    data: OrderReceive_DetailCreateManyItemInput | OrderReceive_DetailCreateManyItemInput[]
     skipDuplicates?: boolean
   }
 
@@ -77881,6 +78288,36 @@ export namespace Prisma {
     updateDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
   }
 
+  export type OrderReceive_DetailUpsertWithWhereUniqueWithoutItemInput = {
+    where: OrderReceive_DetailWhereUniqueInput
+    update: XOR<OrderReceive_DetailUpdateWithoutItemInput, OrderReceive_DetailUncheckedUpdateWithoutItemInput>
+    create: XOR<OrderReceive_DetailCreateWithoutItemInput, OrderReceive_DetailUncheckedCreateWithoutItemInput>
+  }
+
+  export type OrderReceive_DetailUpdateWithWhereUniqueWithoutItemInput = {
+    where: OrderReceive_DetailWhereUniqueInput
+    data: XOR<OrderReceive_DetailUpdateWithoutItemInput, OrderReceive_DetailUncheckedUpdateWithoutItemInput>
+  }
+
+  export type OrderReceive_DetailUpdateManyWithWhereWithoutItemInput = {
+    where: OrderReceive_DetailScalarWhereInput
+    data: XOR<OrderReceive_DetailUpdateManyMutationInput, OrderReceive_DetailUncheckedUpdateManyWithoutItemInput>
+  }
+
+  export type OrderReceive_DetailScalarWhereInput = {
+    AND?: OrderReceive_DetailScalarWhereInput | OrderReceive_DetailScalarWhereInput[]
+    OR?: OrderReceive_DetailScalarWhereInput[]
+    NOT?: OrderReceive_DetailScalarWhereInput | OrderReceive_DetailScalarWhereInput[]
+    id?: UuidFilter<"OrderReceive_Detail"> | string
+    masterId?: UuidNullableFilter<"OrderReceive_Detail"> | string | null
+    itemId?: UuidNullableFilter<"OrderReceive_Detail"> | string | null
+    qty?: DecimalFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string
+    unitPrice?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
+    serialNo?: StringNullableFilter<"OrderReceive_Detail"> | string | null
+    vatPrice?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
+    amount?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type InventoryUpsertWithoutItemInput = {
     update: XOR<InventoryUpdateWithoutItemInput, InventoryUncheckedUpdateWithoutItemInput>
     create: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
@@ -77990,6 +78427,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
   }
@@ -78014,6 +78452,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
   }
@@ -78054,6 +78493,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
   }
@@ -78078,6 +78518,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
   }
@@ -78102,6 +78543,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
   }
@@ -78126,6 +78568,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
   }
@@ -78166,6 +78609,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
   }
@@ -78190,6 +78634,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
   }
@@ -78214,6 +78659,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
   }
@@ -78238,6 +78684,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
   }
@@ -78278,6 +78725,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
   }
@@ -78302,6 +78750,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
   }
@@ -78316,6 +78765,7 @@ export namespace Prisma {
     joiningDate?: Date | string | null
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
+    orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutSalesInput = {
@@ -78328,6 +78778,7 @@ export namespace Prisma {
     joiningDate?: Date | string | null
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+    orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutSalesInput = {
@@ -78388,6 +78839,7 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
+    orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutSalesInput = {
@@ -78400,6 +78852,7 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
+    orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CSDetailUpsertWithWhereUniqueWithoutSaleInput = {
@@ -78476,6 +78929,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -78500,6 +78954,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -78585,6 +79040,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -78609,6 +79065,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -78624,6 +79081,7 @@ export namespace Prisma {
     joiningDate?: Date | string | null
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
+    orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutSalesVatInput = {
@@ -78636,6 +79094,7 @@ export namespace Prisma {
     joiningDate?: Date | string | null
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+    orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutSalesVatInput = {
@@ -78696,6 +79155,7 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
+    orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutSalesVatInput = {
@@ -78708,6 +79168,7 @@ export namespace Prisma {
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
+    orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CSVDetailUpsertWithWhereUniqueWithoutSaleInput = {
@@ -78995,6 +79456,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -79019,6 +79481,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -79120,6 +79583,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -79144,6 +79608,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -79281,6 +79746,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -79305,6 +79771,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -79404,6 +79871,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -79428,6 +79896,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -79510,6 +79979,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -79534,6 +80004,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -79623,6 +80094,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -79647,6 +80119,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -79821,6 +80294,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -79845,6 +80319,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -79926,6 +80401,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -79950,6 +80426,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -79974,6 +80451,7 @@ export namespace Prisma {
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -79998,6 +80476,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -80038,6 +80517,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -80062,6 +80542,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -80086,6 +80567,7 @@ export namespace Prisma {
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -80110,6 +80592,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -80150,6 +80633,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -80174,6 +80658,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -80198,6 +80683,7 @@ export namespace Prisma {
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -80222,6 +80708,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -80262,6 +80749,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -80286,6 +80774,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -80592,19 +81081,50 @@ export namespace Prisma {
     receives?: Packet_ReceiveUncheckedUpdateManyWithoutPacketNestedInput
   }
 
+  export type CustomerCreateWithoutOrdersInput = {
+    id?: string
+    code: string
+    name: string
+    mobile?: string | null
+    address?: string | null
+    email?: string | null
+    joiningDate?: Date | string | null
+    sales?: CSMasterCreateNestedManyWithoutCustomerInput
+    salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
+    customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutOrdersInput = {
+    id?: string
+    code: string
+    name: string
+    mobile?: string | null
+    address?: string | null
+    email?: string | null
+    joiningDate?: Date | string | null
+    sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
+    salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
+    customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutOrdersInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutOrdersInput, CustomerUncheckedCreateWithoutOrdersInput>
+  }
+
   export type OrderReceive_DetailCreateWithoutMasterInput = {
     id?: string
-    itemCode: string
     qty: Decimal | DecimalJsLike | number | string
     unitPrice?: Decimal | DecimalJsLike | number | string | null
     serialNo?: string | null
     vatPrice?: Decimal | DecimalJsLike | number | string | null
     amount?: Decimal | DecimalJsLike | number | string | null
+    item?: Item_InformationCreateNestedOneWithoutOrderDetailsInput
   }
 
   export type OrderReceive_DetailUncheckedCreateWithoutMasterInput = {
     id?: string
-    itemCode: string
+    itemId?: string | null
     qty: Decimal | DecimalJsLike | number | string
     unitPrice?: Decimal | DecimalJsLike | number | string | null
     serialNo?: string | null
@@ -80620,6 +81140,43 @@ export namespace Prisma {
   export type OrderReceive_DetailCreateManyMasterInputEnvelope = {
     data: OrderReceive_DetailCreateManyMasterInput | OrderReceive_DetailCreateManyMasterInput[]
     skipDuplicates?: boolean
+  }
+
+  export type CustomerUpsertWithoutOrdersInput = {
+    update: XOR<CustomerUpdateWithoutOrdersInput, CustomerUncheckedUpdateWithoutOrdersInput>
+    create: XOR<CustomerCreateWithoutOrdersInput, CustomerUncheckedCreateWithoutOrdersInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutOrdersInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutOrdersInput, CustomerUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type CustomerUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mobile?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sales?: CSMasterUpdateManyWithoutCustomerNestedInput
+    salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
+    customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mobile?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
+    salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
+    customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type OrderReceive_DetailUpsertWithWhereUniqueWithoutMasterInput = {
@@ -80638,23 +81195,8 @@ export namespace Prisma {
     data: XOR<OrderReceive_DetailUpdateManyMutationInput, OrderReceive_DetailUncheckedUpdateManyWithoutMasterInput>
   }
 
-  export type OrderReceive_DetailScalarWhereInput = {
-    AND?: OrderReceive_DetailScalarWhereInput | OrderReceive_DetailScalarWhereInput[]
-    OR?: OrderReceive_DetailScalarWhereInput[]
-    NOT?: OrderReceive_DetailScalarWhereInput | OrderReceive_DetailScalarWhereInput[]
-    id?: UuidFilter<"OrderReceive_Detail"> | string
-    masterId?: UuidNullableFilter<"OrderReceive_Detail"> | string | null
-    itemCode?: StringFilter<"OrderReceive_Detail"> | string
-    qty?: DecimalFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string
-    unitPrice?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
-    serialNo?: StringNullableFilter<"OrderReceive_Detail"> | string | null
-    vatPrice?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
-    amount?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type OrderReceive_MasterCreateWithoutDetailsInput = {
     id?: string
-    clientCode: string
     serialNo?: string | null
     advance?: Decimal | DecimalJsLike | number | string | null
     orderDate?: Date | string | null
@@ -80670,11 +81212,12 @@ export namespace Prisma {
     createDate?: Date | string | null
     updateBy?: string | null
     updateDate?: Date | string | null
+    customer?: CustomerCreateNestedOneWithoutOrdersInput
   }
 
   export type OrderReceive_MasterUncheckedCreateWithoutDetailsInput = {
     id?: string
-    clientCode: string
+    clientId?: string | null
     serialNo?: string | null
     advance?: Decimal | DecimalJsLike | number | string | null
     orderDate?: Date | string | null
@@ -80697,6 +81240,61 @@ export namespace Prisma {
     create: XOR<OrderReceive_MasterCreateWithoutDetailsInput, OrderReceive_MasterUncheckedCreateWithoutDetailsInput>
   }
 
+  export type Item_InformationCreateWithoutOrderDetailsInput = {
+    id?: string
+    itmCode: string
+    itmName?: string | null
+    itmCategory?: string | null
+    itmType?: string | null
+    itmUOM?: string | null
+    itmRemarks?: string | null
+    itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: string | null
+    isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
+    runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
+    runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
+    ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
+    asstDetails?: AsstDetCreateNestedManyWithoutItemInput
+    itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
+    itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
+    itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
+    prices?: t_PriceCreateNestedManyWithoutItemInput
+    costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+  }
+
+  export type Item_InformationUncheckedCreateWithoutOrderDetailsInput = {
+    id?: string
+    itmCode: string
+    itmName?: string | null
+    itmCategory?: string | null
+    itmType?: string | null
+    itmUOM?: string | null
+    itmRemarks?: string | null
+    imageId?: string | null
+    itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: string | null
+    isActive?: string | null
+    runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
+    runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
+    ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
+    asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
+    itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
+    itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
+    itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
+    prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
+    costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+  }
+
+  export type Item_InformationCreateOrConnectWithoutOrderDetailsInput = {
+    where: Item_InformationWhereUniqueInput
+    create: XOR<Item_InformationCreateWithoutOrderDetailsInput, Item_InformationUncheckedCreateWithoutOrderDetailsInput>
+  }
+
   export type OrderReceive_MasterUpsertWithoutDetailsInput = {
     update: XOR<OrderReceive_MasterUpdateWithoutDetailsInput, OrderReceive_MasterUncheckedUpdateWithoutDetailsInput>
     create: XOR<OrderReceive_MasterCreateWithoutDetailsInput, OrderReceive_MasterUncheckedCreateWithoutDetailsInput>
@@ -80710,7 +81308,27 @@ export namespace Prisma {
 
   export type OrderReceive_MasterUpdateWithoutDetailsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    clientCode?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    cType?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customer?: CustomerUpdateOneWithoutOrdersNestedInput
+  }
+
+  export type OrderReceive_MasterUncheckedUpdateWithoutDetailsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clientId?: NullableStringFieldUpdateOperationsInput | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -80728,24 +81346,65 @@ export namespace Prisma {
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type OrderReceive_MasterUncheckedUpdateWithoutDetailsInput = {
+  export type Item_InformationUpsertWithoutOrderDetailsInput = {
+    update: XOR<Item_InformationUpdateWithoutOrderDetailsInput, Item_InformationUncheckedUpdateWithoutOrderDetailsInput>
+    create: XOR<Item_InformationCreateWithoutOrderDetailsInput, Item_InformationUncheckedCreateWithoutOrderDetailsInput>
+    where?: Item_InformationWhereInput
+  }
+
+  export type Item_InformationUpdateToOneWithWhereWithoutOrderDetailsInput = {
+    where?: Item_InformationWhereInput
+    data: XOR<Item_InformationUpdateWithoutOrderDetailsInput, Item_InformationUncheckedUpdateWithoutOrderDetailsInput>
+  }
+
+  export type Item_InformationUpdateWithoutOrderDetailsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    clientCode?: StringFieldUpdateOperationsInput | string
-    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
-    advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    orderDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    totalPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
-    cType?: NullableStringFieldUpdateOperationsInput | string | null
-    branchId?: NullableStringFieldUpdateOperationsInput | string | null
-    deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    isActive?: NullableIntFieldUpdateOperationsInput | number | null
-    createBy?: NullableStringFieldUpdateOperationsInput | string | null
-    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
-    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    itmCode?: StringFieldUpdateOperationsInput | string
+    itmName?: NullableStringFieldUpdateOperationsInput | string | null
+    itmCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    itmType?: NullableStringFieldUpdateOperationsInput | string | null
+    itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
+    runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
+    runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
+    ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
+    asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
+    itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
+    itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
+    itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
+    prices?: t_PriceUpdateManyWithoutItemNestedInput
+    costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+  }
+
+  export type Item_InformationUncheckedUpdateWithoutOrderDetailsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itmCode?: StringFieldUpdateOperationsInput | string
+    itmName?: NullableStringFieldUpdateOperationsInput | string | null
+    itmCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    itmType?: NullableStringFieldUpdateOperationsInput | string | null
+    itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
+    itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
+    runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
+    ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
+    asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
+    itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
+    itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
+    itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
+    prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
+    costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type VOrderReceive_DetailCreateWithoutMasterInput = {
@@ -81028,6 +81687,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -81052,6 +81712,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -81430,6 +82091,25 @@ export namespace Prisma {
     branchId?: string | null
   }
 
+  export type OrderReceive_MasterCreateManyCustomerInput = {
+    id?: string
+    serialNo?: string | null
+    advance?: Decimal | DecimalJsLike | number | string | null
+    orderDate?: Date | string | null
+    totalPrice?: Decimal | DecimalJsLike | number | string | null
+    discount?: Decimal | DecimalJsLike | number | string | null
+    deliveryDate?: Date | string | null
+    deliveryAddress?: string | null
+    cType?: string | null
+    branchId?: string | null
+    deliveryTime?: Date | string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+  }
+
   export type CSMasterUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     invNo?: StringFieldUpdateOperationsInput | string
@@ -81560,6 +82240,65 @@ export namespace Prisma {
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type OrderReceive_MasterUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    cType?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    details?: OrderReceive_DetailUpdateManyWithoutMasterNestedInput
+  }
+
+  export type OrderReceive_MasterUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    cType?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    details?: OrderReceive_DetailUncheckedUpdateManyWithoutMasterNestedInput
+  }
+
+  export type OrderReceive_MasterUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    cType?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type t_SODetCreateManyItemInput = {
     id?: string
     t_SOMstr_id?: string | null
@@ -81680,6 +82419,16 @@ export namespace Prisma {
     createDate?: Date | string | null
     updateBy?: string | null
     updateDate?: Date | string | null
+  }
+
+  export type OrderReceive_DetailCreateManyItemInput = {
+    id?: string
+    masterId?: string | null
+    qty: Decimal | DecimalJsLike | number | string
+    unitPrice?: Decimal | DecimalJsLike | number | string | null
+    serialNo?: string | null
+    vatPrice?: Decimal | DecimalJsLike | number | string | null
+    amount?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type t_PriceCreateManyItemInput = {
@@ -82076,6 +82825,36 @@ export namespace Prisma {
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type OrderReceive_DetailUpdateWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    master?: OrderReceive_MasterUpdateOneWithoutDetailsNestedInput
+  }
+
+  export type OrderReceive_DetailUncheckedUpdateWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    masterId?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type OrderReceive_DetailUncheckedUpdateManyWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    masterId?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type t_PriceUpdateWithoutItemInput = {
@@ -82634,7 +83413,7 @@ export namespace Prisma {
 
   export type OrderReceive_DetailCreateManyMasterInput = {
     id?: string
-    itemCode: string
+    itemId?: string | null
     qty: Decimal | DecimalJsLike | number | string
     unitPrice?: Decimal | DecimalJsLike | number | string | null
     serialNo?: string | null
@@ -82644,17 +83423,17 @@ export namespace Prisma {
 
   export type OrderReceive_DetailUpdateWithoutMasterInput = {
     id?: StringFieldUpdateOperationsInput | string
-    itemCode?: StringFieldUpdateOperationsInput | string
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    item?: Item_InformationUpdateOneWithoutOrderDetailsNestedInput
   }
 
   export type OrderReceive_DetailUncheckedUpdateWithoutMasterInput = {
     id?: StringFieldUpdateOperationsInput | string
-    itemCode?: StringFieldUpdateOperationsInput | string
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -82664,7 +83443,7 @@ export namespace Prisma {
 
   export type OrderReceive_DetailUncheckedUpdateManyWithoutMasterInput = {
     id?: StringFieldUpdateOperationsInput | string
-    itemCode?: StringFieldUpdateOperationsInput | string
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     unitPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null

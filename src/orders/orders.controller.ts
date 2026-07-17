@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
-import { OrdersService, CreateOrderDto } from './orders.service';
+import { OrdersService, CreateOrderDto, CreateVatOrderDto } from './orders.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { CurrentUser, RequiredPermission } from '../common/decorators';
@@ -76,7 +76,7 @@ export class OrdersController {
   @RequiredPermission({ control: 'Orders', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a VAT order' })
   @ApiResponse({ status: 201, description: 'VAT order created successfully' })
-  createVat(@Body() dto: any, @CurrentUser('userName') userName: string) {
+  createVat(@Body() dto: CreateVatOrderDto, @CurrentUser('userName') userName: string) {
     return this.ordersService.createVat(dto, userName);
   }
 }

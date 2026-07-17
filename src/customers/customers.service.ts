@@ -129,9 +129,9 @@ export class CustomersService {
   // Ledger formula: outstanding = credit sales − money receipts − order advances.
   // Debits are net credit sales (CSMaster + CSVMaster, net of discount); credits
   // are money receipts (Customer_Transaction) and order advance payments
-  // (OrderReceive_Master.advance). CSVMaster and OrderReceive_Master still key
-  // on the string ClientCode (uuid migration pending), so those two filter by
-  // customer.code while CSMaster/Customer_Transaction use the uuid FK.
+  // (OrderReceive_Master.advance). CSVMaster still keys on the string
+  // ClientCode (uuid migration pending), so it filters by customer.code, while
+  // CSMaster/Customer_Transaction/OrderReceive_Master use the uuid FK.
   async getLedger(idOrCode: string) {
     const customer = await this.resolveCustomer(idOrCode);
     const [sales, vatSales, payments, advances] = await this.prisma.$transaction([
@@ -148,7 +148,7 @@ export class CustomersService {
         select: { id: true, receiveDate: true, receiveAmount: true, tType: true, moneyReceptNo: true },
       }),
       this.prisma.orderReceive_Master.findMany({
-        where: { clientCode: customer.code, isActive: 1, advance: { gt: 0 } },
+        where: { clientId: customer.id, isActive: 1, advance: { gt: 0 } },
         select: { id: true, serialNo: true, orderDate: true, advance: true },
       }),
     ]);
@@ -217,7 +217,7 @@ export class CustomersService {
         _sum: { receiveAmount: true },
       }),
       this.prisma.orderReceive_Master.aggregate({
-        where: { clientCode: customer.code, isActive: 1, advance: { gt: 0 } },
+        where: { clientId: customer.id, isActive: 1, advance: { gt: 0 } },
         _sum: { advance: true },
       }),
     ]);

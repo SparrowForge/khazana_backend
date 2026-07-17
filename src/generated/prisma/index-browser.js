@@ -663,7 +663,7 @@ exports.Prisma.Packet_IssueScalarFieldEnum = {
 
 exports.Prisma.OrderReceive_MasterScalarFieldEnum = {
   id: 'id',
-  clientCode: 'clientCode',
+  clientId: 'clientId',
   serialNo: 'serialNo',
   advance: 'advance',
   orderDate: 'orderDate',
@@ -684,7 +684,7 @@ exports.Prisma.OrderReceive_MasterScalarFieldEnum = {
 exports.Prisma.OrderReceive_DetailScalarFieldEnum = {
   id: 'id',
   masterId: 'masterId',
-  itemCode: 'itemCode',
+  itemId: 'itemId',
   qty: 'qty',
   unitPrice: 'unitPrice',
   serialNo: 'serialNo',

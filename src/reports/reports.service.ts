@@ -156,19 +156,19 @@ export class ReportsService {
   }> {
     const todayCredit = await this.prisma.cSMaster.findMany({
       where: { invDate: { gte: day, lt: nextDay }, isActive: 1, ...branchFilter },
-      select: { customer: { select: { code: true } } },
+      select: { customerId: true },
     });
-    const custCodes = [...new Set(todayCredit.map((c) => c.customer?.code).filter((x): x is string => !!x))];
-    if (!custCodes.length) return { creditRows: [], orderCollection: 0 };
+    const custIds = [...new Set(todayCredit.map((c) => c.customerId).filter((x): x is string => !!x))];
+    if (!custIds.length) return { creditRows: [], orderCollection: 0 };
 
     const [advances, allCredits] = await this.prisma.$transaction([
       this.prisma.orderReceive_Master.findMany({
-        where: { clientCode: { in: custCodes }, isActive: 1, advance: { gt: 0 }, orderDate: { lt: nextDay }, ...branchFilter },
-        select: { clientCode: true, advance: true, orderDate: true },
+        where: { clientId: { in: custIds }, isActive: 1, advance: { gt: 0 }, orderDate: { lt: nextDay }, ...branchFilter },
+        select: { clientId: true, advance: true, orderDate: true },
       }),
       this.prisma.cSMaster.findMany({
-        where: { customer: { code: { in: custCodes } }, isActive: 1, invDate: { lt: nextDay }, ...branchFilter },
-        select: { id: true, invNo: true, customer: { select: { code: true } }, totalAmount: true, totalDiscount: true, invDate: true },
+        where: { customerId: { in: custIds }, isActive: 1, invDate: { lt: nextDay }, ...branchFilter },
+        select: { id: true, invNo: true, customerId: true, totalAmount: true, totalDiscount: true, invDate: true },
       }),
     ]);
 
@@ -176,20 +176,20 @@ export class ReportsService {
       | { t: number; kind: 'adv'; amount: number }
       | { t: number; kind: 'cr'; amount: number; id: string; invNo: string; today: boolean };
     const byCust = new Map<string, Ev[]>();
-    const push = (code: string, ev: Ev) => {
-      const arr = byCust.get(code) ?? [];
+    const push = (custId: string, ev: Ev) => {
+      const arr = byCust.get(custId) ?? [];
       arr.push(ev);
-      byCust.set(code, arr);
+      byCust.set(custId, arr);
     };
     for (const a of advances) {
-      if (!a.orderDate) continue;
-      push(a.clientCode, { t: a.orderDate.getTime(), kind: 'adv', amount: num(a.advance) });
+      if (!a.orderDate || !a.clientId) continue;
+      push(a.clientId, { t: a.orderDate.getTime(), kind: 'adv', amount: num(a.advance) });
     }
     for (const c of allCredits) {
-      const code = c.customer?.code;
-      if (!c.invDate || !code) continue;
+      const custId = c.customerId;
+      if (!c.invDate || !custId) continue;
       const today = c.invDate >= day && c.invDate < nextDay;
-      push(code, { t: c.invDate.getTime(), kind: 'cr', amount: num(c.totalAmount) - num(c.totalDiscount), id: c.id, invNo: c.invNo, today });
+      push(custId, { t: c.invDate.getTime(), kind: 'cr', amount: num(c.totalAmount) - num(c.totalDiscount), id: c.id, invNo: c.invNo, today });
     }
 
     const creditRows: { id: string; invNo: string; type: string; netAmount: number; net: number }[] = [];

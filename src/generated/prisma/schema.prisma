@@ -209,6 +209,7 @@ model Customer {
   sales                CSMaster[]
   salesVat             CSVMaster[]
   customerTransactions Customer_Transaction[]
+  orders               OrderReceive_Master[]
 
   @@map("Customer")
 }
@@ -249,18 +250,18 @@ model Employee {
 // ==================== ITEMS ====================
 
 model Item_Information {
-  id                    String         @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  itmCode               String         @unique @map("itmCode")
-  itmName               String?        @map("itmName")
-  itmCategory           String?        @map("itmCategory")
-  itmType               String?        @map("itmType")
-  itmUOM                String?        @map("itmUOM")
-  itmRemarks            String?        @map("itmRemarks")
-  imageId               String?        @map("image_id") @db.Uuid
-  itmOrderLevel         Decimal?       @map("itmOrderLevel") @db.Decimal(9, 2)
-  image                 MediaFile?     @relation(fields: [imageId], references: [id], onDelete: SetNull)
-  orderLevelUOM         String?        @map("OrderLevelUOM")
-  isActive              String?        @map("IsActive")
+  id                    String                @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  itmCode               String                @unique @map("itmCode")
+  itmName               String?               @map("itmName")
+  itmCategory           String?               @map("itmCategory")
+  itmType               String?               @map("itmType")
+  itmUOM                String?               @map("itmUOM")
+  itmRemarks            String?               @map("itmRemarks")
+  imageId               String?               @map("image_id") @db.Uuid
+  itmOrderLevel         Decimal?              @map("itmOrderLevel") @db.Decimal(9, 2)
+  image                 MediaFile?            @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  orderLevelUOM         String?               @map("OrderLevelUOM")
+  isActive              String?               @map("IsActive")
   // Relations using Item_Information.ID (uuid)
   runningSaleDetails    t_SODet[]
   runningSaleVatDetails t_SODeV[]
@@ -270,10 +271,11 @@ model Item_Information {
   itemRejects           ItemReject[]
   itemReceives          Item_Receive[]
   itemIssues            Item_Issue[]
+  orderDetails          OrderReceive_Detail[]
   // Relations using Item_Information.itmCode (varchar)
   inventory             Inventory?
-  prices                t_Price[]      @relation("ItemPrices")
-  costPrices            t_CostPr[]     @relation("ItemCostPrices")
+  prices                t_Price[]             @relation("ItemPrices")
+  costPrices            t_CostPr[]            @relation("ItemCostPrices")
 
   @@map("Item_Information")
 }
@@ -731,7 +733,7 @@ model Packet_Issue {
 
 model OrderReceive_Master {
   id              String                @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  clientCode      String                @map("ClientCode")
+  clientId        String?               @map("ClientID") @db.Uuid
   serialNo        String?               @map("SerialNo")
   advance         Decimal?              @map("Advance") @db.Decimal(9, 2)
   orderDate       DateTime?             @map("OrderDate")
@@ -747,6 +749,7 @@ model OrderReceive_Master {
   createDate      DateTime?             @map("CreateDate")
   updateBy        String?               @map("UpdateBy")
   updateDate      DateTime?             @map("UpdateDate")
+  customer        Customer?             @relation(fields: [clientId], references: [id])
   details         OrderReceive_Detail[]
 
   @@map("OrderReceive_Master")
@@ -755,13 +758,14 @@ model OrderReceive_Master {
 model OrderReceive_Detail {
   id        String               @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   masterId  String?              @map("MasterId") @db.Uuid
-  itemCode  String               @map("ItemCode")
+  itemId    String?              @map("ItemID") @db.Uuid
   qty       Decimal              @map("Qty") @db.Decimal(9, 2)
   unitPrice Decimal?             @map("UnitPrice") @db.Decimal(9, 2)
   serialNo  String?              @map("SerialNo")
   vatPrice  Decimal?             @map("VatPrice") @db.Decimal(18, 2)
   amount    Decimal?             @map("Amount") @db.Decimal(18, 2)
   master    OrderReceive_Master? @relation(fields: [masterId], references: [id])
+  item      Item_Information?    @relation(fields: [itemId], references: [id])
 
   @@map("OrderReceive_Detail")
 }

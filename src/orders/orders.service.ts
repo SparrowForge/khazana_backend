@@ -6,9 +6,8 @@ import { BranchPaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
 
 export class OrderItemDto {
-  @IsString()
-  @IsNotEmpty()
-  itemCode: string;
+  @IsUUID()
+  itemId: string;
 
   @IsNumber()
   qty: number;
@@ -27,9 +26,8 @@ export class OrderItemDto {
 }
 
 export class CreateOrderDto {
-  @IsString()
-  @IsNotEmpty()
-  clientCode: string;
+  @IsUUID()
+  clientId: string;
 
   @IsString()
   @IsOptional()
@@ -77,6 +75,65 @@ export class CreateOrderDto {
   items: OrderItemDto[];
 }
 
+// VAT orders (VOrderReceive_Master/Detail) still key on the legacy string
+// ClientCode/ItemCode — unlike CreateOrderDto/OrderItemDto above, which moved
+// to uuid ClientID/ItemID FKs on the regular OrderReceive_Master/Detail.
+export class VatOrderItemDto {
+  @IsString()
+  @IsNotEmpty()
+  itemCode: string;
+
+  @IsNumber()
+  qty: number;
+
+  @IsNumber()
+  @IsOptional()
+  unitPrice?: number;
+}
+
+export class CreateVatOrderDto {
+  @IsString()
+  @IsNotEmpty()
+  clientCode: string;
+
+  @IsString()
+  @IsOptional()
+  serialNo?: string;
+
+  @IsNumber()
+  @IsOptional()
+  advance?: number;
+
+  @IsString()
+  @IsOptional()
+  orderDate?: string;
+
+  @IsString()
+  @IsOptional()
+  deliveryDate?: string;
+
+  @IsString()
+  @IsOptional()
+  deliveryAddress?: string;
+
+  @IsString()
+  @IsOptional()
+  cType?: string;
+
+  @IsUUID()
+  @IsOptional()
+  branchId?: string;
+
+  @IsString()
+  @IsOptional()
+  deliveryTime?: string;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => VatOrderItemDto)
+  items: VatOrderItemDto[];
+}
+
 @Injectable()
 export class OrdersService {
   constructor(private prisma: PrismaService) {}
@@ -103,10 +160,11 @@ export class OrdersService {
   }
 
   async create(dto: CreateOrderDto, createdBy: string, userBranchId?: string) {
-    const serialNo = dto.serialNo || (await this.generateSerialNo('ORD', dto.branchId ?? userBranchId));
+    const branchId = dto.branchId ?? userBranchId;
+    const serialNo = dto.serialNo || (await this.generateSerialNo('ORD', branchId));
     return this.prisma.orderReceive_Master.create({
       data: {
-        clientCode: dto.clientCode,
+        clientId: dto.clientId,
         serialNo,
         advance: dto.advance,
         orderDate: dto.orderDate ? new Date(dto.orderDate) : new Date(),
@@ -115,14 +173,14 @@ export class OrdersService {
         deliveryDate: dto.deliveryDate ? new Date(dto.deliveryDate) : undefined,
         deliveryAddress: dto.deliveryAddress,
         cType: dto.cType,
-        branchId: dto.branchId,
+        branchId,
         deliveryTime: dto.deliveryTime ? new Date(dto.deliveryTime) : undefined,
         isActive: 1,
         createBy: createdBy,
         createDate: new Date(),
         details: {
           create: dto.items.map((item) => ({
-            itemCode: item.itemCode,
+            itemId: item.itemId,
             qty: item.qty,
             unitPrice: item.unitPrice,
             vatPrice: item.vatPrice,
@@ -152,7 +210,7 @@ export class OrdersService {
           details: {
             deleteMany: {},
             create: items.map((item) => ({
-              itemCode: item.itemCode,
+              itemId: item.itemId,
               qty: item.qty,
               unitPrice: item.unitPrice,
               vatPrice: item.vatPrice,
@@ -187,7 +245,7 @@ export class OrdersService {
     return { items: rows, meta: buildPaginationMeta(total, page, limit) };
   }
 
-  async createVat(dto: Omit<CreateOrderDto, 'totalPrice' | 'discount'>, createdBy: string) {
+  async createVat(dto: CreateVatOrderDto, createdBy: string) {
     return this.prisma.vOrderReceive_Master.create({
       data: {
         clientCode: dto.clientCode,
