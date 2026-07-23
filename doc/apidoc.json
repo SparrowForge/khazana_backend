@@ -1495,6 +1495,64 @@
         ]
       }
     },
+    "/sales/credit/{id}/invoice": {
+      "get": {
+        "operationId": "SalesController_getCreditSaleInvoice",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Credit sale not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get a credit sale with customer + branch details, for printing",
+        "tags": [
+          "Sales"
+        ]
+      }
+    },
+    "/sales/vat/credit/{id}/invoice": {
+      "get": {
+        "operationId": "SalesController_getVatCreditSaleInvoice",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "VAT credit sale not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get a VAT credit sale with customer + branch details, for printing",
+        "tags": [
+          "Sales"
+        ]
+      }
+    },
     "/inventory": {
       "get": {
         "operationId": "InventoryController_findAll",
@@ -2072,15 +2130,15 @@
         ]
       }
     },
-    "/inventory/adjust/{id}": {
+    "/inventory/adjust/{invNo}": {
       "get": {
         "operationId": "InventoryController_findOneAdjustment",
         "parameters": [
           {
-            "name": "id",
+            "name": "invNo",
             "required": true,
             "in": "path",
-            "description": "ItemReject UUID",
+            "description": "Adjustment reference number",
             "schema": {
               "type": "string"
             }
@@ -2099,7 +2157,7 @@
             "access-token": []
           }
         ],
-        "summary": "Get a single stock adjustment by ID",
+        "summary": "Get a single stock adjustment (all lines) by reference number",
         "tags": [
           "Inventory"
         ]
@@ -2108,10 +2166,10 @@
         "operationId": "InventoryController_updateAdjustment",
         "parameters": [
           {
-            "name": "id",
+            "name": "invNo",
             "required": true,
             "in": "path",
-            "description": "ItemReject UUID",
+            "description": "Adjustment reference number",
             "schema": {
               "type": "string"
             }
@@ -2127,7 +2185,7 @@
             "access-token": []
           }
         ],
-        "summary": "Update a stock adjustment by ID",
+        "summary": "Replace all lines of a stock adjustment by reference number",
         "tags": [
           "Inventory"
         ]
@@ -2136,10 +2194,10 @@
         "operationId": "InventoryController_removeAdjustment",
         "parameters": [
           {
-            "name": "id",
+            "name": "invNo",
             "required": true,
             "in": "path",
-            "description": "ItemReject UUID",
+            "description": "Adjustment reference number",
             "schema": {
               "type": "string"
             }
@@ -2158,7 +2216,7 @@
             "access-token": []
           }
         ],
-        "summary": "Delete a stock adjustment by ID",
+        "summary": "Delete a stock adjustment (all lines) by reference number",
         "tags": [
           "Inventory"
         ]
@@ -3065,6 +3123,16 @@
       "post": {
         "operationId": "OrdersController_createVat",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVatOrderDto"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "VAT order created successfully"
@@ -3078,6 +3146,180 @@
         "summary": "Create a VAT order",
         "tags": [
           "Orders"
+        ]
+      }
+    },
+    "/demand-orders": {
+      "get": {
+        "operationId": "DemandOrdersController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by branch UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of demand orders"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get all demand orders",
+        "tags": [
+          "Demand Orders"
+        ]
+      },
+      "post": {
+        "operationId": "DemandOrdersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDemandOrderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Demand order created successfully"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Submit a new demand order to the factory",
+        "tags": [
+          "Demand Orders"
+        ]
+      }
+    },
+    "/demand-orders/{id}": {
+      "get": {
+        "operationId": "DemandOrdersController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Demand order UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Demand order found"
+          },
+          "404": {
+            "description": "Demand order not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get demand order by ID",
+        "tags": [
+          "Demand Orders"
+        ]
+      },
+      "patch": {
+        "operationId": "DemandOrdersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Demand order UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Demand order updated successfully"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Update demand order by ID",
+        "tags": [
+          "Demand Orders"
+        ]
+      },
+      "delete": {
+        "operationId": "DemandOrdersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Demand order UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Demand order deleted successfully"
+          },
+          "404": {
+            "description": "Demand order not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete demand order by ID",
+        "tags": [
+          "Demand Orders"
         ]
       }
     },
@@ -6497,7 +6739,8 @@
           },
           "mobile": {
             "type": "string",
-            "example": "01700000000"
+            "example": "01700000000",
+            "description": "Customer mobile number"
           },
           "address": {
             "type": "string",
@@ -6514,7 +6757,8 @@
         },
         "required": [
           "code",
-          "name"
+          "name",
+          "mobile"
         ]
       },
       "UpdateCustomerDto": {
@@ -6543,6 +6787,14 @@
         }
       },
       "CreateOrderDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateVatOrderDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateDemandOrderDto": {
         "type": "object",
         "properties": {}
       },

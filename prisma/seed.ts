@@ -42,14 +42,13 @@ async function main() {
   // (Dashboard, Finance, Reports, Admin) are left null and appear under "All".
   const menus = [
     { menuName: 'Dashboard', controlName: 'Dashboard', order: 1, parentMenu: null, module: null },
-    { menuName: 'POS Billing', controlName: 'POS', order: 2, parentMenu: null, module: 'Sale' },
-    { menuName: 'POS Terminal', controlName: 'POSTerminal', order: 1, parentMenu: 'POS', module: 'Sale' },
-    { menuName: 'POS Sales', controlName: 'POSSales', order: 2, parentMenu: 'POS', module: 'Sale' },
     { menuName: 'Sales', controlName: 'Sales', order: 3, parentMenu: null, module: 'Sale' },
-    { menuName: 'Cash Sales', controlName: 'CashSales', order: 1, parentMenu: 'Sales', module: 'Sale' },
-    { menuName: 'Credit Sales', controlName: 'CreditSales', order: 2, parentMenu: 'Sales', module: 'Sale' },
-    { menuName: 'VAT Cash Sales', controlName: 'VatCashSales', order: 3, parentMenu: 'Sales', module: 'Sale' },
-    { menuName: 'VAT Credit Sales', controlName: 'VatCreditSales', order: 4, parentMenu: 'Sales', module: 'Sale' },
+    { menuName: 'POS Terminal', controlName: 'POSTerminal', order: 1, parentMenu: 'Sales', module: 'Sale' },
+    { menuName: 'POS Sales', controlName: 'POSSales', order: 2, parentMenu: 'Sales', module: 'Sale' },
+    { menuName: 'Cash Sales', controlName: 'CashSales', order: 3, parentMenu: 'Sales', module: 'Sale' },
+    { menuName: 'Credit Sales', controlName: 'CreditSales', order: 4, parentMenu: 'Sales', module: 'Sale' },
+    { menuName: 'VAT Cash Sales', controlName: 'VatCashSales', order: 5, parentMenu: 'Sales', module: 'Sale' },
+    { menuName: 'VAT Credit Sales', controlName: 'VatCreditSales', order: 6, parentMenu: 'Sales', module: 'Sale' },
     { menuName: 'NC Adjustment', controlName: 'NCAdjustment', order: 3, parentMenu: null, module: 'Sale' },
     { menuName: 'Assortment', controlName: 'Assortment', order: 4, parentMenu: null, module: 'Sale' },
     { menuName: 'Packets', controlName: 'Packets', order: 7, parentMenu: null, module: 'Sale' },
@@ -74,7 +73,7 @@ async function main() {
     // ---- Per-page leaf menus: every navigable page is its own menu row so it
     // can be permission-controlled individually (mirrors frontend navRegistry).
     // Sales
-    { menuName: 'Sales List', controlName: 'SalesList', order: 5, parentMenu: 'Sales', module: 'Sale' },
+    { menuName: 'Sales List', controlName: 'SalesList', order: 7, parentMenu: 'Sales', module: 'Sale' },
     // NC Adjustment
     { menuName: 'New NC', controlName: 'NCNew', order: 1, parentMenu: 'NCAdjustment', module: 'Sale' },
     { menuName: 'NC List', controlName: 'NCList', order: 2, parentMenu: 'NCAdjustment', module: 'Sale' },
@@ -94,6 +93,7 @@ async function main() {
     // Orders
     { menuName: 'Orders List', controlName: 'OrdersList', order: 1, parentMenu: 'Orders', module: 'Sale' },
     { menuName: 'VAT Orders', controlName: 'VatOrders', order: 2, parentMenu: 'Orders', module: 'Sale' },
+    { menuName: 'Demand Order', controlName: 'DemandOrders', order: 3, parentMenu: 'Orders', module: 'Sale' },
     // Pricing
     { menuName: 'Price Setup', controlName: 'PriceSetup', order: 1, parentMenu: 'Pricing', module: 'Sale' },
     { menuName: 'Cost Price Setup', controlName: 'CostPriceSetup', order: 2, parentMenu: 'Pricing', module: 'Sale' },

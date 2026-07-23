@@ -692,6 +692,30 @@ exports.Prisma.OrderReceive_DetailScalarFieldEnum = {
   amount: 'amount'
 };
 
+exports.Prisma.DemandOrder_MasterScalarFieldEnum = {
+  id: 'id',
+  serialNo: 'serialNo',
+  fromBranchId: 'fromBranchId',
+  toBranchId: 'toBranchId',
+  demandDate: 'demandDate',
+  requiredDate: 'requiredDate',
+  remarks: 'remarks',
+  isActive: 'isActive',
+  createBy: 'createBy',
+  createDate: 'createDate',
+  updateBy: 'updateBy',
+  updateDate: 'updateDate'
+};
+
+exports.Prisma.DemandOrder_DetailScalarFieldEnum = {
+  id: 'id',
+  masterId: 'masterId',
+  itemId: 'itemId',
+  qty: 'qty',
+  remarks: 'remarks',
+  serialNo: 'serialNo'
+};
+
 exports.Prisma.VOrderReceive_MasterScalarFieldEnum = {
   id: 'id',
   clientCode: 'clientCode',
@@ -845,6 +869,8 @@ exports.Prisma.ModelName = {
   Packet_Issue: 'Packet_Issue',
   OrderReceive_Master: 'OrderReceive_Master',
   OrderReceive_Detail: 'OrderReceive_Detail',
+  DemandOrder_Master: 'DemandOrder_Master',
+  DemandOrder_Detail: 'DemandOrder_Detail',
   VOrderReceive_Master: 'VOrderReceive_Master',
   VOrderReceive_Detail: 'VOrderReceive_Detail',
   t_SaleAmountPost: 't_SaleAmountPost',

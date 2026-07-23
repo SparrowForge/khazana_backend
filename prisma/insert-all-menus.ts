@@ -29,6 +29,7 @@ const newMenus = [
   { menuName: 'Customer Money Receipt', controlName: 'CustomerPayments', order: 2, parentMenu: 'Customers', module: 'Sale' },
   { menuName: 'Orders List', controlName: 'OrdersList', order: 1, parentMenu: 'Orders', module: 'Sale' },
   { menuName: 'VAT Orders', controlName: 'VatOrders', order: 2, parentMenu: 'Orders', module: 'Sale' },
+  { menuName: 'Demand Order', controlName: 'DemandOrders', order: 3, parentMenu: 'Orders', module: 'Sale' },
   { menuName: 'Price Setup', controlName: 'PriceSetup', order: 1, parentMenu: 'Pricing', module: 'Sale' },
   { menuName: 'Cost Price Setup', controlName: 'CostPriceSetup', order: 2, parentMenu: 'Pricing', module: 'Sale' },
   { menuName: 'Cash Purchase', controlName: 'CashPurchase', order: 1, parentMenu: 'Finance', module: null },

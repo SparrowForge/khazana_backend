@@ -272,6 +272,7 @@ model Item_Information {
   itemReceives          Item_Receive[]
   itemIssues            Item_Issue[]
   orderDetails          OrderReceive_Detail[]
+  demandOrderDetails    DemandOrder_Detail[]
   // Relations using Item_Information.itmCode (varchar)
   inventory             Inventory?
   prices                t_Price[]             @relation("ItemPrices")
@@ -768,6 +769,40 @@ model OrderReceive_Detail {
   item      Item_Information?    @relation(fields: [itemId], references: [id])
 
   @@map("OrderReceive_Detail")
+}
+
+// Demand Order (DO): a branch's stock requisition submitted to the factory.
+// Separate from OrderReceive_Master (customer sales orders) — no customer or
+// pricing involved, just item + qty requested from one branch to another.
+model DemandOrder_Master {
+  id           String               @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  serialNo     String?              @map("SerialNo")
+  fromBranchId String?              @map("FromBranchId") @db.Uuid
+  toBranchId   String?              @map("ToBranchId") @db.Uuid
+  demandDate   DateTime?            @map("DemandDate")
+  requiredDate DateTime?            @map("RequiredDate")
+  remarks      String?              @map("Remarks")
+  isActive     Int?                 @map("IsActive")
+  createBy     String?              @map("CreateBy")
+  createDate   DateTime?            @map("CreateDate")
+  updateBy     String?              @map("UpdateBy")
+  updateDate   DateTime?            @map("UpdateDate")
+  details      DemandOrder_Detail[]
+
+  @@map("DemandOrder_Master")
+}
+
+model DemandOrder_Detail {
+  id       String              @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  masterId String?             @map("MasterId") @db.Uuid
+  itemId   String?             @map("ItemID") @db.Uuid
+  qty      Decimal             @map("Qty") @db.Decimal(9, 2)
+  remarks  String?             @map("Remarks")
+  serialNo String?             @map("SerialNo")
+  master   DemandOrder_Master? @relation(fields: [masterId], references: [id])
+  item     Item_Information?   @relation(fields: [itemId], references: [id])
+
+  @@map("DemandOrder_Detail")
 }
 
 model VOrderReceive_Master {

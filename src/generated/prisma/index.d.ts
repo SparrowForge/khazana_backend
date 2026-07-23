@@ -219,6 +219,16 @@ export type OrderReceive_Master = $Result.DefaultSelection<Prisma.$OrderReceive_
  */
 export type OrderReceive_Detail = $Result.DefaultSelection<Prisma.$OrderReceive_DetailPayload>
 /**
+ * Model DemandOrder_Master
+ * 
+ */
+export type DemandOrder_Master = $Result.DefaultSelection<Prisma.$DemandOrder_MasterPayload>
+/**
+ * Model DemandOrder_Detail
+ * 
+ */
+export type DemandOrder_Detail = $Result.DefaultSelection<Prisma.$DemandOrder_DetailPayload>
+/**
  * Model VOrderReceive_Master
  * 
  */
@@ -773,6 +783,26 @@ export class PrismaClient<
   get orderReceive_Detail(): Prisma.OrderReceive_DetailDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.demandOrder_Master`: Exposes CRUD operations for the **DemandOrder_Master** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DemandOrder_Masters
+    * const demandOrder_Masters = await prisma.demandOrder_Master.findMany()
+    * ```
+    */
+  get demandOrder_Master(): Prisma.DemandOrder_MasterDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.demandOrder_Detail`: Exposes CRUD operations for the **DemandOrder_Detail** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DemandOrder_Details
+    * const demandOrder_Details = await prisma.demandOrder_Detail.findMany()
+    * ```
+    */
+  get demandOrder_Detail(): Prisma.DemandOrder_DetailDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.vOrderReceive_Master`: Exposes CRUD operations for the **VOrderReceive_Master** model.
     * Example usage:
     * ```ts
@@ -1303,6 +1333,8 @@ export namespace Prisma {
     Packet_Issue: 'Packet_Issue',
     OrderReceive_Master: 'OrderReceive_Master',
     OrderReceive_Detail: 'OrderReceive_Detail',
+    DemandOrder_Master: 'DemandOrder_Master',
+    DemandOrder_Detail: 'DemandOrder_Detail',
     VOrderReceive_Master: 'VOrderReceive_Master',
     VOrderReceive_Detail: 'VOrderReceive_Detail',
     t_SaleAmountPost: 't_SaleAmountPost',
@@ -1326,7 +1358,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "customer_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
+      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "customer_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "demandOrder_Master" | "demandOrder_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4364,6 +4396,154 @@ export namespace Prisma {
           }
         }
       }
+      DemandOrder_Master: {
+        payload: Prisma.$DemandOrder_MasterPayload<ExtArgs>
+        fields: Prisma.DemandOrder_MasterFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DemandOrder_MasterFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_MasterPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DemandOrder_MasterFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_MasterPayload>
+          }
+          findFirst: {
+            args: Prisma.DemandOrder_MasterFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_MasterPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DemandOrder_MasterFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_MasterPayload>
+          }
+          findMany: {
+            args: Prisma.DemandOrder_MasterFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_MasterPayload>[]
+          }
+          create: {
+            args: Prisma.DemandOrder_MasterCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_MasterPayload>
+          }
+          createMany: {
+            args: Prisma.DemandOrder_MasterCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DemandOrder_MasterCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_MasterPayload>[]
+          }
+          delete: {
+            args: Prisma.DemandOrder_MasterDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_MasterPayload>
+          }
+          update: {
+            args: Prisma.DemandOrder_MasterUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_MasterPayload>
+          }
+          deleteMany: {
+            args: Prisma.DemandOrder_MasterDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DemandOrder_MasterUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DemandOrder_MasterUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_MasterPayload>[]
+          }
+          upsert: {
+            args: Prisma.DemandOrder_MasterUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_MasterPayload>
+          }
+          aggregate: {
+            args: Prisma.DemandOrder_MasterAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDemandOrder_Master>
+          }
+          groupBy: {
+            args: Prisma.DemandOrder_MasterGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DemandOrder_MasterGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DemandOrder_MasterCountArgs<ExtArgs>
+            result: $Utils.Optional<DemandOrder_MasterCountAggregateOutputType> | number
+          }
+        }
+      }
+      DemandOrder_Detail: {
+        payload: Prisma.$DemandOrder_DetailPayload<ExtArgs>
+        fields: Prisma.DemandOrder_DetailFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DemandOrder_DetailFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_DetailPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DemandOrder_DetailFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_DetailPayload>
+          }
+          findFirst: {
+            args: Prisma.DemandOrder_DetailFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_DetailPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DemandOrder_DetailFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_DetailPayload>
+          }
+          findMany: {
+            args: Prisma.DemandOrder_DetailFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_DetailPayload>[]
+          }
+          create: {
+            args: Prisma.DemandOrder_DetailCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_DetailPayload>
+          }
+          createMany: {
+            args: Prisma.DemandOrder_DetailCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DemandOrder_DetailCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_DetailPayload>[]
+          }
+          delete: {
+            args: Prisma.DemandOrder_DetailDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_DetailPayload>
+          }
+          update: {
+            args: Prisma.DemandOrder_DetailUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_DetailPayload>
+          }
+          deleteMany: {
+            args: Prisma.DemandOrder_DetailDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DemandOrder_DetailUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DemandOrder_DetailUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_DetailPayload>[]
+          }
+          upsert: {
+            args: Prisma.DemandOrder_DetailUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemandOrder_DetailPayload>
+          }
+          aggregate: {
+            args: Prisma.DemandOrder_DetailAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDemandOrder_Detail>
+          }
+          groupBy: {
+            args: Prisma.DemandOrder_DetailGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DemandOrder_DetailGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DemandOrder_DetailCountArgs<ExtArgs>
+            result: $Utils.Optional<DemandOrder_DetailCountAggregateOutputType> | number
+          }
+        }
+      }
       VOrderReceive_Master: {
         payload: Prisma.$VOrderReceive_MasterPayload<ExtArgs>
         fields: Prisma.VOrderReceive_MasterFieldRefs
@@ -4871,6 +5051,8 @@ export namespace Prisma {
     packet_Issue?: Packet_IssueOmit
     orderReceive_Master?: OrderReceive_MasterOmit
     orderReceive_Detail?: OrderReceive_DetailOmit
+    demandOrder_Master?: DemandOrder_MasterOmit
+    demandOrder_Detail?: DemandOrder_DetailOmit
     vOrderReceive_Master?: VOrderReceive_MasterOmit
     vOrderReceive_Detail?: VOrderReceive_DetailOmit
     t_SaleAmountPost?: t_SaleAmountPostOmit
@@ -5236,6 +5418,7 @@ export namespace Prisma {
     itemReceives: number
     itemIssues: number
     orderDetails: number
+    demandOrderDetails: number
     prices: number
     costPrices: number
   }
@@ -5250,6 +5433,7 @@ export namespace Prisma {
     itemReceives?: boolean | Item_InformationCountOutputTypeCountItemReceivesArgs
     itemIssues?: boolean | Item_InformationCountOutputTypeCountItemIssuesArgs
     orderDetails?: boolean | Item_InformationCountOutputTypeCountOrderDetailsArgs
+    demandOrderDetails?: boolean | Item_InformationCountOutputTypeCountDemandOrderDetailsArgs
     prices?: boolean | Item_InformationCountOutputTypeCountPricesArgs
     costPrices?: boolean | Item_InformationCountOutputTypeCountCostPricesArgs
   }
@@ -5326,6 +5510,13 @@ export namespace Prisma {
    */
   export type Item_InformationCountOutputTypeCountOrderDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderReceive_DetailWhereInput
+  }
+
+  /**
+   * Item_InformationCountOutputType without action
+   */
+  export type Item_InformationCountOutputTypeCountDemandOrderDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DemandOrder_DetailWhereInput
   }
 
   /**
@@ -5597,6 +5788,37 @@ export namespace Prisma {
    */
   export type OrderReceive_MasterCountOutputTypeCountDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderReceive_DetailWhereInput
+  }
+
+
+  /**
+   * Count Type DemandOrder_MasterCountOutputType
+   */
+
+  export type DemandOrder_MasterCountOutputType = {
+    details: number
+  }
+
+  export type DemandOrder_MasterCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    details?: boolean | DemandOrder_MasterCountOutputTypeCountDetailsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DemandOrder_MasterCountOutputType without action
+   */
+  export type DemandOrder_MasterCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_MasterCountOutputType
+     */
+    select?: DemandOrder_MasterCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DemandOrder_MasterCountOutputType without action
+   */
+  export type DemandOrder_MasterCountOutputTypeCountDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DemandOrder_DetailWhereInput
   }
 
 
@@ -22627,6 +22849,7 @@ export namespace Prisma {
     itemReceives?: boolean | Item_Information$itemReceivesArgs<ExtArgs>
     itemIssues?: boolean | Item_Information$itemIssuesArgs<ExtArgs>
     orderDetails?: boolean | Item_Information$orderDetailsArgs<ExtArgs>
+    demandOrderDetails?: boolean | Item_Information$demandOrderDetailsArgs<ExtArgs>
     inventory?: boolean | Item_Information$inventoryArgs<ExtArgs>
     prices?: boolean | Item_Information$pricesArgs<ExtArgs>
     costPrices?: boolean | Item_Information$costPricesArgs<ExtArgs>
@@ -22689,6 +22912,7 @@ export namespace Prisma {
     itemReceives?: boolean | Item_Information$itemReceivesArgs<ExtArgs>
     itemIssues?: boolean | Item_Information$itemIssuesArgs<ExtArgs>
     orderDetails?: boolean | Item_Information$orderDetailsArgs<ExtArgs>
+    demandOrderDetails?: boolean | Item_Information$demandOrderDetailsArgs<ExtArgs>
     inventory?: boolean | Item_Information$inventoryArgs<ExtArgs>
     prices?: boolean | Item_Information$pricesArgs<ExtArgs>
     costPrices?: boolean | Item_Information$costPricesArgs<ExtArgs>
@@ -22714,6 +22938,7 @@ export namespace Prisma {
       itemReceives: Prisma.$Item_ReceivePayload<ExtArgs>[]
       itemIssues: Prisma.$Item_IssuePayload<ExtArgs>[]
       orderDetails: Prisma.$OrderReceive_DetailPayload<ExtArgs>[]
+      demandOrderDetails: Prisma.$DemandOrder_DetailPayload<ExtArgs>[]
       inventory: Prisma.$InventoryPayload<ExtArgs> | null
       prices: Prisma.$t_PricePayload<ExtArgs>[]
       costPrices: Prisma.$t_CostPrPayload<ExtArgs>[]
@@ -23134,6 +23359,7 @@ export namespace Prisma {
     itemReceives<T extends Item_Information$itemReceivesArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$itemReceivesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Item_ReceivePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     itemIssues<T extends Item_Information$itemIssuesArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$itemIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Item_IssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orderDetails<T extends Item_Information$orderDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$orderDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderReceive_DetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    demandOrderDetails<T extends Item_Information$demandOrderDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$demandOrderDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     inventory<T extends Item_Information$inventoryArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$inventoryArgs<ExtArgs>>): Prisma__InventoryClient<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     prices<T extends Item_Information$pricesArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$pricesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_PricePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     costPrices<T extends Item_Information$costPricesArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$costPricesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_CostPrPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -23805,6 +24031,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderReceive_DetailScalarFieldEnum | OrderReceive_DetailScalarFieldEnum[]
+  }
+
+  /**
+   * Item_Information.demandOrderDetails
+   */
+  export type Item_Information$demandOrderDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Detail
+     */
+    select?: DemandOrder_DetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Detail
+     */
+    omit?: DemandOrder_DetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_DetailInclude<ExtArgs> | null
+    where?: DemandOrder_DetailWhereInput
+    orderBy?: DemandOrder_DetailOrderByWithRelationInput | DemandOrder_DetailOrderByWithRelationInput[]
+    cursor?: DemandOrder_DetailWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DemandOrder_DetailScalarFieldEnum | DemandOrder_DetailScalarFieldEnum[]
   }
 
   /**
@@ -54439,6 +54689,2352 @@ export namespace Prisma {
 
 
   /**
+   * Model DemandOrder_Master
+   */
+
+  export type AggregateDemandOrder_Master = {
+    _count: DemandOrder_MasterCountAggregateOutputType | null
+    _avg: DemandOrder_MasterAvgAggregateOutputType | null
+    _sum: DemandOrder_MasterSumAggregateOutputType | null
+    _min: DemandOrder_MasterMinAggregateOutputType | null
+    _max: DemandOrder_MasterMaxAggregateOutputType | null
+  }
+
+  export type DemandOrder_MasterAvgAggregateOutputType = {
+    isActive: number | null
+  }
+
+  export type DemandOrder_MasterSumAggregateOutputType = {
+    isActive: number | null
+  }
+
+  export type DemandOrder_MasterMinAggregateOutputType = {
+    id: string | null
+    serialNo: string | null
+    fromBranchId: string | null
+    toBranchId: string | null
+    demandDate: Date | null
+    requiredDate: Date | null
+    remarks: string | null
+    isActive: number | null
+    createBy: string | null
+    createDate: Date | null
+    updateBy: string | null
+    updateDate: Date | null
+  }
+
+  export type DemandOrder_MasterMaxAggregateOutputType = {
+    id: string | null
+    serialNo: string | null
+    fromBranchId: string | null
+    toBranchId: string | null
+    demandDate: Date | null
+    requiredDate: Date | null
+    remarks: string | null
+    isActive: number | null
+    createBy: string | null
+    createDate: Date | null
+    updateBy: string | null
+    updateDate: Date | null
+  }
+
+  export type DemandOrder_MasterCountAggregateOutputType = {
+    id: number
+    serialNo: number
+    fromBranchId: number
+    toBranchId: number
+    demandDate: number
+    requiredDate: number
+    remarks: number
+    isActive: number
+    createBy: number
+    createDate: number
+    updateBy: number
+    updateDate: number
+    _all: number
+  }
+
+
+  export type DemandOrder_MasterAvgAggregateInputType = {
+    isActive?: true
+  }
+
+  export type DemandOrder_MasterSumAggregateInputType = {
+    isActive?: true
+  }
+
+  export type DemandOrder_MasterMinAggregateInputType = {
+    id?: true
+    serialNo?: true
+    fromBranchId?: true
+    toBranchId?: true
+    demandDate?: true
+    requiredDate?: true
+    remarks?: true
+    isActive?: true
+    createBy?: true
+    createDate?: true
+    updateBy?: true
+    updateDate?: true
+  }
+
+  export type DemandOrder_MasterMaxAggregateInputType = {
+    id?: true
+    serialNo?: true
+    fromBranchId?: true
+    toBranchId?: true
+    demandDate?: true
+    requiredDate?: true
+    remarks?: true
+    isActive?: true
+    createBy?: true
+    createDate?: true
+    updateBy?: true
+    updateDate?: true
+  }
+
+  export type DemandOrder_MasterCountAggregateInputType = {
+    id?: true
+    serialNo?: true
+    fromBranchId?: true
+    toBranchId?: true
+    demandDate?: true
+    requiredDate?: true
+    remarks?: true
+    isActive?: true
+    createBy?: true
+    createDate?: true
+    updateBy?: true
+    updateDate?: true
+    _all?: true
+  }
+
+  export type DemandOrder_MasterAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DemandOrder_Master to aggregate.
+     */
+    where?: DemandOrder_MasterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemandOrder_Masters to fetch.
+     */
+    orderBy?: DemandOrder_MasterOrderByWithRelationInput | DemandOrder_MasterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DemandOrder_MasterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemandOrder_Masters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemandOrder_Masters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DemandOrder_Masters
+    **/
+    _count?: true | DemandOrder_MasterCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DemandOrder_MasterAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DemandOrder_MasterSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DemandOrder_MasterMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DemandOrder_MasterMaxAggregateInputType
+  }
+
+  export type GetDemandOrder_MasterAggregateType<T extends DemandOrder_MasterAggregateArgs> = {
+        [P in keyof T & keyof AggregateDemandOrder_Master]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDemandOrder_Master[P]>
+      : GetScalarType<T[P], AggregateDemandOrder_Master[P]>
+  }
+
+
+
+
+  export type DemandOrder_MasterGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DemandOrder_MasterWhereInput
+    orderBy?: DemandOrder_MasterOrderByWithAggregationInput | DemandOrder_MasterOrderByWithAggregationInput[]
+    by: DemandOrder_MasterScalarFieldEnum[] | DemandOrder_MasterScalarFieldEnum
+    having?: DemandOrder_MasterScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DemandOrder_MasterCountAggregateInputType | true
+    _avg?: DemandOrder_MasterAvgAggregateInputType
+    _sum?: DemandOrder_MasterSumAggregateInputType
+    _min?: DemandOrder_MasterMinAggregateInputType
+    _max?: DemandOrder_MasterMaxAggregateInputType
+  }
+
+  export type DemandOrder_MasterGroupByOutputType = {
+    id: string
+    serialNo: string | null
+    fromBranchId: string | null
+    toBranchId: string | null
+    demandDate: Date | null
+    requiredDate: Date | null
+    remarks: string | null
+    isActive: number | null
+    createBy: string | null
+    createDate: Date | null
+    updateBy: string | null
+    updateDate: Date | null
+    _count: DemandOrder_MasterCountAggregateOutputType | null
+    _avg: DemandOrder_MasterAvgAggregateOutputType | null
+    _sum: DemandOrder_MasterSumAggregateOutputType | null
+    _min: DemandOrder_MasterMinAggregateOutputType | null
+    _max: DemandOrder_MasterMaxAggregateOutputType | null
+  }
+
+  type GetDemandOrder_MasterGroupByPayload<T extends DemandOrder_MasterGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DemandOrder_MasterGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DemandOrder_MasterGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DemandOrder_MasterGroupByOutputType[P]>
+            : GetScalarType<T[P], DemandOrder_MasterGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DemandOrder_MasterSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    serialNo?: boolean
+    fromBranchId?: boolean
+    toBranchId?: boolean
+    demandDate?: boolean
+    requiredDate?: boolean
+    remarks?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+    updateBy?: boolean
+    updateDate?: boolean
+    details?: boolean | DemandOrder_Master$detailsArgs<ExtArgs>
+    _count?: boolean | DemandOrder_MasterCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["demandOrder_Master"]>
+
+  export type DemandOrder_MasterSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    serialNo?: boolean
+    fromBranchId?: boolean
+    toBranchId?: boolean
+    demandDate?: boolean
+    requiredDate?: boolean
+    remarks?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+    updateBy?: boolean
+    updateDate?: boolean
+  }, ExtArgs["result"]["demandOrder_Master"]>
+
+  export type DemandOrder_MasterSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    serialNo?: boolean
+    fromBranchId?: boolean
+    toBranchId?: boolean
+    demandDate?: boolean
+    requiredDate?: boolean
+    remarks?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+    updateBy?: boolean
+    updateDate?: boolean
+  }, ExtArgs["result"]["demandOrder_Master"]>
+
+  export type DemandOrder_MasterSelectScalar = {
+    id?: boolean
+    serialNo?: boolean
+    fromBranchId?: boolean
+    toBranchId?: boolean
+    demandDate?: boolean
+    requiredDate?: boolean
+    remarks?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+    updateBy?: boolean
+    updateDate?: boolean
+  }
+
+  export type DemandOrder_MasterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "fromBranchId" | "toBranchId" | "demandDate" | "requiredDate" | "remarks" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["demandOrder_Master"]>
+  export type DemandOrder_MasterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    details?: boolean | DemandOrder_Master$detailsArgs<ExtArgs>
+    _count?: boolean | DemandOrder_MasterCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DemandOrder_MasterIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type DemandOrder_MasterIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $DemandOrder_MasterPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DemandOrder_Master"
+    objects: {
+      details: Prisma.$DemandOrder_DetailPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      serialNo: string | null
+      fromBranchId: string | null
+      toBranchId: string | null
+      demandDate: Date | null
+      requiredDate: Date | null
+      remarks: string | null
+      isActive: number | null
+      createBy: string | null
+      createDate: Date | null
+      updateBy: string | null
+      updateDate: Date | null
+    }, ExtArgs["result"]["demandOrder_Master"]>
+    composites: {}
+  }
+
+  type DemandOrder_MasterGetPayload<S extends boolean | null | undefined | DemandOrder_MasterDefaultArgs> = $Result.GetResult<Prisma.$DemandOrder_MasterPayload, S>
+
+  type DemandOrder_MasterCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DemandOrder_MasterFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DemandOrder_MasterCountAggregateInputType | true
+    }
+
+  export interface DemandOrder_MasterDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DemandOrder_Master'], meta: { name: 'DemandOrder_Master' } }
+    /**
+     * Find zero or one DemandOrder_Master that matches the filter.
+     * @param {DemandOrder_MasterFindUniqueArgs} args - Arguments to find a DemandOrder_Master
+     * @example
+     * // Get one DemandOrder_Master
+     * const demandOrder_Master = await prisma.demandOrder_Master.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DemandOrder_MasterFindUniqueArgs>(args: SelectSubset<T, DemandOrder_MasterFindUniqueArgs<ExtArgs>>): Prisma__DemandOrder_MasterClient<$Result.GetResult<Prisma.$DemandOrder_MasterPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DemandOrder_Master that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DemandOrder_MasterFindUniqueOrThrowArgs} args - Arguments to find a DemandOrder_Master
+     * @example
+     * // Get one DemandOrder_Master
+     * const demandOrder_Master = await prisma.demandOrder_Master.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DemandOrder_MasterFindUniqueOrThrowArgs>(args: SelectSubset<T, DemandOrder_MasterFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DemandOrder_MasterClient<$Result.GetResult<Prisma.$DemandOrder_MasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DemandOrder_Master that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemandOrder_MasterFindFirstArgs} args - Arguments to find a DemandOrder_Master
+     * @example
+     * // Get one DemandOrder_Master
+     * const demandOrder_Master = await prisma.demandOrder_Master.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DemandOrder_MasterFindFirstArgs>(args?: SelectSubset<T, DemandOrder_MasterFindFirstArgs<ExtArgs>>): Prisma__DemandOrder_MasterClient<$Result.GetResult<Prisma.$DemandOrder_MasterPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DemandOrder_Master that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemandOrder_MasterFindFirstOrThrowArgs} args - Arguments to find a DemandOrder_Master
+     * @example
+     * // Get one DemandOrder_Master
+     * const demandOrder_Master = await prisma.demandOrder_Master.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DemandOrder_MasterFindFirstOrThrowArgs>(args?: SelectSubset<T, DemandOrder_MasterFindFirstOrThrowArgs<ExtArgs>>): Prisma__DemandOrder_MasterClient<$Result.GetResult<Prisma.$DemandOrder_MasterPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DemandOrder_Masters that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemandOrder_MasterFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DemandOrder_Masters
+     * const demandOrder_Masters = await prisma.demandOrder_Master.findMany()
+     * 
+     * // Get first 10 DemandOrder_Masters
+     * const demandOrder_Masters = await prisma.demandOrder_Master.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const demandOrder_MasterWithIdOnly = await prisma.demandOrder_Master.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DemandOrder_MasterFindManyArgs>(args?: SelectSubset<T, DemandOrder_MasterFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemandOrder_MasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DemandOrder_Master.
+     * @param {DemandOrder_MasterCreateArgs} args - Arguments to create a DemandOrder_Master.
+     * @example
+     * // Create one DemandOrder_Master
+     * const DemandOrder_Master = await prisma.demandOrder_Master.create({
+     *   data: {
+     *     // ... data to create a DemandOrder_Master
+     *   }
+     * })
+     * 
+     */
+    create<T extends DemandOrder_MasterCreateArgs>(args: SelectSubset<T, DemandOrder_MasterCreateArgs<ExtArgs>>): Prisma__DemandOrder_MasterClient<$Result.GetResult<Prisma.$DemandOrder_MasterPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DemandOrder_Masters.
+     * @param {DemandOrder_MasterCreateManyArgs} args - Arguments to create many DemandOrder_Masters.
+     * @example
+     * // Create many DemandOrder_Masters
+     * const demandOrder_Master = await prisma.demandOrder_Master.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DemandOrder_MasterCreateManyArgs>(args?: SelectSubset<T, DemandOrder_MasterCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DemandOrder_Masters and returns the data saved in the database.
+     * @param {DemandOrder_MasterCreateManyAndReturnArgs} args - Arguments to create many DemandOrder_Masters.
+     * @example
+     * // Create many DemandOrder_Masters
+     * const demandOrder_Master = await prisma.demandOrder_Master.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DemandOrder_Masters and only return the `id`
+     * const demandOrder_MasterWithIdOnly = await prisma.demandOrder_Master.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DemandOrder_MasterCreateManyAndReturnArgs>(args?: SelectSubset<T, DemandOrder_MasterCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemandOrder_MasterPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DemandOrder_Master.
+     * @param {DemandOrder_MasterDeleteArgs} args - Arguments to delete one DemandOrder_Master.
+     * @example
+     * // Delete one DemandOrder_Master
+     * const DemandOrder_Master = await prisma.demandOrder_Master.delete({
+     *   where: {
+     *     // ... filter to delete one DemandOrder_Master
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DemandOrder_MasterDeleteArgs>(args: SelectSubset<T, DemandOrder_MasterDeleteArgs<ExtArgs>>): Prisma__DemandOrder_MasterClient<$Result.GetResult<Prisma.$DemandOrder_MasterPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DemandOrder_Master.
+     * @param {DemandOrder_MasterUpdateArgs} args - Arguments to update one DemandOrder_Master.
+     * @example
+     * // Update one DemandOrder_Master
+     * const demandOrder_Master = await prisma.demandOrder_Master.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DemandOrder_MasterUpdateArgs>(args: SelectSubset<T, DemandOrder_MasterUpdateArgs<ExtArgs>>): Prisma__DemandOrder_MasterClient<$Result.GetResult<Prisma.$DemandOrder_MasterPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DemandOrder_Masters.
+     * @param {DemandOrder_MasterDeleteManyArgs} args - Arguments to filter DemandOrder_Masters to delete.
+     * @example
+     * // Delete a few DemandOrder_Masters
+     * const { count } = await prisma.demandOrder_Master.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DemandOrder_MasterDeleteManyArgs>(args?: SelectSubset<T, DemandOrder_MasterDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DemandOrder_Masters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemandOrder_MasterUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DemandOrder_Masters
+     * const demandOrder_Master = await prisma.demandOrder_Master.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DemandOrder_MasterUpdateManyArgs>(args: SelectSubset<T, DemandOrder_MasterUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DemandOrder_Masters and returns the data updated in the database.
+     * @param {DemandOrder_MasterUpdateManyAndReturnArgs} args - Arguments to update many DemandOrder_Masters.
+     * @example
+     * // Update many DemandOrder_Masters
+     * const demandOrder_Master = await prisma.demandOrder_Master.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DemandOrder_Masters and only return the `id`
+     * const demandOrder_MasterWithIdOnly = await prisma.demandOrder_Master.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DemandOrder_MasterUpdateManyAndReturnArgs>(args: SelectSubset<T, DemandOrder_MasterUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemandOrder_MasterPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DemandOrder_Master.
+     * @param {DemandOrder_MasterUpsertArgs} args - Arguments to update or create a DemandOrder_Master.
+     * @example
+     * // Update or create a DemandOrder_Master
+     * const demandOrder_Master = await prisma.demandOrder_Master.upsert({
+     *   create: {
+     *     // ... data to create a DemandOrder_Master
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DemandOrder_Master we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DemandOrder_MasterUpsertArgs>(args: SelectSubset<T, DemandOrder_MasterUpsertArgs<ExtArgs>>): Prisma__DemandOrder_MasterClient<$Result.GetResult<Prisma.$DemandOrder_MasterPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DemandOrder_Masters.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemandOrder_MasterCountArgs} args - Arguments to filter DemandOrder_Masters to count.
+     * @example
+     * // Count the number of DemandOrder_Masters
+     * const count = await prisma.demandOrder_Master.count({
+     *   where: {
+     *     // ... the filter for the DemandOrder_Masters we want to count
+     *   }
+     * })
+    **/
+    count<T extends DemandOrder_MasterCountArgs>(
+      args?: Subset<T, DemandOrder_MasterCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DemandOrder_MasterCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DemandOrder_Master.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemandOrder_MasterAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DemandOrder_MasterAggregateArgs>(args: Subset<T, DemandOrder_MasterAggregateArgs>): Prisma.PrismaPromise<GetDemandOrder_MasterAggregateType<T>>
+
+    /**
+     * Group by DemandOrder_Master.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemandOrder_MasterGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DemandOrder_MasterGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DemandOrder_MasterGroupByArgs['orderBy'] }
+        : { orderBy?: DemandOrder_MasterGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DemandOrder_MasterGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDemandOrder_MasterGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DemandOrder_Master model
+   */
+  readonly fields: DemandOrder_MasterFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DemandOrder_Master.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DemandOrder_MasterClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    details<T extends DemandOrder_Master$detailsArgs<ExtArgs> = {}>(args?: Subset<T, DemandOrder_Master$detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DemandOrder_Master model
+   */
+  interface DemandOrder_MasterFieldRefs {
+    readonly id: FieldRef<"DemandOrder_Master", 'String'>
+    readonly serialNo: FieldRef<"DemandOrder_Master", 'String'>
+    readonly fromBranchId: FieldRef<"DemandOrder_Master", 'String'>
+    readonly toBranchId: FieldRef<"DemandOrder_Master", 'String'>
+    readonly demandDate: FieldRef<"DemandOrder_Master", 'DateTime'>
+    readonly requiredDate: FieldRef<"DemandOrder_Master", 'DateTime'>
+    readonly remarks: FieldRef<"DemandOrder_Master", 'String'>
+    readonly isActive: FieldRef<"DemandOrder_Master", 'Int'>
+    readonly createBy: FieldRef<"DemandOrder_Master", 'String'>
+    readonly createDate: FieldRef<"DemandOrder_Master", 'DateTime'>
+    readonly updateBy: FieldRef<"DemandOrder_Master", 'String'>
+    readonly updateDate: FieldRef<"DemandOrder_Master", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DemandOrder_Master findUnique
+   */
+  export type DemandOrder_MasterFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Master
+     */
+    select?: DemandOrder_MasterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Master
+     */
+    omit?: DemandOrder_MasterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_MasterInclude<ExtArgs> | null
+    /**
+     * Filter, which DemandOrder_Master to fetch.
+     */
+    where: DemandOrder_MasterWhereUniqueInput
+  }
+
+  /**
+   * DemandOrder_Master findUniqueOrThrow
+   */
+  export type DemandOrder_MasterFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Master
+     */
+    select?: DemandOrder_MasterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Master
+     */
+    omit?: DemandOrder_MasterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_MasterInclude<ExtArgs> | null
+    /**
+     * Filter, which DemandOrder_Master to fetch.
+     */
+    where: DemandOrder_MasterWhereUniqueInput
+  }
+
+  /**
+   * DemandOrder_Master findFirst
+   */
+  export type DemandOrder_MasterFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Master
+     */
+    select?: DemandOrder_MasterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Master
+     */
+    omit?: DemandOrder_MasterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_MasterInclude<ExtArgs> | null
+    /**
+     * Filter, which DemandOrder_Master to fetch.
+     */
+    where?: DemandOrder_MasterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemandOrder_Masters to fetch.
+     */
+    orderBy?: DemandOrder_MasterOrderByWithRelationInput | DemandOrder_MasterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DemandOrder_Masters.
+     */
+    cursor?: DemandOrder_MasterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemandOrder_Masters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemandOrder_Masters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DemandOrder_Masters.
+     */
+    distinct?: DemandOrder_MasterScalarFieldEnum | DemandOrder_MasterScalarFieldEnum[]
+  }
+
+  /**
+   * DemandOrder_Master findFirstOrThrow
+   */
+  export type DemandOrder_MasterFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Master
+     */
+    select?: DemandOrder_MasterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Master
+     */
+    omit?: DemandOrder_MasterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_MasterInclude<ExtArgs> | null
+    /**
+     * Filter, which DemandOrder_Master to fetch.
+     */
+    where?: DemandOrder_MasterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemandOrder_Masters to fetch.
+     */
+    orderBy?: DemandOrder_MasterOrderByWithRelationInput | DemandOrder_MasterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DemandOrder_Masters.
+     */
+    cursor?: DemandOrder_MasterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemandOrder_Masters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemandOrder_Masters.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DemandOrder_Masters.
+     */
+    distinct?: DemandOrder_MasterScalarFieldEnum | DemandOrder_MasterScalarFieldEnum[]
+  }
+
+  /**
+   * DemandOrder_Master findMany
+   */
+  export type DemandOrder_MasterFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Master
+     */
+    select?: DemandOrder_MasterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Master
+     */
+    omit?: DemandOrder_MasterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_MasterInclude<ExtArgs> | null
+    /**
+     * Filter, which DemandOrder_Masters to fetch.
+     */
+    where?: DemandOrder_MasterWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemandOrder_Masters to fetch.
+     */
+    orderBy?: DemandOrder_MasterOrderByWithRelationInput | DemandOrder_MasterOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DemandOrder_Masters.
+     */
+    cursor?: DemandOrder_MasterWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemandOrder_Masters from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemandOrder_Masters.
+     */
+    skip?: number
+    distinct?: DemandOrder_MasterScalarFieldEnum | DemandOrder_MasterScalarFieldEnum[]
+  }
+
+  /**
+   * DemandOrder_Master create
+   */
+  export type DemandOrder_MasterCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Master
+     */
+    select?: DemandOrder_MasterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Master
+     */
+    omit?: DemandOrder_MasterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_MasterInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DemandOrder_Master.
+     */
+    data?: XOR<DemandOrder_MasterCreateInput, DemandOrder_MasterUncheckedCreateInput>
+  }
+
+  /**
+   * DemandOrder_Master createMany
+   */
+  export type DemandOrder_MasterCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DemandOrder_Masters.
+     */
+    data: DemandOrder_MasterCreateManyInput | DemandOrder_MasterCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DemandOrder_Master createManyAndReturn
+   */
+  export type DemandOrder_MasterCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Master
+     */
+    select?: DemandOrder_MasterSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Master
+     */
+    omit?: DemandOrder_MasterOmit<ExtArgs> | null
+    /**
+     * The data used to create many DemandOrder_Masters.
+     */
+    data: DemandOrder_MasterCreateManyInput | DemandOrder_MasterCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DemandOrder_Master update
+   */
+  export type DemandOrder_MasterUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Master
+     */
+    select?: DemandOrder_MasterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Master
+     */
+    omit?: DemandOrder_MasterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_MasterInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DemandOrder_Master.
+     */
+    data: XOR<DemandOrder_MasterUpdateInput, DemandOrder_MasterUncheckedUpdateInput>
+    /**
+     * Choose, which DemandOrder_Master to update.
+     */
+    where: DemandOrder_MasterWhereUniqueInput
+  }
+
+  /**
+   * DemandOrder_Master updateMany
+   */
+  export type DemandOrder_MasterUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DemandOrder_Masters.
+     */
+    data: XOR<DemandOrder_MasterUpdateManyMutationInput, DemandOrder_MasterUncheckedUpdateManyInput>
+    /**
+     * Filter which DemandOrder_Masters to update
+     */
+    where?: DemandOrder_MasterWhereInput
+    /**
+     * Limit how many DemandOrder_Masters to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DemandOrder_Master updateManyAndReturn
+   */
+  export type DemandOrder_MasterUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Master
+     */
+    select?: DemandOrder_MasterSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Master
+     */
+    omit?: DemandOrder_MasterOmit<ExtArgs> | null
+    /**
+     * The data used to update DemandOrder_Masters.
+     */
+    data: XOR<DemandOrder_MasterUpdateManyMutationInput, DemandOrder_MasterUncheckedUpdateManyInput>
+    /**
+     * Filter which DemandOrder_Masters to update
+     */
+    where?: DemandOrder_MasterWhereInput
+    /**
+     * Limit how many DemandOrder_Masters to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DemandOrder_Master upsert
+   */
+  export type DemandOrder_MasterUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Master
+     */
+    select?: DemandOrder_MasterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Master
+     */
+    omit?: DemandOrder_MasterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_MasterInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DemandOrder_Master to update in case it exists.
+     */
+    where: DemandOrder_MasterWhereUniqueInput
+    /**
+     * In case the DemandOrder_Master found by the `where` argument doesn't exist, create a new DemandOrder_Master with this data.
+     */
+    create: XOR<DemandOrder_MasterCreateInput, DemandOrder_MasterUncheckedCreateInput>
+    /**
+     * In case the DemandOrder_Master was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DemandOrder_MasterUpdateInput, DemandOrder_MasterUncheckedUpdateInput>
+  }
+
+  /**
+   * DemandOrder_Master delete
+   */
+  export type DemandOrder_MasterDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Master
+     */
+    select?: DemandOrder_MasterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Master
+     */
+    omit?: DemandOrder_MasterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_MasterInclude<ExtArgs> | null
+    /**
+     * Filter which DemandOrder_Master to delete.
+     */
+    where: DemandOrder_MasterWhereUniqueInput
+  }
+
+  /**
+   * DemandOrder_Master deleteMany
+   */
+  export type DemandOrder_MasterDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DemandOrder_Masters to delete
+     */
+    where?: DemandOrder_MasterWhereInput
+    /**
+     * Limit how many DemandOrder_Masters to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DemandOrder_Master.details
+   */
+  export type DemandOrder_Master$detailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Detail
+     */
+    select?: DemandOrder_DetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Detail
+     */
+    omit?: DemandOrder_DetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_DetailInclude<ExtArgs> | null
+    where?: DemandOrder_DetailWhereInput
+    orderBy?: DemandOrder_DetailOrderByWithRelationInput | DemandOrder_DetailOrderByWithRelationInput[]
+    cursor?: DemandOrder_DetailWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DemandOrder_DetailScalarFieldEnum | DemandOrder_DetailScalarFieldEnum[]
+  }
+
+  /**
+   * DemandOrder_Master without action
+   */
+  export type DemandOrder_MasterDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Master
+     */
+    select?: DemandOrder_MasterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Master
+     */
+    omit?: DemandOrder_MasterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_MasterInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DemandOrder_Detail
+   */
+
+  export type AggregateDemandOrder_Detail = {
+    _count: DemandOrder_DetailCountAggregateOutputType | null
+    _avg: DemandOrder_DetailAvgAggregateOutputType | null
+    _sum: DemandOrder_DetailSumAggregateOutputType | null
+    _min: DemandOrder_DetailMinAggregateOutputType | null
+    _max: DemandOrder_DetailMaxAggregateOutputType | null
+  }
+
+  export type DemandOrder_DetailAvgAggregateOutputType = {
+    qty: Decimal | null
+  }
+
+  export type DemandOrder_DetailSumAggregateOutputType = {
+    qty: Decimal | null
+  }
+
+  export type DemandOrder_DetailMinAggregateOutputType = {
+    id: string | null
+    masterId: string | null
+    itemId: string | null
+    qty: Decimal | null
+    remarks: string | null
+    serialNo: string | null
+  }
+
+  export type DemandOrder_DetailMaxAggregateOutputType = {
+    id: string | null
+    masterId: string | null
+    itemId: string | null
+    qty: Decimal | null
+    remarks: string | null
+    serialNo: string | null
+  }
+
+  export type DemandOrder_DetailCountAggregateOutputType = {
+    id: number
+    masterId: number
+    itemId: number
+    qty: number
+    remarks: number
+    serialNo: number
+    _all: number
+  }
+
+
+  export type DemandOrder_DetailAvgAggregateInputType = {
+    qty?: true
+  }
+
+  export type DemandOrder_DetailSumAggregateInputType = {
+    qty?: true
+  }
+
+  export type DemandOrder_DetailMinAggregateInputType = {
+    id?: true
+    masterId?: true
+    itemId?: true
+    qty?: true
+    remarks?: true
+    serialNo?: true
+  }
+
+  export type DemandOrder_DetailMaxAggregateInputType = {
+    id?: true
+    masterId?: true
+    itemId?: true
+    qty?: true
+    remarks?: true
+    serialNo?: true
+  }
+
+  export type DemandOrder_DetailCountAggregateInputType = {
+    id?: true
+    masterId?: true
+    itemId?: true
+    qty?: true
+    remarks?: true
+    serialNo?: true
+    _all?: true
+  }
+
+  export type DemandOrder_DetailAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DemandOrder_Detail to aggregate.
+     */
+    where?: DemandOrder_DetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemandOrder_Details to fetch.
+     */
+    orderBy?: DemandOrder_DetailOrderByWithRelationInput | DemandOrder_DetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DemandOrder_DetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemandOrder_Details from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemandOrder_Details.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DemandOrder_Details
+    **/
+    _count?: true | DemandOrder_DetailCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DemandOrder_DetailAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DemandOrder_DetailSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DemandOrder_DetailMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DemandOrder_DetailMaxAggregateInputType
+  }
+
+  export type GetDemandOrder_DetailAggregateType<T extends DemandOrder_DetailAggregateArgs> = {
+        [P in keyof T & keyof AggregateDemandOrder_Detail]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDemandOrder_Detail[P]>
+      : GetScalarType<T[P], AggregateDemandOrder_Detail[P]>
+  }
+
+
+
+
+  export type DemandOrder_DetailGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DemandOrder_DetailWhereInput
+    orderBy?: DemandOrder_DetailOrderByWithAggregationInput | DemandOrder_DetailOrderByWithAggregationInput[]
+    by: DemandOrder_DetailScalarFieldEnum[] | DemandOrder_DetailScalarFieldEnum
+    having?: DemandOrder_DetailScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DemandOrder_DetailCountAggregateInputType | true
+    _avg?: DemandOrder_DetailAvgAggregateInputType
+    _sum?: DemandOrder_DetailSumAggregateInputType
+    _min?: DemandOrder_DetailMinAggregateInputType
+    _max?: DemandOrder_DetailMaxAggregateInputType
+  }
+
+  export type DemandOrder_DetailGroupByOutputType = {
+    id: string
+    masterId: string | null
+    itemId: string | null
+    qty: Decimal
+    remarks: string | null
+    serialNo: string | null
+    _count: DemandOrder_DetailCountAggregateOutputType | null
+    _avg: DemandOrder_DetailAvgAggregateOutputType | null
+    _sum: DemandOrder_DetailSumAggregateOutputType | null
+    _min: DemandOrder_DetailMinAggregateOutputType | null
+    _max: DemandOrder_DetailMaxAggregateOutputType | null
+  }
+
+  type GetDemandOrder_DetailGroupByPayload<T extends DemandOrder_DetailGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DemandOrder_DetailGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DemandOrder_DetailGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DemandOrder_DetailGroupByOutputType[P]>
+            : GetScalarType<T[P], DemandOrder_DetailGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DemandOrder_DetailSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    masterId?: boolean
+    itemId?: boolean
+    qty?: boolean
+    remarks?: boolean
+    serialNo?: boolean
+    master?: boolean | DemandOrder_Detail$masterArgs<ExtArgs>
+    item?: boolean | DemandOrder_Detail$itemArgs<ExtArgs>
+  }, ExtArgs["result"]["demandOrder_Detail"]>
+
+  export type DemandOrder_DetailSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    masterId?: boolean
+    itemId?: boolean
+    qty?: boolean
+    remarks?: boolean
+    serialNo?: boolean
+    master?: boolean | DemandOrder_Detail$masterArgs<ExtArgs>
+    item?: boolean | DemandOrder_Detail$itemArgs<ExtArgs>
+  }, ExtArgs["result"]["demandOrder_Detail"]>
+
+  export type DemandOrder_DetailSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    masterId?: boolean
+    itemId?: boolean
+    qty?: boolean
+    remarks?: boolean
+    serialNo?: boolean
+    master?: boolean | DemandOrder_Detail$masterArgs<ExtArgs>
+    item?: boolean | DemandOrder_Detail$itemArgs<ExtArgs>
+  }, ExtArgs["result"]["demandOrder_Detail"]>
+
+  export type DemandOrder_DetailSelectScalar = {
+    id?: boolean
+    masterId?: boolean
+    itemId?: boolean
+    qty?: boolean
+    remarks?: boolean
+    serialNo?: boolean
+  }
+
+  export type DemandOrder_DetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "masterId" | "itemId" | "qty" | "remarks" | "serialNo", ExtArgs["result"]["demandOrder_Detail"]>
+  export type DemandOrder_DetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    master?: boolean | DemandOrder_Detail$masterArgs<ExtArgs>
+    item?: boolean | DemandOrder_Detail$itemArgs<ExtArgs>
+  }
+  export type DemandOrder_DetailIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    master?: boolean | DemandOrder_Detail$masterArgs<ExtArgs>
+    item?: boolean | DemandOrder_Detail$itemArgs<ExtArgs>
+  }
+  export type DemandOrder_DetailIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    master?: boolean | DemandOrder_Detail$masterArgs<ExtArgs>
+    item?: boolean | DemandOrder_Detail$itemArgs<ExtArgs>
+  }
+
+  export type $DemandOrder_DetailPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DemandOrder_Detail"
+    objects: {
+      master: Prisma.$DemandOrder_MasterPayload<ExtArgs> | null
+      item: Prisma.$Item_InformationPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      masterId: string | null
+      itemId: string | null
+      qty: Prisma.Decimal
+      remarks: string | null
+      serialNo: string | null
+    }, ExtArgs["result"]["demandOrder_Detail"]>
+    composites: {}
+  }
+
+  type DemandOrder_DetailGetPayload<S extends boolean | null | undefined | DemandOrder_DetailDefaultArgs> = $Result.GetResult<Prisma.$DemandOrder_DetailPayload, S>
+
+  type DemandOrder_DetailCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DemandOrder_DetailFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DemandOrder_DetailCountAggregateInputType | true
+    }
+
+  export interface DemandOrder_DetailDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DemandOrder_Detail'], meta: { name: 'DemandOrder_Detail' } }
+    /**
+     * Find zero or one DemandOrder_Detail that matches the filter.
+     * @param {DemandOrder_DetailFindUniqueArgs} args - Arguments to find a DemandOrder_Detail
+     * @example
+     * // Get one DemandOrder_Detail
+     * const demandOrder_Detail = await prisma.demandOrder_Detail.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DemandOrder_DetailFindUniqueArgs>(args: SelectSubset<T, DemandOrder_DetailFindUniqueArgs<ExtArgs>>): Prisma__DemandOrder_DetailClient<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DemandOrder_Detail that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DemandOrder_DetailFindUniqueOrThrowArgs} args - Arguments to find a DemandOrder_Detail
+     * @example
+     * // Get one DemandOrder_Detail
+     * const demandOrder_Detail = await prisma.demandOrder_Detail.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DemandOrder_DetailFindUniqueOrThrowArgs>(args: SelectSubset<T, DemandOrder_DetailFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DemandOrder_DetailClient<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DemandOrder_Detail that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemandOrder_DetailFindFirstArgs} args - Arguments to find a DemandOrder_Detail
+     * @example
+     * // Get one DemandOrder_Detail
+     * const demandOrder_Detail = await prisma.demandOrder_Detail.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DemandOrder_DetailFindFirstArgs>(args?: SelectSubset<T, DemandOrder_DetailFindFirstArgs<ExtArgs>>): Prisma__DemandOrder_DetailClient<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DemandOrder_Detail that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemandOrder_DetailFindFirstOrThrowArgs} args - Arguments to find a DemandOrder_Detail
+     * @example
+     * // Get one DemandOrder_Detail
+     * const demandOrder_Detail = await prisma.demandOrder_Detail.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DemandOrder_DetailFindFirstOrThrowArgs>(args?: SelectSubset<T, DemandOrder_DetailFindFirstOrThrowArgs<ExtArgs>>): Prisma__DemandOrder_DetailClient<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DemandOrder_Details that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemandOrder_DetailFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DemandOrder_Details
+     * const demandOrder_Details = await prisma.demandOrder_Detail.findMany()
+     * 
+     * // Get first 10 DemandOrder_Details
+     * const demandOrder_Details = await prisma.demandOrder_Detail.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const demandOrder_DetailWithIdOnly = await prisma.demandOrder_Detail.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DemandOrder_DetailFindManyArgs>(args?: SelectSubset<T, DemandOrder_DetailFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DemandOrder_Detail.
+     * @param {DemandOrder_DetailCreateArgs} args - Arguments to create a DemandOrder_Detail.
+     * @example
+     * // Create one DemandOrder_Detail
+     * const DemandOrder_Detail = await prisma.demandOrder_Detail.create({
+     *   data: {
+     *     // ... data to create a DemandOrder_Detail
+     *   }
+     * })
+     * 
+     */
+    create<T extends DemandOrder_DetailCreateArgs>(args: SelectSubset<T, DemandOrder_DetailCreateArgs<ExtArgs>>): Prisma__DemandOrder_DetailClient<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DemandOrder_Details.
+     * @param {DemandOrder_DetailCreateManyArgs} args - Arguments to create many DemandOrder_Details.
+     * @example
+     * // Create many DemandOrder_Details
+     * const demandOrder_Detail = await prisma.demandOrder_Detail.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DemandOrder_DetailCreateManyArgs>(args?: SelectSubset<T, DemandOrder_DetailCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DemandOrder_Details and returns the data saved in the database.
+     * @param {DemandOrder_DetailCreateManyAndReturnArgs} args - Arguments to create many DemandOrder_Details.
+     * @example
+     * // Create many DemandOrder_Details
+     * const demandOrder_Detail = await prisma.demandOrder_Detail.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DemandOrder_Details and only return the `id`
+     * const demandOrder_DetailWithIdOnly = await prisma.demandOrder_Detail.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DemandOrder_DetailCreateManyAndReturnArgs>(args?: SelectSubset<T, DemandOrder_DetailCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DemandOrder_Detail.
+     * @param {DemandOrder_DetailDeleteArgs} args - Arguments to delete one DemandOrder_Detail.
+     * @example
+     * // Delete one DemandOrder_Detail
+     * const DemandOrder_Detail = await prisma.demandOrder_Detail.delete({
+     *   where: {
+     *     // ... filter to delete one DemandOrder_Detail
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DemandOrder_DetailDeleteArgs>(args: SelectSubset<T, DemandOrder_DetailDeleteArgs<ExtArgs>>): Prisma__DemandOrder_DetailClient<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DemandOrder_Detail.
+     * @param {DemandOrder_DetailUpdateArgs} args - Arguments to update one DemandOrder_Detail.
+     * @example
+     * // Update one DemandOrder_Detail
+     * const demandOrder_Detail = await prisma.demandOrder_Detail.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DemandOrder_DetailUpdateArgs>(args: SelectSubset<T, DemandOrder_DetailUpdateArgs<ExtArgs>>): Prisma__DemandOrder_DetailClient<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DemandOrder_Details.
+     * @param {DemandOrder_DetailDeleteManyArgs} args - Arguments to filter DemandOrder_Details to delete.
+     * @example
+     * // Delete a few DemandOrder_Details
+     * const { count } = await prisma.demandOrder_Detail.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DemandOrder_DetailDeleteManyArgs>(args?: SelectSubset<T, DemandOrder_DetailDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DemandOrder_Details.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemandOrder_DetailUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DemandOrder_Details
+     * const demandOrder_Detail = await prisma.demandOrder_Detail.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DemandOrder_DetailUpdateManyArgs>(args: SelectSubset<T, DemandOrder_DetailUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DemandOrder_Details and returns the data updated in the database.
+     * @param {DemandOrder_DetailUpdateManyAndReturnArgs} args - Arguments to update many DemandOrder_Details.
+     * @example
+     * // Update many DemandOrder_Details
+     * const demandOrder_Detail = await prisma.demandOrder_Detail.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DemandOrder_Details and only return the `id`
+     * const demandOrder_DetailWithIdOnly = await prisma.demandOrder_Detail.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DemandOrder_DetailUpdateManyAndReturnArgs>(args: SelectSubset<T, DemandOrder_DetailUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DemandOrder_Detail.
+     * @param {DemandOrder_DetailUpsertArgs} args - Arguments to update or create a DemandOrder_Detail.
+     * @example
+     * // Update or create a DemandOrder_Detail
+     * const demandOrder_Detail = await prisma.demandOrder_Detail.upsert({
+     *   create: {
+     *     // ... data to create a DemandOrder_Detail
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DemandOrder_Detail we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DemandOrder_DetailUpsertArgs>(args: SelectSubset<T, DemandOrder_DetailUpsertArgs<ExtArgs>>): Prisma__DemandOrder_DetailClient<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DemandOrder_Details.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemandOrder_DetailCountArgs} args - Arguments to filter DemandOrder_Details to count.
+     * @example
+     * // Count the number of DemandOrder_Details
+     * const count = await prisma.demandOrder_Detail.count({
+     *   where: {
+     *     // ... the filter for the DemandOrder_Details we want to count
+     *   }
+     * })
+    **/
+    count<T extends DemandOrder_DetailCountArgs>(
+      args?: Subset<T, DemandOrder_DetailCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DemandOrder_DetailCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DemandOrder_Detail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemandOrder_DetailAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DemandOrder_DetailAggregateArgs>(args: Subset<T, DemandOrder_DetailAggregateArgs>): Prisma.PrismaPromise<GetDemandOrder_DetailAggregateType<T>>
+
+    /**
+     * Group by DemandOrder_Detail.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemandOrder_DetailGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DemandOrder_DetailGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DemandOrder_DetailGroupByArgs['orderBy'] }
+        : { orderBy?: DemandOrder_DetailGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DemandOrder_DetailGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDemandOrder_DetailGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DemandOrder_Detail model
+   */
+  readonly fields: DemandOrder_DetailFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DemandOrder_Detail.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DemandOrder_DetailClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    master<T extends DemandOrder_Detail$masterArgs<ExtArgs> = {}>(args?: Subset<T, DemandOrder_Detail$masterArgs<ExtArgs>>): Prisma__DemandOrder_MasterClient<$Result.GetResult<Prisma.$DemandOrder_MasterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    item<T extends DemandOrder_Detail$itemArgs<ExtArgs> = {}>(args?: Subset<T, DemandOrder_Detail$itemArgs<ExtArgs>>): Prisma__Item_InformationClient<$Result.GetResult<Prisma.$Item_InformationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DemandOrder_Detail model
+   */
+  interface DemandOrder_DetailFieldRefs {
+    readonly id: FieldRef<"DemandOrder_Detail", 'String'>
+    readonly masterId: FieldRef<"DemandOrder_Detail", 'String'>
+    readonly itemId: FieldRef<"DemandOrder_Detail", 'String'>
+    readonly qty: FieldRef<"DemandOrder_Detail", 'Decimal'>
+    readonly remarks: FieldRef<"DemandOrder_Detail", 'String'>
+    readonly serialNo: FieldRef<"DemandOrder_Detail", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DemandOrder_Detail findUnique
+   */
+  export type DemandOrder_DetailFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Detail
+     */
+    select?: DemandOrder_DetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Detail
+     */
+    omit?: DemandOrder_DetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_DetailInclude<ExtArgs> | null
+    /**
+     * Filter, which DemandOrder_Detail to fetch.
+     */
+    where: DemandOrder_DetailWhereUniqueInput
+  }
+
+  /**
+   * DemandOrder_Detail findUniqueOrThrow
+   */
+  export type DemandOrder_DetailFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Detail
+     */
+    select?: DemandOrder_DetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Detail
+     */
+    omit?: DemandOrder_DetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_DetailInclude<ExtArgs> | null
+    /**
+     * Filter, which DemandOrder_Detail to fetch.
+     */
+    where: DemandOrder_DetailWhereUniqueInput
+  }
+
+  /**
+   * DemandOrder_Detail findFirst
+   */
+  export type DemandOrder_DetailFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Detail
+     */
+    select?: DemandOrder_DetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Detail
+     */
+    omit?: DemandOrder_DetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_DetailInclude<ExtArgs> | null
+    /**
+     * Filter, which DemandOrder_Detail to fetch.
+     */
+    where?: DemandOrder_DetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemandOrder_Details to fetch.
+     */
+    orderBy?: DemandOrder_DetailOrderByWithRelationInput | DemandOrder_DetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DemandOrder_Details.
+     */
+    cursor?: DemandOrder_DetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemandOrder_Details from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemandOrder_Details.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DemandOrder_Details.
+     */
+    distinct?: DemandOrder_DetailScalarFieldEnum | DemandOrder_DetailScalarFieldEnum[]
+  }
+
+  /**
+   * DemandOrder_Detail findFirstOrThrow
+   */
+  export type DemandOrder_DetailFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Detail
+     */
+    select?: DemandOrder_DetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Detail
+     */
+    omit?: DemandOrder_DetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_DetailInclude<ExtArgs> | null
+    /**
+     * Filter, which DemandOrder_Detail to fetch.
+     */
+    where?: DemandOrder_DetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemandOrder_Details to fetch.
+     */
+    orderBy?: DemandOrder_DetailOrderByWithRelationInput | DemandOrder_DetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DemandOrder_Details.
+     */
+    cursor?: DemandOrder_DetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemandOrder_Details from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemandOrder_Details.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DemandOrder_Details.
+     */
+    distinct?: DemandOrder_DetailScalarFieldEnum | DemandOrder_DetailScalarFieldEnum[]
+  }
+
+  /**
+   * DemandOrder_Detail findMany
+   */
+  export type DemandOrder_DetailFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Detail
+     */
+    select?: DemandOrder_DetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Detail
+     */
+    omit?: DemandOrder_DetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_DetailInclude<ExtArgs> | null
+    /**
+     * Filter, which DemandOrder_Details to fetch.
+     */
+    where?: DemandOrder_DetailWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemandOrder_Details to fetch.
+     */
+    orderBy?: DemandOrder_DetailOrderByWithRelationInput | DemandOrder_DetailOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DemandOrder_Details.
+     */
+    cursor?: DemandOrder_DetailWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemandOrder_Details from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemandOrder_Details.
+     */
+    skip?: number
+    distinct?: DemandOrder_DetailScalarFieldEnum | DemandOrder_DetailScalarFieldEnum[]
+  }
+
+  /**
+   * DemandOrder_Detail create
+   */
+  export type DemandOrder_DetailCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Detail
+     */
+    select?: DemandOrder_DetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Detail
+     */
+    omit?: DemandOrder_DetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_DetailInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DemandOrder_Detail.
+     */
+    data: XOR<DemandOrder_DetailCreateInput, DemandOrder_DetailUncheckedCreateInput>
+  }
+
+  /**
+   * DemandOrder_Detail createMany
+   */
+  export type DemandOrder_DetailCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DemandOrder_Details.
+     */
+    data: DemandOrder_DetailCreateManyInput | DemandOrder_DetailCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DemandOrder_Detail createManyAndReturn
+   */
+  export type DemandOrder_DetailCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Detail
+     */
+    select?: DemandOrder_DetailSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Detail
+     */
+    omit?: DemandOrder_DetailOmit<ExtArgs> | null
+    /**
+     * The data used to create many DemandOrder_Details.
+     */
+    data: DemandOrder_DetailCreateManyInput | DemandOrder_DetailCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_DetailIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DemandOrder_Detail update
+   */
+  export type DemandOrder_DetailUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Detail
+     */
+    select?: DemandOrder_DetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Detail
+     */
+    omit?: DemandOrder_DetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_DetailInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DemandOrder_Detail.
+     */
+    data: XOR<DemandOrder_DetailUpdateInput, DemandOrder_DetailUncheckedUpdateInput>
+    /**
+     * Choose, which DemandOrder_Detail to update.
+     */
+    where: DemandOrder_DetailWhereUniqueInput
+  }
+
+  /**
+   * DemandOrder_Detail updateMany
+   */
+  export type DemandOrder_DetailUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DemandOrder_Details.
+     */
+    data: XOR<DemandOrder_DetailUpdateManyMutationInput, DemandOrder_DetailUncheckedUpdateManyInput>
+    /**
+     * Filter which DemandOrder_Details to update
+     */
+    where?: DemandOrder_DetailWhereInput
+    /**
+     * Limit how many DemandOrder_Details to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DemandOrder_Detail updateManyAndReturn
+   */
+  export type DemandOrder_DetailUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Detail
+     */
+    select?: DemandOrder_DetailSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Detail
+     */
+    omit?: DemandOrder_DetailOmit<ExtArgs> | null
+    /**
+     * The data used to update DemandOrder_Details.
+     */
+    data: XOR<DemandOrder_DetailUpdateManyMutationInput, DemandOrder_DetailUncheckedUpdateManyInput>
+    /**
+     * Filter which DemandOrder_Details to update
+     */
+    where?: DemandOrder_DetailWhereInput
+    /**
+     * Limit how many DemandOrder_Details to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_DetailIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DemandOrder_Detail upsert
+   */
+  export type DemandOrder_DetailUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Detail
+     */
+    select?: DemandOrder_DetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Detail
+     */
+    omit?: DemandOrder_DetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_DetailInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DemandOrder_Detail to update in case it exists.
+     */
+    where: DemandOrder_DetailWhereUniqueInput
+    /**
+     * In case the DemandOrder_Detail found by the `where` argument doesn't exist, create a new DemandOrder_Detail with this data.
+     */
+    create: XOR<DemandOrder_DetailCreateInput, DemandOrder_DetailUncheckedCreateInput>
+    /**
+     * In case the DemandOrder_Detail was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DemandOrder_DetailUpdateInput, DemandOrder_DetailUncheckedUpdateInput>
+  }
+
+  /**
+   * DemandOrder_Detail delete
+   */
+  export type DemandOrder_DetailDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Detail
+     */
+    select?: DemandOrder_DetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Detail
+     */
+    omit?: DemandOrder_DetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_DetailInclude<ExtArgs> | null
+    /**
+     * Filter which DemandOrder_Detail to delete.
+     */
+    where: DemandOrder_DetailWhereUniqueInput
+  }
+
+  /**
+   * DemandOrder_Detail deleteMany
+   */
+  export type DemandOrder_DetailDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DemandOrder_Details to delete
+     */
+    where?: DemandOrder_DetailWhereInput
+    /**
+     * Limit how many DemandOrder_Details to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DemandOrder_Detail.master
+   */
+  export type DemandOrder_Detail$masterArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Master
+     */
+    select?: DemandOrder_MasterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Master
+     */
+    omit?: DemandOrder_MasterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_MasterInclude<ExtArgs> | null
+    where?: DemandOrder_MasterWhereInput
+  }
+
+  /**
+   * DemandOrder_Detail.item
+   */
+  export type DemandOrder_Detail$itemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_Information
+     */
+    select?: Item_InformationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_Information
+     */
+    omit?: Item_InformationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Item_InformationInclude<ExtArgs> | null
+    where?: Item_InformationWhereInput
+  }
+
+  /**
+   * DemandOrder_Detail without action
+   */
+  export type DemandOrder_DetailDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemandOrder_Detail
+     */
+    select?: DemandOrder_DetailSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemandOrder_Detail
+     */
+    omit?: DemandOrder_DetailOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemandOrder_DetailInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model VOrderReceive_Master
    */
 
@@ -61160,6 +63756,36 @@ export namespace Prisma {
   export type OrderReceive_DetailScalarFieldEnum = (typeof OrderReceive_DetailScalarFieldEnum)[keyof typeof OrderReceive_DetailScalarFieldEnum]
 
 
+  export const DemandOrder_MasterScalarFieldEnum: {
+    id: 'id',
+    serialNo: 'serialNo',
+    fromBranchId: 'fromBranchId',
+    toBranchId: 'toBranchId',
+    demandDate: 'demandDate',
+    requiredDate: 'requiredDate',
+    remarks: 'remarks',
+    isActive: 'isActive',
+    createBy: 'createBy',
+    createDate: 'createDate',
+    updateBy: 'updateBy',
+    updateDate: 'updateDate'
+  };
+
+  export type DemandOrder_MasterScalarFieldEnum = (typeof DemandOrder_MasterScalarFieldEnum)[keyof typeof DemandOrder_MasterScalarFieldEnum]
+
+
+  export const DemandOrder_DetailScalarFieldEnum: {
+    id: 'id',
+    masterId: 'masterId',
+    itemId: 'itemId',
+    qty: 'qty',
+    remarks: 'remarks',
+    serialNo: 'serialNo'
+  };
+
+  export type DemandOrder_DetailScalarFieldEnum = (typeof DemandOrder_DetailScalarFieldEnum)[keyof typeof DemandOrder_DetailScalarFieldEnum]
+
+
   export const VOrderReceive_MasterScalarFieldEnum: {
     id: 'id',
     clientCode: 'clientCode',
@@ -62531,6 +65157,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveListRelationFilter
     itemIssues?: Item_IssueListRelationFilter
     orderDetails?: OrderReceive_DetailListRelationFilter
+    demandOrderDetails?: DemandOrder_DetailListRelationFilter
     inventory?: XOR<InventoryNullableScalarRelationFilter, InventoryWhereInput> | null
     prices?: T_PriceListRelationFilter
     costPrices?: T_CostPrListRelationFilter
@@ -62558,6 +65185,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveOrderByRelationAggregateInput
     itemIssues?: Item_IssueOrderByRelationAggregateInput
     orderDetails?: OrderReceive_DetailOrderByRelationAggregateInput
+    demandOrderDetails?: DemandOrder_DetailOrderByRelationAggregateInput
     inventory?: InventoryOrderByWithRelationInput
     prices?: t_PriceOrderByRelationAggregateInput
     costPrices?: t_CostPrOrderByRelationAggregateInput
@@ -62588,6 +65216,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveListRelationFilter
     itemIssues?: Item_IssueListRelationFilter
     orderDetails?: OrderReceive_DetailListRelationFilter
+    demandOrderDetails?: DemandOrder_DetailListRelationFilter
     inventory?: XOR<InventoryNullableScalarRelationFilter, InventoryWhereInput> | null
     prices?: T_PriceListRelationFilter
     costPrices?: T_CostPrListRelationFilter
@@ -65007,6 +67636,163 @@ export namespace Prisma {
     amount?: DecimalNullableWithAggregatesFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
   }
 
+  export type DemandOrder_MasterWhereInput = {
+    AND?: DemandOrder_MasterWhereInput | DemandOrder_MasterWhereInput[]
+    OR?: DemandOrder_MasterWhereInput[]
+    NOT?: DemandOrder_MasterWhereInput | DemandOrder_MasterWhereInput[]
+    id?: UuidFilter<"DemandOrder_Master"> | string
+    serialNo?: StringNullableFilter<"DemandOrder_Master"> | string | null
+    fromBranchId?: UuidNullableFilter<"DemandOrder_Master"> | string | null
+    toBranchId?: UuidNullableFilter<"DemandOrder_Master"> | string | null
+    demandDate?: DateTimeNullableFilter<"DemandOrder_Master"> | Date | string | null
+    requiredDate?: DateTimeNullableFilter<"DemandOrder_Master"> | Date | string | null
+    remarks?: StringNullableFilter<"DemandOrder_Master"> | string | null
+    isActive?: IntNullableFilter<"DemandOrder_Master"> | number | null
+    createBy?: StringNullableFilter<"DemandOrder_Master"> | string | null
+    createDate?: DateTimeNullableFilter<"DemandOrder_Master"> | Date | string | null
+    updateBy?: StringNullableFilter<"DemandOrder_Master"> | string | null
+    updateDate?: DateTimeNullableFilter<"DemandOrder_Master"> | Date | string | null
+    details?: DemandOrder_DetailListRelationFilter
+  }
+
+  export type DemandOrder_MasterOrderByWithRelationInput = {
+    id?: SortOrder
+    serialNo?: SortOrderInput | SortOrder
+    fromBranchId?: SortOrderInput | SortOrder
+    toBranchId?: SortOrderInput | SortOrder
+    demandDate?: SortOrderInput | SortOrder
+    requiredDate?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    isActive?: SortOrderInput | SortOrder
+    createBy?: SortOrderInput | SortOrder
+    createDate?: SortOrderInput | SortOrder
+    updateBy?: SortOrderInput | SortOrder
+    updateDate?: SortOrderInput | SortOrder
+    details?: DemandOrder_DetailOrderByRelationAggregateInput
+  }
+
+  export type DemandOrder_MasterWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DemandOrder_MasterWhereInput | DemandOrder_MasterWhereInput[]
+    OR?: DemandOrder_MasterWhereInput[]
+    NOT?: DemandOrder_MasterWhereInput | DemandOrder_MasterWhereInput[]
+    serialNo?: StringNullableFilter<"DemandOrder_Master"> | string | null
+    fromBranchId?: UuidNullableFilter<"DemandOrder_Master"> | string | null
+    toBranchId?: UuidNullableFilter<"DemandOrder_Master"> | string | null
+    demandDate?: DateTimeNullableFilter<"DemandOrder_Master"> | Date | string | null
+    requiredDate?: DateTimeNullableFilter<"DemandOrder_Master"> | Date | string | null
+    remarks?: StringNullableFilter<"DemandOrder_Master"> | string | null
+    isActive?: IntNullableFilter<"DemandOrder_Master"> | number | null
+    createBy?: StringNullableFilter<"DemandOrder_Master"> | string | null
+    createDate?: DateTimeNullableFilter<"DemandOrder_Master"> | Date | string | null
+    updateBy?: StringNullableFilter<"DemandOrder_Master"> | string | null
+    updateDate?: DateTimeNullableFilter<"DemandOrder_Master"> | Date | string | null
+    details?: DemandOrder_DetailListRelationFilter
+  }, "id">
+
+  export type DemandOrder_MasterOrderByWithAggregationInput = {
+    id?: SortOrder
+    serialNo?: SortOrderInput | SortOrder
+    fromBranchId?: SortOrderInput | SortOrder
+    toBranchId?: SortOrderInput | SortOrder
+    demandDate?: SortOrderInput | SortOrder
+    requiredDate?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    isActive?: SortOrderInput | SortOrder
+    createBy?: SortOrderInput | SortOrder
+    createDate?: SortOrderInput | SortOrder
+    updateBy?: SortOrderInput | SortOrder
+    updateDate?: SortOrderInput | SortOrder
+    _count?: DemandOrder_MasterCountOrderByAggregateInput
+    _avg?: DemandOrder_MasterAvgOrderByAggregateInput
+    _max?: DemandOrder_MasterMaxOrderByAggregateInput
+    _min?: DemandOrder_MasterMinOrderByAggregateInput
+    _sum?: DemandOrder_MasterSumOrderByAggregateInput
+  }
+
+  export type DemandOrder_MasterScalarWhereWithAggregatesInput = {
+    AND?: DemandOrder_MasterScalarWhereWithAggregatesInput | DemandOrder_MasterScalarWhereWithAggregatesInput[]
+    OR?: DemandOrder_MasterScalarWhereWithAggregatesInput[]
+    NOT?: DemandOrder_MasterScalarWhereWithAggregatesInput | DemandOrder_MasterScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"DemandOrder_Master"> | string
+    serialNo?: StringNullableWithAggregatesFilter<"DemandOrder_Master"> | string | null
+    fromBranchId?: UuidNullableWithAggregatesFilter<"DemandOrder_Master"> | string | null
+    toBranchId?: UuidNullableWithAggregatesFilter<"DemandOrder_Master"> | string | null
+    demandDate?: DateTimeNullableWithAggregatesFilter<"DemandOrder_Master"> | Date | string | null
+    requiredDate?: DateTimeNullableWithAggregatesFilter<"DemandOrder_Master"> | Date | string | null
+    remarks?: StringNullableWithAggregatesFilter<"DemandOrder_Master"> | string | null
+    isActive?: IntNullableWithAggregatesFilter<"DemandOrder_Master"> | number | null
+    createBy?: StringNullableWithAggregatesFilter<"DemandOrder_Master"> | string | null
+    createDate?: DateTimeNullableWithAggregatesFilter<"DemandOrder_Master"> | Date | string | null
+    updateBy?: StringNullableWithAggregatesFilter<"DemandOrder_Master"> | string | null
+    updateDate?: DateTimeNullableWithAggregatesFilter<"DemandOrder_Master"> | Date | string | null
+  }
+
+  export type DemandOrder_DetailWhereInput = {
+    AND?: DemandOrder_DetailWhereInput | DemandOrder_DetailWhereInput[]
+    OR?: DemandOrder_DetailWhereInput[]
+    NOT?: DemandOrder_DetailWhereInput | DemandOrder_DetailWhereInput[]
+    id?: UuidFilter<"DemandOrder_Detail"> | string
+    masterId?: UuidNullableFilter<"DemandOrder_Detail"> | string | null
+    itemId?: UuidNullableFilter<"DemandOrder_Detail"> | string | null
+    qty?: DecimalFilter<"DemandOrder_Detail"> | Decimal | DecimalJsLike | number | string
+    remarks?: StringNullableFilter<"DemandOrder_Detail"> | string | null
+    serialNo?: StringNullableFilter<"DemandOrder_Detail"> | string | null
+    master?: XOR<DemandOrder_MasterNullableScalarRelationFilter, DemandOrder_MasterWhereInput> | null
+    item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
+  }
+
+  export type DemandOrder_DetailOrderByWithRelationInput = {
+    id?: SortOrder
+    masterId?: SortOrderInput | SortOrder
+    itemId?: SortOrderInput | SortOrder
+    qty?: SortOrder
+    remarks?: SortOrderInput | SortOrder
+    serialNo?: SortOrderInput | SortOrder
+    master?: DemandOrder_MasterOrderByWithRelationInput
+    item?: Item_InformationOrderByWithRelationInput
+  }
+
+  export type DemandOrder_DetailWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DemandOrder_DetailWhereInput | DemandOrder_DetailWhereInput[]
+    OR?: DemandOrder_DetailWhereInput[]
+    NOT?: DemandOrder_DetailWhereInput | DemandOrder_DetailWhereInput[]
+    masterId?: UuidNullableFilter<"DemandOrder_Detail"> | string | null
+    itemId?: UuidNullableFilter<"DemandOrder_Detail"> | string | null
+    qty?: DecimalFilter<"DemandOrder_Detail"> | Decimal | DecimalJsLike | number | string
+    remarks?: StringNullableFilter<"DemandOrder_Detail"> | string | null
+    serialNo?: StringNullableFilter<"DemandOrder_Detail"> | string | null
+    master?: XOR<DemandOrder_MasterNullableScalarRelationFilter, DemandOrder_MasterWhereInput> | null
+    item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
+  }, "id">
+
+  export type DemandOrder_DetailOrderByWithAggregationInput = {
+    id?: SortOrder
+    masterId?: SortOrderInput | SortOrder
+    itemId?: SortOrderInput | SortOrder
+    qty?: SortOrder
+    remarks?: SortOrderInput | SortOrder
+    serialNo?: SortOrderInput | SortOrder
+    _count?: DemandOrder_DetailCountOrderByAggregateInput
+    _avg?: DemandOrder_DetailAvgOrderByAggregateInput
+    _max?: DemandOrder_DetailMaxOrderByAggregateInput
+    _min?: DemandOrder_DetailMinOrderByAggregateInput
+    _sum?: DemandOrder_DetailSumOrderByAggregateInput
+  }
+
+  export type DemandOrder_DetailScalarWhereWithAggregatesInput = {
+    AND?: DemandOrder_DetailScalarWhereWithAggregatesInput | DemandOrder_DetailScalarWhereWithAggregatesInput[]
+    OR?: DemandOrder_DetailScalarWhereWithAggregatesInput[]
+    NOT?: DemandOrder_DetailScalarWhereWithAggregatesInput | DemandOrder_DetailScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"DemandOrder_Detail"> | string
+    masterId?: UuidNullableWithAggregatesFilter<"DemandOrder_Detail"> | string | null
+    itemId?: UuidNullableWithAggregatesFilter<"DemandOrder_Detail"> | string | null
+    qty?: DecimalWithAggregatesFilter<"DemandOrder_Detail"> | Decimal | DecimalJsLike | number | string
+    remarks?: StringNullableWithAggregatesFilter<"DemandOrder_Detail"> | string | null
+    serialNo?: StringNullableWithAggregatesFilter<"DemandOrder_Detail"> | string | null
+  }
+
   export type VOrderReceive_MasterWhereInput = {
     AND?: VOrderReceive_MasterWhereInput | VOrderReceive_MasterWhereInput[]
     OR?: VOrderReceive_MasterWhereInput[]
@@ -66765,6 +69551,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -66791,6 +69578,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -66817,6 +69605,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -66843,6 +69632,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -69602,6 +72392,176 @@ export namespace Prisma {
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
+  export type DemandOrder_MasterCreateInput = {
+    id?: string
+    serialNo?: string | null
+    fromBranchId?: string | null
+    toBranchId?: string | null
+    demandDate?: Date | string | null
+    requiredDate?: Date | string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+    details?: DemandOrder_DetailCreateNestedManyWithoutMasterInput
+  }
+
+  export type DemandOrder_MasterUncheckedCreateInput = {
+    id?: string
+    serialNo?: string | null
+    fromBranchId?: string | null
+    toBranchId?: string | null
+    demandDate?: Date | string | null
+    requiredDate?: Date | string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+    details?: DemandOrder_DetailUncheckedCreateNestedManyWithoutMasterInput
+  }
+
+  export type DemandOrder_MasterUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    fromBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    toBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    demandDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiredDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    details?: DemandOrder_DetailUpdateManyWithoutMasterNestedInput
+  }
+
+  export type DemandOrder_MasterUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    fromBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    toBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    demandDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiredDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    details?: DemandOrder_DetailUncheckedUpdateManyWithoutMasterNestedInput
+  }
+
+  export type DemandOrder_MasterCreateManyInput = {
+    id?: string
+    serialNo?: string | null
+    fromBranchId?: string | null
+    toBranchId?: string | null
+    demandDate?: Date | string | null
+    requiredDate?: Date | string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+  }
+
+  export type DemandOrder_MasterUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    fromBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    toBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    demandDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiredDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DemandOrder_MasterUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    fromBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    toBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    demandDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiredDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DemandOrder_DetailCreateInput = {
+    id?: string
+    qty: Decimal | DecimalJsLike | number | string
+    remarks?: string | null
+    serialNo?: string | null
+    master?: DemandOrder_MasterCreateNestedOneWithoutDetailsInput
+    item?: Item_InformationCreateNestedOneWithoutDemandOrderDetailsInput
+  }
+
+  export type DemandOrder_DetailUncheckedCreateInput = {
+    id?: string
+    masterId?: string | null
+    itemId?: string | null
+    qty: Decimal | DecimalJsLike | number | string
+    remarks?: string | null
+    serialNo?: string | null
+  }
+
+  export type DemandOrder_DetailUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    master?: DemandOrder_MasterUpdateOneWithoutDetailsNestedInput
+    item?: Item_InformationUpdateOneWithoutDemandOrderDetailsNestedInput
+  }
+
+  export type DemandOrder_DetailUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    masterId?: NullableStringFieldUpdateOperationsInput | string | null
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DemandOrder_DetailCreateManyInput = {
+    id?: string
+    masterId?: string | null
+    itemId?: string | null
+    qty: Decimal | DecimalJsLike | number | string
+    remarks?: string | null
+    serialNo?: string | null
+  }
+
+  export type DemandOrder_DetailUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DemandOrder_DetailUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    masterId?: NullableStringFieldUpdateOperationsInput | string | null
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type VOrderReceive_MasterCreateInput = {
     id?: string
     clientCode: string
@@ -71271,6 +74231,12 @@ export namespace Prisma {
     none?: OrderReceive_DetailWhereInput
   }
 
+  export type DemandOrder_DetailListRelationFilter = {
+    every?: DemandOrder_DetailWhereInput
+    some?: DemandOrder_DetailWhereInput
+    none?: DemandOrder_DetailWhereInput
+  }
+
   export type InventoryNullableScalarRelationFilter = {
     is?: InventoryWhereInput | null
     isNot?: InventoryWhereInput | null
@@ -71321,6 +74287,10 @@ export namespace Prisma {
   }
 
   export type OrderReceive_DetailOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DemandOrder_DetailOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -73033,6 +76003,99 @@ export namespace Prisma {
     amount?: SortOrder
   }
 
+  export type DemandOrder_MasterCountOrderByAggregateInput = {
+    id?: SortOrder
+    serialNo?: SortOrder
+    fromBranchId?: SortOrder
+    toBranchId?: SortOrder
+    demandDate?: SortOrder
+    requiredDate?: SortOrder
+    remarks?: SortOrder
+    isActive?: SortOrder
+    createBy?: SortOrder
+    createDate?: SortOrder
+    updateBy?: SortOrder
+    updateDate?: SortOrder
+  }
+
+  export type DemandOrder_MasterAvgOrderByAggregateInput = {
+    isActive?: SortOrder
+  }
+
+  export type DemandOrder_MasterMaxOrderByAggregateInput = {
+    id?: SortOrder
+    serialNo?: SortOrder
+    fromBranchId?: SortOrder
+    toBranchId?: SortOrder
+    demandDate?: SortOrder
+    requiredDate?: SortOrder
+    remarks?: SortOrder
+    isActive?: SortOrder
+    createBy?: SortOrder
+    createDate?: SortOrder
+    updateBy?: SortOrder
+    updateDate?: SortOrder
+  }
+
+  export type DemandOrder_MasterMinOrderByAggregateInput = {
+    id?: SortOrder
+    serialNo?: SortOrder
+    fromBranchId?: SortOrder
+    toBranchId?: SortOrder
+    demandDate?: SortOrder
+    requiredDate?: SortOrder
+    remarks?: SortOrder
+    isActive?: SortOrder
+    createBy?: SortOrder
+    createDate?: SortOrder
+    updateBy?: SortOrder
+    updateDate?: SortOrder
+  }
+
+  export type DemandOrder_MasterSumOrderByAggregateInput = {
+    isActive?: SortOrder
+  }
+
+  export type DemandOrder_MasterNullableScalarRelationFilter = {
+    is?: DemandOrder_MasterWhereInput | null
+    isNot?: DemandOrder_MasterWhereInput | null
+  }
+
+  export type DemandOrder_DetailCountOrderByAggregateInput = {
+    id?: SortOrder
+    masterId?: SortOrder
+    itemId?: SortOrder
+    qty?: SortOrder
+    remarks?: SortOrder
+    serialNo?: SortOrder
+  }
+
+  export type DemandOrder_DetailAvgOrderByAggregateInput = {
+    qty?: SortOrder
+  }
+
+  export type DemandOrder_DetailMaxOrderByAggregateInput = {
+    id?: SortOrder
+    masterId?: SortOrder
+    itemId?: SortOrder
+    qty?: SortOrder
+    remarks?: SortOrder
+    serialNo?: SortOrder
+  }
+
+  export type DemandOrder_DetailMinOrderByAggregateInput = {
+    id?: SortOrder
+    masterId?: SortOrder
+    itemId?: SortOrder
+    qty?: SortOrder
+    remarks?: SortOrder
+    serialNo?: SortOrder
+  }
+
+  export type DemandOrder_DetailSumOrderByAggregateInput = {
+    qty?: SortOrder
+  }
+
   export type VOrderReceive_DetailListRelationFilter = {
     every?: VOrderReceive_DetailWhereInput
     some?: VOrderReceive_DetailWhereInput
@@ -74191,6 +77254,13 @@ export namespace Prisma {
     connect?: OrderReceive_DetailWhereUniqueInput | OrderReceive_DetailWhereUniqueInput[]
   }
 
+  export type DemandOrder_DetailCreateNestedManyWithoutItemInput = {
+    create?: XOR<DemandOrder_DetailCreateWithoutItemInput, DemandOrder_DetailUncheckedCreateWithoutItemInput> | DemandOrder_DetailCreateWithoutItemInput[] | DemandOrder_DetailUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: DemandOrder_DetailCreateOrConnectWithoutItemInput | DemandOrder_DetailCreateOrConnectWithoutItemInput[]
+    createMany?: DemandOrder_DetailCreateManyItemInputEnvelope
+    connect?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+  }
+
   export type InventoryCreateNestedOneWithoutItemInput = {
     create?: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
     connectOrCreate?: InventoryCreateOrConnectWithoutItemInput
@@ -74272,6 +77342,13 @@ export namespace Prisma {
     connectOrCreate?: OrderReceive_DetailCreateOrConnectWithoutItemInput | OrderReceive_DetailCreateOrConnectWithoutItemInput[]
     createMany?: OrderReceive_DetailCreateManyItemInputEnvelope
     connect?: OrderReceive_DetailWhereUniqueInput | OrderReceive_DetailWhereUniqueInput[]
+  }
+
+  export type DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput = {
+    create?: XOR<DemandOrder_DetailCreateWithoutItemInput, DemandOrder_DetailUncheckedCreateWithoutItemInput> | DemandOrder_DetailCreateWithoutItemInput[] | DemandOrder_DetailUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: DemandOrder_DetailCreateOrConnectWithoutItemInput | DemandOrder_DetailCreateOrConnectWithoutItemInput[]
+    createMany?: DemandOrder_DetailCreateManyItemInputEnvelope
+    connect?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
   }
 
   export type InventoryUncheckedCreateNestedOneWithoutItemInput = {
@@ -74428,6 +77505,20 @@ export namespace Prisma {
     update?: OrderReceive_DetailUpdateWithWhereUniqueWithoutItemInput | OrderReceive_DetailUpdateWithWhereUniqueWithoutItemInput[]
     updateMany?: OrderReceive_DetailUpdateManyWithWhereWithoutItemInput | OrderReceive_DetailUpdateManyWithWhereWithoutItemInput[]
     deleteMany?: OrderReceive_DetailScalarWhereInput | OrderReceive_DetailScalarWhereInput[]
+  }
+
+  export type DemandOrder_DetailUpdateManyWithoutItemNestedInput = {
+    create?: XOR<DemandOrder_DetailCreateWithoutItemInput, DemandOrder_DetailUncheckedCreateWithoutItemInput> | DemandOrder_DetailCreateWithoutItemInput[] | DemandOrder_DetailUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: DemandOrder_DetailCreateOrConnectWithoutItemInput | DemandOrder_DetailCreateOrConnectWithoutItemInput[]
+    upsert?: DemandOrder_DetailUpsertWithWhereUniqueWithoutItemInput | DemandOrder_DetailUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: DemandOrder_DetailCreateManyItemInputEnvelope
+    set?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    disconnect?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    delete?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    connect?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    update?: DemandOrder_DetailUpdateWithWhereUniqueWithoutItemInput | DemandOrder_DetailUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: DemandOrder_DetailUpdateManyWithWhereWithoutItemInput | DemandOrder_DetailUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: DemandOrder_DetailScalarWhereInput | DemandOrder_DetailScalarWhereInput[]
   }
 
   export type InventoryUpdateOneWithoutItemNestedInput = {
@@ -74592,6 +77683,20 @@ export namespace Prisma {
     update?: OrderReceive_DetailUpdateWithWhereUniqueWithoutItemInput | OrderReceive_DetailUpdateWithWhereUniqueWithoutItemInput[]
     updateMany?: OrderReceive_DetailUpdateManyWithWhereWithoutItemInput | OrderReceive_DetailUpdateManyWithWhereWithoutItemInput[]
     deleteMany?: OrderReceive_DetailScalarWhereInput | OrderReceive_DetailScalarWhereInput[]
+  }
+
+  export type DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput = {
+    create?: XOR<DemandOrder_DetailCreateWithoutItemInput, DemandOrder_DetailUncheckedCreateWithoutItemInput> | DemandOrder_DetailCreateWithoutItemInput[] | DemandOrder_DetailUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: DemandOrder_DetailCreateOrConnectWithoutItemInput | DemandOrder_DetailCreateOrConnectWithoutItemInput[]
+    upsert?: DemandOrder_DetailUpsertWithWhereUniqueWithoutItemInput | DemandOrder_DetailUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: DemandOrder_DetailCreateManyItemInputEnvelope
+    set?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    disconnect?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    delete?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    connect?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    update?: DemandOrder_DetailUpdateWithWhereUniqueWithoutItemInput | DemandOrder_DetailUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: DemandOrder_DetailUpdateManyWithWhereWithoutItemInput | DemandOrder_DetailUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: DemandOrder_DetailScalarWhereInput | DemandOrder_DetailScalarWhereInput[]
   }
 
   export type InventoryUncheckedUpdateOneWithoutItemNestedInput = {
@@ -75422,6 +78527,80 @@ export namespace Prisma {
     update?: XOR<XOR<Item_InformationUpdateToOneWithWhereWithoutOrderDetailsInput, Item_InformationUpdateWithoutOrderDetailsInput>, Item_InformationUncheckedUpdateWithoutOrderDetailsInput>
   }
 
+  export type DemandOrder_DetailCreateNestedManyWithoutMasterInput = {
+    create?: XOR<DemandOrder_DetailCreateWithoutMasterInput, DemandOrder_DetailUncheckedCreateWithoutMasterInput> | DemandOrder_DetailCreateWithoutMasterInput[] | DemandOrder_DetailUncheckedCreateWithoutMasterInput[]
+    connectOrCreate?: DemandOrder_DetailCreateOrConnectWithoutMasterInput | DemandOrder_DetailCreateOrConnectWithoutMasterInput[]
+    createMany?: DemandOrder_DetailCreateManyMasterInputEnvelope
+    connect?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+  }
+
+  export type DemandOrder_DetailUncheckedCreateNestedManyWithoutMasterInput = {
+    create?: XOR<DemandOrder_DetailCreateWithoutMasterInput, DemandOrder_DetailUncheckedCreateWithoutMasterInput> | DemandOrder_DetailCreateWithoutMasterInput[] | DemandOrder_DetailUncheckedCreateWithoutMasterInput[]
+    connectOrCreate?: DemandOrder_DetailCreateOrConnectWithoutMasterInput | DemandOrder_DetailCreateOrConnectWithoutMasterInput[]
+    createMany?: DemandOrder_DetailCreateManyMasterInputEnvelope
+    connect?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+  }
+
+  export type DemandOrder_DetailUpdateManyWithoutMasterNestedInput = {
+    create?: XOR<DemandOrder_DetailCreateWithoutMasterInput, DemandOrder_DetailUncheckedCreateWithoutMasterInput> | DemandOrder_DetailCreateWithoutMasterInput[] | DemandOrder_DetailUncheckedCreateWithoutMasterInput[]
+    connectOrCreate?: DemandOrder_DetailCreateOrConnectWithoutMasterInput | DemandOrder_DetailCreateOrConnectWithoutMasterInput[]
+    upsert?: DemandOrder_DetailUpsertWithWhereUniqueWithoutMasterInput | DemandOrder_DetailUpsertWithWhereUniqueWithoutMasterInput[]
+    createMany?: DemandOrder_DetailCreateManyMasterInputEnvelope
+    set?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    disconnect?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    delete?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    connect?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    update?: DemandOrder_DetailUpdateWithWhereUniqueWithoutMasterInput | DemandOrder_DetailUpdateWithWhereUniqueWithoutMasterInput[]
+    updateMany?: DemandOrder_DetailUpdateManyWithWhereWithoutMasterInput | DemandOrder_DetailUpdateManyWithWhereWithoutMasterInput[]
+    deleteMany?: DemandOrder_DetailScalarWhereInput | DemandOrder_DetailScalarWhereInput[]
+  }
+
+  export type DemandOrder_DetailUncheckedUpdateManyWithoutMasterNestedInput = {
+    create?: XOR<DemandOrder_DetailCreateWithoutMasterInput, DemandOrder_DetailUncheckedCreateWithoutMasterInput> | DemandOrder_DetailCreateWithoutMasterInput[] | DemandOrder_DetailUncheckedCreateWithoutMasterInput[]
+    connectOrCreate?: DemandOrder_DetailCreateOrConnectWithoutMasterInput | DemandOrder_DetailCreateOrConnectWithoutMasterInput[]
+    upsert?: DemandOrder_DetailUpsertWithWhereUniqueWithoutMasterInput | DemandOrder_DetailUpsertWithWhereUniqueWithoutMasterInput[]
+    createMany?: DemandOrder_DetailCreateManyMasterInputEnvelope
+    set?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    disconnect?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    delete?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    connect?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+    update?: DemandOrder_DetailUpdateWithWhereUniqueWithoutMasterInput | DemandOrder_DetailUpdateWithWhereUniqueWithoutMasterInput[]
+    updateMany?: DemandOrder_DetailUpdateManyWithWhereWithoutMasterInput | DemandOrder_DetailUpdateManyWithWhereWithoutMasterInput[]
+    deleteMany?: DemandOrder_DetailScalarWhereInput | DemandOrder_DetailScalarWhereInput[]
+  }
+
+  export type DemandOrder_MasterCreateNestedOneWithoutDetailsInput = {
+    create?: XOR<DemandOrder_MasterCreateWithoutDetailsInput, DemandOrder_MasterUncheckedCreateWithoutDetailsInput>
+    connectOrCreate?: DemandOrder_MasterCreateOrConnectWithoutDetailsInput
+    connect?: DemandOrder_MasterWhereUniqueInput
+  }
+
+  export type Item_InformationCreateNestedOneWithoutDemandOrderDetailsInput = {
+    create?: XOR<Item_InformationCreateWithoutDemandOrderDetailsInput, Item_InformationUncheckedCreateWithoutDemandOrderDetailsInput>
+    connectOrCreate?: Item_InformationCreateOrConnectWithoutDemandOrderDetailsInput
+    connect?: Item_InformationWhereUniqueInput
+  }
+
+  export type DemandOrder_MasterUpdateOneWithoutDetailsNestedInput = {
+    create?: XOR<DemandOrder_MasterCreateWithoutDetailsInput, DemandOrder_MasterUncheckedCreateWithoutDetailsInput>
+    connectOrCreate?: DemandOrder_MasterCreateOrConnectWithoutDetailsInput
+    upsert?: DemandOrder_MasterUpsertWithoutDetailsInput
+    disconnect?: DemandOrder_MasterWhereInput | boolean
+    delete?: DemandOrder_MasterWhereInput | boolean
+    connect?: DemandOrder_MasterWhereUniqueInput
+    update?: XOR<XOR<DemandOrder_MasterUpdateToOneWithWhereWithoutDetailsInput, DemandOrder_MasterUpdateWithoutDetailsInput>, DemandOrder_MasterUncheckedUpdateWithoutDetailsInput>
+  }
+
+  export type Item_InformationUpdateOneWithoutDemandOrderDetailsNestedInput = {
+    create?: XOR<Item_InformationCreateWithoutDemandOrderDetailsInput, Item_InformationUncheckedCreateWithoutDemandOrderDetailsInput>
+    connectOrCreate?: Item_InformationCreateOrConnectWithoutDemandOrderDetailsInput
+    upsert?: Item_InformationUpsertWithoutDemandOrderDetailsInput
+    disconnect?: Item_InformationWhereInput | boolean
+    delete?: Item_InformationWhereInput | boolean
+    connect?: Item_InformationWhereUniqueInput
+    update?: XOR<XOR<Item_InformationUpdateToOneWithWhereWithoutDemandOrderDetailsInput, Item_InformationUpdateWithoutDemandOrderDetailsInput>, Item_InformationUncheckedUpdateWithoutDemandOrderDetailsInput>
+  }
+
   export type VOrderReceive_DetailCreateNestedManyWithoutMasterInput = {
     create?: XOR<VOrderReceive_DetailCreateWithoutMasterInput, VOrderReceive_DetailUncheckedCreateWithoutMasterInput> | VOrderReceive_DetailCreateWithoutMasterInput[] | VOrderReceive_DetailUncheckedCreateWithoutMasterInput[]
     connectOrCreate?: VOrderReceive_DetailCreateOrConnectWithoutMasterInput | VOrderReceive_DetailCreateOrConnectWithoutMasterInput[]
@@ -75988,6 +79167,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -76013,6 +79193,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -77870,6 +81051,32 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DemandOrder_DetailCreateWithoutItemInput = {
+    id?: string
+    qty: Decimal | DecimalJsLike | number | string
+    remarks?: string | null
+    serialNo?: string | null
+    master?: DemandOrder_MasterCreateNestedOneWithoutDetailsInput
+  }
+
+  export type DemandOrder_DetailUncheckedCreateWithoutItemInput = {
+    id?: string
+    masterId?: string | null
+    qty: Decimal | DecimalJsLike | number | string
+    remarks?: string | null
+    serialNo?: string | null
+  }
+
+  export type DemandOrder_DetailCreateOrConnectWithoutItemInput = {
+    where: DemandOrder_DetailWhereUniqueInput
+    create: XOR<DemandOrder_DetailCreateWithoutItemInput, DemandOrder_DetailUncheckedCreateWithoutItemInput>
+  }
+
+  export type DemandOrder_DetailCreateManyItemInputEnvelope = {
+    data: DemandOrder_DetailCreateManyItemInput | DemandOrder_DetailCreateManyItemInput[]
+    skipDuplicates?: boolean
+  }
+
   export type InventoryCreateWithoutItemInput = {
     quantity?: Decimal | DecimalJsLike | number | string
   }
@@ -78318,6 +81525,34 @@ export namespace Prisma {
     amount?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
   }
 
+  export type DemandOrder_DetailUpsertWithWhereUniqueWithoutItemInput = {
+    where: DemandOrder_DetailWhereUniqueInput
+    update: XOR<DemandOrder_DetailUpdateWithoutItemInput, DemandOrder_DetailUncheckedUpdateWithoutItemInput>
+    create: XOR<DemandOrder_DetailCreateWithoutItemInput, DemandOrder_DetailUncheckedCreateWithoutItemInput>
+  }
+
+  export type DemandOrder_DetailUpdateWithWhereUniqueWithoutItemInput = {
+    where: DemandOrder_DetailWhereUniqueInput
+    data: XOR<DemandOrder_DetailUpdateWithoutItemInput, DemandOrder_DetailUncheckedUpdateWithoutItemInput>
+  }
+
+  export type DemandOrder_DetailUpdateManyWithWhereWithoutItemInput = {
+    where: DemandOrder_DetailScalarWhereInput
+    data: XOR<DemandOrder_DetailUpdateManyMutationInput, DemandOrder_DetailUncheckedUpdateManyWithoutItemInput>
+  }
+
+  export type DemandOrder_DetailScalarWhereInput = {
+    AND?: DemandOrder_DetailScalarWhereInput | DemandOrder_DetailScalarWhereInput[]
+    OR?: DemandOrder_DetailScalarWhereInput[]
+    NOT?: DemandOrder_DetailScalarWhereInput | DemandOrder_DetailScalarWhereInput[]
+    id?: UuidFilter<"DemandOrder_Detail"> | string
+    masterId?: UuidNullableFilter<"DemandOrder_Detail"> | string | null
+    itemId?: UuidNullableFilter<"DemandOrder_Detail"> | string | null
+    qty?: DecimalFilter<"DemandOrder_Detail"> | Decimal | DecimalJsLike | number | string
+    remarks?: StringNullableFilter<"DemandOrder_Detail"> | string | null
+    serialNo?: StringNullableFilter<"DemandOrder_Detail"> | string | null
+  }
+
   export type InventoryUpsertWithoutItemInput = {
     update: XOR<InventoryUpdateWithoutItemInput, InventoryUncheckedUpdateWithoutItemInput>
     create: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
@@ -78428,6 +81663,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
   }
@@ -78453,6 +81689,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
   }
@@ -78494,6 +81731,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
   }
@@ -78519,6 +81757,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
   }
@@ -78544,6 +81783,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
   }
@@ -78569,6 +81809,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
   }
@@ -78610,6 +81851,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
   }
@@ -78635,6 +81877,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
   }
@@ -78660,6 +81903,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
   }
@@ -78685,6 +81929,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
   }
@@ -78726,6 +81971,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
   }
@@ -78751,6 +81997,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
   }
@@ -78930,6 +82177,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -78955,6 +82203,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -79041,6 +82290,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -79066,6 +82316,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -79457,6 +82708,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -79482,6 +82734,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -79584,6 +82837,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -79609,6 +82863,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -79747,6 +83002,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -79772,6 +83028,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -79872,6 +83129,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -79897,6 +83155,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -79980,6 +83239,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -80005,6 +83265,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -80095,6 +83356,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -80120,6 +83382,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -80295,6 +83558,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -80320,6 +83584,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -80402,6 +83667,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -80427,6 +83693,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -80452,6 +83719,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -80477,6 +83745,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -80518,6 +83787,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -80543,6 +83813,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -80568,6 +83839,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -80593,6 +83865,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -80634,6 +83907,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -80659,6 +83933,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -80684,6 +83959,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -80709,6 +83985,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -80750,6 +84027,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -80775,6 +84053,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -81260,6 +84539,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -81285,6 +84565,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -81377,6 +84658,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -81402,6 +84684,245 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
+    prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
+    costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+  }
+
+  export type DemandOrder_DetailCreateWithoutMasterInput = {
+    id?: string
+    qty: Decimal | DecimalJsLike | number | string
+    remarks?: string | null
+    serialNo?: string | null
+    item?: Item_InformationCreateNestedOneWithoutDemandOrderDetailsInput
+  }
+
+  export type DemandOrder_DetailUncheckedCreateWithoutMasterInput = {
+    id?: string
+    itemId?: string | null
+    qty: Decimal | DecimalJsLike | number | string
+    remarks?: string | null
+    serialNo?: string | null
+  }
+
+  export type DemandOrder_DetailCreateOrConnectWithoutMasterInput = {
+    where: DemandOrder_DetailWhereUniqueInput
+    create: XOR<DemandOrder_DetailCreateWithoutMasterInput, DemandOrder_DetailUncheckedCreateWithoutMasterInput>
+  }
+
+  export type DemandOrder_DetailCreateManyMasterInputEnvelope = {
+    data: DemandOrder_DetailCreateManyMasterInput | DemandOrder_DetailCreateManyMasterInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DemandOrder_DetailUpsertWithWhereUniqueWithoutMasterInput = {
+    where: DemandOrder_DetailWhereUniqueInput
+    update: XOR<DemandOrder_DetailUpdateWithoutMasterInput, DemandOrder_DetailUncheckedUpdateWithoutMasterInput>
+    create: XOR<DemandOrder_DetailCreateWithoutMasterInput, DemandOrder_DetailUncheckedCreateWithoutMasterInput>
+  }
+
+  export type DemandOrder_DetailUpdateWithWhereUniqueWithoutMasterInput = {
+    where: DemandOrder_DetailWhereUniqueInput
+    data: XOR<DemandOrder_DetailUpdateWithoutMasterInput, DemandOrder_DetailUncheckedUpdateWithoutMasterInput>
+  }
+
+  export type DemandOrder_DetailUpdateManyWithWhereWithoutMasterInput = {
+    where: DemandOrder_DetailScalarWhereInput
+    data: XOR<DemandOrder_DetailUpdateManyMutationInput, DemandOrder_DetailUncheckedUpdateManyWithoutMasterInput>
+  }
+
+  export type DemandOrder_MasterCreateWithoutDetailsInput = {
+    id?: string
+    serialNo?: string | null
+    fromBranchId?: string | null
+    toBranchId?: string | null
+    demandDate?: Date | string | null
+    requiredDate?: Date | string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+  }
+
+  export type DemandOrder_MasterUncheckedCreateWithoutDetailsInput = {
+    id?: string
+    serialNo?: string | null
+    fromBranchId?: string | null
+    toBranchId?: string | null
+    demandDate?: Date | string | null
+    requiredDate?: Date | string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+  }
+
+  export type DemandOrder_MasterCreateOrConnectWithoutDetailsInput = {
+    where: DemandOrder_MasterWhereUniqueInput
+    create: XOR<DemandOrder_MasterCreateWithoutDetailsInput, DemandOrder_MasterUncheckedCreateWithoutDetailsInput>
+  }
+
+  export type Item_InformationCreateWithoutDemandOrderDetailsInput = {
+    id?: string
+    itmCode: string
+    itmName?: string | null
+    itmCategory?: string | null
+    itmType?: string | null
+    itmUOM?: string | null
+    itmRemarks?: string | null
+    itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: string | null
+    isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
+    runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
+    runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
+    ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
+    asstDetails?: AsstDetCreateNestedManyWithoutItemInput
+    itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
+    itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
+    itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
+    prices?: t_PriceCreateNestedManyWithoutItemInput
+    costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+  }
+
+  export type Item_InformationUncheckedCreateWithoutDemandOrderDetailsInput = {
+    id?: string
+    itmCode: string
+    itmName?: string | null
+    itmCategory?: string | null
+    itmType?: string | null
+    itmUOM?: string | null
+    itmRemarks?: string | null
+    imageId?: string | null
+    itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: string | null
+    isActive?: string | null
+    runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
+    runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
+    ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
+    asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
+    itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
+    itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
+    itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
+    prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
+    costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+  }
+
+  export type Item_InformationCreateOrConnectWithoutDemandOrderDetailsInput = {
+    where: Item_InformationWhereUniqueInput
+    create: XOR<Item_InformationCreateWithoutDemandOrderDetailsInput, Item_InformationUncheckedCreateWithoutDemandOrderDetailsInput>
+  }
+
+  export type DemandOrder_MasterUpsertWithoutDetailsInput = {
+    update: XOR<DemandOrder_MasterUpdateWithoutDetailsInput, DemandOrder_MasterUncheckedUpdateWithoutDetailsInput>
+    create: XOR<DemandOrder_MasterCreateWithoutDetailsInput, DemandOrder_MasterUncheckedCreateWithoutDetailsInput>
+    where?: DemandOrder_MasterWhereInput
+  }
+
+  export type DemandOrder_MasterUpdateToOneWithWhereWithoutDetailsInput = {
+    where?: DemandOrder_MasterWhereInput
+    data: XOR<DemandOrder_MasterUpdateWithoutDetailsInput, DemandOrder_MasterUncheckedUpdateWithoutDetailsInput>
+  }
+
+  export type DemandOrder_MasterUpdateWithoutDetailsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    fromBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    toBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    demandDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiredDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DemandOrder_MasterUncheckedUpdateWithoutDetailsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    fromBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    toBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    demandDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    requiredDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Item_InformationUpsertWithoutDemandOrderDetailsInput = {
+    update: XOR<Item_InformationUpdateWithoutDemandOrderDetailsInput, Item_InformationUncheckedUpdateWithoutDemandOrderDetailsInput>
+    create: XOR<Item_InformationCreateWithoutDemandOrderDetailsInput, Item_InformationUncheckedCreateWithoutDemandOrderDetailsInput>
+    where?: Item_InformationWhereInput
+  }
+
+  export type Item_InformationUpdateToOneWithWhereWithoutDemandOrderDetailsInput = {
+    where?: Item_InformationWhereInput
+    data: XOR<Item_InformationUpdateWithoutDemandOrderDetailsInput, Item_InformationUncheckedUpdateWithoutDemandOrderDetailsInput>
+  }
+
+  export type Item_InformationUpdateWithoutDemandOrderDetailsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itmCode?: StringFieldUpdateOperationsInput | string
+    itmName?: NullableStringFieldUpdateOperationsInput | string | null
+    itmCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    itmType?: NullableStringFieldUpdateOperationsInput | string | null
+    itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
+    runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
+    runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
+    ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
+    asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
+    itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
+    itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
+    itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
+    prices?: t_PriceUpdateManyWithoutItemNestedInput
+    costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+  }
+
+  export type Item_InformationUncheckedUpdateWithoutDemandOrderDetailsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itmCode?: StringFieldUpdateOperationsInput | string
+    itmName?: NullableStringFieldUpdateOperationsInput | string | null
+    itmCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    itmType?: NullableStringFieldUpdateOperationsInput | string | null
+    itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
+    itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
+    runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
+    ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
+    asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
+    itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
+    itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
+    itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -81688,6 +85209,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -81713,6 +85235,7 @@ export namespace Prisma {
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -82431,6 +85954,14 @@ export namespace Prisma {
     amount?: Decimal | DecimalJsLike | number | string | null
   }
 
+  export type DemandOrder_DetailCreateManyItemInput = {
+    id?: string
+    masterId?: string | null
+    qty: Decimal | DecimalJsLike | number | string
+    remarks?: string | null
+    serialNo?: string | null
+  }
+
   export type t_PriceCreateManyItemInput = {
     id?: string
     priceFromDate?: Date | string | null
@@ -82855,6 +86386,30 @@ export namespace Prisma {
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type DemandOrder_DetailUpdateWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    master?: DemandOrder_MasterUpdateOneWithoutDetailsNestedInput
+  }
+
+  export type DemandOrder_DetailUncheckedUpdateWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    masterId?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DemandOrder_DetailUncheckedUpdateManyWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    masterId?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_PriceUpdateWithoutItemInput = {
@@ -83449,6 +87004,38 @@ export namespace Prisma {
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type DemandOrder_DetailCreateManyMasterInput = {
+    id?: string
+    itemId?: string | null
+    qty: Decimal | DecimalJsLike | number | string
+    remarks?: string | null
+    serialNo?: string | null
+  }
+
+  export type DemandOrder_DetailUpdateWithoutMasterInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    item?: Item_InformationUpdateOneWithoutDemandOrderDetailsNestedInput
+  }
+
+  export type DemandOrder_DetailUncheckedUpdateWithoutMasterInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type DemandOrder_DetailUncheckedUpdateManyWithoutMasterInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VOrderReceive_DetailCreateManyMasterInput = {
