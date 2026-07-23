@@ -830,4 +830,210 @@ export class ReportsService {
       }))
       .sort((a, b) => a.code.localeCompare(b.code));
   }
+
+  // ── Sales History Summary (invoice-level summary with payment breakdown) ───
+
+  async getSalesHistory(query: DateRangeQuery) {
+    const { from, to } = this.parseRange(query);
+    const branchFilter = query.branchId ? { branchId: query.branchId } : {};
+
+    // Fetch all four sale ledgers (invoice-level only)
+    const [cashSales, creditSales, vatCashSales, vatCreditSales, branchesData] = await this.prisma.$transaction([
+      this.prisma.t_SOMstr.findMany({
+        where: { somstrDate: { gte: from, lte: to }, somstrIsActive: true, ...branchFilter },
+        orderBy: { somstrDate: 'asc' },
+      }),
+      this.prisma.cSMaster.findMany({
+        where: { invDate: { gte: from, lte: to }, isActive: 1, ...branchFilter },
+        orderBy: { invDate: 'asc' },
+      }),
+      this.prisma.t_SOMstV.findMany({
+        where: { somstrDate: { gte: from, lte: to }, somstrIsActive: true, ...branchFilter },
+        orderBy: { somstrDate: 'asc' },
+      }),
+      this.prisma.cSVMaster.findMany({
+        where: { invDate: { gte: from, lte: to }, ...branchFilter },
+        orderBy: { invDate: 'asc' },
+      }),
+      this.prisma.branch.findMany(),
+    ]);
+
+    const branchMap = new Map(branchesData.map((b) => [b.id, b.branchName ?? '']));
+
+    // Format sales items from all ledgers (invoice-level summary)
+    const allItems: any[] = [];
+
+    // Process cash sales
+    cashSales.forEach((s) => {
+      allItems.push({
+        date: s.somstrDate,
+        invoiceNo: s.somstrCode ?? '',
+        itemName: 'Multiple Items',
+        qty: 0,
+        price: 0,
+        amount: num(s.somstrTotalAmt),
+        discount: num(s.somstrDiscAmt),
+        vat: 0,
+        totalAmount: num(s.somstrNetAmt),
+        cash: num(s.somstrTotalAmt),
+        bkash: 0,
+        nagad: 0,
+        brac: 0,
+        ucb: 0,
+        city: 0,
+        ebl: 0,
+        fpanda: 0,
+        pathao: 0,
+        foodi: 0,
+        credit: 0,
+        branchName: branchMap.get(s.branchId) ?? '',
+        branchId: s.branchId,
+      });
+    });
+
+    // Process credit sales
+    creditSales.forEach((s) => {
+      allItems.push({
+        date: s.invDate,
+        invoiceNo: s.invNo ?? '',
+        itemName: 'Multiple Items',
+        qty: 0,
+        price: 0,
+        amount: num(s.totalAmount),
+        discount: num(s.totalDiscount),
+        vat: num(s.totalVat) ?? 0,
+        totalAmount: num(s.totalAmount) - num(s.totalDiscount),
+        cash: 0,
+        bkash: 0,
+        nagad: 0,
+        brac: 0,
+        ucb: 0,
+        city: 0,
+        ebl: 0,
+        fpanda: 0,
+        pathao: 0,
+        foodi: 0,
+        credit: num(s.totalAmount) - num(s.totalDiscount),
+        branchName: branchMap.get(s.branchId) ?? '',
+        branchId: s.branchId,
+      });
+    });
+
+    // Process VAT cash sales
+    vatCashSales.forEach((s) => {
+      allItems.push({
+        date: s.somstrDate,
+        invoiceNo: s.somstrCode ?? '',
+        itemName: 'Multiple Items',
+        qty: 0,
+        price: 0,
+        amount: num(s.somstrTotalAmt),
+        discount: num(s.somstrDiscAmt),
+        vat: 0,
+        totalAmount: num(s.somstrNetAmt),
+        cash: num(s.somstrTotalAmt),
+        bkash: 0,
+        nagad: 0,
+        brac: 0,
+        ucb: 0,
+        city: 0,
+        ebl: 0,
+        fpanda: 0,
+        pathao: 0,
+        foodi: 0,
+        credit: 0,
+        branchName: branchMap.get(s.branchId) ?? '',
+        branchId: s.branchId,
+      });
+    });
+
+    // Process VAT credit sales
+    vatCreditSales.forEach((s) => {
+      allItems.push({
+        date: s.invDate,
+        invoiceNo: s.invNo ?? '',
+        itemName: 'Multiple Items',
+        qty: 0,
+        price: 0,
+        amount: num(s.totalAmount),
+        discount: num(s.totalDiscount),
+        vat: num(s.totalVat) ?? 0,
+        totalAmount: num(s.totalAmount) - num(s.totalDiscount),
+        cash: 0,
+        bkash: 0,
+        nagad: 0,
+        brac: 0,
+        ucb: 0,
+        city: 0,
+        ebl: 0,
+        fpanda: 0,
+        pathao: 0,
+        foodi: 0,
+        credit: num(s.totalAmount) - num(s.totalDiscount),
+        branchName: branchMap.get(s.branchId) ?? '',
+        branchId: s.branchId,
+      });
+    });
+
+    // Sort by date and invoice
+    allItems.sort((a, b) => {
+      const dateCompare = (a.date?.getTime() ?? 0) - (b.date?.getTime() ?? 0);
+      if (dateCompare !== 0) return dateCompare;
+      return (a.invoiceNo ?? '').localeCompare(b.invoiceNo ?? '');
+    });
+
+    // Calculate daily subtotals
+    const dailyMap = new Map<string, any>();
+    allItems.forEach((item) => {
+      const dateStr = (item.date as Date).toISOString().split('T')[0];
+      if (!dailyMap.has(dateStr)) {
+        dailyMap.set(dateStr, {
+          date: item.date,
+          qty: 0,
+          amount: 0,
+          discount: 0,
+          vat: 0,
+          totalAmount: 0,
+          cash: 0,
+          bkash: 0,
+          nagad: 0,
+          brac: 0,
+          ucb: 0,
+          city: 0,
+          ebl: 0,
+          fpanda: 0,
+          pathao: 0,
+          foodi: 0,
+          credit: 0,
+        });
+      }
+      const daily = dailyMap.get(dateStr);
+      daily.amount += item.amount;
+      daily.discount += item.discount;
+      daily.vat += item.vat;
+      daily.totalAmount += item.totalAmount;
+      daily.cash += item.cash;
+      daily.bkash += item.bkash;
+      daily.nagad += item.nagad;
+      daily.brac += item.brac;
+      daily.ucb += item.ucb;
+      daily.city += item.city;
+      daily.ebl += item.ebl;
+      daily.fpanda += item.fpanda;
+      daily.pathao += item.pathao;
+      daily.foodi += item.foodi;
+      daily.credit += item.credit;
+    });
+
+    const dailySubTotals = Array.from(dailyMap.values());
+
+    return {
+      branchName: query.branchId ? branchMap.get(query.branchId) ?? 'All Branches' : 'All Branches',
+      branchAddress: '',
+      fromDate: from.toISOString().split('T')[0],
+      toDate: to.toISOString().split('T')[0],
+      items: allItems,
+      dailySubTotals,
+    };
+  }
 }

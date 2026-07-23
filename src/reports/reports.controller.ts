@@ -125,4 +125,18 @@ export class ReportsController {
   ) {
     return this.reportsService.getPacketAnalysis(this.range(from, fromDate, to, toDate));
   }
+
+  @Get('sales-history')
+  @ApiOperation({ summary: 'Get sales history summary with line-item details and payment method breakdown' })
+  @ApiQuery({ name: 'fromDate', required: true, description: 'Start date (ISO 8601)' })
+  @ApiQuery({ name: 'toDate', required: true, description: 'End date (ISO 8601)' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch ID — omit to aggregate all branches' })
+  @ApiResponse({ status: 200, description: 'Sales history rows with payment breakdown and daily subtotals' })
+  getSalesHistory(
+    @Query('fromDate') fromDate: string,
+    @Query('toDate') toDate: string,
+    @Query('branchId') branchId?: string,
+  ) {
+    return this.reportsService.getSalesHistory({ fromDate, toDate, branchId: branchId || undefined });
+  }
 }
