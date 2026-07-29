@@ -368,6 +368,7 @@ exports.Prisma.CSMasterScalarFieldEnum = {
   totalAmount: 'totalAmount',
   totalDiscount: 'totalDiscount',
   totalVat: 'totalVat',
+  discountPercent: 'discountPercent',
   discountRemarks: 'discountRemarks',
   isActive: 'isActive',
   branchId: 'branchId',

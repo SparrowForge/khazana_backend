@@ -360,6 +360,10 @@ model CSMaster {
   totalAmount     Decimal?   @map("TotalAmount") @db.Decimal(9, 2)
   totalDiscount   Decimal?   @map("TotalDiscount") @db.Decimal(8, 2)
   totalVat        Decimal?   @map("TotalVat") @db.Decimal(8, 2)
+  // Invoice-level discount, charged as a % of the VAT-inclusive total — the same
+  // basis OrderReceive_Master.discount uses, so billing an order reproduces its
+  // total exactly. TotalDiscount holds the resulting amount (+ line discounts).
+  discountPercent Decimal?   @map("DiscountPercent") @db.Decimal(5, 2)
   discountRemarks String?    @map("DiscountRemarks")
   isActive        Int?       @map("IsActive")
   branchId        String?    @map("BranchId") @db.Uuid

@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsString, IsOptional, IsNumber, IsArray, ValidateNested,
-  IsDateString, IsPositive, Min, IsUUID,
+  IsDateString, IsPositive, Min, Max, IsUUID,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -66,11 +66,22 @@ export class CreateCreditSaleDto {
   @Min(0)
   totalAmount: number;
 
-  @ApiPropertyOptional({ example: 50.00, description: 'Total discount' })
+  @ApiPropertyOptional({ example: 50.00, description: 'Total discount amount (line discounts + the invoice-level discount)' })
   @IsNumber()
   @Min(0)
   @IsOptional()
   totalDiscount?: number;
+
+  @ApiPropertyOptional({
+    example: 5,
+    description:
+      'Invoice-level discount %, charged on the VAT-inclusive total. Same basis as an order\'s discount, so billing an order at its percent reproduces the order total.',
+  })
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  @IsOptional()
+  discountPercent?: number;
 
   @ApiPropertyOptional({ example: 30.00, description: 'Total VAT' })
   @IsNumber()

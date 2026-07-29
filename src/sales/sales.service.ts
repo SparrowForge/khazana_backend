@@ -20,6 +20,9 @@ interface UnifiedSale {
   customerName: string | null;
 }
 
+/** Money rounding — 2dp, the same rounding the sale forms apply client-side. */
+const r2 = (n: number): number => Math.round(n * 100) / 100;
+
 @Injectable()
 export class SalesService {
   constructor(private prisma: PrismaService) {}
@@ -94,7 +97,11 @@ export class SalesService {
         poNo: dto.poNo,
         branchId,
         totalAmount: dto.totalAmount,
+        // totalDiscount is the money value (line discounts + the invoice-level
+        // discount); discountPercent is kept so the invoice can be re-rendered
+        // and re-edited from the rate it was actually given at.
         totalDiscount: dto.totalDiscount ?? 0,
+        discountPercent: dto.discountPercent ?? 0,
         totalVat: dto.totalVat ?? 0,
         discountRemarks: dto.discountRemarks,
         isActive: 1,
@@ -356,6 +363,7 @@ export class SalesService {
       poNo: sale.poNo,
       totalAmount: Number(sale.totalAmount ?? 0),
       totalDiscount: Number(sale.totalDiscount ?? 0),
+      discountPercent: Number(sale.discountPercent ?? 0),
       totalVat: Number(sale.totalVat ?? 0),
       items: sale.details.map((d) => ({
         itemId: d.itemOId,
@@ -404,9 +412,17 @@ export class SalesService {
       total: Number(d.total ?? 0),
     }));
 
-    const netAmount = items.reduce((s, i) => s + i.total, 0);
+    // Two discounts stack: the per-line ones (already inside each line total)
+    // and the invoice-level percent, which is charged on the VAT-inclusive gross
+    // — the same basis an order discounts on, so an invoice raised against an
+    // order at its percent comes to exactly the order's total.
+    const lineDiscount = r2(items.reduce((s, i) => s + i.discount, 0));
+    const netAmount = r2(items.reduce((s, i) => s + i.total, 0));
     const totalVat = Number(sale.totalVat ?? 0);
-    const payableAmount = netAmount + totalVat;
+    const grossAmount = r2(netAmount + totalVat);
+    const discountPercent = Number(sale.discountPercent ?? 0);
+    const invoiceDiscount = Math.min(r2((grossAmount * discountPercent) / 100), grossAmount);
+    const payableAmount = r2(grossAmount - invoiceDiscount);
     // A credit sale is unpaid at issue — the only money already collected is the
     // advance on the order it was raised against (PO No carries the order no).
     const paidAmount = await this.orderAdvanceFor(sale.poNo);
@@ -436,11 +452,15 @@ export class SalesService {
       items,
       totalAmount: Number(sale.totalAmount ?? 0),
       totalDiscount: Number(sale.totalDiscount ?? 0),
+      lineDiscount,
+      discountPercent,
+      invoiceDiscount,
       totalVat,
       netAmount,
+      grossAmount,
       payableAmount,
       paidAmount,
-      dueAmount: payableAmount - paidAmount,
+      dueAmount: r2(payableAmount - paidAmount),
     };
   }
 
@@ -552,6 +572,7 @@ export class SalesService {
           poNo: dto.poNo ?? undefined,
           totalAmount: dto.totalAmount,
           totalDiscount: dto.totalDiscount,
+          discountPercent: dto.discountPercent,
           totalVat: dto.totalVat,
           details: {
             create: dto.items.map((it) => ({

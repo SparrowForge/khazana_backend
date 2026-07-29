@@ -29676,6 +29676,7 @@ export namespace Prisma {
     totalAmount: Decimal | null
     totalDiscount: Decimal | null
     totalVat: Decimal | null
+    discountPercent: Decimal | null
     isActive: number | null
   }
 
@@ -29683,6 +29684,7 @@ export namespace Prisma {
     totalAmount: Decimal | null
     totalDiscount: Decimal | null
     totalVat: Decimal | null
+    discountPercent: Decimal | null
     isActive: number | null
   }
 
@@ -29697,6 +29699,7 @@ export namespace Prisma {
     totalAmount: Decimal | null
     totalDiscount: Decimal | null
     totalVat: Decimal | null
+    discountPercent: Decimal | null
     discountRemarks: string | null
     isActive: number | null
     branchId: string | null
@@ -29714,6 +29717,7 @@ export namespace Prisma {
     totalAmount: Decimal | null
     totalDiscount: Decimal | null
     totalVat: Decimal | null
+    discountPercent: Decimal | null
     discountRemarks: string | null
     isActive: number | null
     branchId: string | null
@@ -29731,6 +29735,7 @@ export namespace Prisma {
     totalAmount: number
     totalDiscount: number
     totalVat: number
+    discountPercent: number
     discountRemarks: number
     isActive: number
     branchId: number
@@ -29743,6 +29748,7 @@ export namespace Prisma {
     totalAmount?: true
     totalDiscount?: true
     totalVat?: true
+    discountPercent?: true
     isActive?: true
   }
 
@@ -29750,6 +29756,7 @@ export namespace Prisma {
     totalAmount?: true
     totalDiscount?: true
     totalVat?: true
+    discountPercent?: true
     isActive?: true
   }
 
@@ -29764,6 +29771,7 @@ export namespace Prisma {
     totalAmount?: true
     totalDiscount?: true
     totalVat?: true
+    discountPercent?: true
     discountRemarks?: true
     isActive?: true
     branchId?: true
@@ -29781,6 +29789,7 @@ export namespace Prisma {
     totalAmount?: true
     totalDiscount?: true
     totalVat?: true
+    discountPercent?: true
     discountRemarks?: true
     isActive?: true
     branchId?: true
@@ -29798,6 +29807,7 @@ export namespace Prisma {
     totalAmount?: true
     totalDiscount?: true
     totalVat?: true
+    discountPercent?: true
     discountRemarks?: true
     isActive?: true
     branchId?: true
@@ -29902,6 +29912,7 @@ export namespace Prisma {
     totalAmount: Decimal | null
     totalDiscount: Decimal | null
     totalVat: Decimal | null
+    discountPercent: Decimal | null
     discountRemarks: string | null
     isActive: number | null
     branchId: string | null
@@ -29938,6 +29949,7 @@ export namespace Prisma {
     totalAmount?: boolean
     totalDiscount?: boolean
     totalVat?: boolean
+    discountPercent?: boolean
     discountRemarks?: boolean
     isActive?: boolean
     branchId?: boolean
@@ -29958,6 +29970,7 @@ export namespace Prisma {
     totalAmount?: boolean
     totalDiscount?: boolean
     totalVat?: boolean
+    discountPercent?: boolean
     discountRemarks?: boolean
     isActive?: boolean
     branchId?: boolean
@@ -29976,6 +29989,7 @@ export namespace Prisma {
     totalAmount?: boolean
     totalDiscount?: boolean
     totalVat?: boolean
+    discountPercent?: boolean
     discountRemarks?: boolean
     isActive?: boolean
     branchId?: boolean
@@ -29994,13 +30008,14 @@ export namespace Prisma {
     totalAmount?: boolean
     totalDiscount?: boolean
     totalVat?: boolean
+    discountPercent?: boolean
     discountRemarks?: boolean
     isActive?: boolean
     branchId?: boolean
     createDate?: boolean
   }
 
-  export type CSMasterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invNo" | "invDate" | "poNo" | "invoiceBy" | "manualInvoice" | "customerId" | "totalAmount" | "totalDiscount" | "totalVat" | "discountRemarks" | "isActive" | "branchId" | "createDate", ExtArgs["result"]["cSMaster"]>
+  export type CSMasterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invNo" | "invDate" | "poNo" | "invoiceBy" | "manualInvoice" | "customerId" | "totalAmount" | "totalDiscount" | "totalVat" | "discountPercent" | "discountRemarks" | "isActive" | "branchId" | "createDate", ExtArgs["result"]["cSMaster"]>
   export type CSMasterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | CSMaster$customerArgs<ExtArgs>
     details?: boolean | CSMaster$detailsArgs<ExtArgs>
@@ -30030,6 +30045,7 @@ export namespace Prisma {
       totalAmount: Prisma.Decimal | null
       totalDiscount: Prisma.Decimal | null
       totalVat: Prisma.Decimal | null
+      discountPercent: Prisma.Decimal | null
       discountRemarks: string | null
       isActive: number | null
       branchId: string | null
@@ -30469,6 +30485,7 @@ export namespace Prisma {
     readonly totalAmount: FieldRef<"CSMaster", 'Decimal'>
     readonly totalDiscount: FieldRef<"CSMaster", 'Decimal'>
     readonly totalVat: FieldRef<"CSMaster", 'Decimal'>
+    readonly discountPercent: FieldRef<"CSMaster", 'Decimal'>
     readonly discountRemarks: FieldRef<"CSMaster", 'String'>
     readonly isActive: FieldRef<"CSMaster", 'Int'>
     readonly branchId: FieldRef<"CSMaster", 'String'>
@@ -63372,6 +63389,7 @@ export namespace Prisma {
     totalAmount: 'totalAmount',
     totalDiscount: 'totalDiscount',
     totalVat: 'totalVat',
+    discountPercent: 'discountPercent',
     discountRemarks: 'discountRemarks',
     isActive: 'isActive',
     branchId: 'branchId',
@@ -65604,6 +65622,7 @@ export namespace Prisma {
     totalAmount?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalVat?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
+    discountPercent?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: StringNullableFilter<"CSMaster"> | string | null
     isActive?: IntNullableFilter<"CSMaster"> | number | null
     branchId?: UuidNullableFilter<"CSMaster"> | string | null
@@ -65623,6 +65642,7 @@ export namespace Prisma {
     totalAmount?: SortOrderInput | SortOrder
     totalDiscount?: SortOrderInput | SortOrder
     totalVat?: SortOrderInput | SortOrder
+    discountPercent?: SortOrderInput | SortOrder
     discountRemarks?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
     branchId?: SortOrderInput | SortOrder
@@ -65645,6 +65665,7 @@ export namespace Prisma {
     totalAmount?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalVat?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
+    discountPercent?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: StringNullableFilter<"CSMaster"> | string | null
     isActive?: IntNullableFilter<"CSMaster"> | number | null
     branchId?: UuidNullableFilter<"CSMaster"> | string | null
@@ -65664,6 +65685,7 @@ export namespace Prisma {
     totalAmount?: SortOrderInput | SortOrder
     totalDiscount?: SortOrderInput | SortOrder
     totalVat?: SortOrderInput | SortOrder
+    discountPercent?: SortOrderInput | SortOrder
     discountRemarks?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
     branchId?: SortOrderInput | SortOrder
@@ -65689,6 +65711,7 @@ export namespace Prisma {
     totalAmount?: DecimalNullableWithAggregatesFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: DecimalNullableWithAggregatesFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalVat?: DecimalNullableWithAggregatesFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
+    discountPercent?: DecimalNullableWithAggregatesFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: StringNullableWithAggregatesFilter<"CSMaster"> | string | null
     isActive?: IntNullableWithAggregatesFilter<"CSMaster"> | number | null
     branchId?: UuidNullableWithAggregatesFilter<"CSMaster"> | string | null
@@ -70043,6 +70066,7 @@ export namespace Prisma {
     totalAmount?: Decimal | DecimalJsLike | number | string | null
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
+    discountPercent?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
     branchId?: string | null
@@ -70062,6 +70086,7 @@ export namespace Prisma {
     totalAmount?: Decimal | DecimalJsLike | number | string | null
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
+    discountPercent?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
     branchId?: string | null
@@ -70079,6 +70104,7 @@ export namespace Prisma {
     totalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discountPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70098,6 +70124,7 @@ export namespace Prisma {
     totalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discountPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70116,6 +70143,7 @@ export namespace Prisma {
     totalAmount?: Decimal | DecimalJsLike | number | string | null
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
+    discountPercent?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
     branchId?: string | null
@@ -70132,6 +70160,7 @@ export namespace Prisma {
     totalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discountPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -70149,6 +70178,7 @@ export namespace Prisma {
     totalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discountPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -74630,6 +74660,7 @@ export namespace Prisma {
     totalAmount?: SortOrder
     totalDiscount?: SortOrder
     totalVat?: SortOrder
+    discountPercent?: SortOrder
     discountRemarks?: SortOrder
     isActive?: SortOrder
     branchId?: SortOrder
@@ -74640,6 +74671,7 @@ export namespace Prisma {
     totalAmount?: SortOrder
     totalDiscount?: SortOrder
     totalVat?: SortOrder
+    discountPercent?: SortOrder
     isActive?: SortOrder
   }
 
@@ -74654,6 +74686,7 @@ export namespace Prisma {
     totalAmount?: SortOrder
     totalDiscount?: SortOrder
     totalVat?: SortOrder
+    discountPercent?: SortOrder
     discountRemarks?: SortOrder
     isActive?: SortOrder
     branchId?: SortOrder
@@ -74671,6 +74704,7 @@ export namespace Prisma {
     totalAmount?: SortOrder
     totalDiscount?: SortOrder
     totalVat?: SortOrder
+    discountPercent?: SortOrder
     discountRemarks?: SortOrder
     isActive?: SortOrder
     branchId?: SortOrder
@@ -74681,6 +74715,7 @@ export namespace Prisma {
     totalAmount?: SortOrder
     totalDiscount?: SortOrder
     totalVat?: SortOrder
+    discountPercent?: SortOrder
     isActive?: SortOrder
   }
 
@@ -80293,6 +80328,7 @@ export namespace Prisma {
     totalAmount?: Decimal | DecimalJsLike | number | string | null
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
+    discountPercent?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
     branchId?: string | null
@@ -80310,6 +80346,7 @@ export namespace Prisma {
     totalAmount?: Decimal | DecimalJsLike | number | string | null
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
+    discountPercent?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
     branchId?: string | null
@@ -80481,6 +80518,7 @@ export namespace Prisma {
     totalAmount?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     totalVat?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
+    discountPercent?: DecimalNullableFilter<"CSMaster"> | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: StringNullableFilter<"CSMaster"> | string | null
     isActive?: IntNullableFilter<"CSMaster"> | number | null
     branchId?: UuidNullableFilter<"CSMaster"> | string | null
@@ -82128,6 +82166,7 @@ export namespace Prisma {
     totalAmount?: Decimal | DecimalJsLike | number | string | null
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
+    discountPercent?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
     branchId?: string | null
@@ -82146,6 +82185,7 @@ export namespace Prisma {
     totalAmount?: Decimal | DecimalJsLike | number | string | null
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
+    discountPercent?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
     branchId?: string | null
@@ -82235,6 +82275,7 @@ export namespace Prisma {
     totalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discountPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -82253,6 +82294,7 @@ export namespace Prisma {
     totalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discountPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85582,6 +85624,7 @@ export namespace Prisma {
     totalAmount?: Decimal | DecimalJsLike | number | string | null
     totalDiscount?: Decimal | DecimalJsLike | number | string | null
     totalVat?: Decimal | DecimalJsLike | number | string | null
+    discountPercent?: Decimal | DecimalJsLike | number | string | null
     discountRemarks?: string | null
     isActive?: number | null
     branchId?: string | null
@@ -85643,6 +85686,7 @@ export namespace Prisma {
     totalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discountPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85660,6 +85704,7 @@ export namespace Prisma {
     totalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discountPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -85677,6 +85722,7 @@ export namespace Prisma {
     totalAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     totalVat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discountPercent?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null

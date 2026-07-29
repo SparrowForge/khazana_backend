@@ -6309,7 +6309,12 @@
           "totalDiscount": {
             "type": "number",
             "example": 50,
-            "description": "Total discount"
+            "description": "Total discount amount (line discounts + the invoice-level discount)"
+          },
+          "discountPercent": {
+            "type": "number",
+            "example": 5,
+            "description": "Invoice-level discount %, charged on the VAT-inclusive total. Same basis as an order's discount, so billing an order at its percent reproduces the order total."
           },
           "totalVat": {
             "type": "number",
@@ -6629,6 +6634,11 @@
           "totalDiscount": {
             "type": "number",
             "example": 50
+          },
+          "discountPercent": {
+            "type": "number",
+            "example": 5,
+            "description": "Invoice-level discount % on the VAT-inclusive total (credit sales)"
           },
           "totalVat": {
             "type": "number",

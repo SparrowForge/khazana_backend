@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsDateString, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
+import { IsArray, IsDateString, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 /** One replacement line. Cash sales key by `itemId` (t_SODet), credit sales by
@@ -72,6 +72,13 @@ export class UpdateSalesDto {
   @IsNumber()
   @IsOptional()
   totalDiscount?: number;
+
+  @ApiPropertyOptional({ example: 5, description: 'Invoice-level discount % on the VAT-inclusive total (credit sales)' })
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  @IsOptional()
+  discountPercent?: number;
 
   @ApiPropertyOptional({ example: 30 })
   @IsNumber()
