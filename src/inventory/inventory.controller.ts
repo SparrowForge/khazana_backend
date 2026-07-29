@@ -8,7 +8,7 @@ import { ItemQueryDto } from './dto/item-query.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { CurrentUser, RequiredPermission } from '../common/decorators';
-import { PaginationQueryDto, BranchPaginationQueryDto } from '../common/dto';
+import { PaginationQueryDto, BranchPaginationQueryDto, DateRangeQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Inventory')
@@ -85,7 +85,7 @@ export class InventoryController {
   @Get('transfer')
   @ApiOperation({ summary: 'Get paginated stock transfer history' })
   @ApiResponse({ status: 200, description: 'Paginated list of stock transfers' })
-  async findAllTransfers(@Query() query: BranchPaginationQueryDto) {
+  async findAllTransfers(@Query() query: DateRangeQueryDto) {
     const { items, meta } = await this.inventoryService.findTransferHistory(query);
     return paginatedResponse(items, meta, 'Transfer');
   }
@@ -157,7 +157,7 @@ export class InventoryController {
   @Get('adjust/history')
   @ApiOperation({ summary: 'Get paginated stock adjustment history' })
   @ApiResponse({ status: 200, description: 'Paginated list of stock adjustments' })
-  async adjustmentHistory(@Query() query: BranchPaginationQueryDto) {
+  async adjustmentHistory(@Query() query: DateRangeQueryDto) {
     const { items, meta } = await this.inventoryService.findAllAdjustments(query);
     return paginatedResponse(items, meta, 'Adjustment');
   }
@@ -193,7 +193,7 @@ export class InventoryController {
   @Get('receive/history')
   @ApiOperation({ summary: 'Get paginated stock receive history' })
   @ApiResponse({ status: 200, description: 'Paginated list of stock receives' })
-  async receiveHistory(@Query() query: BranchPaginationQueryDto) {
+  async receiveHistory(@Query() query: DateRangeQueryDto) {
     const { items, meta } = await this.inventoryService.findReceiveHistory(query);
     return paginatedResponse(items, meta, 'Receive');
   }
@@ -234,7 +234,7 @@ export class InventoryController {
   @Get('issue/history')
   @ApiOperation({ summary: 'Get paginated stock issue history' })
   @ApiResponse({ status: 200, description: 'Paginated list of stock issues' })
-  async issueHistory(@Query() query: BranchPaginationQueryDto) {
+  async issueHistory(@Query() query: DateRangeQueryDto) {
     const { items, meta } = await this.inventoryService.findAllIssues(query);
     return paginatedResponse(items, meta, 'Issue');
   }

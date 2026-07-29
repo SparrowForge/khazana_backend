@@ -1,4 +1,4 @@
-import { IsOptional, IsIn, IsUUID } from 'class-validator';
+import { IsOptional, IsIn, IsUUID, IsDateString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationQueryDto } from '../../common/dto';
 
@@ -12,4 +12,14 @@ export class SalesQueryDto extends PaginationQueryDto {
   @IsOptional()
   @IsUUID()
   branchId?: string;
+
+  @ApiPropertyOptional({ format: 'date', description: 'Range start (inclusive), YYYY-MM-DD' })
+  @IsOptional()
+  @IsDateString()
+  fromDate?: string;
+
+  @ApiPropertyOptional({ format: 'date', description: 'Range end (inclusive), YYYY-MM-DD' })
+  @IsOptional()
+  @IsDateString()
+  toDate?: string;
 }

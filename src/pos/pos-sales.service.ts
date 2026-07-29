@@ -2,6 +2,8 @@ import { Injectable, BadRequestException, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '../database/prisma.service';
 import { CreatePosSaleDto, UpdatePosSaleDto } from './dto/create-pos-sale.dto';
 import { toBranchUuid } from '../common/helpers';
+import { dateRangeFilter } from '../common/dto';
+import { PosSalesQueryDto } from './dto/pos-sales-query.dto';
 import type { t_SOMstr, t_SODet, Item_Information } from '../generated/prisma';
 
 type SaleWithDetails = t_SOMstr & {
@@ -212,9 +214,10 @@ export class PosSalesService {
     return this.toResponse(sale as SaleWithDetails);
   }
 
-  async findAll() {
+  async findAll(query: PosSalesQueryDto = {}) {
+    const somstrDate = dateRangeFilter(query.fromDate, query.toDate);
     const sales = await this.prisma.t_SOMstr.findMany({
-      where: { somstrCode: { startsWith: 'DS-' } },
+      where: { somstrCode: { startsWith: 'DS-' }, ...(somstrDate && { somstrDate }) },
       orderBy: { somstrDate: 'desc' },
       include: { details: { include: { item: true } }, bank: { select: { name: true } } },
     });

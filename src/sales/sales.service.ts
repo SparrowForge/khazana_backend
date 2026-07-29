@@ -7,6 +7,7 @@ import { CreateVatCreditSaleDto } from './dto/create-vat-credit-sale.dto';
 import { SalesQueryDto } from './dto/sales-query.dto';
 import { UpdateSalesDto } from './dto/update-sales.dto';
 import { buildPaginationMeta, toBranchUuid } from '../common/helpers';
+import { dateRangeFilter } from '../common/dto';
 import type { PaginationMeta } from '../common/helpers';
 
 /** Normalized row for the unified sales report (all sale types in one shape). */
@@ -209,15 +210,19 @@ export class SalesService {
    * in-memory (fine for POS-scale volumes).
    */
   async findAll(query: SalesQueryDto): Promise<{ items: object[]; meta: PaginationMeta }> {
-    const { page, limit, type, branchId } = query;
+    const { page, limit, type, branchId, fromDate, toDate } = query;
     const all = !type || type === 'all';
     const num = (v: unknown): number => (v == null ? 0 : Number(v));
+    // One range, applied to whichever date column each source uses.
+    const range = dateRangeFilter(fromDate, toDate);
+    const saleDate = range ? { somstrDate: range } : {};
+    const invDate = range ? { invDate: range } : {};
 
     const rows: UnifiedSale[] = [];
 
     if (all || type === 'cash') {
       const cash = await this.prisma.t_SOMstr.findMany({
-        where: { somstrIsActive: true, ...(branchId && { branchId }) },
+        where: { somstrIsActive: true, ...(branchId && { branchId }), ...saleDate },
         select: { id: true, somstrCode: true, somstrDate: true, somstrNetAmt: true },
       });
       for (const r of cash)
@@ -226,7 +231,7 @@ export class SalesService {
 
     if (all || type === 'vat-cash') {
       const vcash = await this.prisma.t_SOMstV.findMany({
-        where: { somstrIsActive: true, ...(branchId && { branchId }) },
+        where: { somstrIsActive: true, ...(branchId && { branchId }), ...saleDate },
         select: { id: true, somstrCode: true, somstrDate: true, somstrNetAmt: true },
       });
       for (const r of vcash)
@@ -235,7 +240,7 @@ export class SalesService {
 
     if (all || type === 'credit') {
       const credit = await this.prisma.cSMaster.findMany({
-        where: { isActive: 1, ...(branchId && { branchId }) },
+        where: { isActive: 1, ...(branchId && { branchId }), ...invDate },
         select: { id: true, invNo: true, invDate: true, totalAmount: true, totalVat: true, totalDiscount: true, customer: { select: { name: true } } },
       });
       for (const r of credit)
@@ -244,7 +249,7 @@ export class SalesService {
 
     if (all || type === 'vat-credit') {
       const vcredit = await this.prisma.cSVMaster.findMany({
-        where: { ...(branchId && { branchId }) },
+        where: { ...(branchId && { branchId }), ...invDate },
         select: { id: true, invNo: true, invDate: true, totalAmount: true, totalVat: true, totalDiscount: true, customer: { select: { name: true } } },
       });
       for (const r of vcredit)
@@ -253,7 +258,7 @@ export class SalesService {
 
     if (all || type === 'nc') {
       const nc = await this.prisma.t_NCMstr.findMany({
-        where: { ncmstrIsActive: true, ...(branchId && { branchId }) },
+        where: { ncmstrIsActive: true, ...(branchId && { branchId }), ...(range && { ncmstrDate: range }) },
         select: { id: true, ncmstrCode: true, ncmstrDate: true, details: { select: { ncdetNetAmount: true } } },
       });
       for (const r of nc)
@@ -401,6 +406,10 @@ export class SalesService {
 
     const netAmount = items.reduce((s, i) => s + i.total, 0);
     const totalVat = Number(sale.totalVat ?? 0);
+    const payableAmount = netAmount + totalVat;
+    // A credit sale is unpaid at issue — the only money already collected is the
+    // advance on the order it was raised against (PO No carries the order no).
+    const paidAmount = await this.orderAdvanceFor(sale.poNo);
 
     return {
       id: sale.id,
@@ -429,8 +438,21 @@ export class SalesService {
       totalDiscount: Number(sale.totalDiscount ?? 0),
       totalVat,
       netAmount,
-      payableAmount: netAmount + totalVat,
+      payableAmount,
+      paidAmount,
+      dueAmount: payableAmount - paidAmount,
     };
+  }
+
+  /** Advance already taken on the order a credit sale was raised against, or 0
+   *  when the invoice carries no PO No / matches no order. */
+  private async orderAdvanceFor(poNo?: string | null): Promise<number> {
+    if (!poNo) return 0;
+    const order = await this.prisma.orderReceive_Master.findFirst({
+      where: { serialNo: poNo },
+      select: { advance: true },
+    });
+    return Number(order?.advance ?? 0);
   }
 
   /** VAT credit sale invoice for printing. `CSVDetail.itemOId` has no Prisma

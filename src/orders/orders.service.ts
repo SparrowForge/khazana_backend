@@ -147,7 +147,12 @@ export class OrdersService {
       this.prisma.orderReceive_Master.findMany({ where, include: { details: true }, orderBy: { orderDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
       this.prisma.orderReceive_Master.count({ where }),
     ]);
-    return { items: rows, meta: buildPaginationMeta(total, page, limit) };
+    const delivered = await this.deliveredSerialNos(rows.map((r) => r.serialNo));
+    const items = rows.map((r) => ({
+      ...r,
+      deliveryStatus: r.serialNo && delivered.has(r.serialNo) ? 'Delivery Done' : 'Delivery Pending',
+    }));
+    return { items, meta: buildPaginationMeta(total, page, limit) };
   }
 
   async findOne(id: string) {
@@ -156,7 +161,24 @@ export class OrdersService {
       include: { details: true },
     });
     if (!order) throw new NotFoundException('Order not found');
-    return order;
+    const delivered = await this.deliveredSerialNos([order.serialNo]);
+    return {
+      ...order,
+      deliveryStatus: order.serialNo && delivered.has(order.serialNo) ? 'Delivery Done' : 'Delivery Pending',
+    };
+  }
+
+  /** Order numbers that a credit sale has already been raised against — the
+   *  credit sale's PO No carries the order's serialNo, so a match means the
+   *  order has been invoiced out (delivered). Both credit tables are checked. */
+  private async deliveredSerialNos(serialNos: (string | null)[]): Promise<Set<string>> {
+    const keys = serialNos.filter((s): s is string => !!s);
+    if (!keys.length) return new Set();
+    const [credit, vatCredit] = await Promise.all([
+      this.prisma.cSMaster.findMany({ where: { poNo: { in: keys } }, select: { poNo: true } }),
+      this.prisma.cSVMaster.findMany({ where: { poNo: { in: keys } }, select: { poNo: true } }),
+    ]);
+    return new Set([...credit, ...vatCredit].map((r) => r.poNo).filter((p): p is string => !!p));
   }
 
   async create(dto: CreateOrderDto, createdBy: string, userBranchId?: string) {

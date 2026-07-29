@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { Type } from 'class-transformer';
 import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray, ValidateNested, IsUUID } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
-import { BranchPaginationQueryDto } from '../common/dto';
+import { DateRangeQueryDto, dateRangeFilter } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
 
 export class AssortmentItemDto {
@@ -136,9 +136,10 @@ export class UpdateAssortmentDto {
 export class AssortmentService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(query: BranchPaginationQueryDto) {
-    const { page, limit, branchId } = query;
-    const where = { isActive: true, ...(branchId && { branchId }) };
+  async findAll(query: DateRangeQueryDto) {
+    const { page, limit, branchId, fromDate, toDate } = query;
+    const date = dateRangeFilter(fromDate, toDate);
+    const where = { isActive: true, ...(branchId && { branchId }), ...(date && { date }) };
     const [rows, total] = await Promise.all([
       this.prisma.asstMsrt.findMany({ where, include: { details: true }, orderBy: { date: 'desc' }, skip: (page - 1) * limit, take: limit }),
       this.prisma.asstMsrt.count({ where }),

@@ -4,7 +4,7 @@ import { AssortmentService, CreateAssortmentDto, UpdateAssortmentDto } from './a
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { CurrentUser, RequiredPermission } from '../common/decorators';
-import { BranchPaginationQueryDto } from '../common/dto';
+import { DateRangeQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Assortment')
@@ -17,7 +17,7 @@ export class AssortmentController {
   @Get()
   @ApiOperation({ summary: 'Get all assortment records' })
   @ApiResponse({ status: 200, description: 'Paginated list of assortment records' })
-  async findAll(@Query() query: BranchPaginationQueryDto) {
+  async findAll(@Query() query: DateRangeQueryDto) {
     const { items, meta } = await this.assortmentService.findAll(query);
     return paginatedResponse(items, meta, 'Assortment');
   }

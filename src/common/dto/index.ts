@@ -1,2 +1,3 @@
 export * from './pagination-query.dto';
 export * from './branch-pagination-query.dto';
+export * from './date-range-query.dto';

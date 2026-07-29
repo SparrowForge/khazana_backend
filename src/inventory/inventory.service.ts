@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto';
 import { PrismaService } from '../database/prisma.service';
 import { ReceiveStockDto, UpdateReceiveStockDto } from './dto/receive-stock.dto';
 import { IssueStockDto, UpdateIssueStockDto } from './dto/issue-stock.dto';
-import { BranchPaginationQueryDto } from '../common/dto';
+import { BranchPaginationQueryDto, DateRangeQueryDto, dateRangeFilter } from '../common/dto';
 import { ItemQueryDto } from './dto/item-query.dto';
 import { buildPaginationMeta, toBranchUuid } from '../common/helpers';
 
@@ -198,9 +198,10 @@ export class InventoryService {
     );
   }
 
-  async findTransferHistory(query: BranchPaginationQueryDto) {
-    const { page, limit, branchId } = query;
-    const where = { isActive: 1, ...(branchId && { issueBranchId: branchId }) };
+  async findTransferHistory(query: DateRangeQueryDto) {
+    const { page, limit, branchId, fromDate, toDate } = query;
+    const issueDate = dateRangeFilter(fromDate, toDate);
+    const where = { isActive: 1, ...(branchId && { issueBranchId: branchId }), ...(issueDate && { issueDate }) };
     const rows = await this.prisma.item_Issue.findMany({ where, orderBy: { createDate: 'desc' } });
     return this.groupBySerial(rows, page, limit);
   }
@@ -403,9 +404,10 @@ export class InventoryService {
     return results;
   }
 
-  async findReceiveHistory(query: BranchPaginationQueryDto) {
-    const { page, limit, branchId } = query;
-    const where = { isActive: 1, ...(branchId && { receiveBranchID: branchId }) };
+  async findReceiveHistory(query: DateRangeQueryDto) {
+    const { page, limit, branchId, fromDate, toDate } = query;
+    const purDate = dateRangeFilter(fromDate, toDate);
+    const where = { isActive: 1, ...(branchId && { receiveBranchID: branchId }), ...(purDate && { purDate }) };
     const rows = await this.prisma.item_Receive.findMany({ where, orderBy: { createDate: 'desc' } });
     return this.groupBySerial(rows, page, limit);
   }
@@ -558,9 +560,10 @@ export class InventoryService {
     });
   }
 
-  async findAllIssues(query: BranchPaginationQueryDto) {
-    const { page, limit, branchId } = query;
-    const where = { isActive: 1, ...(branchId && { issueBranchId: branchId }) };
+  async findAllIssues(query: DateRangeQueryDto) {
+    const { page, limit, branchId, fromDate, toDate } = query;
+    const issueDate = dateRangeFilter(fromDate, toDate);
+    const where = { isActive: 1, ...(branchId && { issueBranchId: branchId }), ...(issueDate && { issueDate }) };
     const rows = await this.prisma.item_Issue.findMany({ where, orderBy: { createDate: 'desc' } });
     return this.groupBySerial(rows, page, limit);
   }
@@ -732,9 +735,10 @@ export class InventoryService {
     return results;
   }
 
-  async findAllAdjustments(query: BranchPaginationQueryDto) {
-    const { page, limit, branchId } = query;
-    const where = { isActive: 1, ...(branchId && { branchId }) };
+  async findAllAdjustments(query: DateRangeQueryDto) {
+    const { page, limit, branchId, fromDate, toDate } = query;
+    const date = dateRangeFilter(fromDate, toDate);
+    const where = { isActive: 1, ...(branchId && { branchId }), ...(date && { date }) };
     const rows = await this.prisma.itemReject.findMany({ where, orderBy: { date: 'desc' } });
     return this.groupAdjustments(rows, page, limit);
   }

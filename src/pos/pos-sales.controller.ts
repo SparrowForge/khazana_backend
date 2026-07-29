@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { PosSalesService } from './pos-sales.service';
 import { CreatePosSaleDto, UpdatePosSaleDto } from './dto/create-pos-sale.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { CurrentUser, RequiredPermission } from '../common/decorators';
+import { PosSalesQueryDto } from './dto/pos-sales-query.dto';
 
 @ApiTags('POS Sales')
 @ApiBearerAuth('access-token')
@@ -25,9 +26,9 @@ export class PosSalesController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'List all POS sales (DS- prefix invoices)' })
-  findAll() {
-    return this.service.findAll();
+  @ApiOperation({ summary: 'List POS sales (DS- prefix invoices), optionally within a date range' })
+  findAll(@Query() query: PosSalesQueryDto) {
+    return this.service.findAll(query);
   }
 
   @Get(':id')
