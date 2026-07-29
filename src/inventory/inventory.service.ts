@@ -11,6 +11,35 @@ import { buildPaginationMeta, toBranchUuid } from '../common/helpers';
 export class InventoryService {
   constructor(private prisma: PrismaService) {}
 
+  /** A branch transfer and a plain stock issue both write to Item_Issue — the
+   *  only thing separating them is the serial prefix a transfer gets ('TRF'),
+   *  plus the paired Item_Receive leg a transfer also writes. Without these
+   *  filters the two history endpoints run the identical query and each screen
+   *  lists the other's documents. Issues are "everything that isn't a transfer"
+   *  so legacy rows with an unrecognised serial still show up somewhere. */
+  private static readonly TRANSFER_PREFIX = 'TRF';
+  private static readonly TRANSFER_ONLY = {
+    serialNo: { startsWith: InventoryService.TRANSFER_PREFIX },
+  };
+  private static readonly ISSUE_ONLY = {
+    NOT: { serialNo: { startsWith: InventoryService.TRANSFER_PREFIX } },
+  };
+
+  private isTransferSerial(serialNo?: string | null): boolean {
+    return !!serialNo?.startsWith(InventoryService.TRANSFER_PREFIX);
+  }
+
+  /** A transfer's Item_Issue rows are one half of a paired document. Editing or
+   *  deleting them through the issue endpoints would orphan the Item_Receive leg
+   *  and skew both branches' stock, so refuse and point at the right screen. */
+  private assertNotTransfer(serialNo: string, action: 'edited' | 'deleted') {
+    if (this.isTransferSerial(serialNo)) {
+      throw new BadRequestException(
+        `${serialNo} is a branch transfer — it must be ${action} on the Stock Transfer screen`,
+      );
+    }
+  }
+
   // ── Current Stock ─────────────────────────────────────────────
 
   async findAll(query: BranchPaginationQueryDto) {
@@ -201,7 +230,12 @@ export class InventoryService {
   async findTransferHistory(query: DateRangeQueryDto) {
     const { page, limit, branchId, fromDate, toDate } = query;
     const issueDate = dateRangeFilter(fromDate, toDate);
-    const where = { isActive: 1, ...(branchId && { issueBranchId: branchId }), ...(issueDate && { issueDate }) };
+    const where = {
+      isActive: 1,
+      ...InventoryService.TRANSFER_ONLY,
+      ...(branchId && { issueBranchId: branchId }),
+      ...(issueDate && { issueDate }),
+    };
     const rows = await this.prisma.item_Issue.findMany({ where, orderBy: { createDate: 'desc' } });
     return this.groupBySerial(rows, page, limit);
   }
@@ -407,7 +441,14 @@ export class InventoryService {
   async findReceiveHistory(query: DateRangeQueryDto) {
     const { page, limit, branchId, fromDate, toDate } = query;
     const purDate = dateRangeFilter(fromDate, toDate);
-    const where = { isActive: 1, ...(branchId && { receiveBranchID: branchId }), ...(purDate && { purDate }) };
+    // A transfer writes an Item_Receive leg too — it belongs to Stock Transfer,
+    // not to goods-inward. Same split as findAllIssues.
+    const where = {
+      isActive: 1,
+      ...InventoryService.ISSUE_ONLY,
+      ...(branchId && { receiveBranchID: branchId }),
+      ...(purDate && { purDate }),
+    };
     const rows = await this.prisma.item_Receive.findMany({ where, orderBy: { createDate: 'desc' } });
     return this.groupBySerial(rows, page, limit);
   }
@@ -448,6 +489,7 @@ export class InventoryService {
   async updateReceive(serialNo: string, dto: UpdateReceiveStockDto, updatedBy: string, userBranchId: string) {
     const existing = await this.findReceiveRows(serialNo);
     const key = existing[0].serialNo || existing[0].id;
+    this.assertNotTransfer(key, 'edited');
     const purDate = new Date(dto.purDate);
     const receiveBranchId = toBranchUuid(dto.branchId ?? existing[0].receiveBranchID ?? userBranchId);
     const fromBranchId = toBranchUuid(dto.fromBranchId, existing[0].branchId ?? receiveBranchId);
@@ -500,6 +542,7 @@ export class InventoryService {
   async removeReceive(serialNo: string) {
     const existing = await this.findReceiveRows(serialNo);
     const key = existing[0].serialNo || existing[0].id;
+    this.assertNotTransfer(key, 'deleted');
     const codeByItemId = await this.itemCodesByIds(existing.map((r) => r.itemId).filter((id): id is string => !!id));
     await this.prisma.$transaction(async (tx) => {
       for (const row of existing) {
@@ -545,7 +588,8 @@ export class InventoryService {
             issueBranchId: dto.issueBranchId,
             receiveBranchId: dto.receiveBranchId,
             serialNo,
-            voucharNo: dto.voucharNo,
+            // Column keeps the legacy misspelling; the API field does not.
+            voucharNo: dto.voucherNo,
             isActive: 1,
             createBy: createdBy,
             createDate: new Date(),
@@ -563,7 +607,12 @@ export class InventoryService {
   async findAllIssues(query: DateRangeQueryDto) {
     const { page, limit, branchId, fromDate, toDate } = query;
     const issueDate = dateRangeFilter(fromDate, toDate);
-    const where = { isActive: 1, ...(branchId && { issueBranchId: branchId }), ...(issueDate && { issueDate }) };
+    const where = {
+      isActive: 1,
+      ...InventoryService.ISSUE_ONLY,
+      ...(branchId && { issueBranchId: branchId }),
+      ...(issueDate && { issueDate }),
+    };
     const rows = await this.prisma.item_Issue.findMany({ where, orderBy: { createDate: 'desc' } });
     return this.groupBySerial(rows, page, limit);
   }
@@ -602,6 +651,7 @@ export class InventoryService {
   async updateIssue(serialNo: string, dto: UpdateIssueStockDto, updatedBy: string) {
     const existing = await this.findIssueRows(serialNo);
     const key = existing[0].serialNo || existing[0].id;
+    this.assertNotTransfer(key, 'edited');
     const codeByItemId = await this.itemCodesByIds([
       ...existing.map((r) => r.itemId).filter((id): id is string => !!id),
       ...dto.items.map((i) => i.itemId),
@@ -612,7 +662,10 @@ export class InventoryService {
         .reduce((sum, r) => sum + Number(r.qty ?? 0), 0);
       const itemCode = codeByItemId.get(line.itemId)!;
       const inventory = await this.prisma.inventory.findUnique({ where: { itemCode } });
-      const available = Number(inventory?.quantity ?? 0) + stillHeld;
+      // No inventory row means the decrement below would fail with an opaque
+      // Prisma "record not found" — surface it as a plain message instead.
+      if (!inventory) throw new BadRequestException(`No stock record for item ${itemCode}`);
+      const available = Number(inventory.quantity ?? 0) + stillHeld;
       if (available < line.qty) throw new BadRequestException(`Insufficient stock for item ${itemCode}`);
     }
     const issueDate = new Date(dto.issueDate);
@@ -658,6 +711,7 @@ export class InventoryService {
   async removeIssue(serialNo: string) {
     const existing = await this.findIssueRows(serialNo);
     const key = existing[0].serialNo || existing[0].id;
+    this.assertNotTransfer(key, 'deleted');
     const codeByItemId = await this.itemCodesByIds(existing.map((r) => r.itemId).filter((id): id is string => !!id));
     await this.prisma.$transaction(async (tx) => {
       for (const row of existing) {

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
-import { OrdersService, CreateOrderDto, CreateVatOrderDto } from './orders.service';
+import { OrdersService, CreateOrderDto, CreateVatOrderDto, OrderQueryDto } from './orders.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { CurrentUser, RequiredPermission } from '../common/decorators';
@@ -15,9 +15,9 @@ export class OrdersController {
   constructor(private ordersService: OrdersService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all orders' })
+  @ApiOperation({ summary: 'Get all orders', description: 'Optionally narrowed to one customer and/or delivery status' })
   @ApiResponse({ status: 200, description: 'Paginated list of orders' })
-  async findAll(@Query() query: BranchPaginationQueryDto) {
+  async findAll(@Query() query: OrderQueryDto) {
     const { items, meta } = await this.ordersService.findAll(query);
     return paginatedResponse(items, meta, 'Order');
   }

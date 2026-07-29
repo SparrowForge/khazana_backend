@@ -1195,6 +1195,26 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Range start (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1856,6 +1876,26 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Range start (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2112,6 +2152,26 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Range start (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2256,6 +2316,26 @@
             "description": "Filter by branch UUID",
             "schema": {
               "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Range start (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
               "type": "string"
             }
           }
@@ -2412,6 +2492,26 @@
             "description": "Filter by branch UUID",
             "schema": {
               "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Range start (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
               "type": "string"
             }
           }
@@ -2893,6 +2993,7 @@
     },
     "/orders": {
       "get": {
+        "description": "Optionally narrowed to one customer and/or delivery status",
         "operationId": "OrdersController_findAll",
         "parameters": [
           {
@@ -2926,6 +3027,29 @@
             "schema": {
               "format": "uuid",
               "type": "string"
+            }
+          },
+          {
+            "name": "clientId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by customer UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "deliveryStatus",
+            "required": false,
+            "in": "query",
+            "description": "'pending' = not yet invoiced out, 'done' = a credit sale carries this order's number",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "done"
+              ]
             }
           }
         ],
@@ -4099,6 +4223,26 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Range start (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4663,6 +4807,54 @@
         ]
       }
     },
+    "/reports/sales-history": {
+      "get": {
+        "operationId": "ReportsController_getSalesHistory",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "required": true,
+            "in": "query",
+            "description": "Start date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": true,
+            "in": "query",
+            "description": "End date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Branch ID — omit to aggregate all branches",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sales history rows with payment breakdown and daily subtotals"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get sales history summary with line-item details and payment method breakdown",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
     "/admin/branches": {
       "get": {
         "operationId": "AdminController_findAllBranches",
@@ -5169,7 +5361,28 @@
       },
       "get": {
         "operationId": "PosSalesController_findAll",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Range start (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -5180,7 +5393,7 @@
             "access-token": []
           }
         ],
-        "summary": "List all POS sales (DS- prefix invoices)",
+        "summary": "List POS sales (DS- prefix invoices), optionally within a date range",
         "tags": [
           "POS Sales"
         ]
@@ -6619,7 +6832,7 @@
             "example": "ISS-001",
             "description": "Serial number"
           },
-          "voucharNo": {
+          "voucherNo": {
             "type": "string",
             "example": "VCHR-001",
             "description": "Voucher number"

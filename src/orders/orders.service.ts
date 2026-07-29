@@ -1,9 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray, ValidateNested, IsUUID } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray, ValidateNested, IsUUID, IsIn } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { BranchPaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
+
+/** Query for GET /orders. `clientId` is what drives the credit sale's PO
+ *  picker — once an invoice has a customer, only that customer's orders are
+ *  offered — and `deliveryStatus` keeps already-invoiced orders out of it. */
+export class OrderQueryDto extends BranchPaginationQueryDto {
+  @ApiPropertyOptional({ format: 'uuid', description: 'Filter by customer UUID' })
+  @IsOptional()
+  @IsUUID()
+  clientId?: string;
+
+  @ApiPropertyOptional({
+    enum: ['pending', 'done'],
+    description: "'pending' = not yet invoiced out, 'done' = a credit sale carries this order's number",
+  })
+  @IsOptional()
+  @IsIn(['pending', 'done'])
+  deliveryStatus?: 'pending' | 'done';
+}
 
 export class OrderItemDto {
   @IsUUID()
@@ -140,9 +159,23 @@ export class OrdersService {
 
   // ── Regular Orders ────────────────────────────────────────────
 
-  async findAll(query: BranchPaginationQueryDto) {
-    const { page, limit, branchId } = query;
-    const where = { isActive: 1, ...(branchId && { branchId }) };
+  async findAll(query: OrderQueryDto) {
+    const { page, limit, branchId, clientId, deliveryStatus } = query;
+    // Delivery status isn't stored on the order — it's derived from the credit
+    // sales that carry its number — so it has to be resolved to a serialNo set
+    // up front; filtering the page after the fact would skew total/pageCount.
+    const invoiced = deliveryStatus ? [...(await this.invoicedPoNos())] : [];
+    const where = {
+      isActive: 1,
+      ...(branchId && { branchId }),
+      ...(clientId && { clientId }),
+      ...(deliveryStatus === 'done' && { serialNo: { in: invoiced } }),
+      // `notIn` alone would also drop rows with no order number (SQL NOT IN vs
+      // NULL); an unnumbered order can't have been invoiced, so it's pending.
+      ...(deliveryStatus === 'pending' && {
+        OR: [{ serialNo: null }, { serialNo: { notIn: invoiced } }],
+      }),
+    };
     const [rows, total] = await Promise.all([
       this.prisma.orderReceive_Master.findMany({ where, include: { details: true }, orderBy: { orderDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
       this.prisma.orderReceive_Master.count({ where }),
@@ -158,7 +191,10 @@ export class OrdersService {
   async findOne(id: string) {
     const order = await this.prisma.orderReceive_Master.findUnique({
       where: { id },
-      include: { details: true },
+      // Detail lines carry the item as a uuid FK only; the item summary rides
+      // along so a consumer (the credit sale's "bill this order" prefill) can
+      // name the line without re-fetching the whole item catalog.
+      include: { details: { include: { item: { select: { id: true, itmCode: true, itmName: true } } } } },
     });
     if (!order) throw new NotFoundException('Order not found');
     const delivered = await this.deliveredSerialNos([order.serialNo]);
@@ -177,6 +213,17 @@ export class OrdersService {
     const [credit, vatCredit] = await Promise.all([
       this.prisma.cSMaster.findMany({ where: { poNo: { in: keys } }, select: { poNo: true } }),
       this.prisma.cSVMaster.findMany({ where: { poNo: { in: keys } }, select: { poNo: true } }),
+    ]);
+    return new Set([...credit, ...vatCredit].map((r) => r.poNo).filter((p): p is string => !!p));
+  }
+
+  /** Every order number any credit sale has been raised against — the whole-set
+   *  form of `deliveredSerialNos`, used to filter the list by delivery status
+   *  before paginating. */
+  private async invoicedPoNos(): Promise<Set<string>> {
+    const [credit, vatCredit] = await Promise.all([
+      this.prisma.cSMaster.findMany({ where: { poNo: { not: null } }, select: { poNo: true }, distinct: ['poNo'] }),
+      this.prisma.cSVMaster.findMany({ where: { poNo: { not: null } }, select: { poNo: true }, distinct: ['poNo'] }),
     ]);
     return new Set([...credit, ...vatCredit].map((r) => r.poNo).filter((p): p is string => !!p));
   }

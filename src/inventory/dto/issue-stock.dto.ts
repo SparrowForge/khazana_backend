@@ -27,7 +27,7 @@ export class IssueStockDto {
   @ApiPropertyOptional({ example: 'VCHR-001', description: 'Voucher number' })
   @IsString()
   @IsOptional()
-  voucharNo?: string;
+  voucherNo?: string;
 
   @ApiProperty({ example: '2024-01-15', description: 'Issue date (ISO 8601)' })
   @IsDateString()
