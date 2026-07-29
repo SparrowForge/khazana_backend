@@ -1,10 +1,10 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { CreatePosSaleDto, UpdatePosSaleDto } from './dto/create-pos-sale.dto';
-import { toBranchUuid } from '../common/helpers';
+import { assertStockAvailable, toBranchUuid } from '../common/helpers';
 import { dateRangeFilter } from '../common/dto';
 import { PosSalesQueryDto } from './dto/pos-sales-query.dto';
-import type { t_SOMstr, t_SODet, Item_Information } from '../generated/prisma';
+import type { Prisma, t_SOMstr, t_SODet, Item_Information } from '../generated/prisma';
 
 type SaleWithDetails = t_SOMstr & {
   details: (t_SODet & { item: Item_Information | null })[];
@@ -109,6 +109,11 @@ export class PosSalesService {
    * returns the receipt response. The caller supplies the invoice number and the
    * sale date — online passes a freshly generated number + `now`; offline passes
    * the client-generated prefixed number + the historical save timestamp.
+   *
+   * `enforceStock` guards against overselling. It is on for the live terminal and
+   * deliberately off for `PosSyncService`: a synced order was rung up hours ago
+   * and the goods have already left the shelf, so rejecting it would strand a
+   * completed sale in the client's queue forever rather than prevent anything.
    */
   async persistSale(p: {
     invoiceNo: string;
@@ -124,6 +129,7 @@ export class PosSalesService {
     discountRemarks?: string;
     discountContact?: string;
     createdBy: string;
+    enforceStock?: boolean;
   }) {
     if (!p.items.length) throw new BadRequestException('Cart is empty');
 
@@ -172,44 +178,53 @@ export class PosSalesService {
       );
     }
 
-    const sale = await this.prisma.t_SOMstr.create({
-      data: {
-        somstrCode: p.invoiceNo,
-        somstrDate: p.saleDate,
-        somstrTotalAmt: totalAmount,
-        somstrDiscAmt: discountAmount,
-        somstrNetAmt: netAmount,
-        somstrCustomerpay: this.r2(p.paidAmount),
-        somstrChange: changeAmount,
-        mtype: p.salesType ?? 'Cash',
-        soMstrMBank: p.bankId ?? null,
-        // Discount authoriser audit (only meaningful when a discount applied).
-        soMstrDiscountRemarks: discountAmount > 0 ? (p.discountRemarks ?? null) : null,
-        soMstrDiscountContact: discountAmount > 0 ? (p.discountContact ?? null) : null,
-        somstrCreator: p.servedBy || p.createdBy,
-        somstrCreationDate: new Date(),
-        somstrIsActive: true,
-        branchId,
-        details: {
-          create: lines.map((l, idx) => ({
-            sodetItemSLNum: String(idx + 1),
-            sodetItemOID: l.sodetItemOID,
-            sodetQTY: l.sodetQTY,
-            sodetUOM: l.sodetUOM,
-            sodetPrice: l.sodetPrice,
-            sodetAmount: l.sodetAmount,
-            sodetVATValue: l.sodetVATValue,
-            sodetVATAmount: l.sodetVATAmount,
-            sodetDiscount: l.sodetDiscount,
-            sodetNetAmount: l.sodetNetAmount,
-            branchId: l.branchId,
-          })),
-        },
-      },
-      include: { details: { include: { item: true } }, bank: { select: { name: true } } },
-    });
+    // Availability check, the write and the deduction all share one transaction:
+    // checking outside it leaves a window for two terminals to both pass the
+    // check on the last unit and both sell it.
+    const sale = await this.prisma.$transaction(async (tx) => {
+      const stockLines = lines.map((l) => ({ itemId: l.itemId, qty: l.sodetQTY }));
+      if (p.enforceStock !== false) await assertStockAvailable(tx, stockLines);
 
-    await this.deductStock(lines.map((l) => ({ itemId: l.itemId, qty: l.sodetQTY })));
+      const created = await tx.t_SOMstr.create({
+        data: {
+          somstrCode: p.invoiceNo,
+          somstrDate: p.saleDate,
+          somstrTotalAmt: totalAmount,
+          somstrDiscAmt: discountAmount,
+          somstrNetAmt: netAmount,
+          somstrCustomerpay: this.r2(p.paidAmount),
+          somstrChange: changeAmount,
+          mtype: p.salesType ?? 'Cash',
+          soMstrMBank: p.bankId ?? null,
+          // Discount authoriser audit (only meaningful when a discount applied).
+          soMstrDiscountRemarks: discountAmount > 0 ? (p.discountRemarks ?? null) : null,
+          soMstrDiscountContact: discountAmount > 0 ? (p.discountContact ?? null) : null,
+          somstrCreator: p.servedBy || p.createdBy,
+          somstrCreationDate: new Date(),
+          somstrIsActive: true,
+          branchId,
+          details: {
+            create: lines.map((l, idx) => ({
+              sodetItemSLNum: String(idx + 1),
+              sodetItemOID: l.sodetItemOID,
+              sodetQTY: l.sodetQTY,
+              sodetUOM: l.sodetUOM,
+              sodetPrice: l.sodetPrice,
+              sodetAmount: l.sodetAmount,
+              sodetVATValue: l.sodetVATValue,
+              sodetVATAmount: l.sodetVATAmount,
+              sodetDiscount: l.sodetDiscount,
+              sodetNetAmount: l.sodetNetAmount,
+              branchId: l.branchId,
+            })),
+          },
+        },
+        include: { details: { include: { item: true } }, bank: { select: { name: true } } },
+      });
+
+      await this.deductStock(tx, stockLines);
+      return created;
+    });
 
     return this.toResponse(sale as SaleWithDetails);
   }
@@ -249,14 +264,15 @@ export class PosSalesService {
     };
   }
 
-  private async deductStock(items: { itemId: string; qty: number }[]) {
-    const ops = items.map((i) =>
-      this.prisma.inventory.updateMany({
+  /** Takes the client so the deduction runs in the same transaction as the
+   *  availability check that cleared it. */
+  private async deductStock(db: Prisma.TransactionClient, items: { itemId: string; qty: number }[]) {
+    for (const i of items) {
+      await db.inventory.updateMany({
         where: { item: { id: i.itemId } },
         data: { quantity: { decrement: i.qty } },
-      }),
-    );
-    await this.prisma.$transaction(ops);
+      });
+    }
   }
 
   /** Re-price {itemId, qty} lines from the active t_Price as-of a date.
@@ -338,6 +354,14 @@ export class PosSalesService {
     for (const l of lines) delta.set(l.itemId, (delta.get(l.itemId) ?? 0) - l.sodetQTY);
 
     await this.prisma.$transaction(async (tx) => {
+      // An edit is purge-and-replace, so the qty this invoice already took out
+      // is available to it again — otherwise re-saving an unchanged cart would
+      // fail the check against its own deduction.
+      await assertStockAvailable(
+        tx,
+        lines.map((l) => ({ itemId: l.itemId, qty: l.sodetQTY })),
+        existing.details.map((d) => ({ itemId: d.sodetItemOID, qty: Number(d.sodetQTY ?? 0) })),
+      );
       await tx.t_SODet.deleteMany({ where: { t_SOMstr_id: id } });
       await tx.t_SOMstr.update({
         where: { id },

@@ -43,7 +43,12 @@ export class PosSyncService {
    * - **Historical timestamp:** the sale date is the original offline save time
    *   (`clientSavedAt`); `somstrCreationDate` records the actual sync time.
    * - **Stock:** deduction is plain decrement (commutative — replay order is
-   *   irrelevant for a non-temporal `Inventory.quantity`).
+   *   irrelevant for a non-temporal `Inventory.quantity`). The negative-stock
+   *   guard the live terminal enforces is *off* here: the customer walked out
+   *   with the goods hours ago, so refusing the sale would only strand a
+   *   completed transaction in the client's queue. Stock the sync drives
+   *   negative is a genuine discrepancy for the branch to reconcile, and is
+   *   logged as such.
    */
   async syncOffline(
     dto: SyncOfflineDto,
@@ -88,8 +93,10 @@ export class PosSyncService {
           discountRemarks: order.discountRemarks,
           discountContact: order.discountContact,
           createdBy: dto.userName,
+          enforceStock: false,
         });
 
+        await this.warnOnNegativeStock(order.invoiceNo, order.items);
         results.push({ invoiceNo: order.invoiceNo, status: 'synced', saleId: sale.id });
       } catch (err) {
         const reason = err instanceof Error ? err.message : 'Unknown error';
@@ -104,5 +111,25 @@ export class PosSyncService {
       failedCount: results.filter((r) => r.status === 'failed').length,
       results,
     };
+  }
+
+  /** A synced order is never refused for stock, so an oversell surfaces here
+   *  instead — the branch has physically shipped more than it had on file and
+   *  needs to reconcile. Best-effort: a failure to report must not fail a sale
+   *  that is already committed. */
+  private async warnOnNegativeStock(invoiceNo: string, items: { itemId: string }[]) {
+    try {
+      const negative = await this.prisma.inventory.findMany({
+        where: { quantity: { lt: 0 }, item: { id: { in: items.map((i) => i.itemId) } } },
+        select: { itemCode: true, quantity: true },
+      });
+      if (!negative.length) return;
+      const detail = negative.map((r) => `${r.itemCode}: ${r.quantity}`).join(', ');
+      this.logger.warn(
+        `Offline order ${invoiceNo} drove stock negative (${detail}) — reconcile at the branch`,
+      );
+    } catch {
+      /* reporting only — never let it break a committed sync */
+    }
   }
 }

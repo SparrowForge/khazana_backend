@@ -5,7 +5,8 @@ import { ReceiveStockDto, UpdateReceiveStockDto } from './dto/receive-stock.dto'
 import { IssueStockDto, UpdateIssueStockDto } from './dto/issue-stock.dto';
 import { BranchPaginationQueryDto, DateRangeQueryDto, dateRangeFilter } from '../common/dto';
 import { ItemQueryDto } from './dto/item-query.dto';
-import { buildPaginationMeta, toBranchUuid } from '../common/helpers';
+import { assertStockAvailable, buildPaginationMeta, toBranchUuid } from '../common/helpers';
+import type { Prisma } from '../generated/prisma';
 
 @Injectable()
 export class InventoryService {
@@ -89,11 +90,15 @@ export class InventoryService {
       this.prisma.item_Information.count({ where }),
     ]);
     // vatPercentage rides along with price so sale forms (credit / NC) can compute
-    // line VAT client-side the same way the POS terminal does.
+    // line VAT client-side the same way the POS terminal does. `stock` flattens
+    // the joined Inventory row the same way, so the sale / issue / transfer forms
+    // can show on-hand qty per item and refuse to over-commit it before the
+    // server has to (0 when the item has never been received).
     const items = rows.map((row) => ({
       ...row,
       price: Number(row.prices?.[0]?.priceListPrice ?? 0),
       vatPercentage: Number(row.prices?.[0]?.priceVatPercent ?? 0),
+      stock: Number(row.inventory?.quantity ?? 0),
     }));
     return { items, meta: buildPaginationMeta(total, page, limit) };
   }
@@ -185,46 +190,62 @@ export class InventoryService {
     // document can be looked up / edited / deleted together later.
     const serialNo = this.buildSerialNo('TRF', branchCode, baseCount + 1);
 
-    return this.prisma.$transaction(
-      dto.items.flatMap((line) => {
+    return this.prisma.$transaction(async (tx) => {
+      await this.assertTransferable(tx, dto.items);
+
+      const rows = [];
+      for (const line of dto.items) {
         // Both legs of one transfer line share the same id so they stay paired.
         const id = randomUUID();
-        return [
-          // Stock leaves the issuing branch
-          this.prisma.item_Issue.create({
-            data: {
-              id,
-              serialNo,
-              itemId: line.itemId,
-              qty: line.qty,
-              issueDate,
-              issueBranchId: dto.issueBranchId,
-              receiveBranchId: dto.receiveBranchId,
-              voucharNo: dto.voucherNo,
-              isActive: 1,
-              createBy: createdBy,
-              createDate: new Date(),
-            },
-          }),
-          // Stock arrives at the receiving branch
-          this.prisma.item_Receive.create({
-            data: {
-              id,
-              serialNo,
-              itemId: line.itemId,
-              qty: line.qty,
-              purDate: issueDate,
-              branchId: dto.issueBranchId,
-              receiveBranchID: dto.receiveBranchId,
-              voucharNo: dto.voucherNo,
-              isActive: 1,
-              createBy: createdBy,
-              createDate: new Date(),
-            },
-          }),
-        ];
-      }),
-    );
+        // Stock leaves the issuing branch
+        const issue = await tx.item_Issue.create({
+          data: {
+            id,
+            serialNo,
+            itemId: line.itemId,
+            qty: line.qty,
+            issueDate,
+            issueBranchId: dto.issueBranchId,
+            receiveBranchId: dto.receiveBranchId,
+            voucharNo: dto.voucherNo,
+            isActive: 1,
+            createBy: createdBy,
+            createDate: new Date(),
+          },
+        });
+        // Stock arrives at the receiving branch
+        const receive = await tx.item_Receive.create({
+          data: {
+            id,
+            serialNo,
+            itemId: line.itemId,
+            qty: line.qty,
+            purDate: issueDate,
+            branchId: dto.issueBranchId,
+            receiveBranchID: dto.receiveBranchId,
+            voucharNo: dto.voucherNo,
+            isActive: 1,
+            createBy: createdBy,
+            createDate: new Date(),
+          },
+        });
+        rows.push(issue, receive);
+      }
+      return rows;
+    });
+  }
+
+  /** A transfer is net-zero against `Inventory` — the table is keyed by itemCode
+   *  alone, with no branch dimension, so moving units between branches leaves the
+   *  balance untouched and there is nothing to deduct. What it must still not do
+   *  is ship units that don't exist anywhere, so the lines are measured against
+   *  the whole-company on-hand qty. Nothing is ever "released" back on an edit,
+   *  for the same reason: the previous version never consumed anything. */
+  private async assertTransferable(
+    tx: Prisma.TransactionClient,
+    items: { itemId: string; qty: number }[],
+  ) {
+    await assertStockAvailable(tx, items);
   }
 
   async findTransferHistory(query: DateRangeQueryDto) {
@@ -299,6 +320,8 @@ export class InventoryService {
     const key = existing[0].serialNo || existing[0].id;
 
     return this.prisma.$transaction(async (tx) => {
+      await this.assertTransferable(tx, dto.items);
+
       await tx.item_Issue.deleteMany({ where: { serialNo: key } });
       await tx.item_Receive.deleteMany({ where: { serialNo: key } });
 
@@ -561,13 +584,6 @@ export class InventoryService {
   async issueStock(dto: IssueStockDto, createdBy: string) {
     if (!dto.items?.length) throw new BadRequestException('No items to issue');
     const codeByItemId = await this.itemCodesByIds(dto.items.map((i) => i.itemId));
-    for (const line of dto.items) {
-      const itemCode = codeByItemId.get(line.itemId)!;
-      const inventory = await this.prisma.inventory.findUnique({ where: { itemCode } });
-      if (!inventory || Number(inventory.quantity) < line.qty) {
-        throw new BadRequestException(`Insufficient stock for item ${itemCode}`);
-      }
-    }
 
     const issueDate = new Date(dto.issueDate);
     const branchCode = await this.resolveBranchCode(dto.issueBranchId);
@@ -577,6 +593,10 @@ export class InventoryService {
     const serialNo = dto.serialNo || this.buildSerialNo('ISS', branchCode, baseCount + 1);
 
     return this.prisma.$transaction(async (tx) => {
+      // Inside the transaction that decrements, so a concurrent issue can't pass
+      // the same check on the same units. Sums repeated lines of one item too.
+      await assertStockAvailable(tx, dto.items);
+
       const issues = [];
       for (const line of dto.items) {
         const issue = await tx.item_Issue.create({
@@ -656,21 +676,17 @@ export class InventoryService {
       ...existing.map((r) => r.itemId).filter((id): id is string => !!id),
       ...dto.items.map((i) => i.itemId),
     ]);
-    for (const line of dto.items) {
-      const stillHeld = existing
-        .filter((r) => r.itemId === line.itemId)
-        .reduce((sum, r) => sum + Number(r.qty ?? 0), 0);
-      const itemCode = codeByItemId.get(line.itemId)!;
-      const inventory = await this.prisma.inventory.findUnique({ where: { itemCode } });
-      // No inventory row means the decrement below would fail with an opaque
-      // Prisma "record not found" — surface it as a plain message instead.
-      if (!inventory) throw new BadRequestException(`No stock record for item ${itemCode}`);
-      const available = Number(inventory.quantity ?? 0) + stillHeld;
-      if (available < line.qty) throw new BadRequestException(`Insufficient stock for item ${itemCode}`);
-    }
     const issueDate = new Date(dto.issueDate);
 
     return this.prisma.$transaction(async (tx) => {
+      // What this document already took out is available to it again, so an
+      // amendment isn't blocked by its own earlier deduction.
+      await assertStockAvailable(
+        tx,
+        dto.items,
+        existing.map((r) => ({ itemId: r.itemId, qty: Number(r.qty ?? 0) })),
+      );
+
       // Issuing decrements stock; restore what this document previously took
       // out, then wipe its lines.
       for (const row of existing) {

@@ -6,9 +6,10 @@ import { CreateVatCashSaleDto } from './dto/create-vat-cash-sale.dto';
 import { CreateVatCreditSaleDto } from './dto/create-vat-credit-sale.dto';
 import { SalesQueryDto } from './dto/sales-query.dto';
 import { UpdateSalesDto } from './dto/update-sales.dto';
-import { buildPaginationMeta, toBranchUuid } from '../common/helpers';
+import { assertStockAvailable, buildPaginationMeta, toBranchUuid } from '../common/helpers';
 import { dateRangeFilter } from '../common/dto';
 import type { PaginationMeta } from '../common/helpers';
+import type { Prisma } from '../generated/prisma';
 
 /** Normalized row for the unified sales report (all sale types in one shape). */
 interface UnifiedSale {
@@ -73,7 +74,7 @@ export class SalesService {
       include: { details: true },
     });
 
-    await this.deductStock(dto.items.map((i) => ({ itemId: i.itemId, qty: i.quantity })));
+    await this.deductStock(this.prisma, dto.items.map((i) => ({ itemId: i.itemId, qty: i.quantity })));
     return sale;
   }
 
@@ -88,40 +89,48 @@ export class SalesService {
     const existing = await this.prisma.cSMaster.findUnique({ where: { invNo } });
     if (existing) throw new BadRequestException('Invoice number already exists');
 
-   
-    const sale = await this.prisma.cSMaster.create({
-      data: {
-        invNo,
-        invDate: new Date(dto.invDate),
-        customerId: dto.customerId,
-        poNo: dto.poNo,
-        branchId,
-        totalAmount: dto.totalAmount,
-        // totalDiscount is the money value (line discounts + the invoice-level
-        // discount); discountPercent is kept so the invoice can be re-rendered
-        // and re-edited from the rate it was actually given at.
-        totalDiscount: dto.totalDiscount ?? 0,
-        discountPercent: dto.discountPercent ?? 0,
-        totalVat: dto.totalVat ?? 0,
-        discountRemarks: dto.discountRemarks,
-        isActive: 1,
-        invoiceBy: userName,
-        createDate: new Date(),
-        details: {
-          create: dto.items.map((item) => ({
-            itemOId: item.itemId,
-            rate: item.rate,
-            qty: item.qty,
-            value: item.rate * item.qty,
-            disc: item.disc ?? 0,
-            vat: item.vat ?? 0,
-            total: item.total,
-          })),
+    // A credit sale ships the goods now and collects later, so it moves stock
+    // exactly like a cash sale: check availability, write, deduct — all in one
+    // transaction so a concurrent sale can't slip through on the same units.
+    const stockLines = dto.items.map((i) => ({ itemId: i.itemId, qty: i.qty }));
+    const sale = await this.prisma.$transaction(async (tx) => {
+      await assertStockAvailable(tx, stockLines);
+      const created = await tx.cSMaster.create({
+        data: {
+          invNo,
+          invDate: new Date(dto.invDate),
+          customerId: dto.customerId,
+          poNo: dto.poNo,
+          branchId,
+          totalAmount: dto.totalAmount,
+          // totalDiscount is the money value (line discounts + the invoice-level
+          // discount); discountPercent is kept so the invoice can be re-rendered
+          // and re-edited from the rate it was actually given at.
+          totalDiscount: dto.totalDiscount ?? 0,
+          discountPercent: dto.discountPercent ?? 0,
+          totalVat: dto.totalVat ?? 0,
+          discountRemarks: dto.discountRemarks,
+          isActive: 1,
+          invoiceBy: userName,
+          createDate: new Date(),
+          details: {
+            create: dto.items.map((item) => ({
+              itemOId: item.itemId,
+              rate: item.rate,
+              qty: item.qty,
+              value: item.rate * item.qty,
+              disc: item.disc ?? 0,
+              vat: item.vat ?? 0,
+              total: item.total,
+            })),
+          },
         },
-      },
-      include: { details: true },
+        include: { details: true },
+      });
+      await this.deductStock(tx, stockLines);
+      return created;
     });
-    
+
     return sale;
   }
 
@@ -164,7 +173,7 @@ export class SalesService {
       include: { details: true },
     });
 
-    await this.deductStock(dto.items.map((i) => ({ itemId: i.itemId, qty: i.quantity })));
+    await this.deductStock(this.prisma, dto.items.map((i) => ({ itemId: i.itemId, qty: i.quantity })));
     return sale;
   }
 
@@ -556,13 +565,27 @@ export class SalesService {
 
   async updateCreditSale(id: string, dto: UpdateSalesDto) {
     if (!dto.items?.length) throw new BadRequestException('At least one item is required');
-    const existing = await this.prisma.cSMaster.findUnique({ where: { id }, select: { id: true, invNo: true } });
+    const existing = await this.prisma.cSMaster.findUnique({ where: { id }, include: { details: true } });
     if (!existing) throw new BadRequestException('Credit sale not found');
+
+    // Stock delta (a credit sale deducts): increment by (oldQty − newQty) per
+    // item, the same shape updateCashSale uses.
+    const released = existing.details.map((d) => ({ itemId: d.itemOId, qty: Number(d.qty ?? 0) }));
+    const delta = new Map<string, number>();
+    for (const d of released) if (d.itemId) delta.set(d.itemId, (delta.get(d.itemId) ?? 0) + d.qty);
+    for (const it of dto.items) if (it.itemId) delta.set(it.itemId, (delta.get(it.itemId) ?? 0) - it.qty);
 
     // Purge-and-replace: master fields are updated in place; detail lines are
     // dropped and recreated. CSDetail.itemOId is a uuid FK — the UI sends each
     // line's Item_Information UUID in itemId, stored straight through.
     await this.prisma.$transaction(async (tx) => {
+      // Judged against (on hand + what this invoice already took out), so
+      // re-saving an unchanged invoice isn't blocked by its own deduction.
+      await assertStockAvailable(
+        tx,
+        dto.items.map((it) => ({ itemId: it.itemId, qty: it.qty })),
+        released,
+      );
       await tx.cSDetail.deleteMany({ where: { invNo: existing.invNo } });
       await tx.cSMaster.update({
         where: { id },
@@ -587,6 +610,9 @@ export class SalesService {
           },
         },
       });
+      for (const [itemId, q] of delta) {
+        if (q) await tx.inventory.updateMany({ where: { item: { id: itemId } }, data: { quantity: { increment: q } } });
+      }
     });
     return this.prisma.cSMaster.findUnique({ where: { id }, include: { details: true } });
   }
@@ -607,14 +633,15 @@ export class SalesService {
 
   // ── Helpers ───────────────────────────────────────────────────
 
-  private async deductStock(items: { itemId: string; qty: number }[]) {
-    const ops = items.map((i) =>
-      this.prisma.inventory.updateMany({
+  /** Takes the client so the deduction runs in the same transaction as the sale
+   *  it belongs to (and the availability check that cleared it). */
+  private async deductStock(db: Prisma.TransactionClient, items: { itemId: string; qty: number }[]) {
+    for (const i of items) {
+      await db.inventory.updateMany({
         where: { item: { id: i.itemId } },
         data: { quantity: { decrement: i.qty } },
-      }),
-    );
-    await this.prisma.$transaction(ops);
+      });
+    }
   }
 
   /** Resolve the session branch (a Branch UUID) to its sanitized branch code for
