@@ -64,14 +64,19 @@ export async function assertStockAvailable(
     where: { itemCode: { in: items.map((i) => i.itmCode) } },
     select: { itemCode: true, quantity: true },
   });
-  // An item with no Inventory row has never been received — treat it as zero
-  // on hand rather than letting the decrement fail with an opaque Prisma error.
   const onHand = new Map(rows.map((r) => [r.itemCode, Number(r.quantity)]));
 
   const shortages: string[] = [];
   for (const [itemId, qty] of required) {
     const item = itemById.get(itemId)!;
-    const available = r4((onHand.get(item.itmCode) ?? 0) + (restored.get(itemId) ?? 0));
+    // No Inventory row means the item has never been received — nothing to draw
+    // on, and nothing for the deduction to decrement (it would otherwise fail
+    // with an opaque Prisma "record not found"). `restored` can't rescue it:
+    // giving a quantity back to a row that doesn't exist is a no-op, so the
+    // balance really is zero either way.
+    const available = onHand.has(item.itmCode)
+      ? r4(onHand.get(item.itmCode)! + (restored.get(itemId) ?? 0))
+      : 0;
     if (r4(qty) > available) {
       shortages.push(
         `${item.itmName || item.itmCode} — available ${available}, required ${r4(qty)}`,

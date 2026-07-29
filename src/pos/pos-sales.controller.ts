@@ -17,6 +17,7 @@ export class PosSalesController {
   @Post()
   @RequiredPermission({ control: 'POSTerminal', action: 'addAccess' })
   @ApiOperation({ summary: 'Create POS sale — calculates VAT from t_Price, writes t_SOMstr + t_SODet' })
+  @ApiResponse({ status: 400, description: 'Cart empty, bad discount/payment, or insufficient stock' })
   create(
     @Body() dto: CreatePosSaleDto,
     @CurrentUser('userName') userName: string,
@@ -40,6 +41,7 @@ export class PosSalesController {
   @Patch(':id')
   @RequiredPermission({ control: 'POSSales', action: 'editAccess' })
   @ApiOperation({ summary: 'Edit a POS sale (purge-replace lines, re-price, delta-adjust stock)' })
+  @ApiResponse({ status: 400, description: 'Cart empty, bad discount/payment, or insufficient stock' })
   @ApiResponse({ status: 403, description: 'No edit permission for POS Sales' })
   update(
     @Param('id') id: string,

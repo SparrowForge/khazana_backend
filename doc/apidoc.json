@@ -1283,6 +1283,9 @@
         "responses": {
           "201": {
             "description": "Credit sale created successfully"
+          },
+          "400": {
+            "description": "Duplicate invoice number or insufficient stock"
           }
         },
         "security": [
@@ -1290,7 +1293,7 @@
             "access-token": []
           }
         ],
-        "summary": "Create a credit sale",
+        "summary": "Create a credit sale — deducts stock like a cash sale",
         "tags": [
           "Sales"
         ]
@@ -1473,6 +1476,9 @@
           }
         },
         "responses": {
+          "400": {
+            "description": "Credit sale not found, no items, or insufficient stock"
+          },
           "403": {
             "description": "No edit permission for Credit Sales"
           }
@@ -1829,6 +1835,9 @@
         "responses": {
           "201": {
             "description": "Stock transferred successfully"
+          },
+          "400": {
+            "description": "No items, or more requested than exists on hand"
           }
         },
         "security": [
@@ -1962,6 +1971,9 @@
         "responses": {
           "200": {
             "description": "Transfer updated successfully"
+          },
+          "400": {
+            "description": "More requested than exists on hand"
           }
         },
         "security": [
@@ -2083,6 +2095,9 @@
         "responses": {
           "201": {
             "description": "Stock issued successfully"
+          },
+          "400": {
+            "description": "No items, or insufficient stock"
           }
         },
         "security": [
@@ -2590,6 +2605,9 @@
         "responses": {
           "200": {
             "description": "Issue record updated successfully"
+          },
+          "400": {
+            "description": "A branch transfer, or insufficient stock"
           }
         },
         "security": [
@@ -5345,8 +5363,8 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "400": {
+            "description": "Cart empty, bad discount/payment, or insufficient stock"
           }
         },
         "security": [
@@ -5450,6 +5468,9 @@
           }
         },
         "responses": {
+          "400": {
+            "description": "Cart empty, bad discount/payment, or insufficient stock"
+          },
           "403": {
             "description": "No edit permission for POS Sales"
           }

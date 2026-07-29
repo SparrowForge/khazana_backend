@@ -78,6 +78,7 @@ export class InventoryController {
   @RequiredPermission({ control: 'StockTransfer', action: 'addAccess' })
   @ApiOperation({ summary: 'Transfer stock between branches' })
   @ApiResponse({ status: 201, description: 'Stock transferred successfully' })
+  @ApiResponse({ status: 400, description: 'No items, or more requested than exists on hand' })
   transferStock(@Body() body: any, @CurrentUser('userName') userName: string) {
     return this.inventoryService.transferStock(body, userName);
   }
@@ -104,6 +105,7 @@ export class InventoryController {
   @ApiOperation({ summary: 'Replace all lines of a stock transfer by serial number' })
   @ApiParam({ name: 'serialNo', description: 'Transfer serial number' })
   @ApiResponse({ status: 200, description: 'Transfer updated successfully' })
+  @ApiResponse({ status: 400, description: 'More requested than exists on hand' })
   updateTransfer(@Param('serialNo') serialNo: string, @Body() body: any, @CurrentUser('userName') userName: string) {
     return this.inventoryService.updateTransferBySerial(serialNo, body, userName);
   }
@@ -142,6 +144,7 @@ export class InventoryController {
   @RequiredPermission({ control: 'StockIssue', action: 'addAccess' })
   @ApiOperation({ summary: 'Issue stock (transfer out)' })
   @ApiResponse({ status: 201, description: 'Stock issued successfully' })
+  @ApiResponse({ status: 400, description: 'No items, or insufficient stock' })
   issueStock(@Body() dto: IssueStockDto, @CurrentUser('userName') userName: string) {
     return this.inventoryService.issueStock(dto, userName);
   }
@@ -253,6 +256,7 @@ export class InventoryController {
   @ApiOperation({ summary: 'Replace all lines of a stock issue by serial number' })
   @ApiParam({ name: 'serialNo', description: 'Issue serial number' })
   @ApiResponse({ status: 200, description: 'Issue record updated successfully' })
+  @ApiResponse({ status: 400, description: 'A branch transfer, or insufficient stock' })
   updateIssue(@Param('serialNo') serialNo: string, @Body() dto: UpdateIssueStockDto, @CurrentUser('userName') userName: string) {
     return this.inventoryService.updateIssue(serialNo, dto, userName);
   }

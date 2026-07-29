@@ -44,8 +44,9 @@ export class SalesController {
 
   @Post('credit')
   @RequiredPermission({ control: 'CreditSales', action: 'addAccess' })
-  @ApiOperation({ summary: 'Create a credit sale' })
+  @ApiOperation({ summary: 'Create a credit sale — deducts stock like a cash sale' })
   @ApiResponse({ status: 201, description: 'Credit sale created successfully' })
+  @ApiResponse({ status: 400, description: 'Duplicate invoice number or insufficient stock' })
   createCreditSale(
     @Body() dto: CreateCreditSaleDto,
     @CurrentUser('userName') userName: string,
@@ -117,6 +118,7 @@ export class SalesController {
   @Patch('credit/:id')
   @RequiredPermission({ control: 'CreditSales', action: 'editAccess' })
   @ApiOperation({ summary: 'Edit a credit sale (purge-replace lines, delta-adjust stock)' })
+  @ApiResponse({ status: 400, description: 'Credit sale not found, no items, or insufficient stock' })
   @ApiResponse({ status: 403, description: 'No edit permission for Credit Sales' })
   updateCreditSale(@Param('id') id: string, @Body() dto: UpdateSalesDto) {
     return this.salesService.updateCreditSale(id, dto);
