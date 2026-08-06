@@ -6,7 +6,7 @@ import { CreateVatCashSaleDto } from './dto/create-vat-cash-sale.dto';
 import { CreateVatCreditSaleDto } from './dto/create-vat-credit-sale.dto';
 import { SalesQueryDto } from './dto/sales-query.dto';
 import { UpdateSalesDto } from './dto/update-sales.dto';
-import { assertStockAvailable, buildPaginationMeta, toBranchUuid } from '../common/helpers';
+import { allocateDiscount, assertStockAvailable, buildPaginationMeta, toBranchUuid } from '../common/helpers';
 import { dateRangeFilter } from '../common/dto';
 import type { PaginationMeta } from '../common/helpers';
 import type { Prisma } from '../generated/prisma';
@@ -93,6 +93,7 @@ export class SalesService {
     // exactly like a cash sale: check availability, write, deduct — all in one
     // transaction so a concurrent sale can't slip through on the same units.
     const stockLines = dto.items.map((i) => ({ itemId: i.itemId, qty: i.qty }));
+    const detailLines = this.distributeInvoiceDiscount(dto.items, dto.discountPercent ?? 0);
     const sale = await this.prisma.$transaction(async (tx) => {
       await assertStockAvailable(tx, stockLines);
       const created = await tx.cSMaster.create({
@@ -113,17 +114,7 @@ export class SalesService {
           isActive: 1,
           invoiceBy: userName,
           createDate: new Date(),
-          details: {
-            create: dto.items.map((item) => ({
-              itemOId: item.itemId,
-              rate: item.rate,
-              qty: item.qty,
-              value: item.rate * item.qty,
-              disc: item.disc ?? 0,
-              vat: item.vat ?? 0,
-              total: item.total,
-            })),
-          },
+          details: { create: detailLines },
         },
         include: { details: true },
       });
@@ -175,6 +166,61 @@ export class SalesService {
 
     await this.deductStock(this.prisma, dto.items.map((i) => ({ itemId: i.itemId, qty: i.quantity })));
     return sale;
+  }
+
+  /**
+   * Each line's share of the invoice-level discount, apportioned by its
+   * VAT-inclusive value — the base the percent was charged on.
+   *
+   * Deliberately derived from `total` + `vat` alone, and `total` is stored
+   * un-netted, so this is exactly as computable when reading a saved invoice
+   * back as it was when writing it. That is what lets the share live inside
+   * `disc` without being lost: `lineShares` reproduces it on demand, so the read
+   * paths can subtract it back out again.
+   */
+  // `vat`/`total` are typed loosely so this takes both the numbers a DTO carries
+  // and the Prisma Decimals a loaded row does — Number() normalizes either.
+  private lineShares(
+    lines: { vat?: unknown; total?: unknown }[],
+    discountPercent: number,
+  ): number[] {
+    const lineGross = lines.map((l) => r2(Number(l.total ?? 0) + Number(l.vat ?? 0)));
+    const gross = r2(lineGross.reduce((s, g) => s + g, 0));
+    const pct = Math.min(Math.max(Number(discountPercent) || 0, 0), 100);
+    const invoiceDiscount = Math.min(r2((gross * pct) / 100), gross);
+    return allocateDiscount(lineGross, invoiceDiscount);
+  }
+
+  /**
+   * Build a credit sale's CSDetail rows with the invoice-level discount already
+   * pushed down onto them.
+   *
+   * The share is folded into the line's own `disc`, so `sum(disc)` is the whole
+   * discount and equals CSMaster.totalDiscount. An item-level sales report reads
+   * the lines, and a discount parked on the master alone is invisible there —
+   * the item rows then add up to more than the invoice was sold for.
+   *
+   * `total` is left exactly as entered, NOT reduced by the share. It is the
+   * allocation base, so netting it here would destroy the only record of what
+   * the split was apportioned on and make the fold irreversible — reopening the
+   * invoice would then re-apply the percent on top of itself. Left alone, the
+   * split is recomputed on read by `lineShares` and subtracted back out.
+   */
+  private distributeInvoiceDiscount(
+    items: { itemId: string; rate: number; qty: number; disc?: number; vat?: number; total: number }[],
+    discountPercent: number,
+  ) {
+    const shares = this.lineShares(items, discountPercent);
+
+    return items.map((item, i) => ({
+      itemOId: item.itemId,
+      rate: item.rate,
+      qty: item.qty,
+      value: r2(Number(item.rate ?? 0) * Number(item.qty ?? 0)),
+      disc: r2(Number(item.disc ?? 0) + shares[i]),
+      vat: item.vat ?? 0,
+      total: r2(Number(item.total ?? 0)),
+    }));
   }
 
   // ── VAT Credit Sale ───────────────────────────────────────────
@@ -363,6 +409,12 @@ export class SalesService {
       },
     });
     if (!sale) throw new BadRequestException('Credit sale not found');
+    const discountPercent = Number(sale.discountPercent ?? 0);
+    // `disc` holds the line discount plus this line's share of the invoice-level
+    // percent. The form applies that percent itself, on top of whatever line
+    // discounts it is showing — so the share is taken back out here, or every
+    // save would charge it again on the last save's result.
+    const shares = this.lineShares(sale.details, discountPercent);
     return {
       id: sale.id,
       invoiceNo: sale.invNo,
@@ -372,15 +424,15 @@ export class SalesService {
       poNo: sale.poNo,
       totalAmount: Number(sale.totalAmount ?? 0),
       totalDiscount: Number(sale.totalDiscount ?? 0),
-      discountPercent: Number(sale.discountPercent ?? 0),
+      discountPercent,
       totalVat: Number(sale.totalVat ?? 0),
-      items: sale.details.map((d) => ({
+      items: sale.details.map((d, i) => ({
         itemId: d.itemOId,
         itemCode: d.item?.itmCode ?? '',
         itemName: d.item?.itmName ?? '',
         quantity: Number(d.qty ?? 0),
         rate: Number(d.rate ?? 0),
-        discount: Number(d.disc ?? 0),
+        discount: Math.max(r2(Number(d.disc ?? 0) - shares[i]), 0),
         vat: Number(d.vat ?? 0),
         total: Number(d.total ?? 0),
       })),
@@ -410,27 +462,40 @@ export class SalesService {
         })
       : null;
 
-    const items = sale.details.map((d) => ({
+    const discountPercent = Number(sale.discountPercent ?? 0);
+    // The stored `disc` is both tiers together. The invoice prints them on
+    // separate lines ("Item Discount" then "Discount (n%)"), so the same
+    // recomputed shares that the edit path backs out are used here to split them
+    // apart again.
+    const shares = this.lineShares(sale.details, discountPercent);
+
+    const items = sale.details.map((d, i) => ({
       itemCode: d.item?.itmCode ?? '',
       itemName: d.item?.itmName ?? '',
       uom: d.item?.itmUOM ?? '',
       quantity: Number(d.qty ?? 0),
       rate: Number(d.rate ?? 0),
-      discount: Number(d.disc ?? 0),
+      // The line's own discount, with its share of the invoice-level percent
+      // taken back off — that part is reported below as `invoiceDiscount`.
+      discount: Math.max(r2(Number(d.disc ?? 0) - shares[i]), 0),
       vat: Number(d.vat ?? 0),
       total: Number(d.total ?? 0),
     }));
 
-    // Two discounts stack: the per-line ones (already inside each line total)
-    // and the invoice-level percent, which is charged on the VAT-inclusive gross
-    // — the same basis an order discounts on, so an invoice raised against an
-    // order at its percent comes to exactly the order's total.
-    const lineDiscount = r2(items.reduce((s, i) => s + i.discount, 0));
     const netAmount = r2(items.reduce((s, i) => s + i.total, 0));
     const totalVat = Number(sale.totalVat ?? 0);
     const grossAmount = r2(netAmount + totalVat);
-    const discountPercent = Number(sale.discountPercent ?? 0);
-    const invoiceDiscount = Math.min(r2((grossAmount * discountPercent) / 100), grossAmount);
+    // Invoices saved before the lines carried a share left the whole
+    // invoice-level amount on the master alone, so their recomputed shares sum
+    // to more than `disc` actually holds. `TotalDiscount` has always been both
+    // tiers, so falling back to the shortfall against the line discounts covers
+    // them; for a distributed invoice the two agree.
+    const lineDiscount = r2(items.reduce((s, i) => s + i.discount, 0));
+    const storedTotalDiscount = Number(sale.totalDiscount ?? 0);
+    const invoiceDiscount = Math.min(
+      Math.max(r2(storedTotalDiscount - lineDiscount), 0),
+      grossAmount,
+    );
     const payableAmount = r2(grossAmount - invoiceDiscount);
     // A credit sale is unpaid at issue — the only money already collected is the
     // advance on the order it was raised against (PO No carries the order no).
@@ -598,15 +663,19 @@ export class SalesService {
           discountPercent: dto.discountPercent,
           totalVat: dto.totalVat,
           details: {
-            create: dto.items.map((it) => ({
-              itemOId: it.itemId ?? null,
-              rate: it.rate ?? 0,
-              qty: it.qty,
-              value: (it.rate ?? 0) * it.qty,
-              disc: it.discount ?? 0,
-              vat: it.vat ?? 0,
-              total: it.total ?? 0,
-            })),
+            // Same push-down as create — the replacement lines carry the
+            // invoice-level discount, not the master alone.
+            create: this.distributeInvoiceDiscount(
+              dto.items.map((it) => ({
+                itemId: it.itemId ?? '',
+                rate: it.rate ?? 0,
+                qty: it.qty,
+                disc: it.discount ?? 0,
+                vat: it.vat ?? 0,
+                total: it.total ?? 0,
+              })),
+              dto.discountPercent ?? 0,
+            ).map((l) => ({ ...l, itemOId: l.itemOId || null })),
           },
         },
       });

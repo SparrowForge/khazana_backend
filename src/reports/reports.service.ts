@@ -831,161 +831,272 @@ export class ReportsService {
       .sort((a, b) => a.code.localeCompare(b.code));
   }
 
-  // ── Sales History Summary (invoice-level summary with payment breakdown) ───
+  // ── Sales History Summary (item-level rows with payment breakdown) ────────
+
+  /** Payment columns the sheet breaks each line's money across. Cash-type modes
+   *  and the card-issuing banks are mutually exclusive; the delivery channels
+   *  (fpanda/pathao/foodi) are not — an aggregator order is booked as credit, so
+   *  it fills its channel column *and* Credit, which is how the legacy sheet
+   *  reads. Don't sum across the row expecting Total Amt. */
+  private static readonly PAY_COLUMNS = [
+    'cash', 'bkash', 'nagad', 'brac', 'ucb', 'city', 'ebl',
+    'fpanda', 'pathao', 'foodi', 'credit',
+  ] as const;
+
+  private static zeroPayments(): Record<string, number> {
+    return Object.fromEntries(ReportsService.PAY_COLUMNS.map((c) => [c, 0]));
+  }
+
+  /** Which column a counter sale's money belongs in. `mtype` carries the mode
+   *  picked at the till; a card payment is split further by the bank it was
+   *  swiped on. Anything unrecognised stays in Cash — the column this report has
+   *  always defaulted to. */
+  private static cashPayColumn(mtype?: string | null, bankName?: string | null): string {
+    const m = (mtype ?? '').toLowerCase();
+    if (/bkash/.test(m)) return 'bkash';
+    if (/nagad/.test(m)) return 'nagad';
+    if (/card|bank/.test(m) || bankName) {
+      const b = (bankName ?? '').toLowerCase();
+      if (/brac/.test(b)) return 'brac';
+      if (/ucb|united commercial/.test(b)) return 'ucb';
+      if (/city/.test(b)) return 'city';
+      if (/ebl|eastern/.test(b)) return 'ebl';
+    }
+    return 'cash';
+  }
+
+  /** Delivery-aggregator sales are raised as credit invoices to a customer named
+   *  for the channel, so the channel column is filled alongside Credit. */
+  private static channelColumn(customerName?: string | null): string | null {
+    const c = (customerName ?? '').toLowerCase();
+    if (/panda/.test(c)) return 'fpanda';
+    if (/pathao/.test(c)) return 'pathao';
+    if (/foodi/.test(c)) return 'foodi';
+    return null;
+  }
+
+  /** Push an invoice-level discount down onto its lines, pro-rata by line
+   *  amount, so the item rows still add up to the invoice's net. Line-level
+   *  discounts already sit on the lines — only the remainder is spread, and the
+   *  last line absorbs the rounding so the parts equal the whole exactly. */
+  private static spreadInvoiceDiscount(
+    lines: { amount: number; discount: number }[],
+    invoiceDiscount: number,
+  ): void {
+    if (!lines.length) return;
+    const onLines = lines.reduce((s, l) => s + l.discount, 0);
+    const remainder = r2signed(invoiceDiscount - onLines);
+    if (remainder <= 0) return;
+    const gross = lines.reduce((s, l) => s + l.amount, 0);
+    if (gross <= 0) return;
+    let placed = 0;
+    lines.forEach((line, i) => {
+      const share =
+        i === lines.length - 1
+          ? r2signed(remainder - placed)
+          : r2signed((line.amount / gross) * remainder);
+      line.discount = r2signed(line.discount + share);
+      placed = r2signed(placed + share);
+    });
+  }
 
   async getSalesHistory(query: DateRangeQuery) {
     const { from, to } = this.parseRange(query);
     const branchFilter = query.branchId ? { branchId: query.branchId } : {};
+    const itemSelect = { select: { itmCode: true, itmName: true, itmUOM: true } };
 
-    // Fetch all four sale ledgers (invoice-level only)
-    const [cashSales, creditSales, vatCashSales, vatCreditSales, branchesData] = await this.prisma.$transaction([
-      this.prisma.t_SOMstr.findMany({
-        where: { somstrDate: { gte: from, lte: to }, somstrIsActive: true, ...branchFilter },
-        orderBy: { somstrDate: 'asc' },
-      }),
-      this.prisma.cSMaster.findMany({
-        where: { invDate: { gte: from, lte: to }, isActive: 1, ...branchFilter },
-        orderBy: { invDate: 'asc' },
-      }),
-      this.prisma.t_SOMstV.findMany({
-        where: { somstrDate: { gte: from, lte: to }, somstrIsActive: true, ...branchFilter },
-        orderBy: { somstrDate: 'asc' },
-      }),
-      this.prisma.cSVMaster.findMany({
-        where: { invDate: { gte: from, lte: to }, ...branchFilter },
-        orderBy: { invDate: 'asc' },
-      }),
-      this.prisma.branch.findMany(),
-    ]);
+    // Every ledger is pulled with its detail lines: this sheet reports one row
+    // per item sold, not one row per invoice.
+    const [cashSales, creditSales, vatCashSales, vatCreditSales, branchesData] =
+      await this.prisma.$transaction([
+        this.prisma.t_SOMstr.findMany({
+          where: { somstrDate: { gte: from, lte: to }, somstrIsActive: true, ...branchFilter },
+          include: { bank: { select: { name: true } }, details: { include: { item: itemSelect } } },
+          orderBy: { somstrDate: 'asc' },
+        }),
+        this.prisma.cSMaster.findMany({
+          where: { invDate: { gte: from, lte: to }, isActive: 1, ...branchFilter },
+          include: {
+            customer: { select: { name: true } },
+            details: { include: { item: itemSelect } },
+          },
+          orderBy: { invDate: 'asc' },
+        }),
+        this.prisma.t_SOMstV.findMany({
+          where: { somstrDate: { gte: from, lte: to }, somstrIsActive: true, ...branchFilter },
+          include: { details: { include: { item: itemSelect } } },
+          orderBy: { somstrDate: 'asc' },
+        }),
+        this.prisma.cSVMaster.findMany({
+          where: { invDate: { gte: from, lte: to }, ...branchFilter },
+          include: { customer: { select: { name: true } }, details: true },
+          orderBy: { invDate: 'asc' },
+        }),
+        this.prisma.branch.findMany(),
+      ]);
 
     const branchMap = new Map(branchesData.map((b) => [b.id, b.branchName ?? '']));
 
-    // Format sales items from all ledgers (invoice-level summary)
-    const allItems: any[] = [];
+    // CSVDetail.itemOId is a plain string with no Prisma relation, so VAT credit
+    // lines are named through a separate lookup. Non-uuid values are dropped
+    // rather than handed to Prisma, which would reject the whole query.
+    const isUuid = (v: string) =>
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
+    const vatCreditItemIds = [
+      ...new Set(
+        vatCreditSales
+          .flatMap((s) => s.details.map((d) => d.itemOId ?? ''))
+          .filter((id) => id && isUuid(id)),
+      ),
+    ];
+    const vatCreditItems = vatCreditItemIds.length
+      ? await this.prisma.item_Information.findMany({
+          where: { id: { in: vatCreditItemIds } },
+          select: { id: true, itmCode: true, itmName: true, itmUOM: true },
+        })
+      : [];
+    const vatItemById = new Map(vatCreditItems.map((i) => [i.id, i]));
 
-    // Process cash sales
-    cashSales.forEach((s) => {
-      allItems.push({
-        date: s.somstrDate,
-        invoiceNo: s.somstrCode ?? '',
-        itemName: 'Multiple Items',
-        qty: 0,
-        price: 0,
-        amount: num(s.somstrTotalAmt),
-        discount: num(s.somstrDiscAmt),
-        vat: 0,
-        totalAmount: num(s.somstrNetAmt),
-        cash: num(s.somstrTotalAmt),
-        bkash: 0,
-        nagad: 0,
-        brac: 0,
-        ucb: 0,
-        city: 0,
-        ebl: 0,
-        fpanda: 0,
-        pathao: 0,
-        foodi: 0,
-        credit: 0,
-        branchName: branchMap.get(s.branchId) ?? '',
-        branchId: s.branchId,
-      });
-    });
+    interface HistoryLine extends Record<string, unknown> {
+      date: Date | null;
+      invoiceNo: string;
+      itemName: string;
+      uom: string;
+      qty: number;
+      price: number;
+      amount: number;
+      discount: number;
+      vat: number;
+      totalAmount: number;
+    }
 
-    // Process credit sales
-    creditSales.forEach((s) => {
-      allItems.push({
-        date: s.invDate,
-        invoiceNo: s.invNo ?? '',
-        itemName: 'Multiple Items',
-        qty: 0,
-        price: 0,
-        amount: num(s.totalAmount),
-        discount: num(s.totalDiscount),
-        vat: num(s.totalVat) ?? 0,
-        totalAmount: num(s.totalAmount) - num(s.totalDiscount),
-        cash: 0,
-        bkash: 0,
-        nagad: 0,
-        brac: 0,
-        ucb: 0,
-        city: 0,
-        ebl: 0,
-        fpanda: 0,
-        pathao: 0,
-        foodi: 0,
-        credit: num(s.totalAmount) - num(s.totalDiscount),
-        branchName: branchMap.get(s.branchId) ?? '',
-        branchId: s.branchId,
-      });
-    });
+    const allItems: HistoryLine[] = [];
 
-    // Process VAT cash sales
-    vatCashSales.forEach((s) => {
-      allItems.push({
-        date: s.somstrDate,
-        invoiceNo: s.somstrCode ?? '',
-        itemName: 'Multiple Items',
-        qty: 0,
-        price: 0,
-        amount: num(s.somstrTotalAmt),
-        discount: num(s.somstrDiscAmt),
-        vat: 0,
-        totalAmount: num(s.somstrNetAmt),
-        cash: num(s.somstrTotalAmt),
-        bkash: 0,
-        nagad: 0,
-        brac: 0,
-        ucb: 0,
-        city: 0,
-        ebl: 0,
-        fpanda: 0,
-        pathao: 0,
-        foodi: 0,
-        credit: 0,
-        branchName: branchMap.get(s.branchId) ?? '',
-        branchId: s.branchId,
-      });
-    });
+    /** Turn one invoice into its item rows. `pay` names the column(s) each
+     *  line's total is booked into; the caller decides them from the ledger. */
+    const pushInvoice = (
+      header: { date: Date | null; invoiceNo: string; branchId: string | null },
+      rawLines: { itemName: string; uom: string; qty: number; price: number; amount: number; discount: number; vat: number }[],
+      invoiceDiscount: number,
+      payColumns: string[],
+    ) => {
+      ReportsService.spreadInvoiceDiscount(rawLines, invoiceDiscount);
+      for (const line of rawLines) {
+        const totalAmount = r2signed(line.amount - line.discount + line.vat);
+        const payments = ReportsService.zeroPayments();
+        for (const col of payColumns) payments[col] = totalAmount;
+        allItems.push({
+          date: header.date,
+          invoiceNo: header.invoiceNo,
+          itemName: line.itemName,
+          uom: line.uom,
+          qty: line.qty,
+          price: line.price,
+          amount: line.amount,
+          discount: line.discount,
+          vat: line.vat,
+          totalAmount,
+          ...payments,
+          branchName: branchMap.get(header.branchId ?? '') ?? '',
+          branchId: header.branchId,
+        });
+      }
+    };
 
-    // Process VAT credit sales
-    vatCreditSales.forEach((s) => {
-      allItems.push({
-        date: s.invDate,
-        invoiceNo: s.invNo ?? '',
-        itemName: 'Multiple Items',
-        qty: 0,
-        price: 0,
-        amount: num(s.totalAmount),
-        discount: num(s.totalDiscount),
-        vat: num(s.totalVat) ?? 0,
-        totalAmount: num(s.totalAmount) - num(s.totalDiscount),
-        cash: 0,
-        bkash: 0,
-        nagad: 0,
-        brac: 0,
-        ucb: 0,
-        city: 0,
-        ebl: 0,
-        fpanda: 0,
-        pathao: 0,
-        foodi: 0,
-        credit: num(s.totalAmount) - num(s.totalDiscount),
-        branchName: branchMap.get(s.branchId) ?? '',
-        branchId: s.branchId,
-      });
-    });
+    // ── Cash (running) sales ─────────────────────────────────────────────
+    for (const s of cashSales) {
+      pushInvoice(
+        { date: s.somstrDate, invoiceNo: s.somstrCode ?? '', branchId: s.branchId },
+        s.details.map((d) => ({
+          itemName: d.item?.itmName || d.item?.itmCode || '',
+          uom: d.item?.itmUOM ?? d.sodetUOM ?? '',
+          qty: num(d.sodetQTY),
+          price: num(d.sodetPrice),
+          amount: num(d.sodetAmount) || r2signed(num(d.sodetPrice) * num(d.sodetQTY)),
+          discount: num(d.sodetDiscount),
+          vat: num(d.sodetVATAmount),
+        })),
+        num(s.somstrDiscAmt),
+        [ReportsService.cashPayColumn(s.mtype, s.bank?.name)],
+      );
+    }
 
-    // Sort by date and invoice
+    // ── VAT cash (running) sales ─────────────────────────────────────────
+    for (const s of vatCashSales) {
+      pushInvoice(
+        { date: s.somstrDate, invoiceNo: s.somstrCode ?? '', branchId: s.branchId },
+        s.details.map((d) => ({
+          itemName: d.item?.itmName || d.item?.itmCode || '',
+          uom: d.item?.itmUOM ?? d.sodetUOM ?? '',
+          qty: num(d.sodetQTY),
+          price: num(d.sodetPrice),
+          amount: num(d.sodetAmount) || r2signed(num(d.sodetPrice) * num(d.sodetQTY)),
+          discount: num(d.sodetDiscount),
+          vat: num(d.sodetVATAmount),
+        })),
+        num(s.somstrDiscAmt),
+        [ReportsService.cashPayColumn(s.mtype)],
+      );
+    }
+
+    // ── Credit sales ─────────────────────────────────────────────────────
+    for (const s of creditSales) {
+      const channel = ReportsService.channelColumn(s.customer?.name);
+      pushInvoice(
+        { date: s.invDate, invoiceNo: s.invNo ?? '', branchId: s.branchId },
+        s.details.map((d) => ({
+          itemName: d.item?.itmName || d.item?.itmCode || '',
+          uom: d.item?.itmUOM ?? '',
+          qty: num(d.qty),
+          price: num(d.rate),
+          amount: num(d.value) || r2signed(num(d.rate) * num(d.qty)),
+          // Both tiers: `disc` carries the discount typed against the line plus
+          // its share of the invoice-level percent. Older invoices hold only the
+          // per-line part — for those `spreadInvoiceDiscount` still apportions
+          // the shortfall against TotalDiscount below.
+          discount: num(d.disc),
+          vat: num(d.vat),
+        })),
+        num(s.totalDiscount),
+        channel ? ['credit', channel] : ['credit'],
+      );
+    }
+
+    // ── VAT credit sales ─────────────────────────────────────────────────
+    for (const s of vatCreditSales) {
+      const channel = ReportsService.channelColumn(s.customer?.name);
+      pushInvoice(
+        { date: s.invDate, invoiceNo: s.invNo ?? '', branchId: s.branchId },
+        s.details.map((d) => {
+          const item = vatItemById.get(d.itemOId ?? '');
+          return {
+            itemName: item?.itmName || item?.itmCode || '',
+            uom: item?.itmUOM ?? '',
+            qty: num(d.qty),
+            price: num(d.rate),
+            amount: num(d.value) || r2signed(num(d.rate) * num(d.qty)),
+            discount: num(d.disc),
+            vat: num(d.vat),
+          };
+        }),
+        num(s.totalDiscount),
+        channel ? ['credit', channel] : ['credit'],
+      );
+    }
+
+    // Sort by date then invoice, so an invoice's lines stay contiguous and the
+    // sheet can print its date/invoice no once per group.
     allItems.sort((a, b) => {
       const dateCompare = (a.date?.getTime() ?? 0) - (b.date?.getTime() ?? 0);
       if (dateCompare !== 0) return dateCompare;
-      return (a.invoiceNo ?? '').localeCompare(b.invoiceNo ?? '');
+      return a.invoiceNo.localeCompare(b.invoiceNo);
     });
 
-    // Calculate daily subtotals
-    const dailyMap = new Map<string, any>();
-    allItems.forEach((item) => {
-      const dateStr = (item.date as Date).toISOString().split('T')[0];
+    // ── Daily subtotals ──────────────────────────────────────────────────
+    const dailyMap = new Map<string, Record<string, unknown>>();
+    for (const item of allItems) {
+      if (!item.date) continue;
+      const dateStr = item.date.toISOString().split('T')[0];
       if (!dailyMap.has(dateStr)) {
         dailyMap.set(dateStr, {
           date: item.date,
@@ -994,38 +1105,14 @@ export class ReportsService {
           discount: 0,
           vat: 0,
           totalAmount: 0,
-          cash: 0,
-          bkash: 0,
-          nagad: 0,
-          brac: 0,
-          ucb: 0,
-          city: 0,
-          ebl: 0,
-          fpanda: 0,
-          pathao: 0,
-          foodi: 0,
-          credit: 0,
+          ...ReportsService.zeroPayments(),
         });
       }
-      const daily = dailyMap.get(dateStr);
-      daily.amount += item.amount;
-      daily.discount += item.discount;
-      daily.vat += item.vat;
-      daily.totalAmount += item.totalAmount;
-      daily.cash += item.cash;
-      daily.bkash += item.bkash;
-      daily.nagad += item.nagad;
-      daily.brac += item.brac;
-      daily.ucb += item.ucb;
-      daily.city += item.city;
-      daily.ebl += item.ebl;
-      daily.fpanda += item.fpanda;
-      daily.pathao += item.pathao;
-      daily.foodi += item.foodi;
-      daily.credit += item.credit;
-    });
-
-    const dailySubTotals = Array.from(dailyMap.values());
+      const daily = dailyMap.get(dateStr)!;
+      for (const key of ['qty', 'amount', 'discount', 'vat', 'totalAmount', ...ReportsService.PAY_COLUMNS]) {
+        daily[key] = r2signed(Number(daily[key]) + Number(item[key] ?? 0));
+      }
+    }
 
     return {
       branchName: query.branchId ? branchMap.get(query.branchId) ?? 'All Branches' : 'All Branches',
@@ -1033,7 +1120,7 @@ export class ReportsService {
       fromDate: from.toISOString().split('T')[0],
       toDate: to.toISOString().split('T')[0],
       items: allItems,
-      dailySubTotals,
+      dailySubTotals: Array.from(dailyMap.values()),
     };
   }
 }

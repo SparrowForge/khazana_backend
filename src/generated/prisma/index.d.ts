@@ -53533,6 +53533,7 @@ export namespace Prisma {
     unitPrice: Decimal | null
     vatPrice: Decimal | null
     amount: Decimal | null
+    discount: Decimal | null
   }
 
   export type OrderReceive_DetailSumAggregateOutputType = {
@@ -53540,6 +53541,7 @@ export namespace Prisma {
     unitPrice: Decimal | null
     vatPrice: Decimal | null
     amount: Decimal | null
+    discount: Decimal | null
   }
 
   export type OrderReceive_DetailMinAggregateOutputType = {
@@ -53551,6 +53553,7 @@ export namespace Prisma {
     serialNo: string | null
     vatPrice: Decimal | null
     amount: Decimal | null
+    discount: Decimal | null
   }
 
   export type OrderReceive_DetailMaxAggregateOutputType = {
@@ -53562,6 +53565,7 @@ export namespace Prisma {
     serialNo: string | null
     vatPrice: Decimal | null
     amount: Decimal | null
+    discount: Decimal | null
   }
 
   export type OrderReceive_DetailCountAggregateOutputType = {
@@ -53573,6 +53577,7 @@ export namespace Prisma {
     serialNo: number
     vatPrice: number
     amount: number
+    discount: number
     _all: number
   }
 
@@ -53582,6 +53587,7 @@ export namespace Prisma {
     unitPrice?: true
     vatPrice?: true
     amount?: true
+    discount?: true
   }
 
   export type OrderReceive_DetailSumAggregateInputType = {
@@ -53589,6 +53595,7 @@ export namespace Prisma {
     unitPrice?: true
     vatPrice?: true
     amount?: true
+    discount?: true
   }
 
   export type OrderReceive_DetailMinAggregateInputType = {
@@ -53600,6 +53607,7 @@ export namespace Prisma {
     serialNo?: true
     vatPrice?: true
     amount?: true
+    discount?: true
   }
 
   export type OrderReceive_DetailMaxAggregateInputType = {
@@ -53611,6 +53619,7 @@ export namespace Prisma {
     serialNo?: true
     vatPrice?: true
     amount?: true
+    discount?: true
   }
 
   export type OrderReceive_DetailCountAggregateInputType = {
@@ -53622,6 +53631,7 @@ export namespace Prisma {
     serialNo?: true
     vatPrice?: true
     amount?: true
+    discount?: true
     _all?: true
   }
 
@@ -53720,6 +53730,7 @@ export namespace Prisma {
     serialNo: string | null
     vatPrice: Decimal | null
     amount: Decimal | null
+    discount: Decimal | null
     _count: OrderReceive_DetailCountAggregateOutputType | null
     _avg: OrderReceive_DetailAvgAggregateOutputType | null
     _sum: OrderReceive_DetailSumAggregateOutputType | null
@@ -53750,6 +53761,7 @@ export namespace Prisma {
     serialNo?: boolean
     vatPrice?: boolean
     amount?: boolean
+    discount?: boolean
     master?: boolean | OrderReceive_Detail$masterArgs<ExtArgs>
     item?: boolean | OrderReceive_Detail$itemArgs<ExtArgs>
   }, ExtArgs["result"]["orderReceive_Detail"]>
@@ -53763,6 +53775,7 @@ export namespace Prisma {
     serialNo?: boolean
     vatPrice?: boolean
     amount?: boolean
+    discount?: boolean
     master?: boolean | OrderReceive_Detail$masterArgs<ExtArgs>
     item?: boolean | OrderReceive_Detail$itemArgs<ExtArgs>
   }, ExtArgs["result"]["orderReceive_Detail"]>
@@ -53776,6 +53789,7 @@ export namespace Prisma {
     serialNo?: boolean
     vatPrice?: boolean
     amount?: boolean
+    discount?: boolean
     master?: boolean | OrderReceive_Detail$masterArgs<ExtArgs>
     item?: boolean | OrderReceive_Detail$itemArgs<ExtArgs>
   }, ExtArgs["result"]["orderReceive_Detail"]>
@@ -53789,9 +53803,10 @@ export namespace Prisma {
     serialNo?: boolean
     vatPrice?: boolean
     amount?: boolean
+    discount?: boolean
   }
 
-  export type OrderReceive_DetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "masterId" | "itemId" | "qty" | "unitPrice" | "serialNo" | "vatPrice" | "amount", ExtArgs["result"]["orderReceive_Detail"]>
+  export type OrderReceive_DetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "masterId" | "itemId" | "qty" | "unitPrice" | "serialNo" | "vatPrice" | "amount" | "discount", ExtArgs["result"]["orderReceive_Detail"]>
   export type OrderReceive_DetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     master?: boolean | OrderReceive_Detail$masterArgs<ExtArgs>
     item?: boolean | OrderReceive_Detail$itemArgs<ExtArgs>
@@ -53820,6 +53835,7 @@ export namespace Prisma {
       serialNo: string | null
       vatPrice: Prisma.Decimal | null
       amount: Prisma.Decimal | null
+      discount: Prisma.Decimal | null
     }, ExtArgs["result"]["orderReceive_Detail"]>
     composites: {}
   }
@@ -54253,6 +54269,7 @@ export namespace Prisma {
     readonly serialNo: FieldRef<"OrderReceive_Detail", 'String'>
     readonly vatPrice: FieldRef<"OrderReceive_Detail", 'Decimal'>
     readonly amount: FieldRef<"OrderReceive_Detail", 'Decimal'>
+    readonly discount: FieldRef<"OrderReceive_Detail", 'Decimal'>
   }
     
 
@@ -63768,7 +63785,8 @@ export namespace Prisma {
     unitPrice: 'unitPrice',
     serialNo: 'serialNo',
     vatPrice: 'vatPrice',
-    amount: 'amount'
+    amount: 'amount',
+    discount: 'discount'
   };
 
   export type OrderReceive_DetailScalarFieldEnum = (typeof OrderReceive_DetailScalarFieldEnum)[keyof typeof OrderReceive_DetailScalarFieldEnum]
@@ -67596,6 +67614,7 @@ export namespace Prisma {
     serialNo?: StringNullableFilter<"OrderReceive_Detail"> | string | null
     vatPrice?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     amount?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
+    discount?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     master?: XOR<OrderReceive_MasterNullableScalarRelationFilter, OrderReceive_MasterWhereInput> | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }
@@ -67609,6 +67628,7 @@ export namespace Prisma {
     serialNo?: SortOrderInput | SortOrder
     vatPrice?: SortOrderInput | SortOrder
     amount?: SortOrderInput | SortOrder
+    discount?: SortOrderInput | SortOrder
     master?: OrderReceive_MasterOrderByWithRelationInput
     item?: Item_InformationOrderByWithRelationInput
   }
@@ -67625,6 +67645,7 @@ export namespace Prisma {
     serialNo?: StringNullableFilter<"OrderReceive_Detail"> | string | null
     vatPrice?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     amount?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
+    discount?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     master?: XOR<OrderReceive_MasterNullableScalarRelationFilter, OrderReceive_MasterWhereInput> | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }, "id">
@@ -67638,6 +67659,7 @@ export namespace Prisma {
     serialNo?: SortOrderInput | SortOrder
     vatPrice?: SortOrderInput | SortOrder
     amount?: SortOrderInput | SortOrder
+    discount?: SortOrderInput | SortOrder
     _count?: OrderReceive_DetailCountOrderByAggregateInput
     _avg?: OrderReceive_DetailAvgOrderByAggregateInput
     _max?: OrderReceive_DetailMaxOrderByAggregateInput
@@ -67657,6 +67679,7 @@ export namespace Prisma {
     serialNo?: StringNullableWithAggregatesFilter<"OrderReceive_Detail"> | string | null
     vatPrice?: DecimalNullableWithAggregatesFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     amount?: DecimalNullableWithAggregatesFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
+    discount?: DecimalNullableWithAggregatesFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type DemandOrder_MasterWhereInput = {
@@ -72354,6 +72377,7 @@ export namespace Prisma {
     serialNo?: string | null
     vatPrice?: Decimal | DecimalJsLike | number | string | null
     amount?: Decimal | DecimalJsLike | number | string | null
+    discount?: Decimal | DecimalJsLike | number | string | null
     master?: OrderReceive_MasterCreateNestedOneWithoutDetailsInput
     item?: Item_InformationCreateNestedOneWithoutOrderDetailsInput
   }
@@ -72367,6 +72391,7 @@ export namespace Prisma {
     serialNo?: string | null
     vatPrice?: Decimal | DecimalJsLike | number | string | null
     amount?: Decimal | DecimalJsLike | number | string | null
+    discount?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type OrderReceive_DetailUpdateInput = {
@@ -72376,6 +72401,7 @@ export namespace Prisma {
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     master?: OrderReceive_MasterUpdateOneWithoutDetailsNestedInput
     item?: Item_InformationUpdateOneWithoutOrderDetailsNestedInput
   }
@@ -72389,6 +72415,7 @@ export namespace Prisma {
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type OrderReceive_DetailCreateManyInput = {
@@ -72400,6 +72427,7 @@ export namespace Prisma {
     serialNo?: string | null
     vatPrice?: Decimal | DecimalJsLike | number | string | null
     amount?: Decimal | DecimalJsLike | number | string | null
+    discount?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type OrderReceive_DetailUpdateManyMutationInput = {
@@ -72409,6 +72437,7 @@ export namespace Prisma {
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type OrderReceive_DetailUncheckedUpdateManyInput = {
@@ -72420,6 +72449,7 @@ export namespace Prisma {
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type DemandOrder_MasterCreateInput = {
@@ -76000,6 +76030,7 @@ export namespace Prisma {
     serialNo?: SortOrder
     vatPrice?: SortOrder
     amount?: SortOrder
+    discount?: SortOrder
   }
 
   export type OrderReceive_DetailAvgOrderByAggregateInput = {
@@ -76007,6 +76038,7 @@ export namespace Prisma {
     unitPrice?: SortOrder
     vatPrice?: SortOrder
     amount?: SortOrder
+    discount?: SortOrder
   }
 
   export type OrderReceive_DetailMaxOrderByAggregateInput = {
@@ -76018,6 +76050,7 @@ export namespace Prisma {
     serialNo?: SortOrder
     vatPrice?: SortOrder
     amount?: SortOrder
+    discount?: SortOrder
   }
 
   export type OrderReceive_DetailMinOrderByAggregateInput = {
@@ -76029,6 +76062,7 @@ export namespace Prisma {
     serialNo?: SortOrder
     vatPrice?: SortOrder
     amount?: SortOrder
+    discount?: SortOrder
   }
 
   export type OrderReceive_DetailSumOrderByAggregateInput = {
@@ -76036,6 +76070,7 @@ export namespace Prisma {
     unitPrice?: SortOrder
     vatPrice?: SortOrder
     amount?: SortOrder
+    discount?: SortOrder
   }
 
   export type DemandOrder_MasterCountOrderByAggregateInput = {
@@ -81066,6 +81101,7 @@ export namespace Prisma {
     serialNo?: string | null
     vatPrice?: Decimal | DecimalJsLike | number | string | null
     amount?: Decimal | DecimalJsLike | number | string | null
+    discount?: Decimal | DecimalJsLike | number | string | null
     master?: OrderReceive_MasterCreateNestedOneWithoutDetailsInput
   }
 
@@ -81077,6 +81113,7 @@ export namespace Prisma {
     serialNo?: string | null
     vatPrice?: Decimal | DecimalJsLike | number | string | null
     amount?: Decimal | DecimalJsLike | number | string | null
+    discount?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type OrderReceive_DetailCreateOrConnectWithoutItemInput = {
@@ -81561,6 +81598,7 @@ export namespace Prisma {
     serialNo?: StringNullableFilter<"OrderReceive_Detail"> | string | null
     vatPrice?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     amount?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
+    discount?: DecimalNullableFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type DemandOrder_DetailUpsertWithWhereUniqueWithoutItemInput = {
@@ -84440,6 +84478,7 @@ export namespace Prisma {
     serialNo?: string | null
     vatPrice?: Decimal | DecimalJsLike | number | string | null
     amount?: Decimal | DecimalJsLike | number | string | null
+    discount?: Decimal | DecimalJsLike | number | string | null
     item?: Item_InformationCreateNestedOneWithoutOrderDetailsInput
   }
 
@@ -84451,6 +84490,7 @@ export namespace Prisma {
     serialNo?: string | null
     vatPrice?: Decimal | DecimalJsLike | number | string | null
     amount?: Decimal | DecimalJsLike | number | string | null
+    discount?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type OrderReceive_DetailCreateOrConnectWithoutMasterInput = {
@@ -85998,6 +86038,7 @@ export namespace Prisma {
     serialNo?: string | null
     vatPrice?: Decimal | DecimalJsLike | number | string | null
     amount?: Decimal | DecimalJsLike | number | string | null
+    discount?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type DemandOrder_DetailCreateManyItemInput = {
@@ -86411,6 +86452,7 @@ export namespace Prisma {
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     master?: OrderReceive_MasterUpdateOneWithoutDetailsNestedInput
   }
 
@@ -86422,6 +86464,7 @@ export namespace Prisma {
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type OrderReceive_DetailUncheckedUpdateManyWithoutItemInput = {
@@ -86432,6 +86475,7 @@ export namespace Prisma {
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type DemandOrder_DetailUpdateWithoutItemInput = {
@@ -87020,6 +87064,7 @@ export namespace Prisma {
     serialNo?: string | null
     vatPrice?: Decimal | DecimalJsLike | number | string | null
     amount?: Decimal | DecimalJsLike | number | string | null
+    discount?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type OrderReceive_DetailUpdateWithoutMasterInput = {
@@ -87029,6 +87074,7 @@ export namespace Prisma {
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     item?: Item_InformationUpdateOneWithoutOrderDetailsNestedInput
   }
 
@@ -87040,6 +87086,7 @@ export namespace Prisma {
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type OrderReceive_DetailUncheckedUpdateManyWithoutMasterInput = {
@@ -87050,6 +87097,7 @@ export namespace Prisma {
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     vatPrice?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type DemandOrder_DetailCreateManyMasterInput = {

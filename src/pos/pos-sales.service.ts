@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { CreatePosSaleDto, UpdatePosSaleDto } from './dto/create-pos-sale.dto';
-import { assertStockAvailable, toBranchUuid } from '../common/helpers';
+import { allocateDiscount, assertStockAvailable, toBranchUuid } from '../common/helpers';
 import { dateRangeFilter } from '../common/dto';
 import { PosSalesQueryDto } from './dto/pos-sales-query.dto';
 import type { Prisma, t_SOMstr, t_SODet, Item_Information } from '../generated/prisma';
@@ -172,6 +172,12 @@ export class PosSalesService {
     const netAmount = this.r2(grossAmount - discountAmount);
     const changeAmount = this.r2(p.paidAmount - netAmount);
 
+    // Push the invoice-level discount down onto the lines, pro-rata by each
+    // line's VAT-inclusive value — the base the percentage was charged on. Held
+    // only on the master it would be invisible to any item-level report, which
+    // would then show the basket as worth more than it was sold for.
+    const pricedLines = this.applyLineDiscounts(lines, discountAmount);
+
     if (p.paidAmount < netAmount) {
       throw new BadRequestException(
         `Insufficient payment — payable: ৳${netAmount}, paid: ৳${p.paidAmount}`,
@@ -204,7 +210,7 @@ export class PosSalesService {
           somstrIsActive: true,
           branchId,
           details: {
-            create: lines.map((l, idx) => ({
+            create: pricedLines.map((l, idx) => ({
               sodetItemSLNum: String(idx + 1),
               sodetItemOID: l.sodetItemOID,
               sodetQTY: l.sodetQTY,
@@ -227,6 +233,25 @@ export class PosSalesService {
     });
 
     return this.toResponse(sale as SaleWithDetails);
+  }
+
+  /** Stamp each line with its share of the invoice-level discount and restate
+   *  its net accordingly, so `sum(sodetNetAmount)` equals the invoice's net and
+   *  `sum(sodetDiscount)` equals `somstrDiscAmt`. `sodetNetAmount` stays
+   *  VAT-inclusive, which is the convention `priceLines` established. */
+  private applyLineDiscounts<T extends { sodetAmount: number; sodetVATAmount: number }>(
+    lines: T[],
+    discountAmount: number,
+  ): T[] {
+    const shares = allocateDiscount(
+      lines.map((l) => this.r2(l.sodetAmount + l.sodetVATAmount)),
+      discountAmount,
+    );
+    return lines.map((l, i) => ({
+      ...l,
+      sodetDiscount: shares[i],
+      sodetNetAmount: this.r2(l.sodetAmount + l.sodetVATAmount - shares[i]),
+    }));
   }
 
   async findAll(query: PosSalesQueryDto = {}) {
@@ -348,6 +373,9 @@ export class PosSalesService {
     const changeAmount = this.r2(dto.paidAmount - netAmount);
     if (dto.paidAmount < netAmount) throw new BadRequestException(`Insufficient payment — payable: ৳${netAmount}, paid: ৳${dto.paidAmount}`);
 
+    // Re-spread the (re-applied) discount over the replacement lines.
+    const pricedLines = this.applyLineDiscounts(lines, discountAmount);
+
     // Stock delta: restore old, apply new → increment by (old − new) per item.
     const delta = new Map<string, number>();
     for (const d of existing.details) delta.set(d.sodetItemOID, (delta.get(d.sodetItemOID) ?? 0) + Number(d.sodetQTY ?? 0));
@@ -386,7 +414,7 @@ export class PosSalesService {
           somstrUpdateBy: userName,
           somstrUpdateDate: new Date(),
           details: {
-            create: lines.map((l, idx) => ({
+            create: pricedLines.map((l, idx) => ({
               sodetItemSLNum: String(idx + 1),
               sodetItemOID: l.sodetItemOID,
               sodetQTY: l.sodetQTY,

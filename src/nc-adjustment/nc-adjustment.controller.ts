@@ -4,7 +4,7 @@ import { NcAdjustmentService, CreateNcAdjustmentDto, UpdateNcAdjustmentDto } fro
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { CurrentUser, RequiredPermission } from '../common/decorators';
-import { BranchPaginationQueryDto } from '../common/dto';
+import { DateRangeQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('NC Adjustment')
@@ -15,12 +15,20 @@ export class NcAdjustmentController {
   constructor(private ncService: NcAdjustmentService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all NC adjustments' })
+  @ApiOperation({ summary: 'Get all NC adjustments (optionally within a date range)' })
   @ApiResponse({ status: 200, description: 'Paginated list of NC adjustments' })
-  async findAll(@Query() query: BranchPaginationQueryDto) {
+  async findAll(@Query() query: DateRangeQueryDto) {
     const { items, meta } = await this.ncService.findAll(query);
     return paginatedResponse(items, meta, 'NC Adjustment');
   }
+
+  // Declared before ':id' so 'invoice' isn't swallowed by the param route.
+  @Get(':id/invoice')
+  @ApiOperation({ summary: 'Printable NC invoice — branch letterhead, attribution and priced lines' })
+  @ApiParam({ name: 'id', description: 'NC adjustment UUID' })
+  @ApiResponse({ status: 200, description: 'NC invoice payload' })
+  @ApiResponse({ status: 404, description: 'NC adjustment not found' })
+  getInvoice(@Param('id') id: string) { return this.ncService.getInvoice(id); }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get NC adjustment by ID' })

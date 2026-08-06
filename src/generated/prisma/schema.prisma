@@ -381,8 +381,14 @@ model CSDetail {
   rate    Decimal?          @map("Rate") @db.Decimal(8, 2)
   qty     Decimal?          @map("Qty") @db.Decimal(8, 2)
   value   Decimal?          @map("Value") @db.Decimal(8, 2)
+  // The line's whole discount: what the user typed against it, plus its share of
+  // CSMaster.discountPercent. `sum(disc)` therefore equals CSMaster.totalDiscount.
   disc    Decimal?          @map("Disc") @db.Decimal(8, 2)
   vat     Decimal?          @map("vat") @db.Decimal(8, 2)
+  // Net of VAT and deliberately NOT reduced by the invoice-level share — that
+  // share was apportioned by (total + vat), so leaving this column alone keeps
+  // the allocation base in the row and lets the split be recomputed exactly
+  // when the invoice is reopened for edit.
   total   Decimal?          @map("total") @db.Decimal(18, 2)
   sale    CSMaster?         @relation(fields: [invNo], references: [invNo])
   item    Item_Information? @relation(fields: [itemOId], references: [id])
@@ -769,6 +775,10 @@ model OrderReceive_Detail {
   serialNo  String?              @map("SerialNo")
   vatPrice  Decimal?             @map("VatPrice") @db.Decimal(18, 2)
   amount    Decimal?             @map("Amount") @db.Decimal(18, 2)
+  // This line's share of OrderReceive_Master.discount (a % of the VAT-inclusive
+  // total), spread pro-rata by the line's VAT-inclusive value. An order carries
+  // no per-line discount, so this column holds the whole of the line's discount.
+  discount  Decimal?             @map("Discount") @db.Decimal(18, 2)
   master    OrderReceive_Master? @relation(fields: [masterId], references: [id])
   item      Item_Information?    @relation(fields: [itemId], references: [id])
 

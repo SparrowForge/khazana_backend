@@ -690,7 +690,8 @@ exports.Prisma.OrderReceive_DetailScalarFieldEnum = {
   unitPrice: 'unitPrice',
   serialNo: 'serialNo',
   vatPrice: 'vatPrice',
-  amount: 'amount'
+  amount: 'amount',
+  discount: 'discount'
 };
 
 exports.Prisma.DemandOrder_MasterScalarFieldEnum = {

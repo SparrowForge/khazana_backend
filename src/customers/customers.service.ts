@@ -6,10 +6,13 @@ import { PaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta, toBranchUuid } from '../common/helpers';
 
 export class CreateCustomerDto {
-  @ApiProperty({ example: '001', description: 'Unique customer code' })
+  @ApiPropertyOptional({
+    example: 'C-1002',
+    description: 'Unique customer code. Leave blank (or omit) to auto-generate the next C-nnnn.',
+  })
   @IsString()
-  @IsNotEmpty()
-  code: string;
+  @IsOptional()
+  code?: string;
 
   @ApiProperty({ example: 'Fazlu', description: 'Customer name' })
   @IsString()
@@ -113,11 +116,44 @@ export class CustomersService {
     return this.resolveCustomer(idOrCode);
   }
 
+  /**
+   * Next free auto code, continuing the existing `C-nnnn` series: the highest
+   * number already issued, plus one.
+   *
+   * Only `C-<digits>` codes are counted. Customers created by hand carry all
+   * sorts of codes ('001', 'TEST-001'), and letting those set the counter would
+   * make the next auto code depend on whatever someone last typed. The result is
+   * checked for a free slot regardless, so a hand-typed 'C-1005' can't be
+   * collided with later.
+   */
+  private async generateCustomerCode(): Promise<string> {
+    const rows = await this.prisma.customer.findMany({
+      where: { code: { startsWith: 'C-' } },
+      select: { code: true },
+    });
+    const highest = rows.reduce((max, r) => {
+      const m = /^C-(\d+)$/.exec(r.code);
+      return m ? Math.max(max, Number(m[1])) : max;
+    }, 0);
+
+    // Walk forward past anything already taken — the gap can only be a code
+    // someone entered by hand, so a handful of tries always clears it.
+    for (let n = highest + 1; n <= highest + 100; n++) {
+      const code = `C-${String(n).padStart(4, '0')}`;
+      const taken = await this.prisma.customer.findUnique({ where: { code }, select: { id: true } });
+      if (!taken) return code;
+    }
+    throw new ConflictException('Could not allocate a customer code — enter one manually');
+  }
+
   async create(dto: CreateCustomerDto) {
-    const existing = await this.prisma.customer.findUnique({ where: { code: dto.code } });
+    // A blank code from the form means "auto-generate" — the field is read-only
+    // in the UI, so this is the normal path; an explicit code still wins.
+    const code = dto.code?.trim() || (await this.generateCustomerCode());
+    const existing = await this.prisma.customer.findUnique({ where: { code } });
     if (existing) throw new ConflictException('Customer code already exists');
     return this.prisma.customer.create({
-      data: { ...dto, joiningDate: dto.joiningDate ? new Date(dto.joiningDate) : undefined },
+      data: { ...dto, code, joiningDate: dto.joiningDate ? new Date(dto.joiningDate) : undefined },
     });
   }
 

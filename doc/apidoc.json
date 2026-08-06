@@ -4048,6 +4048,26 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Range start (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -4060,7 +4080,7 @@
             "access-token": []
           }
         ],
-        "summary": "Get all NC adjustments",
+        "summary": "Get all NC adjustments (optionally within a date range)",
         "tags": [
           "NC Adjustment"
         ]
@@ -4089,6 +4109,39 @@
           }
         ],
         "summary": "Create a new NC adjustment",
+        "tags": [
+          "NC Adjustment"
+        ]
+      }
+    },
+    "/nc-adjustment/{id}/invoice": {
+      "get": {
+        "operationId": "NcAdjustmentController_getInvoice",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "NC adjustment UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "NC invoice payload"
+          },
+          "404": {
+            "description": "NC adjustment not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Printable NC invoice — branch letterhead, attribution and priced lines",
         "tags": [
           "NC Adjustment"
         ]
@@ -6973,8 +7026,8 @@
         "properties": {
           "code": {
             "type": "string",
-            "example": "001",
-            "description": "Unique customer code"
+            "example": "C-1002",
+            "description": "Unique customer code. Leave blank (or omit) to auto-generate the next C-nnnn."
           },
           "name": {
             "type": "string",
@@ -7000,7 +7053,6 @@
           }
         },
         "required": [
-          "code",
           "name",
           "mobile"
         ]

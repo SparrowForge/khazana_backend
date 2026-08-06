@@ -4,7 +4,10 @@ import { Type } from 'class-transformer';
 import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray, ValidateNested, IsUUID, IsIn } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { BranchPaginationQueryDto } from '../common/dto';
-import { buildPaginationMeta } from '../common/helpers';
+import { allocateDiscount, buildPaginationMeta } from '../common/helpers';
+
+/** Money rounding — 2dp, matching the order form's client-side maths. */
+const r2 = (n: number): number => Math.round(n * 100) / 100;
 
 /** Query for GET /orders. `clientId` is what drives the credit sale's PO
  *  picker — once an invoice has a customer, only that customer's orders are
@@ -228,6 +231,77 @@ export class OrdersService {
     return new Set([...credit, ...vatCredit].map((r) => r.poNo).filter((p): p is string => !!p));
   }
 
+  /**
+   * Build an order's detail rows with the order-level discount already pushed
+   * down onto them.
+   *
+   * `Discount` on the master is a percent of the VAT-inclusive total, so each
+   * line's share is spread by its own VAT-inclusive value and stored on the
+   * line. An order has no per-line discount, so the share is the whole of the
+   * line's discount — and without it an item-level report reads the lines at
+   * full price and shows the order as worth more than it was taken for.
+   *
+   * The form sends only item/qty/price, so VAT is priced here from the catalog
+   * (the same active t_Price row the POS terminal sells at) and the resulting
+   * amount/vatPrice are stored alongside — they are what the share was
+   * apportioned on, so a reader can check the split without re-pricing.
+   */
+  private async buildOrderLines(
+    items: OrderItemDto[],
+    discountPercent: number | undefined,
+    serialNo: string | null,
+  ) {
+    const vatPctById = await this.vatPercentFor(items.map((i) => i.itemId));
+
+    const priced = items.map((item) => {
+      const qty = Number(item.qty) || 0;
+      const unitPrice = Number(item.unitPrice ?? 0) || 0;
+      const amount = item.amount != null ? r2(Number(item.amount)) : r2(qty * unitPrice);
+      const vatPrice =
+        item.vatPrice != null
+          ? r2(Number(item.vatPrice))
+          : r2((amount * (vatPctById.get(item.itemId) ?? 0)) / 100);
+      return { itemId: item.itemId, qty, unitPrice, amount, vatPrice };
+    });
+
+    const lineGross = priced.map((l) => r2(l.amount + l.vatPrice));
+    const gross = r2(lineGross.reduce((s, g) => s + g, 0));
+    const pct = Math.min(Math.max(Number(discountPercent) || 0, 0), 100);
+    const orderDiscount = Math.min(r2((gross * pct) / 100), gross);
+    const shares = allocateDiscount(lineGross, orderDiscount);
+
+    return priced.map((l, i) => ({
+      itemId: l.itemId,
+      qty: l.qty,
+      unitPrice: l.unitPrice,
+      vatPrice: l.vatPrice,
+      amount: l.amount,
+      discount: shares[i],
+      serialNo,
+    }));
+  }
+
+  /** VAT rate per item id, from the active price row. Items with no active
+   *  price fall out of the map and are treated as 0% — an order is a quote, not
+   *  a sale, so a missing price must not block taking it. */
+  private async vatPercentFor(itemIds: string[]): Promise<Map<string, number>> {
+    const ids = [...new Set(itemIds.filter(Boolean))];
+    if (!ids.length) return new Map();
+    const rows = await this.prisma.item_Information.findMany({
+      where: { id: { in: ids } },
+      select: {
+        id: true,
+        prices: {
+          where: { priceIsActive: 1 },
+          orderBy: { priceFromDate: 'desc' },
+          select: { priceVatPercent: true },
+          take: 1,
+        },
+      },
+    });
+    return new Map(rows.map((r) => [r.id, Number(r.prices[0]?.priceVatPercent ?? 0)]));
+  }
+
   async create(dto: CreateOrderDto, createdBy: string, userBranchId?: string) {
     const branchId = dto.branchId ?? userBranchId;
     const serialNo = dto.serialNo || (await this.generateSerialNo('ORD', branchId));
@@ -247,16 +321,7 @@ export class OrdersService {
         isActive: 1,
         createBy: createdBy,
         createDate: new Date(),
-        details: {
-          create: dto.items.map((item) => ({
-            itemId: item.itemId,
-            qty: item.qty,
-            unitPrice: item.unitPrice,
-            vatPrice: item.vatPrice,
-            amount: item.amount,
-            serialNo,
-          })),
-        },
+        details: { create: await this.buildOrderLines(dto.items, dto.discount, serialNo) },
       },
       include: { details: true },
     });
@@ -265,6 +330,10 @@ export class OrdersService {
   async update(id: string, dto: Partial<CreateOrderDto>, updatedBy: string) {
     const existing = await this.findOne(id);
     const { items, orderDate, deliveryDate, deliveryTime, ...rest } = dto;
+    // The replacement lines carry the discount too, and at whatever rate the
+    // edit set — an amended order that kept the old lines' shares would net out
+    // to a different total than the one the form showed.
+    const discount = dto.discount ?? Number(existing.discount ?? 0);
     return this.prisma.orderReceive_Master.update({
       where: { id },
       data: {
@@ -278,14 +347,7 @@ export class OrdersService {
         ...(items && {
           details: {
             deleteMany: {},
-            create: items.map((item) => ({
-              itemId: item.itemId,
-              qty: item.qty,
-              unitPrice: item.unitPrice,
-              vatPrice: item.vatPrice,
-              amount: item.amount,
-              serialNo: existing.serialNo,
-            })),
+            create: await this.buildOrderLines(items, discount, existing.serialNo),
           },
         }),
       },
