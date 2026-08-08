@@ -112,6 +112,28 @@ export class InventoryService {
     return item;
   }
 
+  /** Suggests the next Item Code for a category: its first letter plus a
+   *  4-digit running count, e.g. "Sweets" -> S0001, S0002... Scanned from
+   *  existing codes rather than a stored counter, so it self-heals if a code
+   *  was ever entered out of sequence or edited by hand. */
+  async getNextItemCode(category: string) {
+    const firstChar = category?.trim().charAt(0).toUpperCase();
+    if (!firstChar) throw new BadRequestException('Category is required to generate an item code');
+
+    const existing = await this.prisma.item_Information.findMany({
+      where: { itmCode: { startsWith: firstChar, mode: 'insensitive' } },
+      select: { itmCode: true },
+    });
+
+    const pattern = new RegExp(`^${firstChar}(\\d{4})$`, 'i');
+    const maxSeq = existing.reduce((max, { itmCode }) => {
+      const match = itmCode.match(pattern);
+      return match ? Math.max(max, Number(match[1])) : max;
+    }, 0);
+
+    return { itmCode: `${firstChar}${String(maxSeq + 1).padStart(4, '0')}` };
+  }
+
   async createItem(data: {
     itmCode: string;
     itmName?: string;

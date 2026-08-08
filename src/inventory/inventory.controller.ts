@@ -34,6 +34,13 @@ export class InventoryController {
     return paginatedResponse(items, meta, 'Item');
   }
 
+  @Get('items/next-code')
+  @ApiOperation({ summary: 'Suggest the next Item Code for a category' })
+  @ApiResponse({ status: 200, description: 'Suggested item code' })
+  getNextItemCode(@Query('category') category: string) {
+    return this.inventoryService.getNextItemCode(category);
+  }
+
   @Get('items/:id')
   @ApiOperation({ summary: 'Get item by ID' })
   @ApiParam({ name: 'id', description: 'Item UUID' })
