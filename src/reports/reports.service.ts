@@ -100,7 +100,7 @@ export class ReportsService {
       }),
       this.prisma.t_NCMstr.findMany({
         where: { ncmstrDate: { gte: day, lt: nextDay }, ncmstrIsActive: true, ...branchFilter },
-        include: { details: { select: { ncdetNetAmount: true } } },
+        include: { details: { select: { ncdetNetAmount: true, ncdetVATAmount: true } } },
         orderBy: { ncmstrDate: 'asc' },
       }),
     ]);
@@ -115,8 +115,10 @@ export class ReportsService {
     // across days — stateless, so re-running the report is idempotent.
     const { creditRows, orderCollection } = await this.netCreditAgainstAdvances(day, nextDay, branchFilter);
 
+    // ncdetNetAmount is stored net of VAT — add ncdetVATAmount back so NC value
+    // matches what the goods would actually have sold for (see getDailyFinalReport).
     const ncRows = nc.map((s) => {
-      const net = s.details.reduce((t, d) => t + num(d.ncdetNetAmount), 0);
+      const net = s.details.reduce((t, d) => t + num(d.ncdetNetAmount) + num(d.ncdetVATAmount), 0);
       return { id: s.id, invNo: s.ncmstrCode, type: 'NC', netAmount: net, net };
     });
 
@@ -168,7 +170,7 @@ export class ReportsService {
       }),
       this.prisma.cSMaster.findMany({
         where: { customerId: { in: custIds }, isActive: 1, invDate: { lt: nextDay }, ...branchFilter },
-        select: { id: true, invNo: true, customerId: true, totalAmount: true, totalDiscount: true, invDate: true },
+        select: { id: true, invNo: true, customerId: true, totalAmount: true, totalDiscount: true, totalVat: true, invDate: true },
       }),
     ]);
 
@@ -189,7 +191,9 @@ export class ReportsService {
       const custId = c.customerId;
       if (!c.invDate || !custId) continue;
       const today = c.invDate >= day && c.invDate < nextDay;
-      push(custId, { t: c.invDate.getTime(), kind: 'cr', amount: num(c.totalAmount) - num(c.totalDiscount), id: c.id, invNo: c.invNo, today });
+      // totalAmount is stored net of VAT — add totalVat back so the amount netted
+      // against advances (and shown as the credit row) is the actual billed value.
+      push(custId, { t: c.invDate.getTime(), kind: 'cr', amount: num(c.totalAmount) + num(c.totalVat) - num(c.totalDiscount), id: c.id, invNo: c.invNo, today });
     }
 
     const creditRows: { id: string; invNo: string; type: string; netAmount: number; net: number }[] = [];
