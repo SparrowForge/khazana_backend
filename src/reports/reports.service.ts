@@ -266,7 +266,7 @@ export class ReportsService {
       }),
       this.prisma.t_NCMstr.findMany({
         where: { ncmstrDate: window, ncmstrIsActive: true, branchId },
-        include: { details: { select: { ncdetNetAmount: true } } },
+        include: { details: { select: { ncdetNetAmount: true, ncdetVATAmount: true } } },
       }),
     ]);
 
@@ -299,7 +299,10 @@ export class ReportsService {
     const issueQty = qtyByUom(issues.map((i) => ({ qty: num(i.qty), uom: i.item?.itmUOM })));
     const issueAmt = issues.reduce((t, i) => t + num(i.qty) * num(i.unitPrice), 0);
 
-    const creditNet = (s: (typeof credit)[number]) => num(s.totalAmount) - num(s.totalDiscount);
+    // `totalAmount` is stored net of VAT (the allocation base for the invoice-level
+    // discount — see distributeInvoiceDiscount), so the actual billed value needs
+    // `totalVat` added back, exactly as the customer ledger does.
+    const creditNet = (s: (typeof credit)[number]) => num(s.totalAmount) + num(s.totalVat) - num(s.totalDiscount);
     const creditQty = qtyByUom(credit.flatMap((s) => s.details.map((d) => ({ qty: num(d.qty), uom: uomById.get(d.itemOId ?? '') }))));
     const creditAmt = credit.reduce((t, s) => t + creditNet(s), 0);
 
@@ -320,10 +323,12 @@ export class ReportsService {
     }
 
     // ── Totals ───────────────────────────────────────────────────────────
+    // ncdetNetAmount is stored net of VAT — add ncdetVATAmount back so an NC's
+    // value matches what the goods would actually have sold for.
     const ncRows = nc.map((n) => ({
       name: n.ncmstrName ?? '',
       contact: n.ncmstrContactNo ?? '',
-      amount: n.details.reduce((t, d) => t + num(d.ncdetNetAmount), 0),
+      amount: n.details.reduce((t, d) => t + num(d.ncdetNetAmount) + num(d.ncdetVATAmount), 0),
     }));
     const ncSale = ncRows.reduce((t, r) => t + r.amount, 0);
 
@@ -357,7 +362,7 @@ export class ReportsService {
         .map((s) => discRow(s.soMstrDiscountRemarks ?? '', s.soMstrDiscountContact ?? '', num(s.somstrDiscAmt), num(s.somstrTotalAmt))),
       ...credit
         .filter((s) => num(s.totalDiscount) > 0)
-        .map((s) => discRow(s.customer?.name ?? s.discountRemarks ?? '', s.customer?.mobile ?? '', num(s.totalDiscount), num(s.totalAmount))),
+        .map((s) => discRow(s.customer?.name ?? s.discountRemarks ?? '', s.customer?.mobile ?? '', num(s.totalDiscount), num(s.totalAmount) + num(s.totalVat))),
       ...assorted
         .filter((s) => num(s.discAmt) > 0)
         .map((s) => discRow(s.discountRemarks ?? '', '', num(s.discAmt), num(s.totalAmt))),
@@ -608,7 +613,7 @@ export class ReportsService {
       }),
       this.prisma.t_NCMstr.findMany({
         where: { ncmstrDate: window, ncmstrIsActive: true, ...branchFilter },
-        include: { details: { select: { ncdetNetAmount: true } } },
+        include: { details: { select: { ncdetNetAmount: true, ncdetVATAmount: true } } },
       }),
     ]);
 
@@ -629,11 +634,13 @@ export class ReportsService {
       const amt = num(s.somstrNetAmt);
       if (isCashMode(s.mtype)) cashSale += amt; else cardSale += amt;
     }
-    const creditNet = (s: (typeof credit)[number]) => num(s.totalAmount) - num(s.totalDiscount);
+    // `totalAmount` is stored net of VAT, so add `totalVat` back for the actual
+    // billed value — see the identical note in getDailyFinalReport.
+    const creditNet = (s: (typeof credit)[number]) => num(s.totalAmount) + num(s.totalVat) - num(s.totalDiscount);
     const creditSale = credit.reduce((t, s) => t + creditNet(s), 0);
     const totalSale = cashSale + cardSale + creditSale;
 
-    const ncSale = nc.reduce((t, n) => t + n.details.reduce((x, d) => x + num(d.ncdetNetAmount), 0), 0);
+    const ncSale = nc.reduce((t, n) => t + n.details.reduce((x, d) => x + num(d.ncdetNetAmount) + num(d.ncdetVATAmount), 0), 0);
     const discount =
       cash.reduce((t, s) => t + num(s.somstrDiscAmt), 0) +
       assorted.reduce((t, s) => t + num(s.discAmt), 0) +
