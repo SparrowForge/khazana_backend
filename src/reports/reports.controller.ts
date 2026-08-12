@@ -139,4 +139,53 @@ export class ReportsController {
   ) {
     return this.reportsService.getSalesHistory({ fromDate, toDate, branchId: branchId || undefined });
   }
+
+  @Get('item-receive')
+  @ApiOperation({ summary: 'Get the datewise Item Receive report (items × date, current VAT-inclusive price)' })
+  @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
+  @ApiQuery({ name: 'toDate', required: true, description: 'Range end date, inclusive (ISO 8601)' })
+  @ApiQuery({ name: 'receiveBranchId', required: false, description: 'Branch the goods were received INTO — omit to aggregate all branches' })
+  @ApiQuery({ name: 'fromBranchId', required: false, description: 'Branch the goods were received FROM — omit to include every source' })
+  @ApiResponse({ status: 200, description: 'Datewise item receive rows with current VAT-inclusive price' })
+  getItemReceiveReport(
+    @Query('fromDate') fromDate: string,
+    @Query('toDate') toDate: string,
+    @Query('receiveBranchId') receiveBranchId?: string,
+    @Query('fromBranchId') fromBranchId?: string,
+  ) {
+    return this.reportsService.getItemReceiveReport({
+      fromDate,
+      toDate,
+      receiveBranchId: receiveBranchId || undefined,
+      fromBranchId: fromBranchId || undefined,
+    });
+  }
+
+  @Get('item-reject')
+  @ApiOperation({ summary: 'Get the datewise Item Reject report (items × date, current VAT-inclusive price)' })
+  @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
+  @ApiQuery({ name: 'toDate', required: true, description: 'Range end date, inclusive (ISO 8601)' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch the rejects were recorded at — omit to aggregate all branches' })
+  @ApiResponse({ status: 200, description: 'Datewise item reject rows with current VAT-inclusive price' })
+  getItemRejectReport(
+    @Query('fromDate') fromDate: string,
+    @Query('toDate') toDate: string,
+    @Query('branchId') branchId?: string,
+  ) {
+    return this.reportsService.getItemRejectReport({ fromDate, toDate, branchId: branchId || undefined });
+  }
+
+  @Get('nc')
+  @ApiOperation({ summary: 'Get the NC (non-charge) report: a flat list of NC lines with VAT-inclusive amounts' })
+  @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
+  @ApiQuery({ name: 'toDate', required: true, description: 'Range end date, inclusive (ISO 8601)' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch (Outlet) — omit to aggregate all branches' })
+  @ApiResponse({ status: 200, description: 'NC line rows with attribution (Name/Reference) and VAT-inclusive amount' })
+  getNCReport(
+    @Query('fromDate') fromDate: string,
+    @Query('toDate') toDate: string,
+    @Query('branchId') branchId?: string,
+  ) {
+    return this.reportsService.getNCReport({ fromDate, toDate, branchId: branchId || undefined });
+  }
 }

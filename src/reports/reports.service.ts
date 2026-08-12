@@ -1134,4 +1134,310 @@ export class ReportsService {
       dailySubTotals: Array.from(dailyMap.values()),
     };
   }
+
+  // ── Item Receive Report (per-item, datewise columns) ─────────────────
+  // Reproduces the legacy "Branch Wise Item Received Report": one row per item,
+  // one column per day in the range, quantity received that day, with a
+  // TotalQty + Amount (TotalQty × current VAT-inclusive price) at the end.
+  // `receiveBranchId` = the branch the goods were received INTO (Item_Receive.
+  // receiveBranchID); `fromBranchId` = the branch they were received FROM
+  // (Item_Receive.branchId — yes, the column names are swapped vs. the human
+  // meaning; see receiveStock in inventory.service.ts). Both are optional: omit
+  // `receiveBranchId` to aggregate every branch, omit `fromBranchId` to include
+  // receipts from any source.
+  //
+  // A branch TRANSFER also writes an Item_Receive row (serialNo prefixed
+  // 'TRF') for its destination leg. The dedicated Stock Receive screen
+  // (findReceiveHistory) excludes those so it only shows goods-inward
+  // documents, not the receive-side of internal transfers — this report
+  // mirrors that so the two stay in agreement.
+  async getItemReceiveReport(query: {
+    fromDate?: string;
+    toDate?: string;
+    receiveBranchId?: string;
+    fromBranchId?: string;
+  }) {
+    const { from, to } = this.parseRange({ fromDate: query.fromDate, toDate: query.toDate });
+
+    const rows = await this.prisma.item_Receive.findMany({
+      where: {
+        isActive: 1,
+        purDate: { gte: from, lte: to },
+        NOT: { serialNo: { startsWith: 'TRF' } },
+        ...(query.receiveBranchId ? { receiveBranchID: query.receiveBranchId } : {}),
+        ...(query.fromBranchId ? { branchId: query.fromBranchId } : {}),
+      },
+      select: { itemId: true, qty: true, purDate: true },
+    });
+
+    // ── Date columns (inclusive, one per calendar day in the range) ──────
+    // Stepped in UTC to match how `purDate` is keyed below (toISOString date
+    // part) — date-only values are stored at UTC midnight, so local-timezone
+    // arithmetic here could drift the cursor onto the wrong calendar day.
+    const dates: string[] = [];
+    for (
+      const cursor = new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth(), from.getUTCDate()));
+      cursor <= to;
+      cursor.setUTCDate(cursor.getUTCDate() + 1)
+    ) {
+      dates.push(cursor.toISOString().split('T')[0]);
+    }
+
+    // ── Qty per item per day ──────────────────────────────────────────────
+    const qtyMap = new Map<string, Map<string, number>>();
+    for (const r of rows) {
+      if (!r.itemId || !r.purDate) continue;
+      const dateStr = r.purDate.toISOString().split('T')[0];
+      if (!qtyMap.has(r.itemId)) qtyMap.set(r.itemId, new Map());
+      const byDate = qtyMap.get(r.itemId)!;
+      byDate.set(dateStr, r2signed((byDate.get(dateStr) ?? 0) + num(r.qty)));
+    }
+
+    // ── Catalog + current VAT-inclusive rate, for the items actually received ──
+    const itemIds = [...qtyMap.keys()];
+    const items = await this.prisma.item_Information.findMany({
+      where: { id: { in: itemIds } },
+      orderBy: { itmName: 'asc' },
+      select: {
+        id: true, itmCode: true, itmName: true, itmUOM: true,
+        prices: {
+          where: { priceIsActive: 1 },
+          orderBy: { priceFromDate: 'desc' },
+          take: 1,
+          select: { priceListPrice: true, priceVatPercent: true },
+        },
+      },
+    });
+    // "Current price with VAT" = the latest active price row's list price
+    // grossed up by its VAT% — the same VAT-inclusive unit price a sale line
+    // charges (see priceLines in pos-sales.service.ts).
+    const currentRate = (i: (typeof items)[number]) => {
+      const p = i.prices[0];
+      return r2signed(num(p?.priceListPrice) * (1 + num(p?.priceVatPercent) / 100));
+    };
+
+    const itemRows = items.map((it, idx) => {
+      const byDate = qtyMap.get(it.id) ?? new Map<string, number>();
+      const qtyByDate: Record<string, number> = {};
+      let totalQty = 0;
+      for (const d of dates) {
+        const q = byDate.get(d) ?? 0;
+        qtyByDate[d] = q;
+        totalQty = r2signed(totalQty + q);
+      }
+      const price = currentRate(it);
+      return {
+        sl: idx + 1,
+        itemCode: it.itmCode,
+        itemName: it.itmName ?? '',
+        uom: it.itmUOM ?? '',
+        price,
+        qtyByDate,
+        totalQty,
+        amount: r2signed(totalQty * price),
+      };
+    });
+
+    const totalsByDate: Record<string, number> = {};
+    for (const d of dates) {
+      totalsByDate[d] = r2signed(itemRows.reduce((s, r) => s + (r.qtyByDate[d] ?? 0), 0));
+    }
+    const totals = {
+      byDate: totalsByDate,
+      totalQty: r2signed(itemRows.reduce((s, r) => s + r.totalQty, 0)),
+      amount: r2signed(itemRows.reduce((s, r) => s + r.amount, 0)),
+    };
+
+    const [receiveBranch, fromBranch] = await Promise.all([
+      query.receiveBranchId
+        ? this.prisma.branch.findUnique({ where: { id: query.receiveBranchId }, select: { branchName: true } })
+        : Promise.resolve(null),
+      query.fromBranchId
+        ? this.prisma.branch.findUnique({ where: { id: query.fromBranchId }, select: { branchName: true } })
+        : Promise.resolve(null),
+    ]);
+
+    return {
+      fromDate: from.toISOString().split('T')[0],
+      toDate: to.toISOString().split('T')[0],
+      receiveBranch: query.receiveBranchId
+        ? { id: query.receiveBranchId, name: receiveBranch?.branchName ?? '' }
+        : { id: '', name: 'All Branches' },
+      fromBranch: query.fromBranchId
+        ? { id: query.fromBranchId, name: fromBranch?.branchName ?? '' }
+        : { id: '', name: 'All Branches' },
+      dates,
+      items: itemRows,
+      totals,
+    };
+  }
+
+  // ── Item Reject Report (per-item, datewise columns) ───────────────────
+  // Same datewise-pivot shape as the Item Receive report, but sourced from
+  // `ItemReject.reject` — the reject quantity recorded on a Stock Adjustment
+  // document (adjustStock in inventory.service.ts), not Item_Receive. Unlike
+  // Item Receive there is only one branch dimension here (ItemReject has a
+  // single `branchId`, no separate "from" branch).
+  async getItemRejectReport(query: { fromDate?: string; toDate?: string; branchId?: string }) {
+    const { from, to } = this.parseRange({ fromDate: query.fromDate, toDate: query.toDate });
+
+    const rows = await this.prisma.itemReject.findMany({
+      where: {
+        isActive: 1,
+        date: { gte: from, lte: to },
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+      },
+      select: { itmOId: true, reject: true, date: true },
+    });
+
+    // ── Date columns (inclusive, one per calendar day in the range) ──────
+    // Stepped in UTC — see the matching comment in getItemReceiveReport.
+    const dates: string[] = [];
+    for (
+      const cursor = new Date(Date.UTC(from.getUTCFullYear(), from.getUTCMonth(), from.getUTCDate()));
+      cursor <= to;
+      cursor.setUTCDate(cursor.getUTCDate() + 1)
+    ) {
+      dates.push(cursor.toISOString().split('T')[0]);
+    }
+
+    // ── Reject qty per item per day ───────────────────────────────────────
+    const qtyMap = new Map<string, Map<string, number>>();
+    for (const r of rows) {
+      if (!r.itmOId || !r.date) continue;
+      const dateStr = r.date.toISOString().split('T')[0];
+      if (!qtyMap.has(r.itmOId)) qtyMap.set(r.itmOId, new Map());
+      const byDate = qtyMap.get(r.itmOId)!;
+      byDate.set(dateStr, r2signed((byDate.get(dateStr) ?? 0) + num(r.reject)));
+    }
+
+    // ── Catalog + current VAT-inclusive rate, for the items actually rejected ──
+    const itemIds = [...qtyMap.keys()];
+    const items = await this.prisma.item_Information.findMany({
+      where: { id: { in: itemIds } },
+      orderBy: { itmName: 'asc' },
+      select: {
+        id: true, itmCode: true, itmName: true, itmUOM: true,
+        prices: {
+          where: { priceIsActive: 1 },
+          orderBy: { priceFromDate: 'desc' },
+          take: 1,
+          select: { priceListPrice: true, priceVatPercent: true },
+        },
+      },
+    });
+    const currentRate = (i: (typeof items)[number]) => {
+      const p = i.prices[0];
+      return r2signed(num(p?.priceListPrice) * (1 + num(p?.priceVatPercent) / 100));
+    };
+
+    const itemRows = items.map((it, idx) => {
+      const byDate = qtyMap.get(it.id) ?? new Map<string, number>();
+      const qtyByDate: Record<string, number> = {};
+      let totalQty = 0;
+      for (const d of dates) {
+        const q = byDate.get(d) ?? 0;
+        qtyByDate[d] = q;
+        totalQty = r2signed(totalQty + q);
+      }
+      const price = currentRate(it);
+      return {
+        sl: idx + 1,
+        itemCode: it.itmCode,
+        itemName: it.itmName ?? '',
+        uom: it.itmUOM ?? '',
+        price,
+        qtyByDate,
+        totalQty,
+        amount: r2signed(totalQty * price),
+      };
+    });
+
+    const totalsByDate: Record<string, number> = {};
+    for (const d of dates) {
+      totalsByDate[d] = r2signed(itemRows.reduce((s, r) => s + (r.qtyByDate[d] ?? 0), 0));
+    }
+    const totals = {
+      byDate: totalsByDate,
+      totalQty: r2signed(itemRows.reduce((s, r) => s + r.totalQty, 0)),
+      amount: r2signed(itemRows.reduce((s, r) => s + r.amount, 0)),
+    };
+
+    const branch = query.branchId
+      ? await this.prisma.branch.findUnique({ where: { id: query.branchId }, select: { branchName: true } })
+      : null;
+
+    return {
+      fromDate: from.toISOString().split('T')[0],
+      toDate: to.toISOString().split('T')[0],
+      branch: query.branchId
+        ? { id: query.branchId, name: branch?.branchName ?? '' }
+        : { id: '', name: 'All Branches' },
+      dates,
+      items: itemRows,
+      totals,
+    };
+  }
+
+  // ── NC Report (per-line list, one row per NC line item) ───────────────
+  // Reproduces the legacy "Branch Wise NC Report": a flat list of every NC
+  // (non-charge) line in the range — Date/Invoice/Item/Qty/Amount plus the
+  // document's attribution (Name/Reference) and its branch (Outlet). Unlike
+  // Item Receive/Reject this isn't a datewise pivot — dates repeat per line,
+  // same as the source sheet and the same shape getSalesHistory already uses.
+  async getNCReport(query: { fromDate?: string; toDate?: string; branchId?: string }) {
+    const { from, to } = this.parseRange({ fromDate: query.fromDate, toDate: query.toDate });
+
+    const ncs = await this.prisma.t_NCMstr.findMany({
+      where: {
+        ncmstrDate: { gte: from, lte: to },
+        ncmstrIsActive: true,
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+      },
+      include: { details: { include: { item: { select: { itmName: true, itmUOM: true } } } } },
+      orderBy: { ncmstrDate: 'asc' },
+    });
+
+    const branchIds = [...new Set(ncs.map((n) => n.branchId).filter((id): id is string => !!id))];
+    const branches = branchIds.length
+      ? await this.prisma.branch.findMany({ where: { id: { in: branchIds } }, select: { id: true, branchName: true } })
+      : [];
+    const branchNameById = new Map(branches.map((b) => [b.id, b.branchName ?? '']));
+
+    // ncdetNetAmount is stored net of discount but EXCLUDING VAT — the same
+    // convention getDailySummary/getDailyFinalReport already rely on. Add
+    // ncdetVATAmount back so "Amount" is the VAT-inclusive line value.
+    const rows = ncs.flatMap((nc) =>
+      nc.details.map((d) => ({
+        date: nc.ncmstrDate,
+        invoiceNo: nc.ncmstrCode ?? '',
+        itemName: d.item?.itmName ?? '',
+        uom: d.item?.itmUOM ?? d.ncdetUOM ?? '',
+        qty: num(d.ncdetQTY),
+        amount: r2signed(num(d.ncdetNetAmount) + num(d.ncdetVATAmount)),
+        name: nc.ncmstrName ?? '',
+        reference: nc.ncmstrReference ?? '',
+        outlet: nc.branchId ? branchNameById.get(nc.branchId) ?? '' : '',
+      })),
+    );
+
+    const totals = {
+      qty: r2signed(rows.reduce((s, r) => s + r.qty, 0)),
+      amount: r2signed(rows.reduce((s, r) => s + r.amount, 0)),
+    };
+
+    const branch = query.branchId
+      ? await this.prisma.branch.findUnique({ where: { id: query.branchId }, select: { branchName: true } })
+      : null;
+
+    return {
+      fromDate: from.toISOString().split('T')[0],
+      toDate: to.toISOString().split('T')[0],
+      branch: query.branchId
+        ? { id: query.branchId, name: branch?.branchName ?? '' }
+        : { id: '', name: 'All Branches' },
+      items: rows,
+      totals,
+    };
+  }
 }
