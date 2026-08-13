@@ -68,10 +68,13 @@ export class ReportsService {
     const creditGross = (s: { totalAmount: unknown; totalVat: unknown }) => num(s.totalAmount) + num(s.totalVat);
 
     const rows = [
+      // POS/counter sales carry the teller's actual pay-mode selection
+      // (Cash/Card/Bkash/Rocket/...) in `mtype` — show that instead of a
+      // generic "Cash" bucket label.
       ...cash.map((s) => ({
         id: s.id, invNo: s.somstrCode, date: s.somstrDate, customerName: 'Cash Customer',
         totalAmount: cashGross(s), discount: num(s.somstrDiscAmt), netAmount: num(s.somstrNetAmt),
-        saleType: 'Cash',
+        saleType: s.mtype || 'Cash',
       })),
       ...credit.map((s) => ({
         id: s.id, invNo: s.invNo, date: s.invDate, customerName: s.customer?.name ?? '',
@@ -81,7 +84,7 @@ export class ReportsService {
       ...vatCash.map((s) => ({
         id: s.id, invNo: s.somstrCode, date: s.somstrDate, customerName: 'Cash Customer',
         totalAmount: cashGross(s), discount: num(s.somstrDiscAmt), netAmount: num(s.somstrNetAmt),
-        saleType: 'Cash (VAT)',
+        saleType: s.mtype ? `${s.mtype} (VAT)` : 'Cash (VAT)',
       })),
       ...vatCredit.map((s) => ({
         id: s.id, invNo: s.invNo, date: s.invDate, customerName: s.customer?.name ?? s.clientCode ?? '',
