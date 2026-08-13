@@ -57,25 +57,35 @@ export class ReportsService {
       }),
     ]);
 
+    // somstrTotalAmt is stored net of VAT, while somstrNetAmt is the final
+    // VAT-inclusive amount actually charged (post-discount) — Gross needs to be
+    // VAT-inclusive too, so derive it as netAmt + discAmt rather than reading
+    // somstrTotalAmt directly (see getDailyFinalReport for the same distinction).
+    const cashGross = (s: { somstrNetAmt: unknown; somstrDiscAmt: unknown }) => num(s.somstrNetAmt) + num(s.somstrDiscAmt);
+    // totalAmount on CSMaster/CSVMaster is stored net of VAT — add totalVat back
+    // so Gross/Net reflect what was actually billed (see getDailyFinalReport's
+    // identical creditNet helper).
+    const creditGross = (s: { totalAmount: unknown; totalVat: unknown }) => num(s.totalAmount) + num(s.totalVat);
+
     const rows = [
       ...cash.map((s) => ({
         id: s.id, invNo: s.somstrCode, date: s.somstrDate, customerName: 'Cash Customer',
-        totalAmount: num(s.somstrTotalAmt), discount: num(s.somstrDiscAmt), netAmount: num(s.somstrNetAmt),
+        totalAmount: cashGross(s), discount: num(s.somstrDiscAmt), netAmount: num(s.somstrNetAmt),
         saleType: 'Cash',
       })),
       ...credit.map((s) => ({
         id: s.id, invNo: s.invNo, date: s.invDate, customerName: s.customer?.name ?? '',
-        totalAmount: num(s.totalAmount), discount: num(s.totalDiscount), netAmount: num(s.totalAmount) - num(s.totalDiscount),
+        totalAmount: creditGross(s), discount: num(s.totalDiscount), netAmount: creditGross(s) - num(s.totalDiscount),
         saleType: 'Credit',
       })),
       ...vatCash.map((s) => ({
         id: s.id, invNo: s.somstrCode, date: s.somstrDate, customerName: 'Cash Customer',
-        totalAmount: num(s.somstrTotalAmt), discount: num(s.somstrDiscAmt), netAmount: num(s.somstrNetAmt),
+        totalAmount: cashGross(s), discount: num(s.somstrDiscAmt), netAmount: num(s.somstrNetAmt),
         saleType: 'Cash (VAT)',
       })),
       ...vatCredit.map((s) => ({
         id: s.id, invNo: s.invNo, date: s.invDate, customerName: s.customer?.name ?? s.clientCode ?? '',
-        totalAmount: num(s.totalAmount), discount: num(s.totalDiscount), netAmount: num(s.totalAmount) - num(s.totalDiscount),
+        totalAmount: creditGross(s), discount: num(s.totalDiscount), netAmount: creditGross(s) - num(s.totalDiscount),
         saleType: 'Credit (VAT)',
       })),
     ];
@@ -457,15 +467,18 @@ export class ReportsService {
         prices: {
           where: { priceIsActive: 1 },
           orderBy: { priceFromDate: 'desc' },
-          select: { priceListPrice: true, priceFromDate: true, priceToDate: true },
+          select: { priceListPrice: true, priceVatPercent: true, priceFromDate: true, priceToDate: true },
         },
       },
     });
+    // priceListPrice is the VAT-exclusive list rate — fold priceVatPercent in so
+    // the report's Rate column matches what a unit actually sells for.
     const rateOf = (i: (typeof items)[number]) => {
       const p =
         i.prices.find((pr) => (!pr.priceFromDate || pr.priceFromDate <= day) && (!pr.priceToDate || pr.priceToDate >= day)) ??
         i.prices[0];
-      return num(p?.priceListPrice);
+      const listPrice = num(p?.priceListPrice);
+      return r2signed(listPrice * (1 + num(p?.priceVatPercent) / 100));
     };
 
     // ── Movement aggregates (before-day for opening, during-day for columns) ──
