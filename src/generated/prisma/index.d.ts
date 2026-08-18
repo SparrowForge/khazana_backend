@@ -189,6 +189,14 @@ export type Item_Receive = $Result.DefaultSelection<Prisma.$Item_ReceivePayload>
  */
 export type Item_Issue = $Result.DefaultSelection<Prisma.$Item_IssuePayload>
 /**
+ * Model Production
+ * Production Entry — factory-only record of manufactured output. One row per
+ * item line; all lines of one entry share a `serialNo` (PRD-...) so the
+ * document can be grouped, edited and deleted as a unit, like Item_Issue.
+ * `rate` is the VAT-INCLUSIVE unit price (Item_Issue.unitPrice is not).
+ */
+export type Production = $Result.DefaultSelection<Prisma.$ProductionPayload>
+/**
  * Model ItemReject
  * 
  */
@@ -721,6 +729,16 @@ export class PrismaClient<
     * ```
     */
   get item_Issue(): Prisma.Item_IssueDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.production`: Exposes CRUD operations for the **Production** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Productions
+    * const productions = await prisma.production.findMany()
+    * ```
+    */
+  get production(): Prisma.ProductionDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.itemReject`: Exposes CRUD operations for the **ItemReject** model.
@@ -1327,6 +1345,7 @@ export namespace Prisma {
     t_NCDet: 't_NCDet',
     Item_Receive: 'Item_Receive',
     Item_Issue: 'Item_Issue',
+    Production: 'Production',
     ItemReject: 'ItemReject',
     PacketInfo: 'PacketInfo',
     Packet_Receive: 'Packet_Receive',
@@ -1358,7 +1377,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "customer_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "demandOrder_Master" | "demandOrder_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
+      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "customer_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "production" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "demandOrder_Master" | "demandOrder_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3952,6 +3971,80 @@ export namespace Prisma {
           }
         }
       }
+      Production: {
+        payload: Prisma.$ProductionPayload<ExtArgs>
+        fields: Prisma.ProductionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProductionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProductionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductionPayload>
+          }
+          findFirst: {
+            args: Prisma.ProductionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProductionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductionPayload>
+          }
+          findMany: {
+            args: Prisma.ProductionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductionPayload>[]
+          }
+          create: {
+            args: Prisma.ProductionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductionPayload>
+          }
+          createMany: {
+            args: Prisma.ProductionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProductionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductionPayload>[]
+          }
+          delete: {
+            args: Prisma.ProductionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductionPayload>
+          }
+          update: {
+            args: Prisma.ProductionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductionPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProductionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProductionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProductionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductionPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProductionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProductionPayload>
+          }
+          aggregate: {
+            args: Prisma.ProductionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProduction>
+          }
+          groupBy: {
+            args: Prisma.ProductionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProductionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProductionCountArgs<ExtArgs>
+            result: $Utils.Optional<ProductionCountAggregateOutputType> | number
+          }
+        }
+      }
       ItemReject: {
         payload: Prisma.$ItemRejectPayload<ExtArgs>
         fields: Prisma.ItemRejectFieldRefs
@@ -5045,6 +5138,7 @@ export namespace Prisma {
     t_NCDet?: t_NCDetOmit
     item_Receive?: Item_ReceiveOmit
     item_Issue?: Item_IssueOmit
+    production?: ProductionOmit
     itemReject?: ItemRejectOmit
     packetInfo?: PacketInfoOmit
     packet_Receive?: Packet_ReceiveOmit
@@ -5417,6 +5511,7 @@ export namespace Prisma {
     itemRejects: number
     itemReceives: number
     itemIssues: number
+    productions: number
     orderDetails: number
     demandOrderDetails: number
     prices: number
@@ -5432,6 +5527,7 @@ export namespace Prisma {
     itemRejects?: boolean | Item_InformationCountOutputTypeCountItemRejectsArgs
     itemReceives?: boolean | Item_InformationCountOutputTypeCountItemReceivesArgs
     itemIssues?: boolean | Item_InformationCountOutputTypeCountItemIssuesArgs
+    productions?: boolean | Item_InformationCountOutputTypeCountProductionsArgs
     orderDetails?: boolean | Item_InformationCountOutputTypeCountOrderDetailsArgs
     demandOrderDetails?: boolean | Item_InformationCountOutputTypeCountDemandOrderDetailsArgs
     prices?: boolean | Item_InformationCountOutputTypeCountPricesArgs
@@ -5503,6 +5599,13 @@ export namespace Prisma {
    */
   export type Item_InformationCountOutputTypeCountItemIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: Item_IssueWhereInput
+  }
+
+  /**
+   * Item_InformationCountOutputType without action
+   */
+  export type Item_InformationCountOutputTypeCountProductionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductionWhereInput
   }
 
   /**
@@ -22848,6 +22951,7 @@ export namespace Prisma {
     itemRejects?: boolean | Item_Information$itemRejectsArgs<ExtArgs>
     itemReceives?: boolean | Item_Information$itemReceivesArgs<ExtArgs>
     itemIssues?: boolean | Item_Information$itemIssuesArgs<ExtArgs>
+    productions?: boolean | Item_Information$productionsArgs<ExtArgs>
     orderDetails?: boolean | Item_Information$orderDetailsArgs<ExtArgs>
     demandOrderDetails?: boolean | Item_Information$demandOrderDetailsArgs<ExtArgs>
     inventory?: boolean | Item_Information$inventoryArgs<ExtArgs>
@@ -22911,6 +23015,7 @@ export namespace Prisma {
     itemRejects?: boolean | Item_Information$itemRejectsArgs<ExtArgs>
     itemReceives?: boolean | Item_Information$itemReceivesArgs<ExtArgs>
     itemIssues?: boolean | Item_Information$itemIssuesArgs<ExtArgs>
+    productions?: boolean | Item_Information$productionsArgs<ExtArgs>
     orderDetails?: boolean | Item_Information$orderDetailsArgs<ExtArgs>
     demandOrderDetails?: boolean | Item_Information$demandOrderDetailsArgs<ExtArgs>
     inventory?: boolean | Item_Information$inventoryArgs<ExtArgs>
@@ -22937,6 +23042,7 @@ export namespace Prisma {
       itemRejects: Prisma.$ItemRejectPayload<ExtArgs>[]
       itemReceives: Prisma.$Item_ReceivePayload<ExtArgs>[]
       itemIssues: Prisma.$Item_IssuePayload<ExtArgs>[]
+      productions: Prisma.$ProductionPayload<ExtArgs>[]
       orderDetails: Prisma.$OrderReceive_DetailPayload<ExtArgs>[]
       demandOrderDetails: Prisma.$DemandOrder_DetailPayload<ExtArgs>[]
       inventory: Prisma.$InventoryPayload<ExtArgs> | null
@@ -23358,6 +23464,7 @@ export namespace Prisma {
     itemRejects<T extends Item_Information$itemRejectsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$itemRejectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ItemRejectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     itemReceives<T extends Item_Information$itemReceivesArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$itemReceivesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Item_ReceivePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     itemIssues<T extends Item_Information$itemIssuesArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$itemIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Item_IssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    productions<T extends Item_Information$productionsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$productionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orderDetails<T extends Item_Information$orderDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$orderDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderReceive_DetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     demandOrderDetails<T extends Item_Information$demandOrderDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$demandOrderDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     inventory<T extends Item_Information$inventoryArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$inventoryArgs<ExtArgs>>): Prisma__InventoryClient<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -24007,6 +24114,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Item_IssueScalarFieldEnum | Item_IssueScalarFieldEnum[]
+  }
+
+  /**
+   * Item_Information.productions
+   */
+  export type Item_Information$productionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Production
+     */
+    select?: ProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Production
+     */
+    omit?: ProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductionInclude<ExtArgs> | null
+    where?: ProductionWhereInput
+    orderBy?: ProductionOrderByWithRelationInput | ProductionOrderByWithRelationInput[]
+    cursor?: ProductionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductionScalarFieldEnum | ProductionScalarFieldEnum[]
   }
 
   /**
@@ -47386,6 +47517,1229 @@ export namespace Prisma {
 
 
   /**
+   * Model Production
+   */
+
+  export type AggregateProduction = {
+    _count: ProductionCountAggregateOutputType | null
+    _avg: ProductionAvgAggregateOutputType | null
+    _sum: ProductionSumAggregateOutputType | null
+    _min: ProductionMinAggregateOutputType | null
+    _max: ProductionMaxAggregateOutputType | null
+  }
+
+  export type ProductionAvgAggregateOutputType = {
+    rate: Decimal | null
+    qty: Decimal | null
+    isActive: number | null
+  }
+
+  export type ProductionSumAggregateOutputType = {
+    rate: Decimal | null
+    qty: Decimal | null
+    isActive: number | null
+  }
+
+  export type ProductionMinAggregateOutputType = {
+    id: string | null
+    serialNo: string | null
+    branchId: string | null
+    productionDate: Date | null
+    itemId: string | null
+    rate: Decimal | null
+    qty: Decimal | null
+    remarks: string | null
+    isActive: number | null
+    createBy: string | null
+    createDate: Date | null
+    updateBy: string | null
+    updateDate: Date | null
+  }
+
+  export type ProductionMaxAggregateOutputType = {
+    id: string | null
+    serialNo: string | null
+    branchId: string | null
+    productionDate: Date | null
+    itemId: string | null
+    rate: Decimal | null
+    qty: Decimal | null
+    remarks: string | null
+    isActive: number | null
+    createBy: string | null
+    createDate: Date | null
+    updateBy: string | null
+    updateDate: Date | null
+  }
+
+  export type ProductionCountAggregateOutputType = {
+    id: number
+    serialNo: number
+    branchId: number
+    productionDate: number
+    itemId: number
+    rate: number
+    qty: number
+    remarks: number
+    isActive: number
+    createBy: number
+    createDate: number
+    updateBy: number
+    updateDate: number
+    _all: number
+  }
+
+
+  export type ProductionAvgAggregateInputType = {
+    rate?: true
+    qty?: true
+    isActive?: true
+  }
+
+  export type ProductionSumAggregateInputType = {
+    rate?: true
+    qty?: true
+    isActive?: true
+  }
+
+  export type ProductionMinAggregateInputType = {
+    id?: true
+    serialNo?: true
+    branchId?: true
+    productionDate?: true
+    itemId?: true
+    rate?: true
+    qty?: true
+    remarks?: true
+    isActive?: true
+    createBy?: true
+    createDate?: true
+    updateBy?: true
+    updateDate?: true
+  }
+
+  export type ProductionMaxAggregateInputType = {
+    id?: true
+    serialNo?: true
+    branchId?: true
+    productionDate?: true
+    itemId?: true
+    rate?: true
+    qty?: true
+    remarks?: true
+    isActive?: true
+    createBy?: true
+    createDate?: true
+    updateBy?: true
+    updateDate?: true
+  }
+
+  export type ProductionCountAggregateInputType = {
+    id?: true
+    serialNo?: true
+    branchId?: true
+    productionDate?: true
+    itemId?: true
+    rate?: true
+    qty?: true
+    remarks?: true
+    isActive?: true
+    createBy?: true
+    createDate?: true
+    updateBy?: true
+    updateDate?: true
+    _all?: true
+  }
+
+  export type ProductionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Production to aggregate.
+     */
+    where?: ProductionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Productions to fetch.
+     */
+    orderBy?: ProductionOrderByWithRelationInput | ProductionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProductionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Productions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Productions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Productions
+    **/
+    _count?: true | ProductionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProductionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProductionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProductionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProductionMaxAggregateInputType
+  }
+
+  export type GetProductionAggregateType<T extends ProductionAggregateArgs> = {
+        [P in keyof T & keyof AggregateProduction]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProduction[P]>
+      : GetScalarType<T[P], AggregateProduction[P]>
+  }
+
+
+
+
+  export type ProductionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductionWhereInput
+    orderBy?: ProductionOrderByWithAggregationInput | ProductionOrderByWithAggregationInput[]
+    by: ProductionScalarFieldEnum[] | ProductionScalarFieldEnum
+    having?: ProductionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProductionCountAggregateInputType | true
+    _avg?: ProductionAvgAggregateInputType
+    _sum?: ProductionSumAggregateInputType
+    _min?: ProductionMinAggregateInputType
+    _max?: ProductionMaxAggregateInputType
+  }
+
+  export type ProductionGroupByOutputType = {
+    id: string
+    serialNo: string | null
+    branchId: string | null
+    productionDate: Date | null
+    itemId: string | null
+    rate: Decimal | null
+    qty: Decimal | null
+    remarks: string | null
+    isActive: number | null
+    createBy: string | null
+    createDate: Date | null
+    updateBy: string | null
+    updateDate: Date | null
+    _count: ProductionCountAggregateOutputType | null
+    _avg: ProductionAvgAggregateOutputType | null
+    _sum: ProductionSumAggregateOutputType | null
+    _min: ProductionMinAggregateOutputType | null
+    _max: ProductionMaxAggregateOutputType | null
+  }
+
+  type GetProductionGroupByPayload<T extends ProductionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProductionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProductionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProductionGroupByOutputType[P]>
+            : GetScalarType<T[P], ProductionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProductionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    serialNo?: boolean
+    branchId?: boolean
+    productionDate?: boolean
+    itemId?: boolean
+    rate?: boolean
+    qty?: boolean
+    remarks?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+    updateBy?: boolean
+    updateDate?: boolean
+    item?: boolean | Production$itemArgs<ExtArgs>
+  }, ExtArgs["result"]["production"]>
+
+  export type ProductionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    serialNo?: boolean
+    branchId?: boolean
+    productionDate?: boolean
+    itemId?: boolean
+    rate?: boolean
+    qty?: boolean
+    remarks?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+    updateBy?: boolean
+    updateDate?: boolean
+    item?: boolean | Production$itemArgs<ExtArgs>
+  }, ExtArgs["result"]["production"]>
+
+  export type ProductionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    serialNo?: boolean
+    branchId?: boolean
+    productionDate?: boolean
+    itemId?: boolean
+    rate?: boolean
+    qty?: boolean
+    remarks?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+    updateBy?: boolean
+    updateDate?: boolean
+    item?: boolean | Production$itemArgs<ExtArgs>
+  }, ExtArgs["result"]["production"]>
+
+  export type ProductionSelectScalar = {
+    id?: boolean
+    serialNo?: boolean
+    branchId?: boolean
+    productionDate?: boolean
+    itemId?: boolean
+    rate?: boolean
+    qty?: boolean
+    remarks?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+    updateBy?: boolean
+    updateDate?: boolean
+  }
+
+  export type ProductionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "branchId" | "productionDate" | "itemId" | "rate" | "qty" | "remarks" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["production"]>
+  export type ProductionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    item?: boolean | Production$itemArgs<ExtArgs>
+  }
+  export type ProductionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    item?: boolean | Production$itemArgs<ExtArgs>
+  }
+  export type ProductionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    item?: boolean | Production$itemArgs<ExtArgs>
+  }
+
+  export type $ProductionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Production"
+    objects: {
+      item: Prisma.$Item_InformationPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      serialNo: string | null
+      branchId: string | null
+      productionDate: Date | null
+      itemId: string | null
+      rate: Prisma.Decimal | null
+      qty: Prisma.Decimal | null
+      remarks: string | null
+      isActive: number | null
+      createBy: string | null
+      createDate: Date | null
+      updateBy: string | null
+      updateDate: Date | null
+    }, ExtArgs["result"]["production"]>
+    composites: {}
+  }
+
+  type ProductionGetPayload<S extends boolean | null | undefined | ProductionDefaultArgs> = $Result.GetResult<Prisma.$ProductionPayload, S>
+
+  type ProductionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProductionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProductionCountAggregateInputType | true
+    }
+
+  export interface ProductionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Production'], meta: { name: 'Production' } }
+    /**
+     * Find zero or one Production that matches the filter.
+     * @param {ProductionFindUniqueArgs} args - Arguments to find a Production
+     * @example
+     * // Get one Production
+     * const production = await prisma.production.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProductionFindUniqueArgs>(args: SelectSubset<T, ProductionFindUniqueArgs<ExtArgs>>): Prisma__ProductionClient<$Result.GetResult<Prisma.$ProductionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Production that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProductionFindUniqueOrThrowArgs} args - Arguments to find a Production
+     * @example
+     * // Get one Production
+     * const production = await prisma.production.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProductionFindUniqueOrThrowArgs>(args: SelectSubset<T, ProductionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProductionClient<$Result.GetResult<Prisma.$ProductionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Production that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductionFindFirstArgs} args - Arguments to find a Production
+     * @example
+     * // Get one Production
+     * const production = await prisma.production.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProductionFindFirstArgs>(args?: SelectSubset<T, ProductionFindFirstArgs<ExtArgs>>): Prisma__ProductionClient<$Result.GetResult<Prisma.$ProductionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Production that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductionFindFirstOrThrowArgs} args - Arguments to find a Production
+     * @example
+     * // Get one Production
+     * const production = await prisma.production.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProductionFindFirstOrThrowArgs>(args?: SelectSubset<T, ProductionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProductionClient<$Result.GetResult<Prisma.$ProductionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Productions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Productions
+     * const productions = await prisma.production.findMany()
+     * 
+     * // Get first 10 Productions
+     * const productions = await prisma.production.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const productionWithIdOnly = await prisma.production.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProductionFindManyArgs>(args?: SelectSubset<T, ProductionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Production.
+     * @param {ProductionCreateArgs} args - Arguments to create a Production.
+     * @example
+     * // Create one Production
+     * const Production = await prisma.production.create({
+     *   data: {
+     *     // ... data to create a Production
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProductionCreateArgs>(args: SelectSubset<T, ProductionCreateArgs<ExtArgs>>): Prisma__ProductionClient<$Result.GetResult<Prisma.$ProductionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Productions.
+     * @param {ProductionCreateManyArgs} args - Arguments to create many Productions.
+     * @example
+     * // Create many Productions
+     * const production = await prisma.production.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProductionCreateManyArgs>(args?: SelectSubset<T, ProductionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Productions and returns the data saved in the database.
+     * @param {ProductionCreateManyAndReturnArgs} args - Arguments to create many Productions.
+     * @example
+     * // Create many Productions
+     * const production = await prisma.production.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Productions and only return the `id`
+     * const productionWithIdOnly = await prisma.production.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProductionCreateManyAndReturnArgs>(args?: SelectSubset<T, ProductionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Production.
+     * @param {ProductionDeleteArgs} args - Arguments to delete one Production.
+     * @example
+     * // Delete one Production
+     * const Production = await prisma.production.delete({
+     *   where: {
+     *     // ... filter to delete one Production
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProductionDeleteArgs>(args: SelectSubset<T, ProductionDeleteArgs<ExtArgs>>): Prisma__ProductionClient<$Result.GetResult<Prisma.$ProductionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Production.
+     * @param {ProductionUpdateArgs} args - Arguments to update one Production.
+     * @example
+     * // Update one Production
+     * const production = await prisma.production.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProductionUpdateArgs>(args: SelectSubset<T, ProductionUpdateArgs<ExtArgs>>): Prisma__ProductionClient<$Result.GetResult<Prisma.$ProductionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Productions.
+     * @param {ProductionDeleteManyArgs} args - Arguments to filter Productions to delete.
+     * @example
+     * // Delete a few Productions
+     * const { count } = await prisma.production.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProductionDeleteManyArgs>(args?: SelectSubset<T, ProductionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Productions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Productions
+     * const production = await prisma.production.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProductionUpdateManyArgs>(args: SelectSubset<T, ProductionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Productions and returns the data updated in the database.
+     * @param {ProductionUpdateManyAndReturnArgs} args - Arguments to update many Productions.
+     * @example
+     * // Update many Productions
+     * const production = await prisma.production.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Productions and only return the `id`
+     * const productionWithIdOnly = await prisma.production.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProductionUpdateManyAndReturnArgs>(args: SelectSubset<T, ProductionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Production.
+     * @param {ProductionUpsertArgs} args - Arguments to update or create a Production.
+     * @example
+     * // Update or create a Production
+     * const production = await prisma.production.upsert({
+     *   create: {
+     *     // ... data to create a Production
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Production we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProductionUpsertArgs>(args: SelectSubset<T, ProductionUpsertArgs<ExtArgs>>): Prisma__ProductionClient<$Result.GetResult<Prisma.$ProductionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Productions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductionCountArgs} args - Arguments to filter Productions to count.
+     * @example
+     * // Count the number of Productions
+     * const count = await prisma.production.count({
+     *   where: {
+     *     // ... the filter for the Productions we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProductionCountArgs>(
+      args?: Subset<T, ProductionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProductionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Production.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProductionAggregateArgs>(args: Subset<T, ProductionAggregateArgs>): Prisma.PrismaPromise<GetProductionAggregateType<T>>
+
+    /**
+     * Group by Production.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProductionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProductionGroupByArgs['orderBy'] }
+        : { orderBy?: ProductionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProductionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProductionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Production model
+   */
+  readonly fields: ProductionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Production.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProductionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    item<T extends Production$itemArgs<ExtArgs> = {}>(args?: Subset<T, Production$itemArgs<ExtArgs>>): Prisma__Item_InformationClient<$Result.GetResult<Prisma.$Item_InformationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Production model
+   */
+  interface ProductionFieldRefs {
+    readonly id: FieldRef<"Production", 'String'>
+    readonly serialNo: FieldRef<"Production", 'String'>
+    readonly branchId: FieldRef<"Production", 'String'>
+    readonly productionDate: FieldRef<"Production", 'DateTime'>
+    readonly itemId: FieldRef<"Production", 'String'>
+    readonly rate: FieldRef<"Production", 'Decimal'>
+    readonly qty: FieldRef<"Production", 'Decimal'>
+    readonly remarks: FieldRef<"Production", 'String'>
+    readonly isActive: FieldRef<"Production", 'Int'>
+    readonly createBy: FieldRef<"Production", 'String'>
+    readonly createDate: FieldRef<"Production", 'DateTime'>
+    readonly updateBy: FieldRef<"Production", 'String'>
+    readonly updateDate: FieldRef<"Production", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Production findUnique
+   */
+  export type ProductionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Production
+     */
+    select?: ProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Production
+     */
+    omit?: ProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductionInclude<ExtArgs> | null
+    /**
+     * Filter, which Production to fetch.
+     */
+    where: ProductionWhereUniqueInput
+  }
+
+  /**
+   * Production findUniqueOrThrow
+   */
+  export type ProductionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Production
+     */
+    select?: ProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Production
+     */
+    omit?: ProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductionInclude<ExtArgs> | null
+    /**
+     * Filter, which Production to fetch.
+     */
+    where: ProductionWhereUniqueInput
+  }
+
+  /**
+   * Production findFirst
+   */
+  export type ProductionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Production
+     */
+    select?: ProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Production
+     */
+    omit?: ProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductionInclude<ExtArgs> | null
+    /**
+     * Filter, which Production to fetch.
+     */
+    where?: ProductionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Productions to fetch.
+     */
+    orderBy?: ProductionOrderByWithRelationInput | ProductionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Productions.
+     */
+    cursor?: ProductionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Productions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Productions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Productions.
+     */
+    distinct?: ProductionScalarFieldEnum | ProductionScalarFieldEnum[]
+  }
+
+  /**
+   * Production findFirstOrThrow
+   */
+  export type ProductionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Production
+     */
+    select?: ProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Production
+     */
+    omit?: ProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductionInclude<ExtArgs> | null
+    /**
+     * Filter, which Production to fetch.
+     */
+    where?: ProductionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Productions to fetch.
+     */
+    orderBy?: ProductionOrderByWithRelationInput | ProductionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Productions.
+     */
+    cursor?: ProductionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Productions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Productions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Productions.
+     */
+    distinct?: ProductionScalarFieldEnum | ProductionScalarFieldEnum[]
+  }
+
+  /**
+   * Production findMany
+   */
+  export type ProductionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Production
+     */
+    select?: ProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Production
+     */
+    omit?: ProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductionInclude<ExtArgs> | null
+    /**
+     * Filter, which Productions to fetch.
+     */
+    where?: ProductionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Productions to fetch.
+     */
+    orderBy?: ProductionOrderByWithRelationInput | ProductionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Productions.
+     */
+    cursor?: ProductionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Productions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Productions.
+     */
+    skip?: number
+    distinct?: ProductionScalarFieldEnum | ProductionScalarFieldEnum[]
+  }
+
+  /**
+   * Production create
+   */
+  export type ProductionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Production
+     */
+    select?: ProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Production
+     */
+    omit?: ProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Production.
+     */
+    data?: XOR<ProductionCreateInput, ProductionUncheckedCreateInput>
+  }
+
+  /**
+   * Production createMany
+   */
+  export type ProductionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Productions.
+     */
+    data: ProductionCreateManyInput | ProductionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Production createManyAndReturn
+   */
+  export type ProductionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Production
+     */
+    select?: ProductionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Production
+     */
+    omit?: ProductionOmit<ExtArgs> | null
+    /**
+     * The data used to create many Productions.
+     */
+    data: ProductionCreateManyInput | ProductionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Production update
+   */
+  export type ProductionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Production
+     */
+    select?: ProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Production
+     */
+    omit?: ProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Production.
+     */
+    data: XOR<ProductionUpdateInput, ProductionUncheckedUpdateInput>
+    /**
+     * Choose, which Production to update.
+     */
+    where: ProductionWhereUniqueInput
+  }
+
+  /**
+   * Production updateMany
+   */
+  export type ProductionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Productions.
+     */
+    data: XOR<ProductionUpdateManyMutationInput, ProductionUncheckedUpdateManyInput>
+    /**
+     * Filter which Productions to update
+     */
+    where?: ProductionWhereInput
+    /**
+     * Limit how many Productions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Production updateManyAndReturn
+   */
+  export type ProductionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Production
+     */
+    select?: ProductionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Production
+     */
+    omit?: ProductionOmit<ExtArgs> | null
+    /**
+     * The data used to update Productions.
+     */
+    data: XOR<ProductionUpdateManyMutationInput, ProductionUncheckedUpdateManyInput>
+    /**
+     * Filter which Productions to update
+     */
+    where?: ProductionWhereInput
+    /**
+     * Limit how many Productions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Production upsert
+   */
+  export type ProductionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Production
+     */
+    select?: ProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Production
+     */
+    omit?: ProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Production to update in case it exists.
+     */
+    where: ProductionWhereUniqueInput
+    /**
+     * In case the Production found by the `where` argument doesn't exist, create a new Production with this data.
+     */
+    create: XOR<ProductionCreateInput, ProductionUncheckedCreateInput>
+    /**
+     * In case the Production was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProductionUpdateInput, ProductionUncheckedUpdateInput>
+  }
+
+  /**
+   * Production delete
+   */
+  export type ProductionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Production
+     */
+    select?: ProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Production
+     */
+    omit?: ProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductionInclude<ExtArgs> | null
+    /**
+     * Filter which Production to delete.
+     */
+    where: ProductionWhereUniqueInput
+  }
+
+  /**
+   * Production deleteMany
+   */
+  export type ProductionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Productions to delete
+     */
+    where?: ProductionWhereInput
+    /**
+     * Limit how many Productions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Production.item
+   */
+  export type Production$itemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_Information
+     */
+    select?: Item_InformationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_Information
+     */
+    omit?: Item_InformationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Item_InformationInclude<ExtArgs> | null
+    where?: Item_InformationWhereInput
+  }
+
+  /**
+   * Production without action
+   */
+  export type ProductionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Production
+     */
+    select?: ProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Production
+     */
+    omit?: ProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model ItemReject
    */
 
@@ -63685,6 +65039,25 @@ export namespace Prisma {
   export type Item_IssueScalarFieldEnum = (typeof Item_IssueScalarFieldEnum)[keyof typeof Item_IssueScalarFieldEnum]
 
 
+  export const ProductionScalarFieldEnum: {
+    id: 'id',
+    serialNo: 'serialNo',
+    branchId: 'branchId',
+    productionDate: 'productionDate',
+    itemId: 'itemId',
+    rate: 'rate',
+    qty: 'qty',
+    remarks: 'remarks',
+    isActive: 'isActive',
+    createBy: 'createBy',
+    createDate: 'createDate',
+    updateBy: 'updateBy',
+    updateDate: 'updateDate'
+  };
+
+  export type ProductionScalarFieldEnum = (typeof ProductionScalarFieldEnum)[keyof typeof ProductionScalarFieldEnum]
+
+
   export const ItemRejectScalarFieldEnum: {
     id: 'id',
     invNo: 'invNo',
@@ -65192,6 +66565,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectListRelationFilter
     itemReceives?: Item_ReceiveListRelationFilter
     itemIssues?: Item_IssueListRelationFilter
+    productions?: ProductionListRelationFilter
     orderDetails?: OrderReceive_DetailListRelationFilter
     demandOrderDetails?: DemandOrder_DetailListRelationFilter
     inventory?: XOR<InventoryNullableScalarRelationFilter, InventoryWhereInput> | null
@@ -65220,6 +66594,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectOrderByRelationAggregateInput
     itemReceives?: Item_ReceiveOrderByRelationAggregateInput
     itemIssues?: Item_IssueOrderByRelationAggregateInput
+    productions?: ProductionOrderByRelationAggregateInput
     orderDetails?: OrderReceive_DetailOrderByRelationAggregateInput
     demandOrderDetails?: DemandOrder_DetailOrderByRelationAggregateInput
     inventory?: InventoryOrderByWithRelationInput
@@ -65251,6 +66626,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectListRelationFilter
     itemReceives?: Item_ReceiveListRelationFilter
     itemIssues?: Item_IssueListRelationFilter
+    productions?: ProductionListRelationFilter
     orderDetails?: OrderReceive_DetailListRelationFilter
     demandOrderDetails?: DemandOrder_DetailListRelationFilter
     inventory?: XOR<InventoryNullableScalarRelationFilter, InventoryWhereInput> | null
@@ -67124,6 +68500,103 @@ export namespace Prisma {
     createDate?: DateTimeNullableWithAggregatesFilter<"Item_Issue"> | Date | string | null
     updateBy?: StringNullableWithAggregatesFilter<"Item_Issue"> | string | null
     updateDate?: DateTimeNullableWithAggregatesFilter<"Item_Issue"> | Date | string | null
+  }
+
+  export type ProductionWhereInput = {
+    AND?: ProductionWhereInput | ProductionWhereInput[]
+    OR?: ProductionWhereInput[]
+    NOT?: ProductionWhereInput | ProductionWhereInput[]
+    id?: UuidFilter<"Production"> | string
+    serialNo?: StringNullableFilter<"Production"> | string | null
+    branchId?: UuidNullableFilter<"Production"> | string | null
+    productionDate?: DateTimeNullableFilter<"Production"> | Date | string | null
+    itemId?: UuidNullableFilter<"Production"> | string | null
+    rate?: DecimalNullableFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
+    qty?: DecimalNullableFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
+    remarks?: StringNullableFilter<"Production"> | string | null
+    isActive?: IntNullableFilter<"Production"> | number | null
+    createBy?: StringNullableFilter<"Production"> | string | null
+    createDate?: DateTimeNullableFilter<"Production"> | Date | string | null
+    updateBy?: StringNullableFilter<"Production"> | string | null
+    updateDate?: DateTimeNullableFilter<"Production"> | Date | string | null
+    item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
+  }
+
+  export type ProductionOrderByWithRelationInput = {
+    id?: SortOrder
+    serialNo?: SortOrderInput | SortOrder
+    branchId?: SortOrderInput | SortOrder
+    productionDate?: SortOrderInput | SortOrder
+    itemId?: SortOrderInput | SortOrder
+    rate?: SortOrderInput | SortOrder
+    qty?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    isActive?: SortOrderInput | SortOrder
+    createBy?: SortOrderInput | SortOrder
+    createDate?: SortOrderInput | SortOrder
+    updateBy?: SortOrderInput | SortOrder
+    updateDate?: SortOrderInput | SortOrder
+    item?: Item_InformationOrderByWithRelationInput
+  }
+
+  export type ProductionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProductionWhereInput | ProductionWhereInput[]
+    OR?: ProductionWhereInput[]
+    NOT?: ProductionWhereInput | ProductionWhereInput[]
+    serialNo?: StringNullableFilter<"Production"> | string | null
+    branchId?: UuidNullableFilter<"Production"> | string | null
+    productionDate?: DateTimeNullableFilter<"Production"> | Date | string | null
+    itemId?: UuidNullableFilter<"Production"> | string | null
+    rate?: DecimalNullableFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
+    qty?: DecimalNullableFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
+    remarks?: StringNullableFilter<"Production"> | string | null
+    isActive?: IntNullableFilter<"Production"> | number | null
+    createBy?: StringNullableFilter<"Production"> | string | null
+    createDate?: DateTimeNullableFilter<"Production"> | Date | string | null
+    updateBy?: StringNullableFilter<"Production"> | string | null
+    updateDate?: DateTimeNullableFilter<"Production"> | Date | string | null
+    item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
+  }, "id">
+
+  export type ProductionOrderByWithAggregationInput = {
+    id?: SortOrder
+    serialNo?: SortOrderInput | SortOrder
+    branchId?: SortOrderInput | SortOrder
+    productionDate?: SortOrderInput | SortOrder
+    itemId?: SortOrderInput | SortOrder
+    rate?: SortOrderInput | SortOrder
+    qty?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    isActive?: SortOrderInput | SortOrder
+    createBy?: SortOrderInput | SortOrder
+    createDate?: SortOrderInput | SortOrder
+    updateBy?: SortOrderInput | SortOrder
+    updateDate?: SortOrderInput | SortOrder
+    _count?: ProductionCountOrderByAggregateInput
+    _avg?: ProductionAvgOrderByAggregateInput
+    _max?: ProductionMaxOrderByAggregateInput
+    _min?: ProductionMinOrderByAggregateInput
+    _sum?: ProductionSumOrderByAggregateInput
+  }
+
+  export type ProductionScalarWhereWithAggregatesInput = {
+    AND?: ProductionScalarWhereWithAggregatesInput | ProductionScalarWhereWithAggregatesInput[]
+    OR?: ProductionScalarWhereWithAggregatesInput[]
+    NOT?: ProductionScalarWhereWithAggregatesInput | ProductionScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Production"> | string
+    serialNo?: StringNullableWithAggregatesFilter<"Production"> | string | null
+    branchId?: UuidNullableWithAggregatesFilter<"Production"> | string | null
+    productionDate?: DateTimeNullableWithAggregatesFilter<"Production"> | Date | string | null
+    itemId?: UuidNullableWithAggregatesFilter<"Production"> | string | null
+    rate?: DecimalNullableWithAggregatesFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
+    qty?: DecimalNullableWithAggregatesFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
+    remarks?: StringNullableWithAggregatesFilter<"Production"> | string | null
+    isActive?: IntNullableWithAggregatesFilter<"Production"> | number | null
+    createBy?: StringNullableWithAggregatesFilter<"Production"> | string | null
+    createDate?: DateTimeNullableWithAggregatesFilter<"Production"> | Date | string | null
+    updateBy?: StringNullableWithAggregatesFilter<"Production"> | string | null
+    updateDate?: DateTimeNullableWithAggregatesFilter<"Production"> | Date | string | null
   }
 
   export type ItemRejectWhereInput = {
@@ -69596,6 +71069,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
@@ -69623,6 +71097,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -69650,6 +71125,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
@@ -69677,6 +71153,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -71816,6 +73293,117 @@ export namespace Prisma {
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ProductionCreateInput = {
+    id?: string
+    serialNo?: string | null
+    branchId?: string | null
+    productionDate?: Date | string | null
+    rate?: Decimal | DecimalJsLike | number | string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+    item?: Item_InformationCreateNestedOneWithoutProductionsInput
+  }
+
+  export type ProductionUncheckedCreateInput = {
+    id?: string
+    serialNo?: string | null
+    branchId?: string | null
+    productionDate?: Date | string | null
+    itemId?: string | null
+    rate?: Decimal | DecimalJsLike | number | string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+  }
+
+  export type ProductionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    productionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    item?: Item_InformationUpdateOneWithoutProductionsNestedInput
+  }
+
+  export type ProductionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    productionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
+    rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ProductionCreateManyInput = {
+    id?: string
+    serialNo?: string | null
+    branchId?: string | null
+    productionDate?: Date | string | null
+    itemId?: string | null
+    rate?: Decimal | DecimalJsLike | number | string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+  }
+
+  export type ProductionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    productionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ProductionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    productionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
+    rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -74285,6 +75873,12 @@ export namespace Prisma {
     none?: Item_IssueWhereInput
   }
 
+  export type ProductionListRelationFilter = {
+    every?: ProductionWhereInput
+    some?: ProductionWhereInput
+    none?: ProductionWhereInput
+  }
+
   export type OrderReceive_DetailListRelationFilter = {
     every?: OrderReceive_DetailWhereInput
     some?: OrderReceive_DetailWhereInput
@@ -74343,6 +75937,10 @@ export namespace Prisma {
   }
 
   export type Item_IssueOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProductionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -75694,6 +77292,66 @@ export namespace Prisma {
 
   export type Item_IssueSumOrderByAggregateInput = {
     unitPrice?: SortOrder
+    qty?: SortOrder
+    isActive?: SortOrder
+  }
+
+  export type ProductionCountOrderByAggregateInput = {
+    id?: SortOrder
+    serialNo?: SortOrder
+    branchId?: SortOrder
+    productionDate?: SortOrder
+    itemId?: SortOrder
+    rate?: SortOrder
+    qty?: SortOrder
+    remarks?: SortOrder
+    isActive?: SortOrder
+    createBy?: SortOrder
+    createDate?: SortOrder
+    updateBy?: SortOrder
+    updateDate?: SortOrder
+  }
+
+  export type ProductionAvgOrderByAggregateInput = {
+    rate?: SortOrder
+    qty?: SortOrder
+    isActive?: SortOrder
+  }
+
+  export type ProductionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    serialNo?: SortOrder
+    branchId?: SortOrder
+    productionDate?: SortOrder
+    itemId?: SortOrder
+    rate?: SortOrder
+    qty?: SortOrder
+    remarks?: SortOrder
+    isActive?: SortOrder
+    createBy?: SortOrder
+    createDate?: SortOrder
+    updateBy?: SortOrder
+    updateDate?: SortOrder
+  }
+
+  export type ProductionMinOrderByAggregateInput = {
+    id?: SortOrder
+    serialNo?: SortOrder
+    branchId?: SortOrder
+    productionDate?: SortOrder
+    itemId?: SortOrder
+    rate?: SortOrder
+    qty?: SortOrder
+    remarks?: SortOrder
+    isActive?: SortOrder
+    createBy?: SortOrder
+    createDate?: SortOrder
+    updateBy?: SortOrder
+    updateDate?: SortOrder
+  }
+
+  export type ProductionSumOrderByAggregateInput = {
+    rate?: SortOrder
     qty?: SortOrder
     isActive?: SortOrder
   }
@@ -77317,6 +78975,13 @@ export namespace Prisma {
     connect?: Item_IssueWhereUniqueInput | Item_IssueWhereUniqueInput[]
   }
 
+  export type ProductionCreateNestedManyWithoutItemInput = {
+    create?: XOR<ProductionCreateWithoutItemInput, ProductionUncheckedCreateWithoutItemInput> | ProductionCreateWithoutItemInput[] | ProductionUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: ProductionCreateOrConnectWithoutItemInput | ProductionCreateOrConnectWithoutItemInput[]
+    createMany?: ProductionCreateManyItemInputEnvelope
+    connect?: ProductionWhereUniqueInput | ProductionWhereUniqueInput[]
+  }
+
   export type OrderReceive_DetailCreateNestedManyWithoutItemInput = {
     create?: XOR<OrderReceive_DetailCreateWithoutItemInput, OrderReceive_DetailUncheckedCreateWithoutItemInput> | OrderReceive_DetailCreateWithoutItemInput[] | OrderReceive_DetailUncheckedCreateWithoutItemInput[]
     connectOrCreate?: OrderReceive_DetailCreateOrConnectWithoutItemInput | OrderReceive_DetailCreateOrConnectWithoutItemInput[]
@@ -77405,6 +79070,13 @@ export namespace Prisma {
     connectOrCreate?: Item_IssueCreateOrConnectWithoutItemInput | Item_IssueCreateOrConnectWithoutItemInput[]
     createMany?: Item_IssueCreateManyItemInputEnvelope
     connect?: Item_IssueWhereUniqueInput | Item_IssueWhereUniqueInput[]
+  }
+
+  export type ProductionUncheckedCreateNestedManyWithoutItemInput = {
+    create?: XOR<ProductionCreateWithoutItemInput, ProductionUncheckedCreateWithoutItemInput> | ProductionCreateWithoutItemInput[] | ProductionUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: ProductionCreateOrConnectWithoutItemInput | ProductionCreateOrConnectWithoutItemInput[]
+    createMany?: ProductionCreateManyItemInputEnvelope
+    connect?: ProductionWhereUniqueInput | ProductionWhereUniqueInput[]
   }
 
   export type OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput = {
@@ -77561,6 +79233,20 @@ export namespace Prisma {
     update?: Item_IssueUpdateWithWhereUniqueWithoutItemInput | Item_IssueUpdateWithWhereUniqueWithoutItemInput[]
     updateMany?: Item_IssueUpdateManyWithWhereWithoutItemInput | Item_IssueUpdateManyWithWhereWithoutItemInput[]
     deleteMany?: Item_IssueScalarWhereInput | Item_IssueScalarWhereInput[]
+  }
+
+  export type ProductionUpdateManyWithoutItemNestedInput = {
+    create?: XOR<ProductionCreateWithoutItemInput, ProductionUncheckedCreateWithoutItemInput> | ProductionCreateWithoutItemInput[] | ProductionUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: ProductionCreateOrConnectWithoutItemInput | ProductionCreateOrConnectWithoutItemInput[]
+    upsert?: ProductionUpsertWithWhereUniqueWithoutItemInput | ProductionUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: ProductionCreateManyItemInputEnvelope
+    set?: ProductionWhereUniqueInput | ProductionWhereUniqueInput[]
+    disconnect?: ProductionWhereUniqueInput | ProductionWhereUniqueInput[]
+    delete?: ProductionWhereUniqueInput | ProductionWhereUniqueInput[]
+    connect?: ProductionWhereUniqueInput | ProductionWhereUniqueInput[]
+    update?: ProductionUpdateWithWhereUniqueWithoutItemInput | ProductionUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: ProductionUpdateManyWithWhereWithoutItemInput | ProductionUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: ProductionScalarWhereInput | ProductionScalarWhereInput[]
   }
 
   export type OrderReceive_DetailUpdateManyWithoutItemNestedInput = {
@@ -77739,6 +79425,20 @@ export namespace Prisma {
     update?: Item_IssueUpdateWithWhereUniqueWithoutItemInput | Item_IssueUpdateWithWhereUniqueWithoutItemInput[]
     updateMany?: Item_IssueUpdateManyWithWhereWithoutItemInput | Item_IssueUpdateManyWithWhereWithoutItemInput[]
     deleteMany?: Item_IssueScalarWhereInput | Item_IssueScalarWhereInput[]
+  }
+
+  export type ProductionUncheckedUpdateManyWithoutItemNestedInput = {
+    create?: XOR<ProductionCreateWithoutItemInput, ProductionUncheckedCreateWithoutItemInput> | ProductionCreateWithoutItemInput[] | ProductionUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: ProductionCreateOrConnectWithoutItemInput | ProductionCreateOrConnectWithoutItemInput[]
+    upsert?: ProductionUpsertWithWhereUniqueWithoutItemInput | ProductionUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: ProductionCreateManyItemInputEnvelope
+    set?: ProductionWhereUniqueInput | ProductionWhereUniqueInput[]
+    disconnect?: ProductionWhereUniqueInput | ProductionWhereUniqueInput[]
+    delete?: ProductionWhereUniqueInput | ProductionWhereUniqueInput[]
+    connect?: ProductionWhereUniqueInput | ProductionWhereUniqueInput[]
+    update?: ProductionUpdateWithWhereUniqueWithoutItemInput | ProductionUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: ProductionUpdateManyWithWhereWithoutItemInput | ProductionUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: ProductionScalarWhereInput | ProductionScalarWhereInput[]
   }
 
   export type OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput = {
@@ -78373,6 +80073,22 @@ export namespace Prisma {
     delete?: Item_InformationWhereInput | boolean
     connect?: Item_InformationWhereUniqueInput
     update?: XOR<XOR<Item_InformationUpdateToOneWithWhereWithoutItemIssuesInput, Item_InformationUpdateWithoutItemIssuesInput>, Item_InformationUncheckedUpdateWithoutItemIssuesInput>
+  }
+
+  export type Item_InformationCreateNestedOneWithoutProductionsInput = {
+    create?: XOR<Item_InformationCreateWithoutProductionsInput, Item_InformationUncheckedCreateWithoutProductionsInput>
+    connectOrCreate?: Item_InformationCreateOrConnectWithoutProductionsInput
+    connect?: Item_InformationWhereUniqueInput
+  }
+
+  export type Item_InformationUpdateOneWithoutProductionsNestedInput = {
+    create?: XOR<Item_InformationCreateWithoutProductionsInput, Item_InformationUncheckedCreateWithoutProductionsInput>
+    connectOrCreate?: Item_InformationCreateOrConnectWithoutProductionsInput
+    upsert?: Item_InformationUpsertWithoutProductionsInput
+    disconnect?: Item_InformationWhereInput | boolean
+    delete?: Item_InformationWhereInput | boolean
+    connect?: Item_InformationWhereUniqueInput
+    update?: XOR<XOR<Item_InformationUpdateToOneWithWhereWithoutProductionsInput, Item_InformationUpdateWithoutProductionsInput>, Item_InformationUncheckedUpdateWithoutProductionsInput>
   }
 
   export type Item_InformationCreateNestedOneWithoutItemRejectsInput = {
@@ -79236,6 +80952,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
@@ -79262,6 +80979,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -81094,6 +82812,46 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProductionCreateWithoutItemInput = {
+    id?: string
+    serialNo?: string | null
+    branchId?: string | null
+    productionDate?: Date | string | null
+    rate?: Decimal | DecimalJsLike | number | string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+  }
+
+  export type ProductionUncheckedCreateWithoutItemInput = {
+    id?: string
+    serialNo?: string | null
+    branchId?: string | null
+    productionDate?: Date | string | null
+    rate?: Decimal | DecimalJsLike | number | string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+  }
+
+  export type ProductionCreateOrConnectWithoutItemInput = {
+    where: ProductionWhereUniqueInput
+    create: XOR<ProductionCreateWithoutItemInput, ProductionUncheckedCreateWithoutItemInput>
+  }
+
+  export type ProductionCreateManyItemInputEnvelope = {
+    data: ProductionCreateManyItemInput | ProductionCreateManyItemInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrderReceive_DetailCreateWithoutItemInput = {
     id?: string
     qty: Decimal | DecimalJsLike | number | string
@@ -81570,6 +83328,41 @@ export namespace Prisma {
     updateDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
   }
 
+  export type ProductionUpsertWithWhereUniqueWithoutItemInput = {
+    where: ProductionWhereUniqueInput
+    update: XOR<ProductionUpdateWithoutItemInput, ProductionUncheckedUpdateWithoutItemInput>
+    create: XOR<ProductionCreateWithoutItemInput, ProductionUncheckedCreateWithoutItemInput>
+  }
+
+  export type ProductionUpdateWithWhereUniqueWithoutItemInput = {
+    where: ProductionWhereUniqueInput
+    data: XOR<ProductionUpdateWithoutItemInput, ProductionUncheckedUpdateWithoutItemInput>
+  }
+
+  export type ProductionUpdateManyWithWhereWithoutItemInput = {
+    where: ProductionScalarWhereInput
+    data: XOR<ProductionUpdateManyMutationInput, ProductionUncheckedUpdateManyWithoutItemInput>
+  }
+
+  export type ProductionScalarWhereInput = {
+    AND?: ProductionScalarWhereInput | ProductionScalarWhereInput[]
+    OR?: ProductionScalarWhereInput[]
+    NOT?: ProductionScalarWhereInput | ProductionScalarWhereInput[]
+    id?: UuidFilter<"Production"> | string
+    serialNo?: StringNullableFilter<"Production"> | string | null
+    branchId?: UuidNullableFilter<"Production"> | string | null
+    productionDate?: DateTimeNullableFilter<"Production"> | Date | string | null
+    itemId?: UuidNullableFilter<"Production"> | string | null
+    rate?: DecimalNullableFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
+    qty?: DecimalNullableFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
+    remarks?: StringNullableFilter<"Production"> | string | null
+    isActive?: IntNullableFilter<"Production"> | number | null
+    createBy?: StringNullableFilter<"Production"> | string | null
+    createDate?: DateTimeNullableFilter<"Production"> | Date | string | null
+    updateBy?: StringNullableFilter<"Production"> | string | null
+    updateDate?: DateTimeNullableFilter<"Production"> | Date | string | null
+  }
+
   export type OrderReceive_DetailUpsertWithWhereUniqueWithoutItemInput = {
     where: OrderReceive_DetailWhereUniqueInput
     update: XOR<OrderReceive_DetailUpdateWithoutItemInput, OrderReceive_DetailUncheckedUpdateWithoutItemInput>
@@ -81738,6 +83531,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
@@ -81764,6 +83558,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
@@ -81806,6 +83601,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
@@ -81832,6 +83628,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
@@ -81858,6 +83655,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
@@ -81884,6 +83682,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -81926,6 +83725,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
@@ -81952,6 +83752,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -81978,6 +83779,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
@@ -82004,6 +83806,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -82046,6 +83849,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
@@ -82072,6 +83876,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -82254,6 +84059,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
@@ -82280,6 +84086,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -82369,6 +84176,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
@@ -82395,6 +84203,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -82787,6 +84596,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
@@ -82813,6 +84623,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -82916,6 +84727,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
@@ -82942,6 +84754,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -83081,6 +84894,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
@@ -83107,6 +84921,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -83208,6 +85023,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
@@ -83234,6 +85050,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -83318,6 +85135,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
@@ -83344,6 +85162,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -83435,6 +85254,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
@@ -83461,6 +85281,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -83637,6 +85458,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
@@ -83663,6 +85485,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -83746,6 +85569,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
@@ -83772,6 +85596,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -83798,6 +85623,7 @@ export namespace Prisma {
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
@@ -83824,6 +85650,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -83866,6 +85693,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
@@ -83892,6 +85720,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -83918,6 +85747,7 @@ export namespace Prisma {
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
@@ -83944,6 +85774,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -83986,6 +85817,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
@@ -84012,6 +85844,131 @@ export namespace Prisma {
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
+    prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
+    costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+  }
+
+  export type Item_InformationCreateWithoutProductionsInput = {
+    id?: string
+    itmCode: string
+    itmName?: string | null
+    itmCategory?: string | null
+    itmType?: string | null
+    itmUOM?: string | null
+    itmRemarks?: string | null
+    itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: string | null
+    isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
+    runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
+    runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
+    ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
+    asstDetails?: AsstDetCreateNestedManyWithoutItemInput
+    itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
+    itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
+    itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
+    prices?: t_PriceCreateNestedManyWithoutItemInput
+    costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+  }
+
+  export type Item_InformationUncheckedCreateWithoutProductionsInput = {
+    id?: string
+    itmCode: string
+    itmName?: string | null
+    itmCategory?: string | null
+    itmType?: string | null
+    itmUOM?: string | null
+    itmRemarks?: string | null
+    imageId?: string | null
+    itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: string | null
+    isActive?: string | null
+    runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
+    runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
+    ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
+    asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
+    itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
+    itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
+    itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
+    prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
+    costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+  }
+
+  export type Item_InformationCreateOrConnectWithoutProductionsInput = {
+    where: Item_InformationWhereUniqueInput
+    create: XOR<Item_InformationCreateWithoutProductionsInput, Item_InformationUncheckedCreateWithoutProductionsInput>
+  }
+
+  export type Item_InformationUpsertWithoutProductionsInput = {
+    update: XOR<Item_InformationUpdateWithoutProductionsInput, Item_InformationUncheckedUpdateWithoutProductionsInput>
+    create: XOR<Item_InformationCreateWithoutProductionsInput, Item_InformationUncheckedCreateWithoutProductionsInput>
+    where?: Item_InformationWhereInput
+  }
+
+  export type Item_InformationUpdateToOneWithWhereWithoutProductionsInput = {
+    where?: Item_InformationWhereInput
+    data: XOR<Item_InformationUpdateWithoutProductionsInput, Item_InformationUncheckedUpdateWithoutProductionsInput>
+  }
+
+  export type Item_InformationUpdateWithoutProductionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itmCode?: StringFieldUpdateOperationsInput | string
+    itmName?: NullableStringFieldUpdateOperationsInput | string | null
+    itmCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    itmType?: NullableStringFieldUpdateOperationsInput | string | null
+    itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
+    runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
+    runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
+    ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
+    asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
+    itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
+    itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
+    itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
+    prices?: t_PriceUpdateManyWithoutItemNestedInput
+    costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+  }
+
+  export type Item_InformationUncheckedUpdateWithoutProductionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itmCode?: StringFieldUpdateOperationsInput | string
+    itmName?: NullableStringFieldUpdateOperationsInput | string | null
+    itmCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    itmType?: NullableStringFieldUpdateOperationsInput | string | null
+    itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
+    itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
+    runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
+    ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
+    asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
+    itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
+    itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
+    itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -84038,6 +85995,7 @@ export namespace Prisma {
     asstDetails?: AsstDetCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
@@ -84064,6 +86022,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
@@ -84106,6 +86065,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
@@ -84132,6 +86092,7 @@ export namespace Prisma {
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -84621,6 +86582,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
@@ -84647,6 +86609,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
@@ -84740,6 +86703,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
@@ -84766,6 +86730,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
@@ -84869,6 +86834,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
@@ -84895,6 +86861,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
     itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
@@ -84978,6 +86945,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
@@ -85004,6 +86972,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
@@ -85290,6 +87259,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
@@ -85316,6 +87286,7 @@ export namespace Prisma {
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
@@ -86030,6 +88001,21 @@ export namespace Prisma {
     updateDate?: Date | string | null
   }
 
+  export type ProductionCreateManyItemInput = {
+    id?: string
+    serialNo?: string | null
+    branchId?: string | null
+    productionDate?: Date | string | null
+    rate?: Decimal | DecimalJsLike | number | string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+  }
+
   export type OrderReceive_DetailCreateManyItemInput = {
     id?: string
     masterId?: string | null
@@ -86438,6 +88424,51 @@ export namespace Prisma {
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ProductionUpdateWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    productionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ProductionUncheckedUpdateWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    productionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ProductionUncheckedUpdateManyWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    productionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

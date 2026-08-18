@@ -9,6 +9,7 @@ import { MenusModule } from './menus/menus.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { SalesModule } from './sales/sales.module';
 import { InventoryModule } from './inventory/inventory.module';
+import { ProductionModule } from './production/production.module';
 import { CustomersModule } from './customers/customers.module';
 import { OrdersModule } from './orders/orders.module';
 import { DemandOrdersModule } from './demand-orders/demand-orders.module';
@@ -36,6 +37,7 @@ import { UploadModule } from './upload/upload.module';
     PermissionsModule,
     SalesModule,
     InventoryModule,
+    ProductionModule,
     CustomersModule,
     OrdersModule,
     DemandOrdersModule,

@@ -1720,6 +1720,35 @@
         ]
       }
     },
+    "/inventory/items/next-code": {
+      "get": {
+        "operationId": "InventoryController_getNextItemCode",
+        "parameters": [
+          {
+            "name": "category",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Suggested item code"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Suggest the next Item Code for a category",
+        "tags": [
+          "Inventory"
+        ]
+      }
+    },
     "/inventory/items/{id}": {
       "get": {
         "operationId": "InventoryController_findItem",
@@ -2649,6 +2678,228 @@
         "summary": "Delete a stock issue (all lines) by serial number",
         "tags": [
           "Inventory"
+        ]
+      }
+    },
+    "/production": {
+      "get": {
+        "operationId": "ProductionController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by branch UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Range start (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of production entries"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get paginated production entries (one row per serial number)",
+        "tags": [
+          "Production"
+        ]
+      },
+      "post": {
+        "operationId": "ProductionController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Production entry saved successfully"
+          },
+          "400": {
+            "description": "No items, or an unknown item id"
+          },
+          "403": {
+            "description": "Session branch is not the Factory, or no create permission"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Record production output (increases stock)",
+        "tags": [
+          "Production"
+        ]
+      }
+    },
+    "/production/{serialNo}": {
+      "get": {
+        "operationId": "ProductionController_findOne",
+        "parameters": [
+          {
+            "name": "serialNo",
+            "required": true,
+            "in": "path",
+            "description": "Production serial number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Production entry found"
+          },
+          "404": {
+            "description": "Production entry not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get a single production entry (all lines) by serial number",
+        "tags": [
+          "Production"
+        ]
+      },
+      "patch": {
+        "operationId": "ProductionController_update",
+        "parameters": [
+          {
+            "name": "serialNo",
+            "required": true,
+            "in": "path",
+            "description": "Production serial number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Production entry updated successfully"
+          },
+          "400": {
+            "description": "Reversing the previous lines would drive stock negative"
+          },
+          "403": {
+            "description": "Session branch is not the Factory, or no edit permission"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Replace all lines of a production entry by serial number",
+        "tags": [
+          "Production"
+        ]
+      },
+      "delete": {
+        "operationId": "ProductionController_remove",
+        "parameters": [
+          {
+            "name": "serialNo",
+            "required": true,
+            "in": "path",
+            "description": "Production serial number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Production entry deleted successfully"
+          },
+          "400": {
+            "description": "Reversing the entry would drive stock negative"
+          },
+          "403": {
+            "description": "Session branch is not the Factory, or no delete permission"
+          },
+          "404": {
+            "description": "Production entry not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete a production entry (all lines) by serial number",
+        "tags": [
+          "Production"
         ]
       }
     },
@@ -4926,6 +5177,159 @@
         ]
       }
     },
+    "/reports/item-receive": {
+      "get": {
+        "operationId": "ReportsController_getItemReceiveReport",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "required": true,
+            "in": "query",
+            "description": "Range start date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": true,
+            "in": "query",
+            "description": "Range end date, inclusive (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "receiveBranchId",
+            "required": false,
+            "in": "query",
+            "description": "Branch the goods were received INTO — omit to aggregate all branches",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromBranchId",
+            "required": false,
+            "in": "query",
+            "description": "Branch the goods were received FROM — omit to include every source",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Datewise item receive rows with current VAT-inclusive price"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get the datewise Item Receive report (items × date, current VAT-inclusive price)",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/reports/item-reject": {
+      "get": {
+        "operationId": "ReportsController_getItemRejectReport",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "required": true,
+            "in": "query",
+            "description": "Range start date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": true,
+            "in": "query",
+            "description": "Range end date, inclusive (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Branch the rejects were recorded at — omit to aggregate all branches",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Datewise item reject rows with current VAT-inclusive price"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get the datewise Item Reject report (items × date, current VAT-inclusive price)",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/reports/nc": {
+      "get": {
+        "operationId": "ReportsController_getNCReport",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "required": true,
+            "in": "query",
+            "description": "Range start date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": true,
+            "in": "query",
+            "description": "Range end date, inclusive (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Branch (Outlet) — omit to aggregate all branches",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "NC line rows with attribution (Name/Reference) and VAT-inclusive amount"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get the NC (non-charge) report: a flat list of NC lines with VAT-inclusive amounts",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
     "/admin/branches": {
       "get": {
         "operationId": "AdminController_findAllBranches",
@@ -7018,6 +7422,85 @@
           "issueDate",
           "issueBranchId",
           "receiveBranchId",
+          "items"
+        ]
+      },
+      "ProductionLineDto": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Item_Information UUID of the produced item"
+          },
+          "qty": {
+            "type": "number",
+            "example": 25,
+            "description": "Quantity produced (must be > 0)"
+          },
+          "rate": {
+            "type": "number",
+            "example": 138,
+            "description": "Unit rate INCLUSIVE of VAT (list price + VAT), unlike Item_Issue.unitPrice"
+          }
+        },
+        "required": [
+          "itemId",
+          "qty"
+        ]
+      },
+      "CreateProductionDto": {
+        "type": "object",
+        "properties": {
+          "serialNo": {
+            "type": "string",
+            "example": "PRD-FAC-202608-00001",
+            "description": "Serial number; generated when omitted"
+          },
+          "productionDate": {
+            "type": "string",
+            "example": "2026-08-18",
+            "description": "Production date (ISO 8601)"
+          },
+          "remarks": {
+            "type": "string",
+            "example": "Morning batch",
+            "description": "Free-text note stored on every line of this entry"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductionLineDto"
+            }
+          }
+        },
+        "required": [
+          "productionDate",
+          "items"
+        ]
+      },
+      "UpdateProductionDto": {
+        "type": "object",
+        "properties": {
+          "productionDate": {
+            "type": "string",
+            "example": "2026-08-18",
+            "description": "Production date (ISO 8601)"
+          },
+          "remarks": {
+            "type": "string",
+            "example": "Morning batch"
+          },
+          "items": {
+            "description": "Full replacement set of lines for this serial number",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductionLineDto"
+            }
+          }
+        },
+        "required": [
+          "productionDate",
           "items"
         ]
       },

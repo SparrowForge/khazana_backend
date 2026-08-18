@@ -605,6 +605,22 @@ exports.Prisma.Item_IssueScalarFieldEnum = {
   updateDate: 'updateDate'
 };
 
+exports.Prisma.ProductionScalarFieldEnum = {
+  id: 'id',
+  serialNo: 'serialNo',
+  branchId: 'branchId',
+  productionDate: 'productionDate',
+  itemId: 'itemId',
+  rate: 'rate',
+  qty: 'qty',
+  remarks: 'remarks',
+  isActive: 'isActive',
+  createBy: 'createBy',
+  createDate: 'createDate',
+  updateBy: 'updateBy',
+  updateDate: 'updateDate'
+};
+
 exports.Prisma.ItemRejectScalarFieldEnum = {
   id: 'id',
   invNo: 'invNo',
@@ -865,6 +881,7 @@ exports.Prisma.ModelName = {
   t_NCDet: 't_NCDet',
   Item_Receive: 'Item_Receive',
   Item_Issue: 'Item_Issue',
+  Production: 'Production',
   ItemReject: 'ItemReject',
   PacketInfo: 'PacketInfo',
   Packet_Receive: 'Packet_Receive',

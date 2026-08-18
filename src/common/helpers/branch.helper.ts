@@ -11,3 +11,15 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 export function toBranchUuid(value?: string | null, fallback: string = DEFAULT_BRANCH_ID): string {
   return typeof value === 'string' && UUID_RE.test(value.trim()) ? value.trim() : fallback;
 }
+
+/** True when a branch is the factory. There is no `isFactory` column, so the
+ *  factory is identified by convention on its code/name — the same convention
+ *  the Demand Order screen already uses. Live data has code 'FAC' / name
+ *  'Factory'; prisma/seed.ts creates code 'Factory' / name 'Factory'. Matching
+ *  either field keeps both shapes working. */
+export function isFactoryBranch(branch?: { branchCode?: string | null; branchName?: string | null } | null): boolean {
+  if (!branch) return false;
+  const code = (branch.branchCode ?? '').trim();
+  const name = (branch.branchName ?? '').trim();
+  return /^fac(tory)?$/i.test(code) || /factory/i.test(name);
+}

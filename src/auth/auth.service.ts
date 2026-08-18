@@ -89,6 +89,9 @@ export class AuthService {
         isVerified: user.isVerified,
         branchId: dto.branchId,
         branchName: branchMapping.branch.branchName,
+        // Branch-scoped features (e.g. Production Entry, factory-only) key off
+        // the code as well as the name, so the name can be edited freely.
+        branchCode: branchMapping.branch.branchCode,
         permissions: user.userRoles,
       },
     };

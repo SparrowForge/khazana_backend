@@ -271,6 +271,7 @@ model Item_Information {
   itemRejects           ItemReject[]
   itemReceives          Item_Receive[]
   itemIssues            Item_Issue[]
+  productions           Production[]
   orderDetails          OrderReceive_Detail[]
   demandOrderDetails    DemandOrder_Detail[]
   // Relations using Item_Information.itmCode (varchar)
@@ -666,6 +667,33 @@ model Item_Issue {
   item            Item_Information? @relation(fields: [itemId], references: [id])
 
   @@map("Item_Issue")
+}
+
+/// Production Entry — factory-only record of manufactured output. One row per
+/// item line; all lines of one entry share a `serialNo` (PRD-...) so the
+/// document can be grouped, edited and deleted as a unit, like Item_Issue.
+/// `rate` is the VAT-INCLUSIVE unit price (Item_Issue.unitPrice is not).
+model Production {
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  serialNo       String?           @map("SerialNo") @db.VarChar(50)
+  branchId       String?           @map("BranchId") @db.Uuid
+  productionDate DateTime?         @map("ProductionDate")
+  itemId         String?           @map("ItemId") @db.Uuid
+  rate           Decimal?          @map("Rate") @db.Decimal(18, 6)
+  qty            Decimal?          @map("Qty") @db.Decimal(18, 6)
+  remarks        String?           @map("Remarks") @db.VarChar(500)
+  isActive       Int?              @map("IsActive")
+  createBy       String?           @map("CreateBy") @db.VarChar(50)
+  createDate     DateTime?         @map("CreateDate")
+  updateBy       String?           @map("UpdateBy") @db.VarChar(50)
+  updateDate     DateTime?         @map("UpdateDate")
+  item           Item_Information? @relation(fields: [itemId], references: [id])
+
+  @@index([serialNo])
+  @@index([branchId])
+  @@index([itemId])
+  @@index([productionDate])
+  @@map("Production")
 }
 
 model ItemReject {

@@ -62,6 +62,9 @@ async function main() {
     { menuName: 'Stock Issue', controlName: 'StockIssue', order: 4, parentMenu: 'Inventory', module: 'Inventory' },
     { menuName: 'Stock Transfer', controlName: 'StockTransfer', order: 5, parentMenu: 'Inventory', module: 'Inventory' },
     { menuName: 'Stock Adjustment', controlName: 'StockAdjustment', order: 6, parentMenu: 'Inventory', module: 'Inventory' },
+    // Factory-only: the sidebar hides it unless the session branch is the
+    // factory, and ProductionService rejects any other branch outright.
+    { menuName: 'Production Entry', controlName: 'ProductionEntry', order: 8, parentMenu: 'Inventory', module: 'Inventory' },
     { menuName: 'Finance', controlName: 'Finance', order: 10, parentMenu: null, module: null },
     { menuName: 'Reports', controlName: 'Reports', order: 11, parentMenu: null, module: null },
     { menuName: 'Administration', controlName: 'Admin', order: 12, parentMenu: null, module: null },
