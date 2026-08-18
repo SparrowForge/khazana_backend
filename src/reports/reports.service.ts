@@ -1,5 +1,6 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
+import { isFactoryBranch } from '../common/helpers';
 
 export interface DateRangeQuery {
   fromDate?: string;
@@ -439,11 +440,13 @@ export class ReportsService {
   //
   // Stock is global in `Inventory`, so per-branch quantities are DERIVED from
   // movement records (confirmed with the business):
-  //   Open Stock = (receives − issues − sales − assorted − NC − reject − short
-  //                 + excess) over everything dated BEFORE the day, for the branch.
-  //   Closing    = (Open + G.Receive) − sales − assorted − NC − reject − issue
-  //                 − short + excess  (the day's movements).
-  // Sources: G.Receive ← Item_Receive (receiveBranchID), Issue ← Item_Issue
+  //   Open Stock = (production + receives − issues − sales − assorted − NC
+  //                 − reject − short + excess) over everything dated BEFORE the
+  //                 day, for the branch.
+  //   Closing    = (Open + Production + G.Receive) − sales − assorted − NC
+  //                 − reject − issue − short + excess  (the day's movements).
+  // Sources: Production ← Production (branchId; factory-only, zero elsewhere),
+  //   G.Receive ← Item_Receive (receiveBranchID), Issue ← Item_Issue
   //   (issueBranchId), Sales ← t_SODet, NC ← t_NCDet, and assorted/reject/short/
   //   excess ← ItemReject.{assort,reject,short,excess}.
   // `branchId` omitted ⇒ aggregate ALL branches together (the "All Branches"
@@ -491,10 +494,12 @@ export class ReportsService {
     const saleWhere = (w: object) => ({ sale: { ...(branchId ? { branchId } : {}), somstrIsActive: true, somstrDate: w } });
     const ncWhere = (w: object) => ({ sale: { ...(branchId ? { branchId } : {}), ncmstrIsActive: true, ncmstrDate: w } });
     const rejWhere = (w: object) => ({ ...(branchId ? { branchId } : {}), isActive: 1, date: w });
+    const prodWhere = (w: object) => ({ ...(branchId ? { branchId } : {}), isActive: 1, productionDate: w });
 
     const [
       recvBefore, recvDuring, issueBefore, issueDuring,
       saleBefore, saleDuring, ncBefore, ncDuring, rejBefore, rejDuring,
+      prodBefore, prodDuring,
     ] = await Promise.all([
       this.prisma.item_Receive.groupBy({ by: ['itemId'], where: recvWhere(before), _sum: { qty: true } }),
       this.prisma.item_Receive.groupBy({ by: ['itemId'], where: recvWhere(during), _sum: { qty: true } }),
@@ -506,6 +511,10 @@ export class ReportsService {
       this.prisma.t_NCDet.groupBy({ by: ['ncdetItemOID'], where: ncWhere(during), _sum: { ncdetQTY: true } }),
       this.prisma.itemReject.groupBy({ by: ['itmOId'], where: rejWhere(before), _sum: { assort: true, reject: true, short: true, excess: true } }),
       this.prisma.itemReject.groupBy({ by: ['itmOId'], where: rejWhere(during), _sum: { assort: true, reject: true, short: true, excess: true } }),
+      // Factory-only movement: manufactured output. Zero for every other branch,
+      // but it must be in the roll-forward or the factory's balances under-report.
+      this.prisma.production.groupBy({ by: ['itemId'], where: prodWhere(before), _sum: { qty: true } }),
+      this.prisma.production.groupBy({ by: ['itemId'], where: prodWhere(during), _sum: { qty: true } }),
     ]);
 
     // Index every aggregate by item UUID.
@@ -529,6 +538,7 @@ export class ReportsService {
 
     const recvB = byItemId(recvBefore), recvD = byItemId(recvDuring);
     const issB = byItemId(issueBefore), issD = byItemId(issueDuring);
+    const prodB = byItemId(prodBefore), prodD = byItemId(prodDuring);
     const salB = byId(saleBefore, (r: { _sum: { sodetQTY: number | null } }) => num(r._sum.sodetQTY));
     const salD = byId(saleDuring, (r: { _sum: { sodetQTY: number | null } }) => num(r._sum.sodetQTY));
     const salAmtD = byId(saleDuring, (r: { _sum: { sodetNetAmount: number | null } }) => num(r._sum.sodetNetAmount));
@@ -548,15 +558,17 @@ export class ReportsService {
       const id = it.id;
       // Opening = the previous day's raw closing = the SIGNED roll-forward of all
       // movements dated BEFORE the day, for this branch:
-      //   Received + Excess − (Sales + Assorted + NC + Reject + Issue + Short)
+      //   Produced + Received + Excess
+      //     − (Sales + Assorted + NC + Reject + Issue + Short)
       // Deficits are real: if the item closed yesterday at -1.00 it MUST open at
       // -1.00. Never clamp/abs/default-to-0 — r2signed only trims float noise.
       const openStock = r2signed(
-        g(recvB, id) + g(excessB, id)
+        g(prodB, id) + g(recvB, id) + g(excessB, id)
         - (g(issB, id) + g(salB, id) + g(assortB, id) + g(ncB, id) + g(rejectB, id) + g(shortB, id)),
       );
+      const production = g(prodD, id);
       const gReceive = g(recvD, id);
-      const totalStock = r2signed(openStock + gReceive);
+      const totalStock = r2signed(openStock + production + gReceive);
       const salesQty = g(salD, id);
       const salesAmt = g(salAmtD, id);
       const assorted = g(assortD, id);
@@ -575,7 +587,7 @@ export class ReportsService {
         itemName: it.itmName ?? '',
         uom: it.itmUOM ?? '',
         rate: rateOf(it),
-        openStock, gReceive, totalStock, salesQty, salesAmt,
+        openStock, production, gReceive, totalStock, salesQty, salesAmt,
         assorted, nc, reject, issueQty, short, excess, closing,
       };
     });
@@ -583,7 +595,7 @@ export class ReportsService {
     // Column totals are signed too — r2signed keeps a net deficit negative.
     const sum = (k: keyof (typeof rows)[number]) => r2signed(rows.reduce((s, r) => s + (r[k] as number), 0));
     const totals = {
-      openStock: sum('openStock'), gReceive: sum('gReceive'), totalStock: sum('totalStock'),
+      openStock: sum('openStock'), production: sum('production'), gReceive: sum('gReceive'), totalStock: sum('totalStock'),
       salesQty: sum('salesQty'), salesAmt: sum('salesAmt'), assorted: sum('assorted'),
       nc: sum('nc'), reject: sum('reject'), issueQty: sum('issueQty'),
       short: sum('short'), excess: sum('excess'), closing: sum('closing'),
@@ -605,6 +617,223 @@ export class ReportsService {
       items: rows,
       totals,
       ...footer,
+    };
+  }
+
+  // ── Production & Delivery Report (factory only) ───────────────
+  // The factory's view of the same ledger Stock Analysis derives, laid out as
+  // paired Qty/Tk columns and grouped the way the business reads it:
+  //
+  //   Total Stock    = Opening + Production Of + Item Return Receive
+  //   Total Delivery = Sales + Stock Issue + NC + Assorted   (everything that
+  //                    left as finished goods; NC/Assorted are normally zero at
+  //                    the factory but are included so the sheet stays closed)
+  //   Closing        = Total Stock − Total Delivery − Reject − Short + Over
+  //
+  // That closing is arithmetically identical to Stock Analysis's, so the two
+  // reports agree for the factory branch.
+  //
+  // Money columns are Qty × Rate (VAT-inclusive list rate, as in Stock
+  // Analysis) with two exceptions that use real recorded money instead:
+  //   * Sales Tk       — the actual net sale amount (price at time of sale,
+  //                      after discount), which is not qty × list rate.
+  //   * Production Tk  — the rate captured on each Production row, which the
+  //                      Production Entry screen records VAT-inclusive and
+  //                      leaves editable as a costing decision.
+  async getProductionDeliveryReport(fromDate: string, toDate: string, branchId: string) {
+    // Factory-only. The sidebar and the route guard hide the page; this closes
+    // the direct-API path, exactly as ProductionService#assertFactoryBranch does.
+    const sessionBranch = branchId
+      ? await this.prisma.branch
+          .findUnique({ where: { id: branchId }, select: { branchCode: true, branchName: true } })
+          .catch(() => null)
+      : null;
+    if (!isFactoryBranch(sessionBranch)) {
+      throw new ForbiddenException('The Production & Delivery report is available only at the Factory branch');
+    }
+
+    const from = new Date(fromDate);
+    if (isNaN(from.getTime())) throw new BadRequestException('Valid `fromDate` is required');
+    const to = toDate ? new Date(toDate) : new Date(fromDate);
+    if (isNaN(to.getTime())) throw new BadRequestException('Valid `toDate` is required');
+    const toExclusive = new Date(to);
+    toExclusive.setDate(toExclusive.getDate() + 1);
+    const day = from;
+    const before = { lt: from };
+    const during = { gte: from, lt: toExclusive };
+
+    const items = await this.prisma.item_Information.findMany({
+      orderBy: { itmName: 'asc' },
+      select: {
+        id: true, itmCode: true, itmName: true, itmUOM: true,
+        prices: {
+          where: { priceIsActive: 1 },
+          orderBy: { priceFromDate: 'desc' },
+          select: { priceListPrice: true, priceVatPercent: true, priceFromDate: true, priceToDate: true },
+        },
+      },
+    });
+    const rateOf = (i: (typeof items)[number]) => {
+      const p =
+        i.prices.find((pr) => (!pr.priceFromDate || pr.priceFromDate <= day) && (!pr.priceToDate || pr.priceToDate >= day)) ??
+        i.prices[0];
+      return r2signed(num(p?.priceListPrice) * (1 + num(p?.priceVatPercent) / 100));
+    };
+
+    const prodWhere = (w: object) => ({ branchId, isActive: 1, productionDate: w });
+    const recvWhere = (w: object) => ({ receiveBranchID: branchId, isActive: 1, purDate: w });
+    const issueWhere = (w: object) => ({ issueBranchId: branchId, isActive: 1, issueDate: w });
+    const saleWhere = (w: object) => ({ sale: { branchId, somstrIsActive: true, somstrDate: w } });
+    const ncWhere = (w: object) => ({ sale: { branchId, ncmstrIsActive: true, ncmstrDate: w } });
+    const rejWhere = (w: object) => ({ branchId, isActive: 1, date: w });
+
+    const [
+      prodBefore, prodDuring, recvBefore, recvDuring, issueBefore, issueDuring,
+      saleBefore, saleDuring, ncBefore, ncDuring, rejBefore, rejDuring,
+    ] = await Promise.all([
+      // `_sum.rate` is deliberately absent: money is Σ(qty × rate) per row, which
+      // a groupBy on rate alone cannot produce. Handled by prodValue below.
+      this.prisma.production.groupBy({ by: ['itemId'], where: prodWhere(before), _sum: { qty: true } }),
+      this.prisma.production.groupBy({ by: ['itemId'], where: prodWhere(during), _sum: { qty: true } }),
+      this.prisma.item_Receive.groupBy({ by: ['itemId'], where: recvWhere(before), _sum: { qty: true } }),
+      this.prisma.item_Receive.groupBy({ by: ['itemId'], where: recvWhere(during), _sum: { qty: true } }),
+      this.prisma.item_Issue.groupBy({ by: ['itemId'], where: issueWhere(before), _sum: { qty: true } }),
+      this.prisma.item_Issue.groupBy({ by: ['itemId'], where: issueWhere(during), _sum: { qty: true } }),
+      this.prisma.t_SODet.groupBy({ by: ['sodetItemOID'], where: saleWhere(before), _sum: { sodetQTY: true, sodetNetAmount: true } }),
+      this.prisma.t_SODet.groupBy({ by: ['sodetItemOID'], where: saleWhere(during), _sum: { sodetQTY: true, sodetNetAmount: true } }),
+      this.prisma.t_NCDet.groupBy({ by: ['ncdetItemOID'], where: ncWhere(before), _sum: { ncdetQTY: true } }),
+      this.prisma.t_NCDet.groupBy({ by: ['ncdetItemOID'], where: ncWhere(during), _sum: { ncdetQTY: true } }),
+      this.prisma.itemReject.groupBy({ by: ['itmOId'], where: rejWhere(before), _sum: { assort: true, reject: true, short: true, excess: true } }),
+      this.prisma.itemReject.groupBy({ by: ['itmOId'], where: rejWhere(during), _sum: { assort: true, reject: true, short: true, excess: true } }),
+    ]);
+
+    // Production value at the rate each entry actually recorded, not the list
+    // rate — Σ(qty × rate) per item, which groupBy can't express.
+    const prodRows = await this.prisma.production.findMany({
+      where: prodWhere(during),
+      select: { itemId: true, qty: true, rate: true },
+    });
+    const prodValue = new Map<string, number>();
+    for (const r of prodRows) {
+      if (!r.itemId) continue;
+      prodValue.set(r.itemId, (prodValue.get(r.itemId) ?? 0) + num(r.qty) * num(r.rate));
+    }
+
+    const byId = (rows: { sodetItemOID?: string; ncdetItemOID?: string; itmOId?: string | null }[], pick: (r: never) => number) => {
+      const m = new Map<string, number>();
+      for (const r of rows as never[]) {
+        const id = (r as { sodetItemOID?: string; ncdetItemOID?: string; itmOId?: string | null }).sodetItemOID
+          ?? (r as { ncdetItemOID?: string }).ncdetItemOID
+          ?? (r as { itmOId?: string | null }).itmOId;
+        if (id) m.set(id, (m.get(id) ?? 0) + pick(r as never));
+      }
+      return m;
+    };
+    const byItemId = (rows: { itemId: string | null; _sum: { qty: unknown } }[]) => {
+      const m = new Map<string, number>();
+      for (const r of rows) if (r.itemId) m.set(r.itemId, (m.get(r.itemId) ?? 0) + num(r._sum.qty));
+      return m;
+    };
+
+    const prodB = byItemId(prodBefore), prodD = byItemId(prodDuring);
+    const recvB = byItemId(recvBefore), recvD = byItemId(recvDuring);
+    const issB = byItemId(issueBefore), issD = byItemId(issueDuring);
+    const salB = byId(saleBefore, (r: { _sum: { sodetQTY: number | null } }) => num(r._sum.sodetQTY));
+    const salD = byId(saleDuring, (r: { _sum: { sodetQTY: number | null } }) => num(r._sum.sodetQTY));
+    const salAmtD = byId(saleDuring, (r: { _sum: { sodetNetAmount: number | null } }) => num(r._sum.sodetNetAmount));
+    const ncB = byId(ncBefore, (r: { _sum: { ncdetQTY: number | null } }) => num(r._sum.ncdetQTY));
+    const ncD = byId(ncDuring, (r: { _sum: { ncdetQTY: number | null } }) => num(r._sum.ncdetQTY));
+    const rej = (rows: typeof rejBefore, field: 'assort' | 'reject' | 'short' | 'excess') =>
+      byId(rows, (r: { _sum: Record<string, number | null> }) => num(r._sum[field]));
+    const assortB = rej(rejBefore, 'assort'), assortD = rej(rejDuring, 'assort');
+    const rejectB = rej(rejBefore, 'reject'), rejectD = rej(rejDuring, 'reject');
+    const shortB = rej(rejBefore, 'short'), shortD = rej(rejDuring, 'short');
+    const excessB = rej(rejBefore, 'excess'), excessD = rej(rejDuring, 'excess');
+
+    const g = (m: Map<string, number>, id: string) => m.get(id) ?? 0;
+
+    const rows = items.map((it, idx) => {
+      const id = it.id;
+      const rate = rateOf(it);
+      // Money for a quantity column: valued at the list rate. Signed, so a
+      // deficit carries its sign through to the Tk column too.
+      const tk = (qty: number) => r2signed(qty * rate);
+
+      // Opening = signed roll-forward of every factory movement dated BEFORE the
+      // range — the same formula Stock Analysis uses, so the two agree.
+      const openingQty = r2signed(
+        g(prodB, id) + g(recvB, id) + g(excessB, id)
+        - (g(issB, id) + g(salB, id) + g(assortB, id) + g(ncB, id) + g(rejectB, id) + g(shortB, id)),
+      );
+      const productionQty = g(prodD, id);
+      const returnQty = g(recvD, id);
+      const totalStockQty = r2signed(openingQty + productionQty + returnQty);
+
+      const salesQty = g(salD, id);
+      const salesTk = g(salAmtD, id);
+      const issueQty = g(issD, id);
+      const ncQty = g(ncD, id);
+      const assortedQty = g(assortD, id);
+      const rejectQty = g(rejectD, id);
+      const shortQty = g(shortD, id);
+      const overQty = g(excessD, id);
+
+      const deliveryQty = r2signed(salesQty + issueQty + ncQty + assortedQty);
+      // Sales carry their real money; the rest is valued at the list rate.
+      const deliveryTk = r2signed(salesTk + (issueQty + ncQty + assortedQty) * rate);
+      const closingQty = r2signed(totalStockQty - deliveryQty - rejectQty - shortQty + overQty);
+      // Production is valued at the rate keyed on each entry; the list rate is
+      // only a fallback for an item with no production rows in range.
+      const productionTk = prodValue.has(id) ? r2signed(prodValue.get(id)!) : tk(productionQty);
+
+      return {
+        sl: idx + 1,
+        itemCode: it.itmCode,
+        itemName: it.itmName ?? '',
+        uom: it.itmUOM ?? '',
+        rate,
+        openingQty, openingTk: tk(openingQty),
+        productionQty, productionTk,
+        returnQty, returnTk: tk(returnQty),
+        totalStockQty, totalStockTk: r2signed(tk(openingQty) + productionTk + tk(returnQty)),
+        salesQty, salesTk,
+        rejectQty, rejectTk: tk(rejectQty),
+        shortQty, shortTk: tk(shortQty),
+        overQty, overTk: tk(overQty),
+        deliveryQty, deliveryTk,
+        closingQty, closingTk: tk(closingQty),
+      };
+    });
+
+    const sum = (k: keyof (typeof rows)[number]) => r2signed(rows.reduce((s, r) => s + (r[k] as number), 0));
+    const totals = {
+      openingQty: sum('openingQty'), openingTk: sum('openingTk'),
+      productionQty: sum('productionQty'), productionTk: sum('productionTk'),
+      returnQty: sum('returnQty'), returnTk: sum('returnTk'),
+      totalStockQty: sum('totalStockQty'), totalStockTk: sum('totalStockTk'),
+      salesQty: sum('salesQty'), salesTk: sum('salesTk'),
+      rejectQty: sum('rejectQty'), rejectTk: sum('rejectTk'),
+      shortQty: sum('shortQty'), shortTk: sum('shortTk'),
+      overQty: sum('overQty'), overTk: sum('overTk'),
+      deliveryQty: sum('deliveryQty'), deliveryTk: sum('deliveryTk'),
+      closingQty: sum('closingQty'), closingTk: sum('closingTk'),
+    };
+
+    const [branch, company] = await Promise.all([
+      this.prisma.branch.findUnique({ where: { id: branchId }, select: { branchName: true, address: true, vatNo: true } }),
+      this.prisma.setup_System.findFirst({ select: { companyName: true, companyAddress: true } }),
+    ]);
+
+    return {
+      fromDate,
+      toDate: toDate || fromDate,
+      company: {
+        name: company?.companyName ?? 'Khazana Mithai Limited',
+        address: company?.companyAddress ?? '',
+      },
+      branch: { name: branch?.branchName ?? '', address: branch?.address ?? '', vatNo: branch?.vatNo ?? '' },
+      items: rows,
+      totals,
     };
   }
 

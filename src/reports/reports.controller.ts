@@ -2,6 +2,7 @@ import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { ReportsService } from './reports.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { CurrentUser } from '../common/decorators';
 
 @ApiTags('Reports')
 @ApiBearerAuth('access-token')
@@ -74,6 +75,22 @@ export class ReportsController {
   ) {
     // Backward compatible: accept the legacy single-day `date` param.
     return this.reportsService.getStockAnalysis(fromDate || date, toDate || date, branchId || undefined);
+  }
+
+  @Get('production-delivery')
+  @ApiOperation({ summary: 'Factory-only Production & Delivery report for a date range' })
+  @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
+  @ApiQuery({ name: 'toDate', required: false, description: 'Range end date, inclusive (ISO 8601); defaults to fromDate' })
+  @ApiResponse({ status: 200, description: 'Per-item Qty/Tk rows plus column totals' })
+  @ApiResponse({ status: 403, description: 'Session branch is not the Factory' })
+  getProductionDeliveryReport(
+    @Query('fromDate') fromDate: string,
+    @Query('toDate') toDate: string,
+    @CurrentUser('branchId') branchId: string,
+  ) {
+    // Factory-only, and always scoped to the session branch — there is no
+    // branchId query param to widen it. The service verifies the branch.
+    return this.reportsService.getProductionDeliveryReport(fromDate, toDate, branchId);
   }
 
   @Get('item-sales')

@@ -65,6 +65,10 @@ async function main() {
     // Factory-only: the sidebar hides it unless the session branch is the
     // factory, and ProductionService rejects any other branch outright.
     { menuName: 'Production Entry', controlName: 'ProductionEntry', order: 8, parentMenu: 'Inventory', module: 'Inventory' },
+    // Factory Report — a top-level group whose every leaf is factory-only, so
+    // the sidebar drops the whole group for any other branch.
+    { menuName: 'Factory Report', controlName: 'FactoryReport', order: 13, parentMenu: null, module: 'Inventory' },
+    { menuName: 'Production & Delivery Report', controlName: 'ProductionDeliveryReport', order: 1, parentMenu: 'FactoryReport', module: 'Inventory' },
     { menuName: 'Finance', controlName: 'Finance', order: 10, parentMenu: null, module: null },
     { menuName: 'Reports', controlName: 'Reports', order: 11, parentMenu: null, module: null },
     { menuName: 'Administration', controlName: 'Admin', order: 12, parentMenu: null, module: null },
