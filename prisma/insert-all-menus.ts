@@ -47,6 +47,7 @@ const newMenus = [
   { menuName: 'Item Receive Report', controlName: 'ItemReceiveReport', order: 10, parentMenu: 'Reports', module: null },
   { menuName: 'Item Reject Report', controlName: 'ItemRejectReport', order: 11, parentMenu: 'Reports', module: null },
   { menuName: 'NC Report', controlName: 'NCReport', order: 12, parentMenu: 'Reports', module: null },
+  { menuName: 'Discount Summary', controlName: 'DiscountSummary', order: 13, parentMenu: 'Reports', module: null },
   { menuName: 'Customer Statement', controlName: 'CustomerStatement', order: 5, parentMenu: 'Reports', module: null },
   { menuName: 'Daily Summary', controlName: 'DailySummary', order: 6, parentMenu: 'Reports', module: null },
   { menuName: 'Daily Final Report', controlName: 'DailyFinalReport', order: 7, parentMenu: 'Reports', module: null },

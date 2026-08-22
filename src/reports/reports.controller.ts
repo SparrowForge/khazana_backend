@@ -205,4 +205,18 @@ export class ReportsController {
   ) {
     return this.reportsService.getNCReport({ fromDate, toDate, branchId: branchId || undefined });
   }
+
+  @Get('discount-summary')
+  @ApiOperation({ summary: 'Get the Discount Summary report: one row per discounted sale invoice across all sale ledgers' })
+  @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
+  @ApiQuery({ name: 'toDate', required: true, description: 'Range end date, inclusive (ISO 8601)' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch (Outlet) — omit to aggregate all branches' })
+  @ApiResponse({ status: 200, description: 'Discounted invoices with pre-discount amount, rate, discount and authoriser' })
+  getDiscountSummary(
+    @Query('fromDate') fromDate: string,
+    @Query('toDate') toDate: string,
+    @Query('branchId') branchId?: string,
+  ) {
+    return this.reportsService.getDiscountSummary({ fromDate, toDate, branchId: branchId || undefined });
+  }
 }

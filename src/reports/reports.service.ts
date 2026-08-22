@@ -1685,4 +1685,149 @@ export class ReportsService {
       totals,
     };
   }
+
+  // ── Discount Summary (one row per discounted sale invoice) ────────────
+  // Reproduces the legacy "Daily Discount Summary": every invoice in the range
+  // that was sold at a discount, with the amount it would have fetched, the
+  // rate, the money given away, and who authorised it.
+  //
+  // All four sale ledgers are covered — POS/cash and VAT cash (t_SOMstr /
+  // t_SOMstV) plus credit and VAT credit (CSMaster / CSVMaster) — because a
+  // discount is a discount whichever counter gave it. Invoices with no discount
+  // are dropped: this is the giveaway list, not a sales list.
+  async getDiscountSummary(query: { fromDate?: string; toDate?: string; branchId?: string }) {
+    const { from, to } = this.parseRange({ fromDate: query.fromDate, toDate: query.toDate });
+    const branchFilter = query.branchId ? { branchId: query.branchId } : {};
+
+    const [cash, vatCash, credit, vatCredit] = await this.prisma.$transaction([
+      this.prisma.t_SOMstr.findMany({
+        where: { somstrDate: { gte: from, lte: to }, somstrIsActive: true, ...branchFilter },
+        orderBy: { somstrDate: 'asc' },
+      }),
+      this.prisma.t_SOMstV.findMany({
+        where: { somstrDate: { gte: from, lte: to }, somstrIsActive: true, ...branchFilter },
+        orderBy: { somstrDate: 'asc' },
+      }),
+      this.prisma.cSMaster.findMany({
+        where: { invDate: { gte: from, lte: to }, isActive: 1, ...branchFilter },
+        include: { customer: { select: { name: true, mobile: true } } },
+        orderBy: { invDate: 'asc' },
+      }),
+      this.prisma.cSVMaster.findMany({
+        where: { invDate: { gte: from, lte: to }, ...branchFilter },
+        include: { customer: { select: { name: true, mobile: true } } },
+        orderBy: { invDate: 'asc' },
+      }),
+    ]);
+
+    // "Amount" is what the invoice would have come to before the discount, and
+    // VAT-inclusive — the base the counter's percentage was actually charged on.
+    // somstrTotalAmt is stored net of VAT, so derive it from the VAT-inclusive
+    // net instead (the same distinction getSalesReport/getDailyFinalReport draw).
+    const cashGross = (s: { somstrNetAmt: unknown; somstrDiscAmt: unknown }) =>
+      r2signed(num(s.somstrNetAmt) + num(s.somstrDiscAmt));
+    // CSMaster/CSVMaster.totalAmount is likewise net of VAT — add totalVat back.
+    const creditGross = (s: { totalAmount: unknown; totalVat: unknown }) =>
+      r2signed(num(s.totalAmount) + num(s.totalVat));
+
+    /** The rate the discount represents. Derived from the money rather than read
+     *  off the document: only credit sales store a rate, and a fixed-amount POS
+     *  discount has none at all. */
+    const pctOf = (discount: number, amount: number) =>
+      amount > 0 ? r2signed((discount / amount) * 100) : 0;
+
+    type Row = {
+      date: Date | null;
+      invoiceNo: string;
+      amount: number;
+      discountPercent: number;
+      discount: number;
+      contactNo: string;
+      remarks: string;
+      outlet: string;
+    };
+
+    const branchIds = [
+      ...new Set(
+        [...cash, ...vatCash, ...credit, ...vatCredit]
+          .map((s) => s.branchId)
+          .filter((id): id is string => !!id),
+      ),
+    ];
+    const branches = branchIds.length
+      ? await this.prisma.branch.findMany({ where: { id: { in: branchIds } }, select: { id: true, branchName: true } })
+      : [];
+    const branchNameById = new Map(branches.map((b) => [b.id, b.branchName ?? '']));
+    const outletOf = (branchId: string | null) => (branchId ? branchNameById.get(branchId) ?? '' : '');
+
+    const rows: Row[] = [
+      // Counter sales carry the discount authoriser's name and phone number in
+      // the SoMstr_Discount* audit columns — that is exactly what the legacy
+      // report's Contact No./Remarks columns hold.
+      ...[...cash, ...vatCash]
+        .filter((s) => num(s.somstrDiscAmt) > 0)
+        .map((s) => {
+          const amount = cashGross(s);
+          const discount = r2signed(num(s.somstrDiscAmt));
+          return {
+            date: s.somstrDate,
+            invoiceNo: s.somstrCode ?? '',
+            amount,
+            discountPercent: pctOf(discount, amount),
+            discount,
+            contactNo: s.soMstrDiscountContact ?? '',
+            remarks: s.soMstrDiscountRemarks ?? '',
+            outlet: outletOf(s.branchId),
+          };
+        }),
+      // A credit invoice has no authoriser audit — the customer it was billed to
+      // is who the discount was given to, so their name and mobile stand in.
+      ...[...credit, ...vatCredit]
+        .filter((s) => num(s.totalDiscount) > 0)
+        .map((s) => {
+          const amount = creditGross(s);
+          const discount = r2signed(num(s.totalDiscount));
+          // Credit sales do store the rate they were billed at; prefer it, since
+          // it also covers the line discounts folded into totalDiscount.
+          const stored = 'discountPercent' in s ? num(s.discountPercent) : 0;
+          return {
+            date: s.invDate,
+            invoiceNo: s.invNo,
+            amount,
+            discountPercent: stored > 0 ? r2signed(stored) : pctOf(discount, amount),
+            discount,
+            contactNo: s.customer?.mobile ?? '',
+            remarks: s.discountRemarks || s.customer?.name || '',
+            outlet: outletOf(s.branchId),
+          };
+        }),
+    ];
+
+    rows.sort(
+      (a, b) =>
+        (a.date?.getTime() ?? 0) - (b.date?.getTime() ?? 0) || a.invoiceNo.localeCompare(b.invoiceNo),
+    );
+
+    const totals = {
+      amount: r2signed(rows.reduce((s, r) => s + r.amount, 0)),
+      discount: r2signed(rows.reduce((s, r) => s + r.discount, 0)),
+    };
+
+    const branch = query.branchId
+      ? await this.prisma.branch.findUnique({
+          where: { id: query.branchId },
+          select: { branchName: true, address: true },
+        })
+      : null;
+
+    return {
+      fromDate: from.toISOString().split('T')[0],
+      toDate: to.toISOString().split('T')[0],
+      branch: query.branchId
+        ? { id: query.branchId, name: branch?.branchName ?? '', address: branch?.address ?? '' }
+        : { id: '', name: 'All Branches', address: '' },
+      items: rows,
+      totals,
+    };
+  }
 }
