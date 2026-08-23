@@ -619,6 +619,27 @@ export class InventoryService {
       .map((l) => ({ itemId: l.itemId, qty: l.qty, unitPrice: l.unitPrice }));
   }
 
+  /** Lines that must be checked against on-hand stock before the issue writes.
+   *
+   *  A production line is left out on purpose: `syncFromIssue` has already added
+   *  the very same quantity for that item, so the line finances its own issue
+   *  and can never drive Inventory negative. Checking it anyway only creates
+   *  false shortages — an item manufactured and shipped the same day legitimately
+   *  starts from a zero (or absent) balance. */
+  /** Prisma's interactive transactions time out after 5s by default. An issue
+   *  that also writes production runs both documents plus their Inventory
+   *  updates in one transaction — a dozen round trips — and against a pooled
+   *  Neon database from a cold serverless function that budget is not generous.
+   *  A timeout surfaces as an opaque 500, so the issue flows get room to finish;
+   *  the work is still one atomic unit and still rolls back as one. */
+  private issueTransaction<T>(fn: (tx: Prisma.TransactionClient) => Promise<T>): Promise<T> {
+    return this.prisma.$transaction(fn, { maxWait: 15_000, timeout: 30_000 });
+  }
+
+  private stockCheckedLines(items: IssueStockDto['items']) {
+    return items.filter((l) => !(l.isProduction && Number(l.qty) > 0));
+  }
+
   /** Flagging a line as production writes a Production row, so the session has
    *  to clear the very same factory-only gate the Production Entry screen does.
    *  Returns the branch (for its code) when there is production to write. */
@@ -639,7 +660,7 @@ export class InventoryService {
     const serialNo = dto.serialNo || this.buildSerialNo('ISS', branchCode, baseCount + 1);
     const producedAt = await this.assertMayProduce(dto.items, dto.issueBranchId);
 
-    return this.prisma.$transaction(async (tx) => {
+    return this.issueTransaction(async (tx) => {
       // Production runs FIRST, because it is what makes the goods this document
       // then issues out: an item produced and shipped the same day can be issued
       // on a zero opening balance, and the availability check below must see the
@@ -657,7 +678,7 @@ export class InventoryService {
 
       // Inside the transaction that decrements, so a concurrent issue can't pass
       // the same check on the same units. Sums repeated lines of one item too.
-      await assertStockAvailable(tx, dto.items);
+      await assertStockAvailable(tx, this.stockCheckedLines(dto.items));
 
       const issues = [];
       for (const line of dto.items) {
@@ -753,7 +774,7 @@ export class InventoryService {
         select: { id: true, branchCode: true },
       }));
 
-    return this.prisma.$transaction(async (tx) => {
+    return this.issueTransaction(async (tx) => {
       // Editing is purge-and-replace. Reverse this document's whole previous
       // effect first, then apply the new one — every check below then reads the
       // real balance inside the transaction rather than a pre-computed net, so
@@ -784,8 +805,9 @@ export class InventoryService {
       }
 
       // Step 3: the replacement lines, checked against the balance those two
-      // steps just left behind.
-      await assertStockAvailable(tx, dto.items);
+      // steps just left behind. Production lines are exempt — step 2 just added
+      // their quantity, so they cannot come up short.
+      await assertStockAvailable(tx, this.stockCheckedLines(dto.items));
 
       const issues = [];
       for (const line of dto.items) {
@@ -820,7 +842,7 @@ export class InventoryService {
     const key = existing[0].serialNo || existing[0].id;
     this.assertNotTransfer(key, 'deleted');
     const codeByItemId = await this.itemCodesByIds(existing.map((r) => r.itemId).filter((id): id is string => !!id));
-    await this.prisma.$transaction(async (tx) => {
+    await this.issueTransaction(async (tx) => {
       for (const row of existing) {
         if (row.itemId) {
           const itemCode = codeByItemId.get(row.itemId)!;
