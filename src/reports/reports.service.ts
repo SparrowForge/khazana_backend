@@ -640,6 +640,54 @@ export class ReportsService {
   //   * Production Tk  — the rate captured on each Production row, which the
   //                      Production Entry screen records VAT-inclusive and
   //                      leaves editable as a costing decision.
+  /**
+   * Sales that do NOT live in t_SODet: credit, VAT cash and VAT credit. The
+   * Production & Delivery sheet's "Sales" column has to count all four ledgers —
+   * reading only the cash counter table made a factory that sells on credit look
+   * like it sold nothing.
+   *
+   * Money is the VAT-INCLUSIVE line value net of every discount, which is what
+   * `sodetNetAmount` already holds for cash sales (`amount + vat - discount
+   * share`, see PosSalesService#priceLines) and what the sheet's VAT-inclusive
+   * `rate` needs to stay comparable. For the credit ledgers that is
+   * `value + vat - disc`: `value` is rate x qty net of VAT, `disc` carries the
+   * line discount AND its share of the invoice-level one, so the three together
+   * sum to exactly `totalAmount + totalVat - totalDiscount` off the master row.
+   * `CSDetail.total` is deliberately NOT used — it is left un-netted so the
+   * invoice-discount fold stays reversible (see distributeInvoiceDiscount).
+   *
+   * No groupBy can express that sum, so the lines are added up here.
+   */
+  private async otherSalesInWindow(branchId: string, window: object) {
+    const [credit, vatCash, vatCredit] = await Promise.all([
+      this.prisma.cSDetail.findMany({
+        where: { sale: { branchId, isActive: 1, invDate: window } },
+        select: { itemOId: true, qty: true, value: true, vat: true, disc: true },
+      }),
+      this.prisma.t_SODeV.findMany({
+        where: { sale: { branchId, somstrIsActive: true, somstrDate: window } },
+        select: { sodetItemOID: true, sodetQTY: true, sodetNetAmount: true },
+      }),
+      // CSVMaster has no IsActive column — matches how getDiscountSummary reads it.
+      this.prisma.cSVDetail.findMany({
+        where: { sale: { branchId, invDate: window } },
+        select: { itemOId: true, qty: true, value: true, vat: true, disc: true },
+      }),
+    ]);
+
+    const qty = new Map<string, number>();
+    const amount = new Map<string, number>();
+    const add = (id: string | null | undefined, q: number, money: number) => {
+      if (!id) return;
+      qty.set(id, (qty.get(id) ?? 0) + q);
+      amount.set(id, (amount.get(id) ?? 0) + money);
+    };
+    for (const d of credit) add(d.itemOId, num(d.qty), num(d.value) + num(d.vat) - num(d.disc));
+    for (const d of vatCredit) add(d.itemOId, num(d.qty), num(d.value) + num(d.vat) - num(d.disc));
+    for (const d of vatCash) add(d.sodetItemOID, num(d.sodetQTY), num(d.sodetNetAmount));
+    return { qty, amount };
+  }
+
   async getProductionDeliveryReport(fromDate: string, toDate: string, branchId: string) {
     // Factory-only. The sidebar and the route guard hide the page; this closes
     // the direct-API path, exactly as ProductionService#assertFactoryBranch does.
@@ -709,6 +757,12 @@ export class ReportsService {
 
     // Production value at the rate each entry actually recorded, not the list
     // rate — Σ(qty × rate) per item, which groupBy can't express.
+    // Credit / VAT sales, for the same two windows the groupBys above cover.
+    const [otherBefore, otherDuring] = await Promise.all([
+      this.otherSalesInWindow(branchId, before),
+      this.otherSalesInWindow(branchId, during),
+    ]);
+
     const prodRows = await this.prisma.production.findMany({
       where: prodWhere(during),
       select: { itemId: true, qty: true, rate: true },
@@ -738,9 +792,27 @@ export class ReportsService {
     const prodB = byItemId(prodBefore), prodD = byItemId(prodDuring);
     const recvB = byItemId(recvBefore), recvD = byItemId(recvDuring);
     const issB = byItemId(issueBefore), issD = byItemId(issueDuring);
-    const salB = byId(saleBefore, (r: { _sum: { sodetQTY: number | null } }) => num(r._sum.sodetQTY));
-    const salD = byId(saleDuring, (r: { _sum: { sodetQTY: number | null } }) => num(r._sum.sodetQTY));
-    const salAmtD = byId(saleDuring, (r: { _sum: { sodetNetAmount: number | null } }) => num(r._sum.sodetNetAmount));
+
+    /** Fold one ledger's per-item totals into another's, in place. */
+    const addInto = (target: Map<string, number>, extra: Map<string, number>) => {
+      for (const [id, value] of extra) target.set(id, (target.get(id) ?? 0) + value);
+      return target;
+    };
+    // Cash counter sales, then everything else on top — the opening balance
+    // roll-forward uses `salB`, so credit sales have to count there too or the
+    // opening comes out overstated by every credit invoice ever raised.
+    const salB = addInto(
+      byId(saleBefore, (r: { _sum: { sodetQTY: number | null } }) => num(r._sum.sodetQTY)),
+      otherBefore.qty,
+    );
+    const salD = addInto(
+      byId(saleDuring, (r: { _sum: { sodetQTY: number | null } }) => num(r._sum.sodetQTY)),
+      otherDuring.qty,
+    );
+    const salAmtD = addInto(
+      byId(saleDuring, (r: { _sum: { sodetNetAmount: number | null } }) => num(r._sum.sodetNetAmount)),
+      otherDuring.amount,
+    );
     const ncB = byId(ncBefore, (r: { _sum: { ncdetQTY: number | null } }) => num(r._sum.ncdetQTY));
     const ncD = byId(ncDuring, (r: { _sum: { ncdetQTY: number | null } }) => num(r._sum.ncdetQTY));
     const rej = (rows: typeof rejBefore, field: 'assort' | 'reject' | 'short' | 'excess') =>
