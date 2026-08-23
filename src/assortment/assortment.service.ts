@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray, ValidateNested, IsUUID } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { DateRangeQueryDto, dateRangeFilter } from '../common/dto';
-import { buildPaginationMeta } from '../common/helpers';
+import { buildPaginationMeta, branchScope } from '../common/helpers';
 
 export class AssortmentItemDto {
   @IsString()
@@ -136,10 +136,14 @@ export class UpdateAssortmentDto {
 export class AssortmentService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(query: DateRangeQueryDto) {
+  async findAll(query: DateRangeQueryDto, accessibleBranchIds?: string[]) {
     const { page, limit, branchId, fromDate, toDate } = query;
     const date = dateRangeFilter(fromDate, toDate);
-    const where = { isActive: true, ...(branchId && { branchId }), ...(date && { date }) };
+    const where = {
+      isActive: true,
+      ...branchScope(accessibleBranchIds, ['branchId'], branchId),
+      ...(date && { date }),
+    };
     const [rows, total] = await Promise.all([
       this.prisma.asstMsrt.findMany({ where, include: { details: true }, orderBy: { date: 'desc' }, skip: (page - 1) * limit, take: limit }),
       this.prisma.asstMsrt.count({ where }),

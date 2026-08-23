@@ -17,8 +17,8 @@ export class AssortmentController {
   @Get()
   @ApiOperation({ summary: 'Get all assortment records' })
   @ApiResponse({ status: 200, description: 'Paginated list of assortment records' })
-  async findAll(@Query() query: DateRangeQueryDto) {
-    const { items, meta } = await this.assortmentService.findAll(query);
+  async findAll(@Query() query: DateRangeQueryDto, @CurrentUser('branchIds') branchIds: string[]) {
+    const { items, meta } = await this.assortmentService.findAll(query, branchIds);
     return paginatedResponse(items, meta, 'Assortment');
   }
 

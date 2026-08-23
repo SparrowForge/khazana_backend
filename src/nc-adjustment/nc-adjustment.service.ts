@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray, ValidateNested, IsUUID } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { DateRangeQueryDto, dateRangeFilter } from '../common/dto';
-import { assertStockAvailable, buildPaginationMeta } from '../common/helpers';
+import { assertStockAvailable, buildPaginationMeta, branchScope } from '../common/helpers';
 import type { Prisma } from '../generated/prisma';
 
 const r2 = (n: number) => Math.round(n * 100) / 100;
@@ -117,14 +117,14 @@ export class UpdateNcAdjustmentDto {
 export class NcAdjustmentService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(query: DateRangeQueryDto) {
+  async findAll(query: DateRangeQueryDto, accessibleBranchIds?: string[]) {
     const { page, limit, branchId, fromDate, toDate } = query;
     // The list UI always sends a from/to range, so the query DTO has to declare
     // them — the global ValidationPipe runs with forbidNonWhitelisted.
     const ncmstrDate = dateRangeFilter(fromDate, toDate);
     const where = {
       ncmstrIsActive: true,
-      ...(branchId && { branchId }),
+      ...branchScope(accessibleBranchIds, ['branchId'], branchId),
       ...(ncmstrDate && { ncmstrDate }),
     };
     const [rows, total] = await Promise.all([

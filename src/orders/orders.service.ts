@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray, ValidateNested, IsUUID, IsIn } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { BranchPaginationQueryDto } from '../common/dto';
-import { allocateDiscount, buildPaginationMeta } from '../common/helpers';
+import { allocateDiscount, buildPaginationMeta, branchScope, canAccessBranch } from '../common/helpers';
 
 /** Money rounding — 2dp, matching the order form's client-side maths. */
 const r2 = (n: number): number => Math.round(n * 100) / 100;
@@ -162,7 +162,7 @@ export class OrdersService {
 
   // ── Regular Orders ────────────────────────────────────────────
 
-  async findAll(query: OrderQueryDto) {
+  async findAll(query: OrderQueryDto, accessibleBranchIds?: string[]) {
     const { page, limit, branchId, clientId, deliveryStatus } = query;
     // Delivery status isn't stored on the order — it's derived from the credit
     // sales that carry its number — so it has to be resolved to a serialNo set
@@ -170,7 +170,8 @@ export class OrdersService {
     const invoiced = deliveryStatus ? [...(await this.invoicedPoNos())] : [];
     const where = {
       isActive: 1,
-      ...(branchId && { branchId }),
+      // An explicit branchId can only narrow the caller's accessible set.
+      ...branchScope(accessibleBranchIds, ['branchId'], branchId),
       ...(clientId && { clientId }),
       ...(deliveryStatus === 'done' && { serialNo: { in: invoiced } }),
       // `notIn` alone would also drop rows with no order number (SQL NOT IN vs
@@ -191,7 +192,7 @@ export class OrdersService {
     return { items, meta: buildPaginationMeta(total, page, limit) };
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, accessibleBranchIds?: string[]) {
     const order = await this.prisma.orderReceive_Master.findUnique({
       where: { id },
       // Detail lines carry the item as a uuid FK only; the item summary rides
@@ -200,6 +201,11 @@ export class OrdersService {
       include: { details: { include: { item: { select: { id: true, itmCode: true, itmName: true } } } } },
     });
     if (!order) throw new NotFoundException('Order not found');
+    // The id appears in every list response, so the detail/edit/delete paths
+    // need the same check the list applies.
+    if (!canAccessBranch(accessibleBranchIds, order.branchId)) {
+      throw new ForbiddenException('This order belongs to another branch');
+    }
     const delivered = await this.deliveredSerialNos([order.serialNo]);
     return {
       ...order,
@@ -327,8 +333,8 @@ export class OrdersService {
     });
   }
 
-  async update(id: string, dto: Partial<CreateOrderDto>, updatedBy: string) {
-    const existing = await this.findOne(id);
+  async update(id: string, dto: Partial<CreateOrderDto>, updatedBy: string, accessibleBranchIds?: string[]) {
+    const existing = await this.findOne(id, accessibleBranchIds);
     const { items, orderDate, deliveryDate, deliveryTime, ...rest } = dto;
     // The replacement lines carry the discount too, and at whatever rate the
     // edit set — an amended order that kept the old lines' shares would net out
@@ -355,8 +361,8 @@ export class OrdersService {
     });
   }
 
-  async remove(id: string) {
-    await this.findOne(id);
+  async remove(id: string, accessibleBranchIds?: string[]) {
+    await this.findOne(id, accessibleBranchIds);
     await this.prisma.$transaction([
       this.prisma.orderReceive_Detail.deleteMany({ where: { masterId: id } }),
       this.prisma.orderReceive_Master.delete({ where: { id } }),
@@ -366,9 +372,9 @@ export class OrdersService {
 
   // ── VAT Orders ────────────────────────────────────────────────
 
-  async findAllVat(query: BranchPaginationQueryDto) {
+  async findAllVat(query: BranchPaginationQueryDto, accessibleBranchIds?: string[]) {
     const { page, limit, branchId } = query;
-    const where = branchId ? { branchId } : {};
+    const where = branchScope(accessibleBranchIds, ['branchId'], branchId);
     const [rows, total] = await Promise.all([
       this.prisma.vOrderReceive_Master.findMany({ where, include: { details: true }, orderBy: { orderDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
       this.prisma.vOrderReceive_Master.count({ where }),

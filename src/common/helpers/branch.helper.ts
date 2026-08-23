@@ -23,3 +23,41 @@ export function isFactoryBranch(branch?: { branchCode?: string | null; branchNam
   const name = (branch.branchName ?? '').trim();
   return /^fac(tory)?$/i.test(code) || /factory/i.test(name);
 }
+
+/**
+ * Prisma `where` fragment restricting rows to the branches a user may see.
+ *
+ * `accessible` is the caller's branch set (`@CurrentUser('branchIds')`).
+ * `fields` are the branch columns on the table — one for most, two for the
+ * documents that have a source and a destination (an issue is visible to both
+ * the branch that sent it and the branch it was sent to).
+ * `requested` is an explicit branch filter from the query string, which can only
+ * ever NARROW the set: asking for a branch you cannot see returns nothing rather
+ * than everything.
+ *
+ * Passing `accessible` as undefined means "unrestricted" — for internal callers
+ * and reports that do their own gating. Never pass undefined straight from a
+ * request.
+ */
+export function branchScope(
+  accessible: string[] | undefined,
+  fields: string[],
+  requested?: string | null,
+): Record<string, unknown> {
+  if (!accessible) {
+    // Unrestricted caller: honour an explicit filter, otherwise no constraint.
+    return requested ? { [fields[0]]: requested } : {};
+  }
+  const ids = requested ? (accessible.includes(requested) ? [requested] : []) : accessible;
+  // An empty list is deliberate, not a no-op: Prisma turns `in: []` into a
+  // always-false predicate, which is the right answer for a branch the user has
+  // no access to.
+  if (fields.length === 1) return { [fields[0]]: { in: ids } };
+  return { OR: fields.map((field) => ({ [field]: { in: ids } })) };
+}
+
+/** True when at least one of a row's branch columns is in the caller's set. */
+export function canAccessBranch(accessible: string[] | undefined, ...rowBranchIds: (string | null | undefined)[]): boolean {
+  if (!accessible) return true;
+  return rowBranchIds.some((id) => !!id && accessible.includes(id));
+}

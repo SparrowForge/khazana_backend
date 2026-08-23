@@ -24,8 +24,8 @@ export class SalesController {
   @ApiQuery({ name: 'type', required: false, enum: ['cash', 'credit', 'vat-cash', 'vat-credit'], description: 'Sale type' })
   @ApiQuery({ name: 'branchId', required: false, description: 'Filter by branch ID' })
   @ApiResponse({ status: 200, description: 'List of sales' })
-  async findAll(@Query() query: SalesQueryDto) {
-    const { items, meta } = await this.salesService.findAll(query);
+  async findAll(@Query() query: SalesQueryDto, @CurrentUser('branchIds') branchIds: string[]) {
+    const { items, meta } = await this.salesService.findAll(query, branchIds);
     return paginatedResponse(items, meta, 'Sale');
   }
 

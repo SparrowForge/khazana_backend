@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { Type } from 'class-transformer';
 import { IsNumber, IsOptional, IsString, IsArray, ValidateNested, IsUUID } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { BranchPaginationQueryDto } from '../common/dto';
-import { buildPaginationMeta } from '../common/helpers';
+import { buildPaginationMeta, branchScope, canAccessBranch } from '../common/helpers';
 
 export class DemandOrderItemDto {
   @IsUUID()
@@ -54,11 +54,14 @@ export class DemandOrdersService {
   // A demand order concerns a branch on either end — surface it to the
   // branch that raised it (fromBranchId) as well as the factory it targets
   // (toBranchId), so the receiving side can see what's been submitted to them.
-  async findAll(query: BranchPaginationQueryDto) {
+  async findAll(query: BranchPaginationQueryDto, accessibleBranchIds?: string[]) {
     const { page, limit, branchId } = query;
+    // Visible to the branch that raised it AND the branch it was raised on, so a
+    // factory user still sees every outlet's demand addressed to them. An
+    // explicit `branchId` filter can only narrow the accessible set.
     const where = {
       isActive: 1,
-      ...(branchId && { OR: [{ fromBranchId: branchId }, { toBranchId: branchId }] }),
+      ...branchScope(accessibleBranchIds, ['fromBranchId', 'toBranchId'], branchId),
     };
     const [rows, total] = await Promise.all([
       this.prisma.demandOrder_Master.findMany({
@@ -73,12 +76,17 @@ export class DemandOrdersService {
     return { items: rows, meta: buildPaginationMeta(total, page, limit) };
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, accessibleBranchIds?: string[]) {
     const order = await this.prisma.demandOrder_Master.findUnique({
       where: { id },
       include: { details: true },
     });
     if (!order) throw new NotFoundException('Demand order not found');
+    // Guarding the list alone would be theatre — the id is in every list
+    // response, so the detail/edit/delete paths have to check it too.
+    if (!canAccessBranch(accessibleBranchIds, order.fromBranchId, order.toBranchId)) {
+      throw new ForbiddenException('This demand order belongs to another branch');
+    }
     return order;
   }
 
@@ -109,8 +117,8 @@ export class DemandOrdersService {
     });
   }
 
-  async update(id: string, dto: Partial<CreateDemandOrderDto>, updatedBy: string) {
-    const existing = await this.findOne(id);
+  async update(id: string, dto: Partial<CreateDemandOrderDto>, updatedBy: string, accessibleBranchIds?: string[]) {
+    const existing = await this.findOne(id, accessibleBranchIds);
     const { items, demandDate, requiredDate, ...rest } = dto;
     return this.prisma.demandOrder_Master.update({
       where: { id },
@@ -137,8 +145,8 @@ export class DemandOrdersService {
     });
   }
 
-  async remove(id: string) {
-    await this.findOne(id);
+  async remove(id: string, accessibleBranchIds?: string[]) {
+    await this.findOne(id, accessibleBranchIds);
     await this.prisma.$transaction([
       this.prisma.demandOrder_Detail.deleteMany({ where: { masterId: id } }),
       this.prisma.demandOrder_Master.delete({ where: { id } }),

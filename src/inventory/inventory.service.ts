@@ -5,7 +5,7 @@ import { ReceiveStockDto, UpdateReceiveStockDto } from './dto/receive-stock.dto'
 import { IssueStockDto, UpdateIssueStockDto } from './dto/issue-stock.dto';
 import { BranchPaginationQueryDto, DateRangeQueryDto, dateRangeFilter } from '../common/dto';
 import { ItemQueryDto } from './dto/item-query.dto';
-import { assertStockAvailable, buildPaginationMeta, toBranchUuid } from '../common/helpers';
+import { assertStockAvailable, buildPaginationMeta, toBranchUuid, branchScope } from '../common/helpers';
 import { ProductionService } from '../production/production.service';
 import type { Prisma } from '../generated/prisma';
 
@@ -277,13 +277,15 @@ export class InventoryService {
     await assertStockAvailable(tx, items);
   }
 
-  async findTransferHistory(query: DateRangeQueryDto) {
+  async findTransferHistory(query: DateRangeQueryDto, accessibleBranchIds?: string[]) {
     const { page, limit, branchId, fromDate, toDate } = query;
     const issueDate = dateRangeFilter(fromDate, toDate);
+    // Both legs: a transfer concerns the branch that sent it and the one that
+    // received it, so either side may see it.
     const where = {
       isActive: 1,
       ...InventoryService.TRANSFER_ONLY,
-      ...(branchId && { issueBranchId: branchId }),
+      ...branchScope(accessibleBranchIds, ['issueBranchId', 'receiveBranchId'], branchId),
       ...(issueDate && { issueDate }),
     };
     const rows = await this.prisma.item_Issue.findMany({ where, orderBy: { createDate: 'desc' } });
@@ -511,7 +513,7 @@ export class InventoryService {
     return results;
   }
 
-  async findReceiveHistory(query: DateRangeQueryDto) {
+  async findReceiveHistory(query: DateRangeQueryDto, accessibleBranchIds?: string[]) {
     const { page, limit, branchId, fromDate, toDate } = query;
     const purDate = dateRangeFilter(fromDate, toDate);
     // A transfer writes an Item_Receive leg too — it belongs to Stock Transfer,
@@ -519,7 +521,8 @@ export class InventoryService {
     const where = {
       isActive: 1,
       ...InventoryService.ISSUE_ONLY,
-      ...(branchId && { receiveBranchID: branchId }),
+      // branchId is the SOURCE column and receiveBranchID the destination.
+      ...branchScope(accessibleBranchIds, ['receiveBranchID', 'branchId'], branchId),
       ...(purDate && { purDate }),
     };
     const rows = await this.prisma.item_Receive.findMany({ where, orderBy: { createDate: 'desc' } });
@@ -900,13 +903,14 @@ export class InventoryService {
     });
   }
 
-  async findAllIssues(query: DateRangeQueryDto) {
+  async findAllIssues(query: DateRangeQueryDto, accessibleBranchIds?: string[]) {
     const { page, limit, branchId, fromDate, toDate } = query;
     const issueDate = dateRangeFilter(fromDate, toDate);
+    // Both legs, so the receiving outlet can see what was sent to it.
     const where = {
       isActive: 1,
       ...InventoryService.ISSUE_ONLY,
-      ...(branchId && { issueBranchId: branchId }),
+      ...branchScope(accessibleBranchIds, ['issueBranchId', 'receiveBranchId'], branchId),
       ...(issueDate && { issueDate }),
     };
     const rows = await this.prisma.item_Issue.findMany({ where, orderBy: { createDate: 'desc' } });
@@ -1134,10 +1138,14 @@ export class InventoryService {
     return results;
   }
 
-  async findAllAdjustments(query: DateRangeQueryDto) {
+  async findAllAdjustments(query: DateRangeQueryDto, accessibleBranchIds?: string[]) {
     const { page, limit, branchId, fromDate, toDate } = query;
     const date = dateRangeFilter(fromDate, toDate);
-    const where = { isActive: 1, ...(branchId && { branchId }), ...(date && { date }) };
+    const where = {
+      isActive: 1,
+      ...branchScope(accessibleBranchIds, ['branchId'], branchId),
+      ...(date && { date }),
+    };
     const rows = await this.prisma.itemReject.findMany({ where, orderBy: { date: 'desc' } });
     return this.groupAdjustments(rows, page, limit);
   }

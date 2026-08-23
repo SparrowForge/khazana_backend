@@ -6,7 +6,7 @@ import { CreateVatCashSaleDto } from './dto/create-vat-cash-sale.dto';
 import { CreateVatCreditSaleDto } from './dto/create-vat-credit-sale.dto';
 import { SalesQueryDto } from './dto/sales-query.dto';
 import { UpdateSalesDto } from './dto/update-sales.dto';
-import { allocateDiscount, assertStockAvailable, buildPaginationMeta, toBranchUuid } from '../common/helpers';
+import { allocateDiscount, assertStockAvailable, buildPaginationMeta, toBranchUuid, branchScope } from '../common/helpers';
 import { dateRangeFilter } from '../common/dto';
 import type { PaginationMeta } from '../common/helpers';
 import type { Prisma } from '../generated/prisma';
@@ -271,8 +271,11 @@ export class SalesService {
    * source; the default ('all') merges them. Sorted by date desc and paginated
    * in-memory (fine for POS-scale volumes).
    */
-  async findAll(query: SalesQueryDto): Promise<{ items: object[]; meta: PaginationMeta }> {
+  async findAll(query: SalesQueryDto, accessibleBranchIds?: string[]): Promise<{ items: object[]; meta: PaginationMeta }> {
     const { page, limit, type, branchId, fromDate, toDate } = query;
+    // One scope fragment reused across all four sale ledgers, which each carry
+    // the same `branchId` column.
+    const scope = branchScope(accessibleBranchIds, ['branchId'], branchId);
     const all = !type || type === 'all';
     const num = (v: unknown): number => (v == null ? 0 : Number(v));
     // One range, applied to whichever date column each source uses.
@@ -284,7 +287,7 @@ export class SalesService {
 
     if (all || type === 'cash') {
       const cash = await this.prisma.t_SOMstr.findMany({
-        where: { somstrIsActive: true, ...(branchId && { branchId }), ...saleDate },
+        where: { somstrIsActive: true, ...scope, ...saleDate },
         select: { id: true, somstrCode: true, somstrDate: true, somstrNetAmt: true },
       });
       for (const r of cash)
@@ -293,7 +296,7 @@ export class SalesService {
 
     if (all || type === 'vat-cash') {
       const vcash = await this.prisma.t_SOMstV.findMany({
-        where: { somstrIsActive: true, ...(branchId && { branchId }), ...saleDate },
+        where: { somstrIsActive: true, ...scope, ...saleDate },
         select: { id: true, somstrCode: true, somstrDate: true, somstrNetAmt: true },
       });
       for (const r of vcash)
@@ -302,7 +305,7 @@ export class SalesService {
 
     if (all || type === 'credit') {
       const credit = await this.prisma.cSMaster.findMany({
-        where: { isActive: 1, ...(branchId && { branchId }), ...invDate },
+        where: { isActive: 1, ...scope, ...invDate },
         select: { id: true, invNo: true, invDate: true, totalAmount: true, totalVat: true, totalDiscount: true, customer: { select: { name: true } } },
       });
       for (const r of credit)
@@ -311,7 +314,7 @@ export class SalesService {
 
     if (all || type === 'vat-credit') {
       const vcredit = await this.prisma.cSVMaster.findMany({
-        where: { ...(branchId && { branchId }), ...invDate },
+        where: { ...scope, ...invDate },
         select: { id: true, invNo: true, invDate: true, totalAmount: true, totalVat: true, totalDiscount: true, customer: { select: { name: true } } },
       });
       for (const r of vcredit)

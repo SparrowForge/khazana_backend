@@ -17,8 +17,8 @@ export class OrdersController {
   @Get()
   @ApiOperation({ summary: 'Get all orders', description: 'Optionally narrowed to one customer and/or delivery status' })
   @ApiResponse({ status: 200, description: 'Paginated list of orders' })
-  async findAll(@Query() query: OrderQueryDto) {
-    const { items, meta } = await this.ordersService.findAll(query);
+  async findAll(@Query() query: OrderQueryDto, @CurrentUser('branchIds') branchIds: string[]) {
+    const { items, meta } = await this.ordersService.findAll(query, branchIds);
     return paginatedResponse(items, meta, 'Order');
   }
 
@@ -27,7 +27,9 @@ export class OrdersController {
   @ApiParam({ name: 'id', description: 'Order UUID' })
   @ApiResponse({ status: 200, description: 'Order found' })
   @ApiResponse({ status: 404, description: 'Order not found' })
-  findOne(@Param('id') id: string) { return this.ordersService.findOne(id); }
+  findOne(@Param('id') id: string, @CurrentUser('branchIds') branchIds: string[]) {
+    return this.ordersService.findOne(id, branchIds);
+  }
 
   @Post()
   @RequiredPermission({ control: 'Orders', action: 'addAccess' })
@@ -50,8 +52,9 @@ export class OrdersController {
     @Param('id') id: string,
     @Body() dto: Partial<CreateOrderDto>,
     @CurrentUser('userName') userName: string,
+    @CurrentUser('branchIds') branchIds: string[],
   ) {
-    return this.ordersService.update(id, dto, userName);
+    return this.ordersService.update(id, dto, userName, branchIds);
   }
 
   @Delete(':id')
@@ -60,15 +63,15 @@ export class OrdersController {
   @ApiParam({ name: 'id', description: 'Order UUID' })
   @ApiResponse({ status: 200, description: 'Order deleted successfully' })
   @ApiResponse({ status: 404, description: 'Order not found' })
-  remove(@Param('id') id: string) {
-    return this.ordersService.remove(id);
+  remove(@Param('id') id: string, @CurrentUser('branchIds') branchIds: string[]) {
+    return this.ordersService.remove(id, branchIds);
   }
 
   @Get('vat/list')
   @ApiOperation({ summary: 'Get all VAT orders' })
   @ApiResponse({ status: 200, description: 'Paginated list of VAT orders' })
-  async findAllVat(@Query() query: BranchPaginationQueryDto) {
-    const { items, meta } = await this.ordersService.findAllVat(query);
+  async findAllVat(@Query() query: BranchPaginationQueryDto, @CurrentUser('branchIds') branchIds: string[]) {
+    const { items, meta } = await this.ordersService.findAllVat(query, branchIds);
     return paginatedResponse(items, meta, 'VAT Order');
   }
 

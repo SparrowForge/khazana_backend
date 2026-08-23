@@ -17,8 +17,8 @@ export class NcAdjustmentController {
   @Get()
   @ApiOperation({ summary: 'Get all NC adjustments (optionally within a date range)' })
   @ApiResponse({ status: 200, description: 'Paginated list of NC adjustments' })
-  async findAll(@Query() query: DateRangeQueryDto) {
-    const { items, meta } = await this.ncService.findAll(query);
+  async findAll(@Query() query: DateRangeQueryDto, @CurrentUser('branchIds') branchIds: string[]) {
+    const { items, meta } = await this.ncService.findAll(query, branchIds);
     return paginatedResponse(items, meta, 'NC Adjustment');
   }
 

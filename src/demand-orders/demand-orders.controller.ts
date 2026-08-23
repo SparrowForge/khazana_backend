@@ -17,8 +17,8 @@ export class DemandOrdersController {
   @Get()
   @ApiOperation({ summary: 'Get all demand orders' })
   @ApiResponse({ status: 200, description: 'Paginated list of demand orders' })
-  async findAll(@Query() query: BranchPaginationQueryDto) {
-    const { items, meta } = await this.demandOrdersService.findAll(query);
+  async findAll(@Query() query: BranchPaginationQueryDto, @CurrentUser('branchIds') branchIds: string[]) {
+    const { items, meta } = await this.demandOrdersService.findAll(query, branchIds);
     return paginatedResponse(items, meta, 'Demand Order');
   }
 
@@ -27,8 +27,8 @@ export class DemandOrdersController {
   @ApiParam({ name: 'id', description: 'Demand order UUID' })
   @ApiResponse({ status: 200, description: 'Demand order found' })
   @ApiResponse({ status: 404, description: 'Demand order not found' })
-  findOne(@Param('id') id: string) {
-    return this.demandOrdersService.findOne(id);
+  findOne(@Param('id') id: string, @CurrentUser('branchIds') branchIds: string[]) {
+    return this.demandOrdersService.findOne(id, branchIds);
   }
 
   @Post()
@@ -52,8 +52,9 @@ export class DemandOrdersController {
     @Param('id') id: string,
     @Body() dto: Partial<CreateDemandOrderDto>,
     @CurrentUser('userName') userName: string,
+    @CurrentUser('branchIds') branchIds: string[],
   ) {
-    return this.demandOrdersService.update(id, dto, userName);
+    return this.demandOrdersService.update(id, dto, userName, branchIds);
   }
 
   @Delete(':id')
@@ -62,7 +63,7 @@ export class DemandOrdersController {
   @ApiParam({ name: 'id', description: 'Demand order UUID' })
   @ApiResponse({ status: 200, description: 'Demand order deleted successfully' })
   @ApiResponse({ status: 404, description: 'Demand order not found' })
-  remove(@Param('id') id: string) {
-    return this.demandOrdersService.remove(id);
+  remove(@Param('id') id: string, @CurrentUser('branchIds') branchIds: string[]) {
+    return this.demandOrdersService.remove(id, branchIds);
   }
 }
