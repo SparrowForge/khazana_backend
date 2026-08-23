@@ -2113,4 +2113,158 @@ export class ReportsService {
       totals,
     };
   }
+
+  // ── Demand Report ─────────────────────────────────────────────
+  // The legacy sheet is a single page: every item down the side, one column per
+  // demanding branch (by branch CODE), the quantity demanded in the cell. Ported
+  // from the printed "Invoice" form, retitled "Demand Report of <date>".
+
+  async getDemandReport(query: {
+    fromDate?: string;
+    toDate?: string;
+    /** The branch that raised the demand. Omitted = every branch, one column each. */
+    fromBranchId?: string;
+    /** The branch the demand was raised ON — defaults to the session branch. */
+    toBranchId?: string;
+    sessionBranchId?: string;
+  }) {
+    // Factory-only, like its siblings in the Factory Report menu. The session
+    // branch is what's checked; the two branch parameters stay free.
+    const sessionBranch = query.sessionBranchId
+      ? await this.prisma.branch
+          .findUnique({ where: { id: query.sessionBranchId }, select: { branchCode: true, branchName: true } })
+          .catch(() => null)
+      : null;
+    if (!isFactoryBranch(sessionBranch)) {
+      throw new ForbiddenException('The Demand Report is available only at the Factory branch');
+    }
+
+    const from = new Date(query.fromDate ?? '');
+    if (isNaN(from.getTime())) throw new BadRequestException('Valid `fromDate` is required');
+    const to = new Date(query.toDate || (query.fromDate ?? ''));
+    if (isNaN(to.getTime())) throw new BadRequestException('Valid `toDate` is required');
+    if (to < from) throw new BadRequestException('`toDate` must not be earlier than `fromDate`');
+    const toExclusive = new Date(to);
+    toExclusive.setUTCDate(toExclusive.getUTCDate() + 1);
+
+    const toBranchId = query.toBranchId || query.sessionBranchId;
+
+    const demands = await this.prisma.demandOrder_Master.findMany({
+      where: {
+        isActive: 1,
+        demandDate: { gte: from, lt: toExclusive },
+        ...(toBranchId ? { toBranchId } : {}),
+        ...(query.fromBranchId ? { fromBranchId: query.fromBranchId } : {}),
+      },
+      select: { fromBranchId: true, details: { select: { itemId: true, qty: true } } },
+    });
+
+    // Columns: every branch that can raise a demand — not just the ones that did,
+    // so the sheet keeps the same shape run to run, exactly like the printed form
+    // with its fixed outlet columns. Narrowed to one column when a specific
+    // "Demand From" branch was chosen.
+    const allBranches = await this.prisma.branch.findMany({
+      where: query.fromBranchId ? { id: query.fromBranchId } : {},
+      select: { id: true, branchCode: true, branchName: true },
+      orderBy: { branchCode: 'asc' },
+    });
+    // A branch that actually raised a demand ALWAYS gets a column, even when it
+    // is the branch being demanded from — the factory does raise demands on
+    // itself, and dropping its column would silently hide those quantities from
+    // a sheet whose whole job is to show them.
+    const demanded = new Set(demands.map((d) => d.fromBranchId).filter((id): id is string => !!id));
+    const columns = allBranches
+      .filter((b) => query.fromBranchId || b.id !== toBranchId || demanded.has(b.id))
+      .map((b) => ({ id: b.id, code: b.branchCode ?? '', name: b.branchName ?? '' }));
+
+    // qty[itemId][branchId]
+    const demandByItem = new Map<string, Map<string, number>>();
+    for (const master of demands) {
+      if (!master.fromBranchId) continue;
+      for (const line of master.details) {
+        if (!line.itemId) continue;
+        const perBranch = demandByItem.get(line.itemId) ?? new Map<string, number>();
+        perBranch.set(master.fromBranchId, (perBranch.get(master.fromBranchId) ?? 0) + num(line.qty));
+        demandByItem.set(line.itemId, perBranch);
+      }
+    }
+
+    // Every item, demanded or not — the sheet is the whole price list, with the
+    // blank cells that make it readable as the form it was ported from.
+    const items = await this.prisma.item_Information.findMany({
+      orderBy: { itmName: 'asc' },
+      select: {
+        id: true,
+        itmCode: true,
+        itmName: true,
+        itmUOM: true,
+        prices: {
+          where: { priceIsActive: 1 },
+          orderBy: { priceFromDate: 'desc' },
+          take: 1,
+          select: { priceListPrice: true, priceVatPercent: true },
+        },
+      },
+    });
+
+    const rows = items.map((it, idx) => {
+      const price = it.prices[0];
+      // VAT-INCLUSIVE, like the printed sheet's Rate column (1,800 not 1,636.36)
+      // and the rest of the factory reports.
+      const rate = r2signed(num(price?.priceListPrice) * (1 + num(price?.priceVatPercent) / 100));
+      const perBranch = demandByItem.get(it.id);
+      const qtyByBranch: Record<string, number> = {};
+      let totalQty = 0;
+      for (const col of columns) {
+        const qty = perBranch?.get(col.id) ?? 0;
+        // Absent rather than 0 — the sheet prints blanks, not a wall of zeros.
+        if (qty !== 0) qtyByBranch[col.id] = r2signed(qty);
+        totalQty += qty;
+      }
+      return {
+        sl: idx + 1,
+        itemCode: it.itmCode,
+        itemName: it.itmName ?? '',
+        uom: it.itmUOM ?? '',
+        rate,
+        qtyByBranch,
+        totalQty: r2signed(totalQty),
+        amount: r2signed(totalQty * rate),
+      };
+    });
+
+    const totals = {
+      qtyByBranch: columns.reduce<Record<string, number>>((acc, col) => {
+        const t = rows.reduce((sum, r) => sum + (r.qtyByBranch[col.id] ?? 0), 0);
+        if (t !== 0) acc[col.id] = r2signed(t);
+        return acc;
+      }, {}),
+      totalQty: r2signed(rows.reduce((t, r) => t + r.totalQty, 0)),
+      amount: r2signed(rows.reduce((t, r) => t + r.amount, 0)),
+    };
+
+    const [toBranch, company] = await Promise.all([
+      toBranchId
+        ? this.prisma.branch.findUnique({ where: { id: toBranchId }, select: { branchCode: true, branchName: true } })
+        : null,
+      this.prisma.setup_System.findFirst({ select: { companyName: true, companyAddress: true } }),
+    ]);
+
+    return {
+      fromDate: from.toISOString().split('T')[0],
+      toDate: to.toISOString().split('T')[0],
+      company: {
+        name: company?.companyName ?? 'Khazana Mithai',
+        address: company?.companyAddress ?? '',
+      },
+      toBranch: { id: toBranchId ?? '', code: toBranch?.branchCode ?? '', name: toBranch?.branchName ?? '' },
+      fromBranch: query.fromBranchId
+        ? { id: query.fromBranchId, name: columns[0]?.name ?? '' }
+        : { id: '', name: 'All Branches' },
+      /** One table column each, in branch-code order. */
+      branches: columns,
+      items: rows,
+      totals,
+    };
+  }
 }

@@ -245,4 +245,28 @@ export class ReportsController {
       sessionBranchId,
     });
   }
+
+  @Get('demand')
+  @ApiOperation({ summary: 'Factory-only Demand Report: every item down the side, one column per demanding branch' })
+  @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
+  @ApiQuery({ name: 'toDate', required: false, description: 'Range end date, inclusive; defaults to fromDate' })
+  @ApiQuery({ name: 'fromBranchId', required: false, description: 'Demanding branch — omit for all branches (one column each)' })
+  @ApiQuery({ name: 'toBranchId', required: false, description: 'Branch the demand was raised on; defaults to the session branch' })
+  @ApiResponse({ status: 200, description: 'Per-item rows with a qty column per branch, plus totals' })
+  @ApiResponse({ status: 403, description: 'Session branch is not the Factory' })
+  getDemandReport(
+    @Query('fromDate') fromDate: string,
+    @Query('toDate') toDate: string,
+    @CurrentUser('branchId') sessionBranchId: string,
+    @Query('fromBranchId') fromBranchId?: string,
+    @Query('toBranchId') toBranchId?: string,
+  ) {
+    return this.reportsService.getDemandReport({
+      fromDate,
+      toDate: toDate || fromDate,
+      fromBranchId: fromBranchId || undefined,
+      toBranchId: toBranchId || sessionBranchId,
+      sessionBranchId,
+    });
+  }
 }

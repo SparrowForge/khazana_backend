@@ -5627,6 +5627,66 @@
         ]
       }
     },
+    "/reports/demand": {
+      "get": {
+        "operationId": "ReportsController_getDemandReport",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "required": true,
+            "in": "query",
+            "description": "Range start date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end date, inclusive; defaults to fromDate",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromBranchId",
+            "required": false,
+            "in": "query",
+            "description": "Demanding branch — omit for all branches (one column each)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toBranchId",
+            "required": false,
+            "in": "query",
+            "description": "Branch the demand was raised on; defaults to the session branch",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Per-item rows with a qty column per branch, plus totals"
+          },
+          "403": {
+            "description": "Session branch is not the Factory"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Factory-only Demand Report: every item down the side, one column per demanding branch",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
     "/admin/branches": {
       "get": {
         "operationId": "AdminController_findAllBranches",

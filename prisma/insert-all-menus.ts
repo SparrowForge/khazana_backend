@@ -34,6 +34,7 @@ const newMenus = [
   // 'DiscountSummary' would match the existing Reports row and this upsert
   // would silently insert nothing.
   { menuName: 'Discount Log Report', controlName: 'DiscountLogReport', order: 3, parentMenu: 'FactoryReport', module: 'Inventory' },
+  { menuName: 'Demand Report', controlName: 'DemandReport', order: 4, parentMenu: 'FactoryReport', module: 'Inventory' },
   { menuName: 'Packet Info', controlName: 'PacketInfo', order: 1, parentMenu: 'Packets', module: 'Sale' },
   { menuName: 'Packet Receive', controlName: 'PacketReceive', order: 2, parentMenu: 'Packets', module: 'Sale' },
   { menuName: 'Packet Issue', controlName: 'PacketIssue', order: 3, parentMenu: 'Packets', module: 'Sale' },
