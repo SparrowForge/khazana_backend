@@ -26,9 +26,14 @@ const newMenus = [
   { menuName: 'Production Entry', controlName: 'ProductionEntry', order: 8, parentMenu: 'Inventory', module: 'Inventory' },
   // Factory Report — a top-level group (parentMenu null) whose every leaf is
   // factory-only, so the sidebar drops the whole group for any other branch.
-  { menuName: 'Factory Report', controlName: 'FactoryReport', order: 13, parentMenu: null, module: 'Inventory' },
+  { menuName: 'Factory Report', controlName: 'FactoryReport', order: 12, parentMenu: null, module: 'Inventory' },
   { menuName: 'Production & Delivery Report', controlName: 'ProductionDeliveryReport', order: 1, parentMenu: 'FactoryReport', module: 'Inventory' },
-  { menuName: 'Branchwise Delivery Report', controlName: 'BranchwiseDeliveryReport', order: 2, parentMenu: 'FactoryReport', module: 'Inventory' },
+  { menuName: 'Branchwise Delivery Report', controlName: 'BranchwiseDeliveryReport', order: 2, parentMenu: 'FactoryReport', module: null },
+  // Opens the SAME page as Reports > Discount Summary (the route re-exports it),
+  // but needs its own ControlName: that column is unique, so reusing
+  // 'DiscountSummary' would match the existing Reports row and this upsert
+  // would silently insert nothing.
+  { menuName: 'Discount Log Report', controlName: 'DiscountLogReport', order: 3, parentMenu: 'FactoryReport', module: 'Inventory' },
   { menuName: 'Packet Info', controlName: 'PacketInfo', order: 1, parentMenu: 'Packets', module: 'Sale' },
   { menuName: 'Packet Receive', controlName: 'PacketReceive', order: 2, parentMenu: 'Packets', module: 'Sale' },
   { menuName: 'Packet Issue', controlName: 'PacketIssue', order: 3, parentMenu: 'Packets', module: 'Sale' },
