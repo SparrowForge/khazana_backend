@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ConflictException, ForbiddenException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../database/prisma.service';
 import { ReceiveStockDto, UpdateReceiveStockDto } from './dto/receive-stock.dto';
@@ -435,6 +435,27 @@ export class InventoryService {
 
   /** Item_Issue doesn't store the item name denormalized (unlike Item_Receive),
    *  so the issue report looks it up from Item_Information for display. */
+  /** VAT percent per item, off the newest active price row — the multiplier that
+   *  turns the stored ex-VAT `Item_Issue.unitPrice` into the VAT-inclusive figure
+   *  the printed issue document shows. */
+  private async vatPercentByItemIds(ids: string[]): Promise<Map<string, number>> {
+    const uniqueIds = [...new Set(ids)];
+    if (!uniqueIds.length) return new Map();
+    const rows = await this.prisma.item_Information.findMany({
+      where: { id: { in: uniqueIds } },
+      select: {
+        id: true,
+        prices: {
+          where: { priceIsActive: 1 },
+          orderBy: { priceFromDate: 'desc' },
+          take: 1,
+          select: { priceVatPercent: true },
+        },
+      },
+    });
+    return new Map(rows.map((r) => [r.id, Number(r.prices[0]?.priceVatPercent ?? 0)]));
+  }
+
   private async itemNamesByIds(ids: string[]): Promise<Map<string, string>> {
     const uniqueIds = [...new Set(ids)];
     const rows = await this.prisma.item_Information.findMany({ where: { id: { in: uniqueIds } }, select: { id: true, itmName: true } });
@@ -708,6 +729,177 @@ export class InventoryService {
     });
   }
 
+  // ── Receive confirmation (issue -> receive handshake) ─────────
+  //
+  // A plain issue writes only the outgoing leg. The receiving branch confirms
+  // it here, which writes the Item_Receive leg and puts the stock back on hand.
+  // Quantities are never taken from the client — they are read off the issue —
+  // so "the receiver cannot change the quantity" is enforced by the API shape,
+  // not just by disabling inputs in the UI.
+
+  /** Issues addressed to `branchId` that nobody has confirmed yet.
+   *
+   *  Transfers are excluded: they write both legs at once, so they are already
+   *  received and confirming one would double-count the stock. */
+  async findPendingReceives(branchId: string, query: DateRangeQueryDto) {
+    if (!branchId) throw new BadRequestException('No branch on this session');
+    const { page, limit, fromDate, toDate } = query;
+    const issueDate = dateRangeFilter(fromDate, toDate);
+    const rows = await this.prisma.item_Issue.findMany({
+      where: {
+        isActive: 1,
+        isReceived: 0,
+        receiveBranchId: branchId,
+        ...InventoryService.ISSUE_ONLY,
+        ...(issueDate && { issueDate }),
+      },
+      orderBy: { issueDate: 'desc' },
+    });
+
+    // One list row per document, carrying the line count the detail view will
+    // show and the summed qty, so the outlet can sanity-check before opening it.
+    const groups = new Map<string, {
+      serialNo: string; voucherNo: string | null; issueDate: Date | null;
+      issueBranchId: string; receiveBranchId: string;
+      totalItems: number; totalQty: number; status: 'Pending';
+    }>();
+    for (const row of rows) {
+      const key = row.serialNo || row.id;
+      const existing = groups.get(key);
+      if (existing) {
+        existing.totalItems += 1;
+        existing.totalQty += Number(row.qty ?? 0);
+      } else {
+        groups.set(key, {
+          serialNo: key,
+          voucherNo: row.voucharNo,
+          issueDate: row.issueDate,
+          issueBranchId: row.issueBranchId,
+          receiveBranchId: row.receiveBranchId,
+          totalItems: 1,
+          totalQty: Number(row.qty ?? 0),
+          status: 'Pending',
+        });
+      }
+    }
+
+    const all = [...groups.values()];
+    const start = (page - 1) * limit;
+    return { items: all.slice(start, start + limit), meta: buildPaginationMeta(all.length, page, limit) };
+  }
+
+  /** The issue rows behind one pending document, with every guard the confirm
+   *  itself applies — so the detail view can never show something that would be
+   *  rejected on submit. Returns the rows for the caller to shape or write. */
+  private async issueForReceive(serialNo: string, branchId: string) {
+    const rows = await this.findIssueRows(serialNo);
+    const [first] = rows;
+    const key = first.serialNo || first.id;
+    if (this.isTransferSerial(key)) {
+      throw new BadRequestException(
+        `${key} is a branch transfer — its receive leg was written when the transfer was made`,
+      );
+    }
+    // Only the branch the goods were addressed to may see or confirm them.
+    if (first.receiveBranchId !== branchId) {
+      throw new ForbiddenException('This issue was not sent to your branch');
+    }
+    if (!rows.length) throw new BadRequestException('This issue has no items to receive');
+    return { rows, key, alreadyReceived: first.isReceived === 1 };
+  }
+
+  /** Read-only detail for the confirmation screen. */
+  async findPendingReceive(serialNo: string, branchId: string) {
+    const { rows, key, alreadyReceived } = await this.issueForReceive(serialNo, branchId);
+    const [first] = rows;
+    const nameByItemId = await this.itemNamesByIds(rows.map((r) => r.itemId).filter((id): id is string => !!id));
+    return {
+      serialNo: key,
+      voucherNo: first.voucharNo,
+      issueDate: first.issueDate,
+      issueBranchId: first.issueBranchId,
+      receiveBranchId: first.receiveBranchId,
+      status: alreadyReceived ? ('Received' as const) : ('Pending' as const),
+      receivedDate: first.receivedDate,
+      receivedBy: first.receivedBy,
+      items: rows.map((r) => ({
+        itemId: r.itemId,
+        itemName: r.itemId ? nameByItemId.get(r.itemId) : undefined,
+        qty: Number(r.qty ?? 0),
+        isProduction: r.isProduction === 1,
+      })),
+    };
+  }
+
+  /**
+   * Confirm receipt of an issue: write the Item_Receive leg, put the stock on
+   * hand and mark the issue received — all or nothing.
+   *
+   * Concurrency is handled without a version column: the status flip is an
+   * atomic `updateMany` guarded on `isReceived: 0`, so of two users confirming
+   * the same document at the same moment exactly one updates rows and the other
+   * gets a Conflict. Doing it first in the transaction means the loser never
+   * writes a receive row at all.
+   */
+  async confirmReceive(serialNo: string, branchId: string, userName: string) {
+    const { rows, key, alreadyReceived } = await this.issueForReceive(serialNo, branchId);
+    if (alreadyReceived) {
+      throw new ConflictException(`${key} has already been received`);
+    }
+    const codeByItemId = await this.itemCodesByIds(rows.map((r) => r.itemId).filter((id): id is string => !!id));
+    const nameByItemId = await this.itemNamesByIds(rows.map((r) => r.itemId).filter((id): id is string => !!id));
+    const receiveSerial = this.buildSerialNo(
+      'GRN',
+      await this.resolveBranchCode(branchId),
+      (await this.prisma.item_Receive.count()) + 1,
+    );
+    const receivedDate = new Date();
+
+    return this.issueTransaction(async (tx) => {
+      // Claim the document first — see the note above.
+      const claimed = await tx.item_Issue.updateMany({
+        where: { serialNo: key, isReceived: 0 },
+        data: { isReceived: 1, receivedDate, receivedBy: userName },
+      });
+      if (claimed.count === 0) {
+        throw new ConflictException(`${key} has already been received`);
+      }
+
+      const created = [];
+      for (const row of rows) {
+        if (!row.itemId) continue;
+        const receive = await tx.item_Receive.create({
+          data: {
+            serialNo: receiveSerial,
+            issueSerialNo: key,
+            voucharNo: row.voucharNo,
+            itemId: row.itemId,
+            itemName: nameByItemId.get(row.itemId) ?? null,
+            // Straight off the issue — never from the request body.
+            qty: row.qty,
+            purDate: receivedDate,
+            // branchId is the SOURCE branch and receiveBranchID the destination
+            // (backwards from how they read — see the Item Receive report).
+            branchId: row.issueBranchId,
+            receiveBranchID: row.receiveBranchId,
+            isActive: 1,
+            createBy: userName,
+            createDate: receivedDate,
+          },
+        });
+        // upsert, not update: the receiving side may never have held this item.
+        const itemCode = codeByItemId.get(row.itemId)!;
+        await tx.inventory.upsert({
+          where: { itemCode },
+          create: { itemCode, quantity: Number(row.qty ?? 0) },
+          update: { quantity: { increment: Number(row.qty ?? 0) } },
+        });
+        created.push(receive);
+      }
+      return { serialNo: receiveSerial, issueSerialNo: key, receivedDate, items: created };
+    });
+  }
+
   async findAllIssues(query: DateRangeQueryDto) {
     const { page, limit, branchId, fromDate, toDate } = query;
     const issueDate = dateRangeFilter(fromDate, toDate);
@@ -736,20 +928,34 @@ export class InventoryService {
   async findOneIssue(serialNo: string) {
     const rows = await this.findIssueRows(serialNo);
     const [first] = rows;
-    const nameByItemId = await this.itemNamesByIds(rows.map((r) => r.itemId).filter((id): id is string => !!id));
+    const itemIds = rows.map((r) => r.itemId).filter((id): id is string => !!id);
+    const [nameByItemId, vatByItemId] = await Promise.all([
+      this.itemNamesByIds(itemIds),
+      this.vatPercentByItemIds(itemIds),
+    ]);
     return {
       serialNo: first.serialNo || first.id,
       voucherNo: first.voucharNo,
       issueDate: first.issueDate,
       issueBranchId: first.issueBranchId,
       receiveBranchId: first.receiveBranchId,
-      items: rows.map((r) => ({
-        itemId: r.itemId,
-        itemName: r.itemId ? nameByItemId.get(r.itemId) : undefined,
-        qty: Number(r.qty ?? 0),
-        unitPrice: Number(r.unitPrice ?? 0),
-        isProduction: r.isProduction === 1,
-      })),
+      items: rows.map((r) => {
+        const unitPrice = Number(r.unitPrice ?? 0);
+        const vatPercent = r.itemId ? vatByItemId.get(r.itemId) ?? 0 : 0;
+        return {
+          itemId: r.itemId,
+          itemName: r.itemId ? nameByItemId.get(r.itemId) : undefined,
+          qty: Number(r.qty ?? 0),
+          // Kept as stored (ex-VAT) so nothing that already reads this field
+          // starts double-counting; the printed document uses the field below.
+          unitPrice,
+          vatPercent,
+          // Rounded to 2dp because the stored price is itself 2dp — 1636.36
+          // grosses to 1799.996, which must print as 1,800.00.
+          unitPriceWithVat: Math.round(unitPrice * (1 + vatPercent / 100) * 100) / 100,
+          isProduction: r.isProduction === 1,
+        };
+      }),
     };
   }
 

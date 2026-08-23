@@ -644,8 +644,12 @@ model Item_Receive {
   updateDate      DateTime?         @map("UpdateDate")
   branchId        String            @map("BranchId") @db.Uuid
   receiveBranchID String?           @map("ReceiveBranchID") @db.Uuid
+  /// The Stock Issue document this receive confirms; null when the receive was
+  /// entered by hand. See InventoryService#confirmReceive.
+  issueSerialNo   String?           @map("IssueSerialNo") @db.VarChar(50)
   item            Item_Information? @relation(fields: [itemId], references: [id])
 
+  @@index([issueSerialNo])
   @@map("Item_Receive")
 }
 
@@ -662,6 +666,12 @@ model Item_Issue {
   /// 1 = this line was also written to Production as part of the same document.
   /// See ProductionService#syncFromIssue.
   isProduction    Int               @default(0) @map("IsProduction")
+  /// Receipt handshake: 0 = pending at the receiving branch, 1 = confirmed.
+  /// Set for the whole SerialNo group at once. Transfers ('TRF-...') are born
+  /// received because they write both legs immediately.
+  isReceived      Int               @default(0) @map("IsReceived")
+  receivedDate    DateTime?         @map("ReceivedDate")
+  receivedBy      String?           @map("ReceivedBy") @db.VarChar(50)
   isActive        Int?              @map("IsActive")
   createBy        String?           @map("CreateBy")
   createDate      DateTime?         @map("CreateDate")
@@ -669,6 +679,7 @@ model Item_Issue {
   updateDate      DateTime?         @map("UpdateDate")
   item            Item_Information? @relation(fields: [itemId], references: [id])
 
+  @@index([receiveBranchId, isReceived])
   @@map("Item_Issue")
 }
 

@@ -585,7 +585,8 @@ exports.Prisma.Item_ReceiveScalarFieldEnum = {
   updateBy: 'updateBy',
   updateDate: 'updateDate',
   branchId: 'branchId',
-  receiveBranchID: 'receiveBranchID'
+  receiveBranchID: 'receiveBranchID',
+  issueSerialNo: 'issueSerialNo'
 };
 
 exports.Prisma.Item_IssueScalarFieldEnum = {
@@ -599,6 +600,9 @@ exports.Prisma.Item_IssueScalarFieldEnum = {
   issueBranchId: 'issueBranchId',
   receiveBranchId: 'receiveBranchId',
   isProduction: 'isProduction',
+  isReceived: 'isReceived',
+  receivedDate: 'receivedDate',
+  receivedBy: 'receivedBy',
   isActive: 'isActive',
   createBy: 'createBy',
   createDate: 'createDate',

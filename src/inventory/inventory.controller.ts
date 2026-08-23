@@ -208,6 +208,47 @@ export class InventoryController {
     return paginatedResponse(items, meta, 'Receive');
   }
 
+  // NOTE: these must stay ABOVE `receive/:serialNo`, or 'pending' is captured
+  // as a serial number by that route.
+
+  @Get('receive/pending')
+  @ApiOperation({ summary: 'Stock issues addressed to the session branch that have not been received yet' })
+  @ApiResponse({ status: 200, description: 'Paginated list of pending issues, one row per issue document' })
+  async pendingReceives(@Query() query: DateRangeQueryDto, @CurrentUser('branchId') branchId: string) {
+    const { items, meta } = await this.inventoryService.findPendingReceives(branchId, query);
+    return paginatedResponse(items, meta, 'PendingReceive');
+  }
+
+  @Get('receive/pending/:serialNo')
+  @ApiOperation({ summary: 'Read-only detail of one pending issue, for the receive confirmation screen' })
+  @ApiParam({ name: 'serialNo', description: 'Issue serial number' })
+  @ApiResponse({ status: 200, description: 'Issue header plus its read-only item lines' })
+  @ApiResponse({ status: 403, description: 'The issue was not sent to the session branch' })
+  @ApiResponse({ status: 404, description: 'Issue not found' })
+  findPendingReceive(@Param('serialNo') serialNo: string, @CurrentUser('branchId') branchId: string) {
+    return this.inventoryService.findPendingReceive(serialNo, branchId);
+  }
+
+  @Post('receive/confirm/:serialNo')
+  @RequiredPermission({ control: 'StockReceive', action: 'addAccess' })
+  @ApiOperation({
+    summary: 'Confirm receipt of an issued document',
+    description:
+      'Writes the Item_Receive leg from the quantities recorded on the issue and marks it received. '
+      + 'There is no request body: quantities are read off the issue, so the receiver cannot alter them.',
+  })
+  @ApiParam({ name: 'serialNo', description: 'Issue serial number to confirm' })
+  @ApiResponse({ status: 201, description: 'Receive document created and the issue marked received' })
+  @ApiResponse({ status: 403, description: 'The issue was not sent to the session branch' })
+  @ApiResponse({ status: 409, description: 'Already received' })
+  confirmReceive(
+    @Param('serialNo') serialNo: string,
+    @CurrentUser('branchId') branchId: string,
+    @CurrentUser('userName') userName: string,
+  ) {
+    return this.inventoryService.confirmReceive(serialNo, branchId, userName);
+  }
+
   @Get('receive/:serialNo')
   @ApiOperation({ summary: 'Get a single stock receive (all lines) by serial number' })
   @ApiParam({ name: 'serialNo', description: 'Receive serial number' })

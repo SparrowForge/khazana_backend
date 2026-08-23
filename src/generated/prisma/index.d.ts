@@ -45085,6 +45085,7 @@ export namespace Prisma {
     updateDate: Date | null
     branchId: string | null
     receiveBranchID: string | null
+    issueSerialNo: string | null
   }
 
   export type Item_ReceiveMaxAggregateOutputType = {
@@ -45102,6 +45103,7 @@ export namespace Prisma {
     updateDate: Date | null
     branchId: string | null
     receiveBranchID: string | null
+    issueSerialNo: string | null
   }
 
   export type Item_ReceiveCountAggregateOutputType = {
@@ -45119,6 +45121,7 @@ export namespace Prisma {
     updateDate: number
     branchId: number
     receiveBranchID: number
+    issueSerialNo: number
     _all: number
   }
 
@@ -45148,6 +45151,7 @@ export namespace Prisma {
     updateDate?: true
     branchId?: true
     receiveBranchID?: true
+    issueSerialNo?: true
   }
 
   export type Item_ReceiveMaxAggregateInputType = {
@@ -45165,6 +45169,7 @@ export namespace Prisma {
     updateDate?: true
     branchId?: true
     receiveBranchID?: true
+    issueSerialNo?: true
   }
 
   export type Item_ReceiveCountAggregateInputType = {
@@ -45182,6 +45187,7 @@ export namespace Prisma {
     updateDate?: true
     branchId?: true
     receiveBranchID?: true
+    issueSerialNo?: true
     _all?: true
   }
 
@@ -45286,6 +45292,7 @@ export namespace Prisma {
     updateDate: Date | null
     branchId: string
     receiveBranchID: string | null
+    issueSerialNo: string | null
     _count: Item_ReceiveCountAggregateOutputType | null
     _avg: Item_ReceiveAvgAggregateOutputType | null
     _sum: Item_ReceiveSumAggregateOutputType | null
@@ -45322,6 +45329,7 @@ export namespace Prisma {
     updateDate?: boolean
     branchId?: boolean
     receiveBranchID?: boolean
+    issueSerialNo?: boolean
     item?: boolean | Item_Receive$itemArgs<ExtArgs>
   }, ExtArgs["result"]["item_Receive"]>
 
@@ -45340,6 +45348,7 @@ export namespace Prisma {
     updateDate?: boolean
     branchId?: boolean
     receiveBranchID?: boolean
+    issueSerialNo?: boolean
     item?: boolean | Item_Receive$itemArgs<ExtArgs>
   }, ExtArgs["result"]["item_Receive"]>
 
@@ -45358,6 +45367,7 @@ export namespace Prisma {
     updateDate?: boolean
     branchId?: boolean
     receiveBranchID?: boolean
+    issueSerialNo?: boolean
     item?: boolean | Item_Receive$itemArgs<ExtArgs>
   }, ExtArgs["result"]["item_Receive"]>
 
@@ -45376,9 +45386,10 @@ export namespace Prisma {
     updateDate?: boolean
     branchId?: boolean
     receiveBranchID?: boolean
+    issueSerialNo?: boolean
   }
 
-  export type Item_ReceiveOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemId" | "itemName" | "qty" | "purDate" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate" | "branchId" | "receiveBranchID", ExtArgs["result"]["item_Receive"]>
+  export type Item_ReceiveOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemId" | "itemName" | "qty" | "purDate" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate" | "branchId" | "receiveBranchID" | "issueSerialNo", ExtArgs["result"]["item_Receive"]>
   export type Item_ReceiveInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | Item_Receive$itemArgs<ExtArgs>
   }
@@ -45409,6 +45420,11 @@ export namespace Prisma {
       updateDate: Date | null
       branchId: string
       receiveBranchID: string | null
+      /**
+       * The Stock Issue document this receive confirms; null when the receive was
+       * entered by hand. See InventoryService#confirmReceive.
+       */
+      issueSerialNo: string | null
     }, ExtArgs["result"]["item_Receive"]>
     composites: {}
   }
@@ -45847,6 +45863,7 @@ export namespace Prisma {
     readonly updateDate: FieldRef<"Item_Receive", 'DateTime'>
     readonly branchId: FieldRef<"Item_Receive", 'String'>
     readonly receiveBranchID: FieldRef<"Item_Receive", 'String'>
+    readonly issueSerialNo: FieldRef<"Item_Receive", 'String'>
   }
     
 
@@ -46296,6 +46313,7 @@ export namespace Prisma {
     unitPrice: Decimal | null
     qty: Decimal | null
     isProduction: number | null
+    isReceived: number | null
     isActive: number | null
   }
 
@@ -46303,6 +46321,7 @@ export namespace Prisma {
     unitPrice: Decimal | null
     qty: Decimal | null
     isProduction: number | null
+    isReceived: number | null
     isActive: number | null
   }
 
@@ -46317,6 +46336,9 @@ export namespace Prisma {
     issueBranchId: string | null
     receiveBranchId: string | null
     isProduction: number | null
+    isReceived: number | null
+    receivedDate: Date | null
+    receivedBy: string | null
     isActive: number | null
     createBy: string | null
     createDate: Date | null
@@ -46335,6 +46357,9 @@ export namespace Prisma {
     issueBranchId: string | null
     receiveBranchId: string | null
     isProduction: number | null
+    isReceived: number | null
+    receivedDate: Date | null
+    receivedBy: string | null
     isActive: number | null
     createBy: string | null
     createDate: Date | null
@@ -46353,6 +46378,9 @@ export namespace Prisma {
     issueBranchId: number
     receiveBranchId: number
     isProduction: number
+    isReceived: number
+    receivedDate: number
+    receivedBy: number
     isActive: number
     createBy: number
     createDate: number
@@ -46366,6 +46394,7 @@ export namespace Prisma {
     unitPrice?: true
     qty?: true
     isProduction?: true
+    isReceived?: true
     isActive?: true
   }
 
@@ -46373,6 +46402,7 @@ export namespace Prisma {
     unitPrice?: true
     qty?: true
     isProduction?: true
+    isReceived?: true
     isActive?: true
   }
 
@@ -46387,6 +46417,9 @@ export namespace Prisma {
     issueBranchId?: true
     receiveBranchId?: true
     isProduction?: true
+    isReceived?: true
+    receivedDate?: true
+    receivedBy?: true
     isActive?: true
     createBy?: true
     createDate?: true
@@ -46405,6 +46438,9 @@ export namespace Prisma {
     issueBranchId?: true
     receiveBranchId?: true
     isProduction?: true
+    isReceived?: true
+    receivedDate?: true
+    receivedBy?: true
     isActive?: true
     createBy?: true
     createDate?: true
@@ -46423,6 +46459,9 @@ export namespace Prisma {
     issueBranchId?: true
     receiveBranchId?: true
     isProduction?: true
+    isReceived?: true
+    receivedDate?: true
+    receivedBy?: true
     isActive?: true
     createBy?: true
     createDate?: true
@@ -46528,6 +46567,9 @@ export namespace Prisma {
     issueBranchId: string
     receiveBranchId: string
     isProduction: number
+    isReceived: number
+    receivedDate: Date | null
+    receivedBy: string | null
     isActive: number | null
     createBy: string | null
     createDate: Date | null
@@ -46565,6 +46607,9 @@ export namespace Prisma {
     issueBranchId?: boolean
     receiveBranchId?: boolean
     isProduction?: boolean
+    isReceived?: boolean
+    receivedDate?: boolean
+    receivedBy?: boolean
     isActive?: boolean
     createBy?: boolean
     createDate?: boolean
@@ -46584,6 +46629,9 @@ export namespace Prisma {
     issueBranchId?: boolean
     receiveBranchId?: boolean
     isProduction?: boolean
+    isReceived?: boolean
+    receivedDate?: boolean
+    receivedBy?: boolean
     isActive?: boolean
     createBy?: boolean
     createDate?: boolean
@@ -46603,6 +46651,9 @@ export namespace Prisma {
     issueBranchId?: boolean
     receiveBranchId?: boolean
     isProduction?: boolean
+    isReceived?: boolean
+    receivedDate?: boolean
+    receivedBy?: boolean
     isActive?: boolean
     createBy?: boolean
     createDate?: boolean
@@ -46622,6 +46673,9 @@ export namespace Prisma {
     issueBranchId?: boolean
     receiveBranchId?: boolean
     isProduction?: boolean
+    isReceived?: boolean
+    receivedDate?: boolean
+    receivedBy?: boolean
     isActive?: boolean
     createBy?: boolean
     createDate?: boolean
@@ -46629,7 +46683,7 @@ export namespace Prisma {
     updateDate?: boolean
   }
 
-  export type Item_IssueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemId" | "unitPrice" | "qty" | "issueDate" | "issueBranchId" | "receiveBranchId" | "isProduction" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["item_Issue"]>
+  export type Item_IssueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemId" | "unitPrice" | "qty" | "issueDate" | "issueBranchId" | "receiveBranchId" | "isProduction" | "isReceived" | "receivedDate" | "receivedBy" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["item_Issue"]>
   export type Item_IssueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | Item_Issue$itemArgs<ExtArgs>
   }
@@ -46660,6 +46714,14 @@ export namespace Prisma {
        * See ProductionService#syncFromIssue.
        */
       isProduction: number
+      /**
+       * Receipt handshake: 0 = pending at the receiving branch, 1 = confirmed.
+       * Set for the whole SerialNo group at once. Transfers ('TRF-...') are born
+       * received because they write both legs immediately.
+       */
+      isReceived: number
+      receivedDate: Date | null
+      receivedBy: string | null
       isActive: number | null
       createBy: string | null
       createDate: Date | null
@@ -47099,6 +47161,9 @@ export namespace Prisma {
     readonly issueBranchId: FieldRef<"Item_Issue", 'String'>
     readonly receiveBranchId: FieldRef<"Item_Issue", 'String'>
     readonly isProduction: FieldRef<"Item_Issue", 'Int'>
+    readonly isReceived: FieldRef<"Item_Issue", 'Int'>
+    readonly receivedDate: FieldRef<"Item_Issue", 'DateTime'>
+    readonly receivedBy: FieldRef<"Item_Issue", 'String'>
     readonly isActive: FieldRef<"Item_Issue", 'Int'>
     readonly createBy: FieldRef<"Item_Issue", 'String'>
     readonly createDate: FieldRef<"Item_Issue", 'DateTime'>
@@ -65052,7 +65117,8 @@ export namespace Prisma {
     updateBy: 'updateBy',
     updateDate: 'updateDate',
     branchId: 'branchId',
-    receiveBranchID: 'receiveBranchID'
+    receiveBranchID: 'receiveBranchID',
+    issueSerialNo: 'issueSerialNo'
   };
 
   export type Item_ReceiveScalarFieldEnum = (typeof Item_ReceiveScalarFieldEnum)[keyof typeof Item_ReceiveScalarFieldEnum]
@@ -65069,6 +65135,9 @@ export namespace Prisma {
     issueBranchId: 'issueBranchId',
     receiveBranchId: 'receiveBranchId',
     isProduction: 'isProduction',
+    isReceived: 'isReceived',
+    receivedDate: 'receivedDate',
+    receivedBy: 'receivedBy',
     isActive: 'isActive',
     createBy: 'createBy',
     createDate: 'createDate',
@@ -68357,6 +68426,7 @@ export namespace Prisma {
     updateDate?: DateTimeNullableFilter<"Item_Receive"> | Date | string | null
     branchId?: UuidFilter<"Item_Receive"> | string
     receiveBranchID?: UuidNullableFilter<"Item_Receive"> | string | null
+    issueSerialNo?: StringNullableFilter<"Item_Receive"> | string | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }
 
@@ -68375,6 +68445,7 @@ export namespace Prisma {
     updateDate?: SortOrderInput | SortOrder
     branchId?: SortOrder
     receiveBranchID?: SortOrderInput | SortOrder
+    issueSerialNo?: SortOrderInput | SortOrder
     item?: Item_InformationOrderByWithRelationInput
   }
 
@@ -68396,6 +68467,7 @@ export namespace Prisma {
     updateDate?: DateTimeNullableFilter<"Item_Receive"> | Date | string | null
     branchId?: UuidFilter<"Item_Receive"> | string
     receiveBranchID?: UuidNullableFilter<"Item_Receive"> | string | null
+    issueSerialNo?: StringNullableFilter<"Item_Receive"> | string | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }, "id">
 
@@ -68414,6 +68486,7 @@ export namespace Prisma {
     updateDate?: SortOrderInput | SortOrder
     branchId?: SortOrder
     receiveBranchID?: SortOrderInput | SortOrder
+    issueSerialNo?: SortOrderInput | SortOrder
     _count?: Item_ReceiveCountOrderByAggregateInput
     _avg?: Item_ReceiveAvgOrderByAggregateInput
     _max?: Item_ReceiveMaxOrderByAggregateInput
@@ -68439,6 +68512,7 @@ export namespace Prisma {
     updateDate?: DateTimeNullableWithAggregatesFilter<"Item_Receive"> | Date | string | null
     branchId?: UuidWithAggregatesFilter<"Item_Receive"> | string
     receiveBranchID?: UuidNullableWithAggregatesFilter<"Item_Receive"> | string | null
+    issueSerialNo?: StringNullableWithAggregatesFilter<"Item_Receive"> | string | null
   }
 
   export type Item_IssueWhereInput = {
@@ -68455,6 +68529,9 @@ export namespace Prisma {
     issueBranchId?: UuidFilter<"Item_Issue"> | string
     receiveBranchId?: UuidFilter<"Item_Issue"> | string
     isProduction?: IntFilter<"Item_Issue"> | number
+    isReceived?: IntFilter<"Item_Issue"> | number
+    receivedDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
+    receivedBy?: StringNullableFilter<"Item_Issue"> | string | null
     isActive?: IntNullableFilter<"Item_Issue"> | number | null
     createBy?: StringNullableFilter<"Item_Issue"> | string | null
     createDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
@@ -68474,6 +68551,9 @@ export namespace Prisma {
     issueBranchId?: SortOrder
     receiveBranchId?: SortOrder
     isProduction?: SortOrder
+    isReceived?: SortOrder
+    receivedDate?: SortOrderInput | SortOrder
+    receivedBy?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
     createBy?: SortOrderInput | SortOrder
     createDate?: SortOrderInput | SortOrder
@@ -68496,6 +68576,9 @@ export namespace Prisma {
     issueBranchId?: UuidFilter<"Item_Issue"> | string
     receiveBranchId?: UuidFilter<"Item_Issue"> | string
     isProduction?: IntFilter<"Item_Issue"> | number
+    isReceived?: IntFilter<"Item_Issue"> | number
+    receivedDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
+    receivedBy?: StringNullableFilter<"Item_Issue"> | string | null
     isActive?: IntNullableFilter<"Item_Issue"> | number | null
     createBy?: StringNullableFilter<"Item_Issue"> | string | null
     createDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
@@ -68515,6 +68598,9 @@ export namespace Prisma {
     issueBranchId?: SortOrder
     receiveBranchId?: SortOrder
     isProduction?: SortOrder
+    isReceived?: SortOrder
+    receivedDate?: SortOrderInput | SortOrder
+    receivedBy?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
     createBy?: SortOrderInput | SortOrder
     createDate?: SortOrderInput | SortOrder
@@ -68541,6 +68627,9 @@ export namespace Prisma {
     issueBranchId?: UuidWithAggregatesFilter<"Item_Issue"> | string
     receiveBranchId?: UuidWithAggregatesFilter<"Item_Issue"> | string
     isProduction?: IntWithAggregatesFilter<"Item_Issue"> | number
+    isReceived?: IntWithAggregatesFilter<"Item_Issue"> | number
+    receivedDate?: DateTimeNullableWithAggregatesFilter<"Item_Issue"> | Date | string | null
+    receivedBy?: StringNullableWithAggregatesFilter<"Item_Issue"> | string | null
     isActive?: IntNullableWithAggregatesFilter<"Item_Issue"> | number | null
     createBy?: StringNullableWithAggregatesFilter<"Item_Issue"> | string | null
     createDate?: DateTimeNullableWithAggregatesFilter<"Item_Issue"> | Date | string | null
@@ -73129,6 +73218,7 @@ export namespace Prisma {
     updateDate?: Date | string | null
     branchId: string
     receiveBranchID?: string | null
+    issueSerialNo?: string | null
     item?: Item_InformationCreateNestedOneWithoutItemReceivesInput
   }
 
@@ -73147,6 +73237,7 @@ export namespace Prisma {
     updateDate?: Date | string | null
     branchId: string
     receiveBranchID?: string | null
+    issueSerialNo?: string | null
   }
 
   export type Item_ReceiveUpdateInput = {
@@ -73163,6 +73254,7 @@ export namespace Prisma {
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     receiveBranchID?: NullableStringFieldUpdateOperationsInput | string | null
+    issueSerialNo?: NullableStringFieldUpdateOperationsInput | string | null
     item?: Item_InformationUpdateOneWithoutItemReceivesNestedInput
   }
 
@@ -73181,6 +73273,7 @@ export namespace Prisma {
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     receiveBranchID?: NullableStringFieldUpdateOperationsInput | string | null
+    issueSerialNo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Item_ReceiveCreateManyInput = {
@@ -73198,6 +73291,7 @@ export namespace Prisma {
     updateDate?: Date | string | null
     branchId: string
     receiveBranchID?: string | null
+    issueSerialNo?: string | null
   }
 
   export type Item_ReceiveUpdateManyMutationInput = {
@@ -73214,6 +73308,7 @@ export namespace Prisma {
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     receiveBranchID?: NullableStringFieldUpdateOperationsInput | string | null
+    issueSerialNo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Item_ReceiveUncheckedUpdateManyInput = {
@@ -73231,6 +73326,7 @@ export namespace Prisma {
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     receiveBranchID?: NullableStringFieldUpdateOperationsInput | string | null
+    issueSerialNo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Item_IssueCreateInput = {
@@ -73243,6 +73339,9 @@ export namespace Prisma {
     issueBranchId: string
     receiveBranchId: string
     isProduction?: number
+    isReceived?: number
+    receivedDate?: Date | string | null
+    receivedBy?: string | null
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -73262,6 +73361,9 @@ export namespace Prisma {
     issueBranchId: string
     receiveBranchId: string
     isProduction?: number
+    isReceived?: number
+    receivedDate?: Date | string | null
+    receivedBy?: string | null
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -73279,6 +73381,9 @@ export namespace Prisma {
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
     isProduction?: IntFieldUpdateOperationsInput | number
+    isReceived?: IntFieldUpdateOperationsInput | number
+    receivedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73298,6 +73403,9 @@ export namespace Prisma {
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
     isProduction?: IntFieldUpdateOperationsInput | number
+    isReceived?: IntFieldUpdateOperationsInput | number
+    receivedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73316,6 +73424,9 @@ export namespace Prisma {
     issueBranchId: string
     receiveBranchId: string
     isProduction?: number
+    isReceived?: number
+    receivedDate?: Date | string | null
+    receivedBy?: string | null
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -73333,6 +73444,9 @@ export namespace Prisma {
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
     isProduction?: IntFieldUpdateOperationsInput | number
+    isReceived?: IntFieldUpdateOperationsInput | number
+    receivedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73351,6 +73465,9 @@ export namespace Prisma {
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
     isProduction?: IntFieldUpdateOperationsInput | number
+    isReceived?: IntFieldUpdateOperationsInput | number
+    receivedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -77252,6 +77369,7 @@ export namespace Prisma {
     updateDate?: SortOrder
     branchId?: SortOrder
     receiveBranchID?: SortOrder
+    issueSerialNo?: SortOrder
   }
 
   export type Item_ReceiveAvgOrderByAggregateInput = {
@@ -77274,6 +77392,7 @@ export namespace Prisma {
     updateDate?: SortOrder
     branchId?: SortOrder
     receiveBranchID?: SortOrder
+    issueSerialNo?: SortOrder
   }
 
   export type Item_ReceiveMinOrderByAggregateInput = {
@@ -77291,6 +77410,7 @@ export namespace Prisma {
     updateDate?: SortOrder
     branchId?: SortOrder
     receiveBranchID?: SortOrder
+    issueSerialNo?: SortOrder
   }
 
   export type Item_ReceiveSumOrderByAggregateInput = {
@@ -77309,6 +77429,9 @@ export namespace Prisma {
     issueBranchId?: SortOrder
     receiveBranchId?: SortOrder
     isProduction?: SortOrder
+    isReceived?: SortOrder
+    receivedDate?: SortOrder
+    receivedBy?: SortOrder
     isActive?: SortOrder
     createBy?: SortOrder
     createDate?: SortOrder
@@ -77320,6 +77443,7 @@ export namespace Prisma {
     unitPrice?: SortOrder
     qty?: SortOrder
     isProduction?: SortOrder
+    isReceived?: SortOrder
     isActive?: SortOrder
   }
 
@@ -77334,6 +77458,9 @@ export namespace Prisma {
     issueBranchId?: SortOrder
     receiveBranchId?: SortOrder
     isProduction?: SortOrder
+    isReceived?: SortOrder
+    receivedDate?: SortOrder
+    receivedBy?: SortOrder
     isActive?: SortOrder
     createBy?: SortOrder
     createDate?: SortOrder
@@ -77352,6 +77479,9 @@ export namespace Prisma {
     issueBranchId?: SortOrder
     receiveBranchId?: SortOrder
     isProduction?: SortOrder
+    isReceived?: SortOrder
+    receivedDate?: SortOrder
+    receivedBy?: SortOrder
     isActive?: SortOrder
     createBy?: SortOrder
     createDate?: SortOrder
@@ -77363,6 +77493,7 @@ export namespace Prisma {
     unitPrice?: SortOrder
     qty?: SortOrder
     isProduction?: SortOrder
+    isReceived?: SortOrder
     isActive?: SortOrder
   }
 
@@ -82815,6 +82946,7 @@ export namespace Prisma {
     updateDate?: Date | string | null
     branchId: string
     receiveBranchID?: string | null
+    issueSerialNo?: string | null
   }
 
   export type Item_ReceiveUncheckedCreateWithoutItemInput = {
@@ -82831,6 +82963,7 @@ export namespace Prisma {
     updateDate?: Date | string | null
     branchId: string
     receiveBranchID?: string | null
+    issueSerialNo?: string | null
   }
 
   export type Item_ReceiveCreateOrConnectWithoutItemInput = {
@@ -82853,6 +82986,9 @@ export namespace Prisma {
     issueBranchId: string
     receiveBranchId: string
     isProduction?: number
+    isReceived?: number
+    receivedDate?: Date | string | null
+    receivedBy?: string | null
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -82870,6 +83006,9 @@ export namespace Prisma {
     issueBranchId: string
     receiveBranchId: string
     isProduction?: number
+    isReceived?: number
+    receivedDate?: Date | string | null
+    receivedBy?: string | null
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -83367,6 +83506,7 @@ export namespace Prisma {
     updateDate?: DateTimeNullableFilter<"Item_Receive"> | Date | string | null
     branchId?: UuidFilter<"Item_Receive"> | string
     receiveBranchID?: UuidNullableFilter<"Item_Receive"> | string | null
+    issueSerialNo?: StringNullableFilter<"Item_Receive"> | string | null
   }
 
   export type Item_IssueUpsertWithWhereUniqueWithoutItemInput = {
@@ -83399,6 +83539,9 @@ export namespace Prisma {
     issueBranchId?: UuidFilter<"Item_Issue"> | string
     receiveBranchId?: UuidFilter<"Item_Issue"> | string
     isProduction?: IntFilter<"Item_Issue"> | number
+    isReceived?: IntFilter<"Item_Issue"> | number
+    receivedDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
+    receivedBy?: StringNullableFilter<"Item_Issue"> | string | null
     isActive?: IntNullableFilter<"Item_Issue"> | number | null
     createBy?: StringNullableFilter<"Item_Issue"> | string | null
     createDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
@@ -88062,6 +88205,7 @@ export namespace Prisma {
     updateDate?: Date | string | null
     branchId: string
     receiveBranchID?: string | null
+    issueSerialNo?: string | null
   }
 
   export type Item_IssueCreateManyItemInput = {
@@ -88074,6 +88218,9 @@ export namespace Prisma {
     issueBranchId: string
     receiveBranchId: string
     isProduction?: number
+    isReceived?: number
+    receivedDate?: Date | string | null
+    receivedBy?: string | null
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -88430,6 +88577,7 @@ export namespace Prisma {
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     receiveBranchID?: NullableStringFieldUpdateOperationsInput | string | null
+    issueSerialNo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Item_ReceiveUncheckedUpdateWithoutItemInput = {
@@ -88446,6 +88594,7 @@ export namespace Prisma {
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     receiveBranchID?: NullableStringFieldUpdateOperationsInput | string | null
+    issueSerialNo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Item_ReceiveUncheckedUpdateManyWithoutItemInput = {
@@ -88462,6 +88611,7 @@ export namespace Prisma {
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     receiveBranchID?: NullableStringFieldUpdateOperationsInput | string | null
+    issueSerialNo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Item_IssueUpdateWithoutItemInput = {
@@ -88474,6 +88624,9 @@ export namespace Prisma {
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
     isProduction?: IntFieldUpdateOperationsInput | number
+    isReceived?: IntFieldUpdateOperationsInput | number
+    receivedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -88491,6 +88644,9 @@ export namespace Prisma {
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
     isProduction?: IntFieldUpdateOperationsInput | number
+    isReceived?: IntFieldUpdateOperationsInput | number
+    receivedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -88508,6 +88664,9 @@ export namespace Prisma {
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
     isProduction?: IntFieldUpdateOperationsInput | number
+    isReceived?: IntFieldUpdateOperationsInput | number
+    receivedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
