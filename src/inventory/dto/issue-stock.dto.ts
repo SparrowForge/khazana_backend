@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsPositive, IsOptional, IsDateString, IsUUID, IsArray, ValidateNested } from 'class-validator';
+import { IsString, IsNumber, IsPositive, IsOptional, IsDateString, IsUUID, IsArray, ValidateNested, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -16,6 +16,16 @@ export class IssueStockLineDto {
   @IsNumber()
   @IsOptional()
   unitPrice?: number;
+
+  @ApiPropertyOptional({
+    example: true,
+    default: false,
+    description:
+      'Also record this line as Production (same item and qty). Factory branch only — a non-factory session is refused.',
+  })
+  @IsBoolean()
+  @IsOptional()
+  isProduction?: boolean;
 }
 
 export class IssueStockDto {

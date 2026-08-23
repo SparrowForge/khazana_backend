@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
+import type { Prisma } from '../generated/prisma';
 import { CreateProductionDto, UpdateProductionDto, ProductionLineDto } from './dto/production.dto';
 import { DateRangeQueryDto, dateRangeFilter } from '../common/dto';
 import { assertStockAvailable, buildPaginationMeta, isFactoryBranch } from '../common/helpers';
@@ -22,6 +23,15 @@ import { assertStockAvailable, buildPaginationMeta, isFactoryBranch } from '../c
  * The whole feature is factory-only: every mutating call re-checks the session
  * branch, so a non-factory session can't reach it by calling the API directly.
  */
+/** One item line another document wants recorded as production. `unitPrice` is
+ *  the VAT-EXCLUSIVE price that document holds (Item_Issue.unitPrice); the
+ *  VAT-inclusive `Production.rate` is derived from it. */
+export interface IssueProductionLine {
+  itemId: string;
+  qty: number;
+  unitPrice?: number | null;
+}
+
 @Injectable()
 export class ProductionService {
   constructor(private prisma: PrismaService) {}
@@ -35,8 +45,12 @@ export class ProductionService {
   /** Production may only be posted from the factory. Resolves the session branch
    *  and refuses anything else — the sidebar and the route guard hide the page,
    *  this closes the direct-API path. Returns the branch so the caller can reuse
-   *  its code for the serial number. */
-  private async assertFactoryBranch(branchId?: string | null) {
+   *  its code for the serial number.
+   *
+   *  Public because Stock Issue has to apply the same rule before it accepts a
+   *  line flagged `isProduction` — the flag writes a Production row, so it must
+   *  clear the very same gate a direct Production Entry would. */
+  async assertFactoryBranch(branchId?: string | null) {
     const branch =
       branchId && this.isUuid(branchId)
         ? await this.prisma.branch.findUnique({
@@ -285,5 +299,132 @@ export class ProductionService {
       await tx.production.deleteMany({ where: { serialNo: key } });
     });
     return { message: 'Production entry deleted successfully' };
+  }
+
+  // ── Reusable: production driven by another document ────────────
+
+  /**
+   * Write the Production side of a source document (currently Stock Issue),
+   * inside that document's own transaction.
+   *
+   * Purge-and-replace, keyed on `issueSerialNo`: every Production row this
+   * source previously created is withdrawn from Inventory and deleted, then the
+   * given lines are inserted fresh. Passing an empty `lines` therefore removes
+   * the production side entirely — which is exactly what deleting the source
+   * document needs, so create / update / delete all route through this one
+   * method and can't drift apart.
+   *
+   * Takes a `tx` rather than reaching for `this.prisma` so the production write
+   * commits or rolls back with the document that triggered it — a half-applied
+   * pair would leave Inventory wrong with no way to tell which side is missing.
+   */
+  async syncFromIssue(
+    tx: Prisma.TransactionClient,
+    opts: {
+      issueSerialNo: string;
+      branchId: string;
+      branchCode?: string | null;
+      date: Date;
+      lines: IssueProductionLine[];
+      user: string;
+    },
+  ) {
+    const previous = await tx.production.findMany({
+      where: { issueSerialNo: opts.issueSerialNo },
+      orderBy: { createDate: 'asc' },
+    });
+    const lines = opts.lines.filter((l) => l.itemId && Number(l.qty) > 0);
+
+    if (previous.length) {
+      // Withdrawing produced units is the risky direction — they may already
+      // have been sold. Judged with the replacement lines counted as what the
+      // document gives back, so re-saving an unchanged line can't fail against
+      // its own earlier contribution. Same rule as `update()`.
+      await assertStockAvailable(
+        tx,
+        previous.map((r) => ({ itemId: r.itemId, qty: Number(r.qty ?? 0) })),
+        lines.map((l) => ({ itemId: l.itemId, qty: l.qty })),
+      );
+      const codes = await this.itemCodesByIds(previous.map((r) => r.itemId).filter((id): id is string => !!id));
+      for (const row of previous) {
+        if (!row.itemId) continue;
+        await tx.inventory.updateMany({
+          where: { itemCode: codes.get(row.itemId)! },
+          data: { quantity: { decrement: Number(row.qty ?? 0) } },
+        });
+      }
+      await tx.production.deleteMany({ where: { issueSerialNo: opts.issueSerialNo } });
+    }
+
+    if (!lines.length) return [];
+
+    // Keep the Production document's own identity across edits of the source —
+    // only mint a new serial the first time this issue produces anything.
+    const serialNo =
+      previous[0]?.serialNo ||
+      this.buildSerialNo(opts.branchCode ?? '', (await tx.production.count()) + 1);
+    const rateByItemId = await this.vatInclusiveRates(tx, lines);
+    const codeByItemId = await this.itemCodesByIds(lines.map((l) => l.itemId));
+
+    const created = [];
+    for (const line of lines) {
+      const row = await tx.production.create({
+        data: {
+          serialNo,
+          issueSerialNo: opts.issueSerialNo,
+          branchId: opts.branchId,
+          productionDate: opts.date,
+          itemId: line.itemId,
+          rate: rateByItemId.get(line.itemId) ?? 0,
+          qty: line.qty,
+          remarks: `Auto-created from Stock Issue ${opts.issueSerialNo}`,
+          isActive: 1,
+          createBy: previous[0]?.createBy ?? opts.user,
+          createDate: previous[0]?.createDate ?? new Date(),
+          ...(previous.length ? { updateBy: opts.user, updateDate: new Date() } : {}),
+        },
+      });
+      // upsert, not update: an item can be produced before it has ever been
+      // received, so its Inventory row may not exist yet.
+      await tx.inventory.upsert({
+        where: { itemCode: codeByItemId.get(line.itemId)! },
+        create: { itemCode: codeByItemId.get(line.itemId)!, quantity: line.qty },
+        update: { quantity: { increment: line.qty } },
+      });
+      created.push(row);
+    }
+    return created;
+  }
+
+  /** `Production.rate` is VAT-INCLUSIVE while the source document's unitPrice is
+   *  not, so gross the line price up by the item's VAT percent — the same sum
+   *  the Production Entry screen pre-fills. Falls back to the item's own active
+   *  list price for a line that carries no price at all. */
+  private async vatInclusiveRates(
+    tx: Prisma.TransactionClient,
+    lines: IssueProductionLine[],
+  ): Promise<Map<string, number>> {
+    const ids = [...new Set(lines.map((l) => l.itemId))];
+    const rows = await tx.item_Information.findMany({
+      where: { id: { in: ids } },
+      select: {
+        id: true,
+        prices: {
+          where: { priceIsActive: 1 },
+          orderBy: { priceFromDate: 'desc' },
+          take: 1,
+          select: { priceListPrice: true, priceVatPercent: true },
+        },
+      },
+    });
+    const priceById = new Map(rows.map((r) => [r.id, r.prices[0]]));
+    const rates = new Map<string, number>();
+    for (const line of lines) {
+      const price = priceById.get(line.itemId);
+      const vat = Number(price?.priceVatPercent ?? 0);
+      const base = Number(line.unitPrice ?? 0) || Number(price?.priceListPrice ?? 0);
+      rates.set(line.itemId, Math.round(base * (1 + vat / 100) * 1e6) / 1e6);
+    }
+    return rates;
   }
 }

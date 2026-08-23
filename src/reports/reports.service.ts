@@ -1830,4 +1830,199 @@ export class ReportsService {
       totals,
     };
   }
+
+  // ── Branchwise Delivery Report ────────────────────────────────
+  // A day-column pivot of Item_Issue: one row per item delivered out of the
+  // issuing branch, one column per day of the range, plus total qty and money.
+  // The legacy sheet runs a whole calendar month (columns 1..31), but any range
+  // works — the columns follow whatever was asked for.
+
+  /** A range wider than this makes an unreadable sheet (and a very wide print),
+   *  so it is refused rather than silently truncated. A quarter is already well
+   *  past the monthly run the report is designed around. */
+  private static readonly MAX_DELIVERY_DAYS = 92;
+
+  async getBranchwiseDeliveryReport(query: {
+    fromDate?: string;
+    toDate?: string;
+    issueBranchId: string;
+    receiveBranchId?: string;
+    sessionBranchId?: string;
+  }) {
+    // Factory-only, like the Production & Delivery report it sits beside in the
+    // Factory Report menu: the sidebar and the route guard hide the page, and
+    // this closes the direct-API path. The *session* branch is what's checked —
+    // the issuing branch is a free parameter that merely defaults to it.
+    const sessionBranch = query.sessionBranchId
+      ? await this.prisma.branch
+          .findUnique({ where: { id: query.sessionBranchId }, select: { branchCode: true, branchName: true } })
+          .catch(() => null)
+      : null;
+    if (!isFactoryBranch(sessionBranch)) {
+      throw new ForbiddenException('The Branchwise Delivery report is available only at the Factory branch');
+    }
+
+    const from = new Date(query.fromDate ?? '');
+    if (isNaN(from.getTime())) throw new BadRequestException('Valid `fromDate` is required');
+    const to = new Date(query.toDate || (query.fromDate ?? ''));
+    if (isNaN(to.getTime())) throw new BadRequestException('Valid `toDate` is required');
+    if (to < from) throw new BadRequestException('`toDate` must not be earlier than `fromDate`');
+    if (!query.issueBranchId) throw new BadRequestException('`issueBranchId` is required');
+
+    // Day buckets, in UTC — the dates arrive as bare `YYYY-MM-DD` (parsed as UTC
+    // midnight) and the sheet prints them in UTC, so bucketing in UTC keeps the
+    // column a row lands in the same one the frontend labels it with.
+    const dayKey = (d: Date) => d.toISOString().split('T')[0];
+    const days: string[] = [];
+    for (let d = new Date(from); d <= to; d.setUTCDate(d.getUTCDate() + 1)) days.push(dayKey(d));
+    if (days.length > ReportsService.MAX_DELIVERY_DAYS) {
+      throw new BadRequestException(
+        `The date range is too wide — at most ${ReportsService.MAX_DELIVERY_DAYS} days (one column per day) can be printed`,
+      );
+    }
+    // Exclusive upper bound, so the whole of `toDate` is included regardless of
+    // the time-of-day stored on the issue.
+    const toExclusive = new Date(to);
+    toExclusive.setUTCDate(toExclusive.getUTCDate() + 1);
+
+    const issues = await this.prisma.item_Issue.findMany({
+      where: {
+        isActive: 1,
+        issueDate: { gte: from, lt: toExclusive },
+        issueBranchId: query.issueBranchId,
+        // Omitted = every receiving branch, i.e. the "All Branch" option.
+        ...(query.receiveBranchId ? { receiveBranchId: query.receiveBranchId } : {}),
+      },
+      select: {
+        itemId: true,
+        qty: true,
+        unitPrice: true,
+        issueDate: true,
+        item: { select: { itmCode: true, itmName: true, itmUOM: true } },
+      },
+    });
+
+    // The issue screen fills `unitPrice` from the item's list price, but rows
+    // saved before it did carry none — and a delivery valued at 0 would print a
+    // blank Rate and Amount. Fall back to the list price in force on the issue
+    // date. VAT is deliberately NOT added back: Item_Issue.unitPrice is the
+    // ex-VAT list price (unlike Production.rate), and the sheet's Rate column
+    // is ex-VAT too, so the two must be valued the same way.
+    const itemIds = [...new Set(issues.map((i) => i.itemId).filter((id): id is string => !!id))];
+    const priceRows = itemIds.length
+      ? await this.prisma.item_Information.findMany({
+          where: { id: { in: itemIds } },
+          select: {
+            id: true,
+            prices: {
+              where: { priceIsActive: 1 },
+              orderBy: { priceFromDate: 'desc' },
+              select: { priceListPrice: true, priceFromDate: true, priceToDate: true },
+            },
+          },
+        })
+      : [];
+    const pricesById = new Map(priceRows.map((i) => [i.id, i.prices]));
+    const listPriceOn = (itemId: string, on: Date) => {
+      const prices = pricesById.get(itemId) ?? [];
+      const p =
+        prices.find((pr) => (!pr.priceFromDate || pr.priceFromDate <= on) && (!pr.priceToDate || pr.priceToDate >= on)) ??
+        prices[0];
+      return num(p?.priceListPrice);
+    };
+
+    type Row = {
+      sl: number;
+      itemCode: string;
+      itemName: string;
+      uom: string;
+      rate: number;
+      /** Qty per day, keyed by the same `YYYY-MM-DD` strings as `days`. Days the
+       *  item wasn't delivered on are simply absent. */
+      qtyByDate: Record<string, number>;
+      totalQty: number;
+      amount: number;
+    };
+
+    const acc = new Map<string, Omit<Row, 'sl' | 'rate'>>();
+    for (const i of issues) {
+      if (!i.itemId) continue;
+      const row =
+        acc.get(i.itemId) ??
+        {
+          itemCode: i.item?.itmCode ?? '',
+          itemName: i.item?.itmName ?? '',
+          uom: i.item?.itmUOM ?? '',
+          qtyByDate: {} as Record<string, number>,
+          totalQty: 0,
+          amount: 0,
+        };
+      const qty = num(i.qty);
+      const key = i.issueDate ? dayKey(i.issueDate) : '';
+      if (key) row.qtyByDate[key] = r2signed((row.qtyByDate[key] ?? 0) + qty);
+      row.totalQty += qty;
+      // Money is Σ(qty × unitPrice) off each issue line, so a rate that changed
+      // mid-range still values every delivery at what it actually went out at.
+      const unitPrice = num(i.unitPrice) || listPriceOn(i.itemId, i.issueDate ?? from);
+      row.amount += qty * unitPrice;
+      acc.set(i.itemId, row);
+    }
+
+    const rows: Row[] = [...acc.values()]
+      .sort((a, b) => a.itemName.localeCompare(b.itemName))
+      .map((r, idx) => ({
+        ...r,
+        sl: idx + 1,
+        totalQty: r2signed(r.totalQty),
+        amount: r2signed(r.amount),
+        // The printed "Rate" column is the effective unit price — derived from
+        // the money rather than read off one line, so it stays consistent with
+        // Amount even when lines went out at different prices.
+        rate: r.totalQty !== 0 ? r2signed(r.amount / r.totalQty) : 0,
+      }));
+
+    const totals = {
+      qtyByDate: days.reduce<Record<string, number>>((m, d) => {
+        const t = rows.reduce((s, r) => s + (r.qtyByDate[d] ?? 0), 0);
+        if (t !== 0) m[d] = r2signed(t);
+        return m;
+      }, {}),
+      totalQty: r2signed(rows.reduce((s, r) => s + r.totalQty, 0)),
+      amount: r2signed(rows.reduce((s, r) => s + r.amount, 0)),
+    };
+
+    const [issueBranch, receiveBranch, company] = await Promise.all([
+      this.prisma.branch.findUnique({
+        where: { id: query.issueBranchId },
+        select: { branchName: true, address: true, vatNo: true },
+      }),
+      query.receiveBranchId
+        ? this.prisma.branch.findUnique({ where: { id: query.receiveBranchId }, select: { branchName: true } })
+        : null,
+      this.prisma.setup_System.findFirst({ select: { companyName: true, companyAddress: true } }),
+    ]);
+
+    return {
+      fromDate: dayKey(from),
+      toDate: dayKey(to),
+      days,
+      company: {
+        name: company?.companyName ?? 'Khazana Mithai Limited',
+        address: company?.companyAddress ?? '',
+      },
+      // The letterhead names the issuing branch; the title line names where the
+      // delivery went, which is 'All Branches' when no receiver was picked.
+      issueBranch: {
+        id: query.issueBranchId,
+        name: issueBranch?.branchName ?? '',
+        address: issueBranch?.address ?? '',
+        vatNo: issueBranch?.vatNo ?? '',
+      },
+      receiveBranch: query.receiveBranchId
+        ? { id: query.receiveBranchId, name: receiveBranch?.branchName ?? '' }
+        : { id: '', name: 'All Branches' },
+      items: rows,
+      totals,
+    };
+  }
 }

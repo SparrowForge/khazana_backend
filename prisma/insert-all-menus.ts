@@ -28,6 +28,7 @@ const newMenus = [
   // factory-only, so the sidebar drops the whole group for any other branch.
   { menuName: 'Factory Report', controlName: 'FactoryReport', order: 13, parentMenu: null, module: 'Inventory' },
   { menuName: 'Production & Delivery Report', controlName: 'ProductionDeliveryReport', order: 1, parentMenu: 'FactoryReport', module: 'Inventory' },
+  { menuName: 'Branchwise Delivery Report', controlName: 'BranchwiseDeliveryReport', order: 2, parentMenu: 'FactoryReport', module: 'Inventory' },
   { menuName: 'Packet Info', controlName: 'PacketInfo', order: 1, parentMenu: 'Packets', module: 'Sale' },
   { menuName: 'Packet Receive', controlName: 'PacketReceive', order: 2, parentMenu: 'Packets', module: 'Sale' },
   { menuName: 'Packet Issue', controlName: 'PacketIssue', order: 3, parentMenu: 'Packets', module: 'Sale' },

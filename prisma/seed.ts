@@ -69,6 +69,7 @@ async function main() {
     // the sidebar drops the whole group for any other branch.
     { menuName: 'Factory Report', controlName: 'FactoryReport', order: 13, parentMenu: null, module: 'Inventory' },
     { menuName: 'Production & Delivery Report', controlName: 'ProductionDeliveryReport', order: 1, parentMenu: 'FactoryReport', module: 'Inventory' },
+    { menuName: 'Branchwise Delivery Report', controlName: 'BranchwiseDeliveryReport', order: 2, parentMenu: 'FactoryReport', module: 'Inventory' },
     { menuName: 'Finance', controlName: 'Finance', order: 10, parentMenu: null, module: null },
     { menuName: 'Reports', controlName: 'Reports', order: 11, parentMenu: null, module: null },
     { menuName: 'Administration', controlName: 'Admin', order: 12, parentMenu: null, module: null },

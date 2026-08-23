@@ -46295,12 +46295,14 @@ export namespace Prisma {
   export type Item_IssueAvgAggregateOutputType = {
     unitPrice: Decimal | null
     qty: Decimal | null
+    isProduction: number | null
     isActive: number | null
   }
 
   export type Item_IssueSumAggregateOutputType = {
     unitPrice: Decimal | null
     qty: Decimal | null
+    isProduction: number | null
     isActive: number | null
   }
 
@@ -46314,6 +46316,7 @@ export namespace Prisma {
     issueDate: Date | null
     issueBranchId: string | null
     receiveBranchId: string | null
+    isProduction: number | null
     isActive: number | null
     createBy: string | null
     createDate: Date | null
@@ -46331,6 +46334,7 @@ export namespace Prisma {
     issueDate: Date | null
     issueBranchId: string | null
     receiveBranchId: string | null
+    isProduction: number | null
     isActive: number | null
     createBy: string | null
     createDate: Date | null
@@ -46348,6 +46352,7 @@ export namespace Prisma {
     issueDate: number
     issueBranchId: number
     receiveBranchId: number
+    isProduction: number
     isActive: number
     createBy: number
     createDate: number
@@ -46360,12 +46365,14 @@ export namespace Prisma {
   export type Item_IssueAvgAggregateInputType = {
     unitPrice?: true
     qty?: true
+    isProduction?: true
     isActive?: true
   }
 
   export type Item_IssueSumAggregateInputType = {
     unitPrice?: true
     qty?: true
+    isProduction?: true
     isActive?: true
   }
 
@@ -46379,6 +46386,7 @@ export namespace Prisma {
     issueDate?: true
     issueBranchId?: true
     receiveBranchId?: true
+    isProduction?: true
     isActive?: true
     createBy?: true
     createDate?: true
@@ -46396,6 +46404,7 @@ export namespace Prisma {
     issueDate?: true
     issueBranchId?: true
     receiveBranchId?: true
+    isProduction?: true
     isActive?: true
     createBy?: true
     createDate?: true
@@ -46413,6 +46422,7 @@ export namespace Prisma {
     issueDate?: true
     issueBranchId?: true
     receiveBranchId?: true
+    isProduction?: true
     isActive?: true
     createBy?: true
     createDate?: true
@@ -46517,6 +46527,7 @@ export namespace Prisma {
     issueDate: Date | null
     issueBranchId: string
     receiveBranchId: string
+    isProduction: number
     isActive: number | null
     createBy: string | null
     createDate: Date | null
@@ -46553,6 +46564,7 @@ export namespace Prisma {
     issueDate?: boolean
     issueBranchId?: boolean
     receiveBranchId?: boolean
+    isProduction?: boolean
     isActive?: boolean
     createBy?: boolean
     createDate?: boolean
@@ -46571,6 +46583,7 @@ export namespace Prisma {
     issueDate?: boolean
     issueBranchId?: boolean
     receiveBranchId?: boolean
+    isProduction?: boolean
     isActive?: boolean
     createBy?: boolean
     createDate?: boolean
@@ -46589,6 +46602,7 @@ export namespace Prisma {
     issueDate?: boolean
     issueBranchId?: boolean
     receiveBranchId?: boolean
+    isProduction?: boolean
     isActive?: boolean
     createBy?: boolean
     createDate?: boolean
@@ -46607,6 +46621,7 @@ export namespace Prisma {
     issueDate?: boolean
     issueBranchId?: boolean
     receiveBranchId?: boolean
+    isProduction?: boolean
     isActive?: boolean
     createBy?: boolean
     createDate?: boolean
@@ -46614,7 +46629,7 @@ export namespace Prisma {
     updateDate?: boolean
   }
 
-  export type Item_IssueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemId" | "unitPrice" | "qty" | "issueDate" | "issueBranchId" | "receiveBranchId" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["item_Issue"]>
+  export type Item_IssueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemId" | "unitPrice" | "qty" | "issueDate" | "issueBranchId" | "receiveBranchId" | "isProduction" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["item_Issue"]>
   export type Item_IssueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | Item_Issue$itemArgs<ExtArgs>
   }
@@ -46640,6 +46655,11 @@ export namespace Prisma {
       issueDate: Date | null
       issueBranchId: string
       receiveBranchId: string
+      /**
+       * 1 = this line was also written to Production as part of the same document.
+       * See ProductionService#syncFromIssue.
+       */
+      isProduction: number
       isActive: number | null
       createBy: string | null
       createDate: Date | null
@@ -47078,6 +47098,7 @@ export namespace Prisma {
     readonly issueDate: FieldRef<"Item_Issue", 'DateTime'>
     readonly issueBranchId: FieldRef<"Item_Issue", 'String'>
     readonly receiveBranchId: FieldRef<"Item_Issue", 'String'>
+    readonly isProduction: FieldRef<"Item_Issue", 'Int'>
     readonly isActive: FieldRef<"Item_Issue", 'Int'>
     readonly createBy: FieldRef<"Item_Issue", 'String'>
     readonly createDate: FieldRef<"Item_Issue", 'DateTime'>
@@ -47549,6 +47570,7 @@ export namespace Prisma {
     rate: Decimal | null
     qty: Decimal | null
     remarks: string | null
+    issueSerialNo: string | null
     isActive: number | null
     createBy: string | null
     createDate: Date | null
@@ -47565,6 +47587,7 @@ export namespace Prisma {
     rate: Decimal | null
     qty: Decimal | null
     remarks: string | null
+    issueSerialNo: string | null
     isActive: number | null
     createBy: string | null
     createDate: Date | null
@@ -47581,6 +47604,7 @@ export namespace Prisma {
     rate: number
     qty: number
     remarks: number
+    issueSerialNo: number
     isActive: number
     createBy: number
     createDate: number
@@ -47611,6 +47635,7 @@ export namespace Prisma {
     rate?: true
     qty?: true
     remarks?: true
+    issueSerialNo?: true
     isActive?: true
     createBy?: true
     createDate?: true
@@ -47627,6 +47652,7 @@ export namespace Prisma {
     rate?: true
     qty?: true
     remarks?: true
+    issueSerialNo?: true
     isActive?: true
     createBy?: true
     createDate?: true
@@ -47643,6 +47669,7 @@ export namespace Prisma {
     rate?: true
     qty?: true
     remarks?: true
+    issueSerialNo?: true
     isActive?: true
     createBy?: true
     createDate?: true
@@ -47746,6 +47773,7 @@ export namespace Prisma {
     rate: Decimal | null
     qty: Decimal | null
     remarks: string | null
+    issueSerialNo: string | null
     isActive: number | null
     createBy: string | null
     createDate: Date | null
@@ -47781,6 +47809,7 @@ export namespace Prisma {
     rate?: boolean
     qty?: boolean
     remarks?: boolean
+    issueSerialNo?: boolean
     isActive?: boolean
     createBy?: boolean
     createDate?: boolean
@@ -47798,6 +47827,7 @@ export namespace Prisma {
     rate?: boolean
     qty?: boolean
     remarks?: boolean
+    issueSerialNo?: boolean
     isActive?: boolean
     createBy?: boolean
     createDate?: boolean
@@ -47815,6 +47845,7 @@ export namespace Prisma {
     rate?: boolean
     qty?: boolean
     remarks?: boolean
+    issueSerialNo?: boolean
     isActive?: boolean
     createBy?: boolean
     createDate?: boolean
@@ -47832,6 +47863,7 @@ export namespace Prisma {
     rate?: boolean
     qty?: boolean
     remarks?: boolean
+    issueSerialNo?: boolean
     isActive?: boolean
     createBy?: boolean
     createDate?: boolean
@@ -47839,7 +47871,7 @@ export namespace Prisma {
     updateDate?: boolean
   }
 
-  export type ProductionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "branchId" | "productionDate" | "itemId" | "rate" | "qty" | "remarks" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["production"]>
+  export type ProductionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "branchId" | "productionDate" | "itemId" | "rate" | "qty" | "remarks" | "issueSerialNo" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["production"]>
   export type ProductionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | Production$itemArgs<ExtArgs>
   }
@@ -47864,6 +47896,12 @@ export namespace Prisma {
       rate: Prisma.Decimal | null
       qty: Prisma.Decimal | null
       remarks: string | null
+      /**
+       * Set when this row was produced BY a Stock Issue document (its SerialNo);
+       * null for entries made directly on the Production Entry screen. The issue's
+       * edit path deletes and rewrites every row carrying its serial.
+       */
+      issueSerialNo: string | null
       isActive: number | null
       createBy: string | null
       createDate: Date | null
@@ -48301,6 +48339,7 @@ export namespace Prisma {
     readonly rate: FieldRef<"Production", 'Decimal'>
     readonly qty: FieldRef<"Production", 'Decimal'>
     readonly remarks: FieldRef<"Production", 'String'>
+    readonly issueSerialNo: FieldRef<"Production", 'String'>
     readonly isActive: FieldRef<"Production", 'Int'>
     readonly createBy: FieldRef<"Production", 'String'>
     readonly createDate: FieldRef<"Production", 'DateTime'>
@@ -65029,6 +65068,7 @@ export namespace Prisma {
     issueDate: 'issueDate',
     issueBranchId: 'issueBranchId',
     receiveBranchId: 'receiveBranchId',
+    isProduction: 'isProduction',
     isActive: 'isActive',
     createBy: 'createBy',
     createDate: 'createDate',
@@ -65048,6 +65088,7 @@ export namespace Prisma {
     rate: 'rate',
     qty: 'qty',
     remarks: 'remarks',
+    issueSerialNo: 'issueSerialNo',
     isActive: 'isActive',
     createBy: 'createBy',
     createDate: 'createDate',
@@ -68413,6 +68454,7 @@ export namespace Prisma {
     issueDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
     issueBranchId?: UuidFilter<"Item_Issue"> | string
     receiveBranchId?: UuidFilter<"Item_Issue"> | string
+    isProduction?: IntFilter<"Item_Issue"> | number
     isActive?: IntNullableFilter<"Item_Issue"> | number | null
     createBy?: StringNullableFilter<"Item_Issue"> | string | null
     createDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
@@ -68431,6 +68473,7 @@ export namespace Prisma {
     issueDate?: SortOrderInput | SortOrder
     issueBranchId?: SortOrder
     receiveBranchId?: SortOrder
+    isProduction?: SortOrder
     isActive?: SortOrderInput | SortOrder
     createBy?: SortOrderInput | SortOrder
     createDate?: SortOrderInput | SortOrder
@@ -68452,6 +68495,7 @@ export namespace Prisma {
     issueDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
     issueBranchId?: UuidFilter<"Item_Issue"> | string
     receiveBranchId?: UuidFilter<"Item_Issue"> | string
+    isProduction?: IntFilter<"Item_Issue"> | number
     isActive?: IntNullableFilter<"Item_Issue"> | number | null
     createBy?: StringNullableFilter<"Item_Issue"> | string | null
     createDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
@@ -68470,6 +68514,7 @@ export namespace Prisma {
     issueDate?: SortOrderInput | SortOrder
     issueBranchId?: SortOrder
     receiveBranchId?: SortOrder
+    isProduction?: SortOrder
     isActive?: SortOrderInput | SortOrder
     createBy?: SortOrderInput | SortOrder
     createDate?: SortOrderInput | SortOrder
@@ -68495,6 +68540,7 @@ export namespace Prisma {
     issueDate?: DateTimeNullableWithAggregatesFilter<"Item_Issue"> | Date | string | null
     issueBranchId?: UuidWithAggregatesFilter<"Item_Issue"> | string
     receiveBranchId?: UuidWithAggregatesFilter<"Item_Issue"> | string
+    isProduction?: IntWithAggregatesFilter<"Item_Issue"> | number
     isActive?: IntNullableWithAggregatesFilter<"Item_Issue"> | number | null
     createBy?: StringNullableWithAggregatesFilter<"Item_Issue"> | string | null
     createDate?: DateTimeNullableWithAggregatesFilter<"Item_Issue"> | Date | string | null
@@ -68514,6 +68560,7 @@ export namespace Prisma {
     rate?: DecimalNullableFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
     remarks?: StringNullableFilter<"Production"> | string | null
+    issueSerialNo?: StringNullableFilter<"Production"> | string | null
     isActive?: IntNullableFilter<"Production"> | number | null
     createBy?: StringNullableFilter<"Production"> | string | null
     createDate?: DateTimeNullableFilter<"Production"> | Date | string | null
@@ -68531,6 +68578,7 @@ export namespace Prisma {
     rate?: SortOrderInput | SortOrder
     qty?: SortOrderInput | SortOrder
     remarks?: SortOrderInput | SortOrder
+    issueSerialNo?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
     createBy?: SortOrderInput | SortOrder
     createDate?: SortOrderInput | SortOrder
@@ -68551,6 +68599,7 @@ export namespace Prisma {
     rate?: DecimalNullableFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
     remarks?: StringNullableFilter<"Production"> | string | null
+    issueSerialNo?: StringNullableFilter<"Production"> | string | null
     isActive?: IntNullableFilter<"Production"> | number | null
     createBy?: StringNullableFilter<"Production"> | string | null
     createDate?: DateTimeNullableFilter<"Production"> | Date | string | null
@@ -68568,6 +68617,7 @@ export namespace Prisma {
     rate?: SortOrderInput | SortOrder
     qty?: SortOrderInput | SortOrder
     remarks?: SortOrderInput | SortOrder
+    issueSerialNo?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
     createBy?: SortOrderInput | SortOrder
     createDate?: SortOrderInput | SortOrder
@@ -68592,6 +68642,7 @@ export namespace Prisma {
     rate?: DecimalNullableWithAggregatesFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableWithAggregatesFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
     remarks?: StringNullableWithAggregatesFilter<"Production"> | string | null
+    issueSerialNo?: StringNullableWithAggregatesFilter<"Production"> | string | null
     isActive?: IntNullableWithAggregatesFilter<"Production"> | number | null
     createBy?: StringNullableWithAggregatesFilter<"Production"> | string | null
     createDate?: DateTimeNullableWithAggregatesFilter<"Production"> | Date | string | null
@@ -73191,6 +73242,7 @@ export namespace Prisma {
     issueDate?: Date | string | null
     issueBranchId: string
     receiveBranchId: string
+    isProduction?: number
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -73209,6 +73261,7 @@ export namespace Prisma {
     issueDate?: Date | string | null
     issueBranchId: string
     receiveBranchId: string
+    isProduction?: number
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -73225,6 +73278,7 @@ export namespace Prisma {
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
+    isProduction?: IntFieldUpdateOperationsInput | number
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73243,6 +73297,7 @@ export namespace Prisma {
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
+    isProduction?: IntFieldUpdateOperationsInput | number
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73260,6 +73315,7 @@ export namespace Prisma {
     issueDate?: Date | string | null
     issueBranchId: string
     receiveBranchId: string
+    isProduction?: number
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -73276,6 +73332,7 @@ export namespace Prisma {
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
+    isProduction?: IntFieldUpdateOperationsInput | number
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73293,6 +73350,7 @@ export namespace Prisma {
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
+    isProduction?: IntFieldUpdateOperationsInput | number
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73308,6 +73366,7 @@ export namespace Prisma {
     rate?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     remarks?: string | null
+    issueSerialNo?: string | null
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -73325,6 +73384,7 @@ export namespace Prisma {
     rate?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     remarks?: string | null
+    issueSerialNo?: string | null
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -73340,6 +73400,7 @@ export namespace Prisma {
     rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    issueSerialNo?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73357,6 +73418,7 @@ export namespace Prisma {
     rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    issueSerialNo?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73373,6 +73435,7 @@ export namespace Prisma {
     rate?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     remarks?: string | null
+    issueSerialNo?: string | null
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -73388,6 +73451,7 @@ export namespace Prisma {
     rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    issueSerialNo?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73404,6 +73468,7 @@ export namespace Prisma {
     rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    issueSerialNo?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -77243,6 +77308,7 @@ export namespace Prisma {
     issueDate?: SortOrder
     issueBranchId?: SortOrder
     receiveBranchId?: SortOrder
+    isProduction?: SortOrder
     isActive?: SortOrder
     createBy?: SortOrder
     createDate?: SortOrder
@@ -77253,6 +77319,7 @@ export namespace Prisma {
   export type Item_IssueAvgOrderByAggregateInput = {
     unitPrice?: SortOrder
     qty?: SortOrder
+    isProduction?: SortOrder
     isActive?: SortOrder
   }
 
@@ -77266,6 +77333,7 @@ export namespace Prisma {
     issueDate?: SortOrder
     issueBranchId?: SortOrder
     receiveBranchId?: SortOrder
+    isProduction?: SortOrder
     isActive?: SortOrder
     createBy?: SortOrder
     createDate?: SortOrder
@@ -77283,6 +77351,7 @@ export namespace Prisma {
     issueDate?: SortOrder
     issueBranchId?: SortOrder
     receiveBranchId?: SortOrder
+    isProduction?: SortOrder
     isActive?: SortOrder
     createBy?: SortOrder
     createDate?: SortOrder
@@ -77293,6 +77362,7 @@ export namespace Prisma {
   export type Item_IssueSumOrderByAggregateInput = {
     unitPrice?: SortOrder
     qty?: SortOrder
+    isProduction?: SortOrder
     isActive?: SortOrder
   }
 
@@ -77305,6 +77375,7 @@ export namespace Prisma {
     rate?: SortOrder
     qty?: SortOrder
     remarks?: SortOrder
+    issueSerialNo?: SortOrder
     isActive?: SortOrder
     createBy?: SortOrder
     createDate?: SortOrder
@@ -77327,6 +77398,7 @@ export namespace Prisma {
     rate?: SortOrder
     qty?: SortOrder
     remarks?: SortOrder
+    issueSerialNo?: SortOrder
     isActive?: SortOrder
     createBy?: SortOrder
     createDate?: SortOrder
@@ -77343,6 +77415,7 @@ export namespace Prisma {
     rate?: SortOrder
     qty?: SortOrder
     remarks?: SortOrder
+    issueSerialNo?: SortOrder
     isActive?: SortOrder
     createBy?: SortOrder
     createDate?: SortOrder
@@ -82779,6 +82852,7 @@ export namespace Prisma {
     issueDate?: Date | string | null
     issueBranchId: string
     receiveBranchId: string
+    isProduction?: number
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -82795,6 +82869,7 @@ export namespace Prisma {
     issueDate?: Date | string | null
     issueBranchId: string
     receiveBranchId: string
+    isProduction?: number
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -82820,6 +82895,7 @@ export namespace Prisma {
     rate?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     remarks?: string | null
+    issueSerialNo?: string | null
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -82835,6 +82911,7 @@ export namespace Prisma {
     rate?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     remarks?: string | null
+    issueSerialNo?: string | null
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -83321,6 +83398,7 @@ export namespace Prisma {
     issueDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
     issueBranchId?: UuidFilter<"Item_Issue"> | string
     receiveBranchId?: UuidFilter<"Item_Issue"> | string
+    isProduction?: IntFilter<"Item_Issue"> | number
     isActive?: IntNullableFilter<"Item_Issue"> | number | null
     createBy?: StringNullableFilter<"Item_Issue"> | string | null
     createDate?: DateTimeNullableFilter<"Item_Issue"> | Date | string | null
@@ -83356,6 +83434,7 @@ export namespace Prisma {
     rate?: DecimalNullableFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
     qty?: DecimalNullableFilter<"Production"> | Decimal | DecimalJsLike | number | string | null
     remarks?: StringNullableFilter<"Production"> | string | null
+    issueSerialNo?: StringNullableFilter<"Production"> | string | null
     isActive?: IntNullableFilter<"Production"> | number | null
     createBy?: StringNullableFilter<"Production"> | string | null
     createDate?: DateTimeNullableFilter<"Production"> | Date | string | null
@@ -87994,6 +88073,7 @@ export namespace Prisma {
     issueDate?: Date | string | null
     issueBranchId: string
     receiveBranchId: string
+    isProduction?: number
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -88009,6 +88089,7 @@ export namespace Prisma {
     rate?: Decimal | DecimalJsLike | number | string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     remarks?: string | null
+    issueSerialNo?: string | null
     isActive?: number | null
     createBy?: string | null
     createDate?: Date | string | null
@@ -88392,6 +88473,7 @@ export namespace Prisma {
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
+    isProduction?: IntFieldUpdateOperationsInput | number
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -88408,6 +88490,7 @@ export namespace Prisma {
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
+    isProduction?: IntFieldUpdateOperationsInput | number
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -88424,6 +88507,7 @@ export namespace Prisma {
     issueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     issueBranchId?: StringFieldUpdateOperationsInput | string
     receiveBranchId?: StringFieldUpdateOperationsInput | string
+    isProduction?: IntFieldUpdateOperationsInput | number
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -88439,6 +88523,7 @@ export namespace Prisma {
     rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    issueSerialNo?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -88454,6 +88539,7 @@ export namespace Prisma {
     rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    issueSerialNo?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -88469,6 +88555,7 @@ export namespace Prisma {
     rate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    issueSerialNo?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

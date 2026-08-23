@@ -219,4 +219,30 @@ export class ReportsController {
   ) {
     return this.reportsService.getDiscountSummary({ fromDate, toDate, branchId: branchId || undefined });
   }
+
+  @Get('branchwise-delivery')
+  @ApiOperation({ summary: 'Factory-only Branchwise Delivery report: per-item, per-day issue quantities out of one branch' })
+  @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
+  @ApiQuery({ name: 'toDate', required: false, description: 'Range end date, inclusive (ISO 8601); defaults to fromDate' })
+  @ApiQuery({ name: 'issueBranchId', required: false, description: 'Issuing branch; defaults to the session branch' })
+  @ApiQuery({ name: 'receiveBranchId', required: false, description: 'Receiving branch — omit for all branches' })
+  @ApiResponse({ status: 200, description: 'Per-item rows with a qty column per day, plus total qty and amount' })
+  @ApiResponse({ status: 403, description: 'Session branch is not the Factory' })
+  getBranchwiseDeliveryReport(
+    @Query('fromDate') fromDate: string,
+    @Query('toDate') toDate: string,
+    @CurrentUser('branchId') sessionBranchId: string,
+    @Query('issueBranchId') issueBranchId?: string,
+    @Query('receiveBranchId') receiveBranchId?: string,
+  ) {
+    return this.reportsService.getBranchwiseDeliveryReport({
+      fromDate,
+      toDate: toDate || fromDate,
+      // The issuing branch defaults to the branch the user logged in at; the
+      // report page sends it explicitly once the user picks a different one.
+      issueBranchId: issueBranchId || sessionBranchId,
+      receiveBranchId: receiveBranchId || undefined,
+      sessionBranchId,
+    });
+  }
 }

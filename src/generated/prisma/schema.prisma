@@ -659,6 +659,9 @@ model Item_Issue {
   issueDate       DateTime?         @map("IssueDate")
   issueBranchId   String            @map("IssueBranchId") @db.Uuid
   receiveBranchId String            @map("ReceiveBranchId") @db.Uuid
+  /// 1 = this line was also written to Production as part of the same document.
+  /// See ProductionService#syncFromIssue.
+  isProduction    Int               @default(0) @map("IsProduction")
   isActive        Int?              @map("IsActive")
   createBy        String?           @map("CreateBy")
   createDate      DateTime?         @map("CreateDate")
@@ -682,6 +685,10 @@ model Production {
   rate           Decimal?          @map("Rate") @db.Decimal(18, 6)
   qty            Decimal?          @map("Qty") @db.Decimal(18, 6)
   remarks        String?           @map("Remarks") @db.VarChar(500)
+  /// Set when this row was produced BY a Stock Issue document (its SerialNo);
+  /// null for entries made directly on the Production Entry screen. The issue's
+  /// edit path deletes and rewrites every row carrying its serial.
+  issueSerialNo  String?           @map("IssueSerialNo") @db.VarChar(50)
   isActive       Int?              @map("IsActive")
   createBy       String?           @map("CreateBy") @db.VarChar(50)
   createDate     DateTime?         @map("CreateDate")
@@ -693,6 +700,7 @@ model Production {
   @@index([branchId])
   @@index([itemId])
   @@index([productionDate])
+  @@index([issueSerialNo])
   @@map("Production")
 }
 

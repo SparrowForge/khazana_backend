@@ -458,7 +458,7 @@ export class SalesService {
     const branch = sale.branchId
       ? await this.prisma.branch.findUnique({
           where: { id: sale.branchId },
-          select: { branchName: true, address: true, vatNo: true, mobileNo: true },
+          select: { branchCode: true, branchName: true, address: true, vatNo: true, mobileNo: true },
         })
       : null;
 
@@ -517,6 +517,7 @@ export class SalesService {
         : null,
       branch: branch
         ? {
+            code: branch.branchCode,
             name: branch.branchName,
             address: branch.address,
             vatNo: branch.vatNo,
@@ -576,7 +577,7 @@ export class SalesService {
     const branch = sale.branchId
       ? await this.prisma.branch.findUnique({
           where: { id: sale.branchId },
-          select: { branchName: true, address: true, vatNo: true, mobileNo: true },
+          select: { branchCode: true, branchName: true, address: true, vatNo: true, mobileNo: true },
         })
       : null;
 
@@ -613,6 +614,7 @@ export class SalesService {
         : null,
       branch: branch
         ? {
+            code: branch.branchCode,
             name: branch.branchName,
             address: branch.address,
             vatNo: branch.vatNo,

@@ -6,11 +6,18 @@ import { IssueStockDto, UpdateIssueStockDto } from './dto/issue-stock.dto';
 import { BranchPaginationQueryDto, DateRangeQueryDto, dateRangeFilter } from '../common/dto';
 import { ItemQueryDto } from './dto/item-query.dto';
 import { assertStockAvailable, buildPaginationMeta, toBranchUuid } from '../common/helpers';
+import { ProductionService } from '../production/production.service';
 import type { Prisma } from '../generated/prisma';
 
 @Injectable()
 export class InventoryService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    // Stock Issue lines flagged `isProduction` are written to Production too.
+    // The production side lives in ProductionService so both entry points obey
+    // one set of rules (factory-only, VAT-inclusive rate, stock direction).
+    private production: ProductionService,
+  ) {}
 
   /** A branch transfer and a plain stock issue both write to Item_Issue — the
    *  only thing separating them is the serial prefix a transfer gets ('TRF'),
@@ -603,6 +610,23 @@ export class InventoryService {
 
   // ── Issue ─────────────────────────────────────────────────────
 
+  /** The lines this document also records as production. Anything with qty <= 0
+   *  is dropped before it gets here, so "production checked but qty 0" simply
+   *  produces nothing rather than an empty Production row. */
+  private productionLines(items: IssueStockDto['items']) {
+    return items
+      .filter((l) => l.isProduction && Number(l.qty) > 0)
+      .map((l) => ({ itemId: l.itemId, qty: l.qty, unitPrice: l.unitPrice }));
+  }
+
+  /** Flagging a line as production writes a Production row, so the session has
+   *  to clear the very same factory-only gate the Production Entry screen does.
+   *  Returns the branch (for its code) when there is production to write. */
+  private async assertMayProduce(items: IssueStockDto['items'], branchId: string) {
+    if (!this.productionLines(items).length) return null;
+    return this.production.assertFactoryBranch(branchId);
+  }
+
   async issueStock(dto: IssueStockDto, createdBy: string) {
     if (!dto.items?.length) throw new BadRequestException('No items to issue');
     const codeByItemId = await this.itemCodesByIds(dto.items.map((i) => i.itemId));
@@ -613,8 +637,24 @@ export class InventoryService {
     // Every line in this request shares one serial number so the whole
     // document can be looked up / edited / deleted together later.
     const serialNo = dto.serialNo || this.buildSerialNo('ISS', branchCode, baseCount + 1);
+    const producedAt = await this.assertMayProduce(dto.items, dto.issueBranchId);
 
     return this.prisma.$transaction(async (tx) => {
+      // Production runs FIRST, because it is what makes the goods this document
+      // then issues out: an item produced and shipped the same day can be issued
+      // on a zero opening balance, and the availability check below must see the
+      // units the production side just added.
+      if (producedAt) {
+        await this.production.syncFromIssue(tx, {
+          issueSerialNo: serialNo,
+          branchId: producedAt.id,
+          branchCode: producedAt.branchCode,
+          date: issueDate,
+          lines: this.productionLines(dto.items),
+          user: createdBy,
+        });
+      }
+
       // Inside the transaction that decrements, so a concurrent issue can't pass
       // the same check on the same units. Sums repeated lines of one item too.
       await assertStockAvailable(tx, dto.items);
@@ -632,6 +672,7 @@ export class InventoryService {
             serialNo,
             // Column keeps the legacy misspelling; the API field does not.
             voucharNo: dto.voucherNo,
+            isProduction: line.isProduction && Number(line.qty) > 0 ? 1 : 0,
             isActive: 1,
             createBy: createdBy,
             createDate: new Date(),
@@ -686,6 +727,7 @@ export class InventoryService {
         itemName: r.itemId ? nameByItemId.get(r.itemId) : undefined,
         qty: Number(r.qty ?? 0),
         unitPrice: Number(r.unitPrice ?? 0),
+        isProduction: r.isProduction === 1,
       })),
     };
   }
@@ -700,17 +742,25 @@ export class InventoryService {
     ]);
     const issueDate = new Date(dto.issueDate);
 
-    return this.prisma.$transaction(async (tx) => {
-      // What this document already took out is available to it again, so an
-      // amendment isn't blocked by its own earlier deduction.
-      await assertStockAvailable(
-        tx,
-        dto.items,
-        existing.map((r) => ({ itemId: r.itemId, qty: Number(r.qty ?? 0) })),
-      );
+    const issueBranchId = dto.issueBranchId ?? existing[0].issueBranchId;
+    // The guard runs before the transaction opens, so a non-factory session is
+    // refused without ever touching stock. `null` when this edit produces
+    // nothing — the sync still runs, to clear whatever the last version did.
+    const producedAt =
+      (await this.assertMayProduce(dto.items, issueBranchId)) ??
+      (await this.prisma.branch.findUnique({
+        where: { id: issueBranchId },
+        select: { id: true, branchCode: true },
+      }));
 
-      // Issuing decrements stock; restore what this document previously took
-      // out, then wipe its lines.
+    return this.prisma.$transaction(async (tx) => {
+      // Editing is purge-and-replace. Reverse this document's whole previous
+      // effect first, then apply the new one — every check below then reads the
+      // real balance inside the transaction rather than a pre-computed net, so
+      // the awkward cases (a line that moved from production to plain, or the
+      // reverse) need no special handling.
+      //
+      // Step 1: issuing decrements stock, so give back what the old lines took.
       for (const row of existing) {
         if (row.itemId) {
           const itemCode = codeByItemId.get(row.itemId)!;
@@ -718,6 +768,24 @@ export class InventoryService {
         }
       }
       await tx.item_Issue.deleteMany({ where: { serialNo: key } });
+
+      // Step 2: withdraw the old production rows and write the new ones. Passing
+      // an empty line set is how an edit that unticks every box removes the
+      // production side altogether.
+      if (producedAt) {
+        await this.production.syncFromIssue(tx, {
+          issueSerialNo: key,
+          branchId: producedAt.id,
+          branchCode: producedAt.branchCode,
+          date: issueDate,
+          lines: this.productionLines(dto.items),
+          user: updatedBy,
+        });
+      }
+
+      // Step 3: the replacement lines, checked against the balance those two
+      // steps just left behind.
+      await assertStockAvailable(tx, dto.items);
 
       const issues = [];
       for (const line of dto.items) {
@@ -727,10 +795,11 @@ export class InventoryService {
             qty: line.qty,
             unitPrice: line.unitPrice,
             issueDate,
-            issueBranchId: dto.issueBranchId ?? existing[0].issueBranchId,
+            issueBranchId,
             receiveBranchId: dto.receiveBranchId ?? existing[0].receiveBranchId,
             serialNo: key,
             voucharNo: dto.voucherNo,
+            isProduction: line.isProduction && Number(line.qty) > 0 ? 1 : 0,
             isActive: 1,
             createBy: existing[0].createBy,
             createDate: existing[0].createDate,
@@ -759,6 +828,16 @@ export class InventoryService {
         }
       }
       await tx.item_Issue.deleteMany({ where: { serialNo: key } });
+      // An empty line set withdraws and deletes whatever this document produced.
+      // No factory check here: deleting must stay possible even from a session
+      // that could not have created the production rows in the first place.
+      await this.production.syncFromIssue(tx, {
+        issueSerialNo: key,
+        branchId: existing[0].issueBranchId,
+        date: existing[0].issueDate ?? new Date(),
+        lines: [],
+        user: 'system',
+      });
     });
     return { message: 'Stock issue deleted successfully' };
   }

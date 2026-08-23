@@ -5420,6 +5420,66 @@
         ]
       }
     },
+    "/reports/branchwise-delivery": {
+      "get": {
+        "operationId": "ReportsController_getBranchwiseDeliveryReport",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "required": true,
+            "in": "query",
+            "description": "Range start date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end date, inclusive (ISO 8601); defaults to fromDate",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "issueBranchId",
+            "required": false,
+            "in": "query",
+            "description": "Issuing branch; defaults to the session branch",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "receiveBranchId",
+            "required": false,
+            "in": "query",
+            "description": "Receiving branch — omit for all branches",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Per-item rows with a qty column per day, plus total qty and amount"
+          },
+          "403": {
+            "description": "Session branch is not the Factory"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Factory-only Branchwise Delivery report: per-item, per-day issue quantities out of one branch",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
     "/admin/branches": {
       "get": {
         "operationId": "AdminController_findAllBranches",
@@ -7395,6 +7455,12 @@
             "type": "number",
             "example": 120,
             "description": "Unit cost price"
+          },
+          "isProduction": {
+            "type": "boolean",
+            "example": true,
+            "default": false,
+            "description": "Also record this line as Production (same item and qty). Factory branch only — a non-factory session is refused."
           }
         },
         "required": [
