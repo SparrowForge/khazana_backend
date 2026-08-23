@@ -1,14 +1,12 @@
-import {
-  Injectable,
-  UnauthorizedException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException, ServiceUnavailableException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
 import { PrismaService } from '../database/prisma.service';
 import { MailService } from '../mail/mail.service';
 import { LoginDto } from './dto/login.dto';
+import { GoogleLoginDto, GoogleCredentialDto } from './dto/google-login.dto';
+import { OAuth2Client, type TokenPayload } from 'google-auth-library';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { VerifyEmailDto } from './dto/verify-email.dto';
 import { ResendVerificationDto } from './dto/resend-verification.dto';
@@ -92,6 +90,139 @@ export class AuthService {
         // Branch-scoped features (e.g. Production Entry, factory-only) key off
         // the code as well as the name, so the name can be edited freely.
         branchCode: branchMapping.branch.branchCode,
+        permissions: user.userRoles,
+      },
+    };
+  }
+
+  // ── Google Sign-In ─────────────────────────────────────────────
+  //
+  // Google is an IDENTITY provider here, not an account source: it proves who
+  // the person is, and that identity is then matched to an existing User by
+  // email. Signing in with a Google account nobody has been given does NOT
+  // create one — self-provisioning into an ERP would be a hole, not a feature.
+
+  /** Lazily built so the app still boots without Google configured; the error
+   *  only surfaces on an actual Google sign-in attempt. */
+  private googleClient?: OAuth2Client;
+
+  private getGoogleClient(): OAuth2Client {
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      throw new ServiceUnavailableException(
+        'Google sign-in is not configured on this server (GOOGLE_CLIENT_ID is not set)',
+      );
+    }
+    if (!this.googleClient) this.googleClient = new OAuth2Client(clientId);
+    return this.googleClient;
+  }
+
+  /**
+   * Verify the ID token and return its payload.
+   *
+   * `verifyIdToken` checks the signature against Google's rotating public keys,
+   * the expiry, the issuer AND the audience — the audience check is what stops a
+   * token minted for some other site being replayed here, so `audience` must
+   * always be passed.
+   */
+  private async verifyGoogleToken(credential: string): Promise<TokenPayload> {
+    // Resolved BEFORE the try: a server with no GOOGLE_CLIENT_ID must surface as
+    // 503 "not configured", not be swallowed by the catch below and reported as
+    // a bad token — that would send an operator hunting for a client-side fault.
+    const client = this.getGoogleClient();
+    const clientId = process.env.GOOGLE_CLIENT_ID!;
+    let ticket;
+    try {
+      ticket = await client.verifyIdToken({ idToken: credential, audience: clientId });
+    } catch {
+      // Deliberately vague: a caller probing with forged tokens learns nothing.
+      throw new UnauthorizedException('Google sign-in failed');
+    }
+    const payload = ticket.getPayload();
+    if (!payload?.email) throw new UnauthorizedException('Google sign-in failed');
+    // An unverified Google address proves nothing about who owns it.
+    if (!payload.email_verified) {
+      throw new UnauthorizedException('This Google account has no verified email address');
+    }
+    return payload;
+  }
+
+  /** Match a verified Google identity to a local user. Email is the only link —
+   *  there is no Google id column — so an account with no email can never sign
+   *  in this way. */
+  private async userForGoogleEmail(email: string) {
+    const user = await this.prisma.user.findFirst({
+      where: { email: { equals: email, mode: 'insensitive' } },
+      include: { userRoles: true, branchMappings: { include: { branch: true } } },
+    });
+    if (!user || user.isActive !== 'Y') {
+      throw new UnauthorizedException('No active account is linked to this Google address');
+    }
+    if (user.validUntil && user.validUntil < new Date()) {
+      throw new UnauthorizedException('Account has expired');
+    }
+    return user;
+  }
+
+  /** Step 1 — which branches this Google identity may sign in at. Mirrors the
+   *  username-driven `getUserBranches`, so the UI flow is the same either way. */
+  async googleBranches(dto: GoogleCredentialDto) {
+    const payload = await this.verifyGoogleToken(dto.credential);
+    const user = await this.userForGoogleEmail(payload.email!);
+    return {
+      email: user.email,
+      name: user.name ?? payload.name ?? null,
+      branches: user.branchMappings.map((m) => ({
+        id: m.branch.id,
+        branchCode: m.branch.branchCode,
+        branchName: m.branch.branchName,
+      })),
+    };
+  }
+
+  /** Step 2 — issue our own session token. `branchId` may be omitted when the
+   *  account maps to exactly one branch, which is the common case. */
+  async googleLogin(dto: GoogleLoginDto) {
+    const payload = await this.verifyGoogleToken(dto.credential);
+    const user = await this.userForGoogleEmail(payload.email!);
+
+    const mapping = dto.branchId
+      ? user.branchMappings.find((m) => m.branchId === dto.branchId)
+      : user.branchMappings.length === 1
+        ? user.branchMappings[0]
+        : undefined;
+    if (!mapping) {
+      throw new UnauthorizedException(
+        user.branchMappings.length
+          ? 'Select a branch to sign in at'
+          : 'No branch is assigned to this account',
+      );
+    }
+
+    await this.prisma.auditLog.create({
+      data: {
+        actionPage: 'Login',
+        // Recorded distinctly so the audit trail shows HOW the session started.
+        actionDone: 'User logged in via Google',
+        userName: user.userName,
+        date: new Date(),
+        module: 'AUTH',
+      },
+    });
+
+    const jwt = { sub: user.id, userName: user.userName, branchId: mapping.branchId };
+    return {
+      accessToken: this.jwtService.sign(jwt),
+      user: {
+        id: user.id,
+        userName: user.userName,
+        userPrefix: user.userPrefix,
+        name: user.name,
+        email: user.email,
+        isVerified: user.isVerified,
+        branchId: mapping.branchId,
+        branchName: mapping.branch.branchName,
+        branchCode: mapping.branch.branchCode,
         permissions: user.userRoles,
       },
     };

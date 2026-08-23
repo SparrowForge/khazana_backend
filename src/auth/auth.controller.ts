@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, UseGuards, Request, Patch, Query } from '@nestjs/common';
+import { Controller, Post, Get, Body, UseGuards, Request, Patch, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiQuery, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -8,6 +8,7 @@ import { ResendVerificationDto } from './dto/resend-verification.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { VerifyResetCodeDto } from './dto/verify-reset-code.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { GoogleLoginDto, GoogleCredentialDto } from './dto/google-login.dto';
 import { JwtAuthGuard } from './guards/jwt.guard';
 
 @ApiTags('Auth')
@@ -31,6 +32,34 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Invalid credentials or email not verified' })
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
+  }
+
+  @Post('google/branches')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Branches a Google identity may sign in at',
+    description: 'Verifies the Google ID token and returns the branches mapped to the matching account.',
+  })
+  @ApiResponse({ status: 200, description: 'Matching account and its branches' })
+  @ApiResponse({ status: 401, description: 'Invalid token, or no active account linked to that address' })
+  @ApiResponse({ status: 503, description: 'Google sign-in is not configured on this server' })
+  googleBranches(@Body() dto: GoogleCredentialDto) {
+    return this.authService.googleBranches(dto);
+  }
+
+  @Post('google')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Sign in with Google',
+    description:
+      'Verifies the Google ID token server-side and issues a session token. '
+      + 'Does NOT create accounts — the Google address must already belong to an active user.',
+  })
+  @ApiResponse({ status: 200, description: 'Signed in' })
+  @ApiResponse({ status: 401, description: 'Invalid token, unknown address, or no branch selected' })
+  @ApiResponse({ status: 503, description: 'Google sign-in is not configured on this server' })
+  googleLogin(@Body() dto: GoogleLoginDto) {
+    return this.authService.googleLogin(dto);
   }
 
   @UseGuards(JwtAuthGuard)
