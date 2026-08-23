@@ -84,7 +84,7 @@ async function main() {
         { menuName: 'Pricing', controlName: 'Pricing', order: 9, parentMenu: null },
         { menuName: 'Finance', controlName: 'Finance', order: 10, parentMenu: null },
         { menuName: 'Reports', controlName: 'Reports', order: 11, parentMenu: null },
-        { menuName: 'Administration', controlName: 'Admin', order: 12, parentMenu: null },
+        { menuName: 'Administration', controlName: 'Admin', order: 13, parentMenu: null },
         { menuName: 'Users', controlName: 'Users', order: 1, parentMenu: 'Admin' },
         { menuName: 'Roles & Permissions', controlName: 'RolesPermissions', order: 2, parentMenu: 'Admin' },
     ];

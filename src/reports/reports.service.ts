@@ -1989,18 +1989,20 @@ export class ReportsService {
             prices: {
               where: { priceIsActive: 1 },
               orderBy: { priceFromDate: 'desc' },
-              select: { priceListPrice: true, priceFromDate: true, priceToDate: true },
+              select: { priceListPrice: true, priceVatPercent: true, priceFromDate: true, priceToDate: true },
             },
           },
         })
       : [];
     const pricesById = new Map(priceRows.map((i) => [i.id, i.prices]));
-    const listPriceOn = (itemId: string, on: Date) => {
+    /** The price row in force on a given date — list price and VAT percent read
+     *  together, so a rate can never be grossed up by another row's VAT. */
+    const priceOn = (itemId: string, on: Date) => {
       const prices = pricesById.get(itemId) ?? [];
       const p =
         prices.find((pr) => (!pr.priceFromDate || pr.priceFromDate <= on) && (!pr.priceToDate || pr.priceToDate >= on)) ??
         prices[0];
-      return num(p?.priceListPrice);
+      return { list: num(p?.priceListPrice), vatPercent: num(p?.priceVatPercent) };
     };
 
     type Row = {
@@ -2035,7 +2037,21 @@ export class ReportsService {
       row.totalQty += qty;
       // Money is Σ(qty × unitPrice) off each issue line, so a rate that changed
       // mid-range still values every delivery at what it actually went out at.
-      const unitPrice = num(i.unitPrice) || listPriceOn(i.itemId, i.issueDate ?? from);
+      //
+      // The sheet prints Rate and Amount INCLUSIVE of VAT, but Item_Issue's
+      // unitPrice is the bare ex-VAT t_Price.priceListPrice (unlike
+      // Production.rate, which is already gross) — so it is grossed up here by
+      // the VAT percent on the price row in force that day. The fallback for a
+      // line saved without a price is that same row's list price, grossed up
+      // identically so both paths agree.
+      // Rounded to 2dp BEFORE multiplying: the stored ex-VAT price is itself a
+      // 2dp figure (1636.36, not 1636.3636...), so grossing up leaves 1799.996 —
+      // which would print as Rate 1,800.00 against an Amount of 53,999.88 for 30
+      // units and read as an arithmetic error on the sheet. Rounding the unit
+      // price first keeps Rate x TotalQty = Amount exactly, as it did before VAT
+      // was added.
+      const price = priceOn(i.itemId, i.issueDate ?? from);
+      const unitPrice = r2signed((num(i.unitPrice) || price.list) * (1 + price.vatPercent / 100));
       row.amount += qty * unitPrice;
       acc.set(i.itemId, row);
     }
@@ -2047,9 +2063,9 @@ export class ReportsService {
         sl: idx + 1,
         totalQty: r2signed(r.totalQty),
         amount: r2signed(r.amount),
-        // The printed "Rate" column is the effective unit price — derived from
-        // the money rather than read off one line, so it stays consistent with
-        // Amount even when lines went out at different prices.
+        // The printed "Rate" column is the effective VAT-INCLUSIVE unit price —
+        // derived from the money rather than read off one line, so it stays
+        // consistent with Amount even when lines went out at different prices.
         rate: r.totalQty !== 0 ? r2signed(r.amount / r.totalQty) : 0,
       }));
 
