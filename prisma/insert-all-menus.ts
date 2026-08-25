@@ -35,6 +35,9 @@ const newMenus = [
   // would silently insert nothing.
   { menuName: 'Discount Log Report', controlName: 'DiscountLogReport', order: 3, parentMenu: 'FactoryReport', module: 'Inventory' },
   { menuName: 'Demand Report', controlName: 'DemandReport', order: 4, parentMenu: 'FactoryReport', module: 'Inventory' },
+  // Same page as Reports > Sales History Summary (the route re-exports it); own
+  // ControlName for the same uniqueness reason as Discount Log Report above.
+  { menuName: 'Sales History Report', controlName: 'SalesHistoryReport', order: 5, parentMenu: 'FactoryReport', module: null },
   { menuName: 'Packet Info', controlName: 'PacketInfo', order: 1, parentMenu: 'Packets', module: 'Sale' },
   { menuName: 'Packet Receive', controlName: 'PacketReceive', order: 2, parentMenu: 'Packets', module: 'Sale' },
   { menuName: 'Packet Issue', controlName: 'PacketIssue', order: 3, parentMenu: 'Packets', module: 'Sale' },

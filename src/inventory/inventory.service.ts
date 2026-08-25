@@ -464,6 +464,14 @@ export class InventoryService {
     return new Map(rows.map((r) => [r.id, r.itmName ?? '']));
   }
 
+  /** Unit of measure per item. The Delivery Challan prints it in brackets after
+   *  the name ("Chanar Laddu (KG)"), so an issue document has to carry it. */
+  private async itemUomsByIds(ids: string[]): Promise<Map<string, string>> {
+    const uniqueIds = [...new Set(ids)];
+    const rows = await this.prisma.item_Information.findMany({ where: { id: { in: uniqueIds } }, select: { id: true, itmUOM: true } });
+    return new Map(rows.map((r) => [r.id, r.itmUOM ?? '']));
+  }
+
   async receiveStock(dto: ReceiveStockDto, createdBy: string, userBranchId: string) {
     const purDate = new Date(dto.purDate);
     // Item_Receive.branchId / receiveBranchID are NOT NULL Branch UUIDs. Resolve
@@ -933,9 +941,10 @@ export class InventoryService {
     const rows = await this.findIssueRows(serialNo);
     const [first] = rows;
     const itemIds = rows.map((r) => r.itemId).filter((id): id is string => !!id);
-    const [nameByItemId, vatByItemId] = await Promise.all([
+    const [nameByItemId, vatByItemId, uomByItemId] = await Promise.all([
       this.itemNamesByIds(itemIds),
       this.vatPercentByItemIds(itemIds),
+      this.itemUomsByIds(itemIds),
     ]);
     return {
       serialNo: first.serialNo || first.id,
@@ -949,6 +958,7 @@ export class InventoryService {
         return {
           itemId: r.itemId,
           itemName: r.itemId ? nameByItemId.get(r.itemId) : undefined,
+          uom: r.itemId ? uomByItemId.get(r.itemId) : undefined,
           qty: Number(r.qty ?? 0),
           // Kept as stored (ex-VAT) so nothing that already reads this field
           // starts double-counting; the printed document uses the field below.

@@ -1288,6 +1288,9 @@ export class ReportsService {
     interface HistoryLine extends Record<string, unknown> {
       date: Date | null;
       invoiceNo: string;
+      /** Customer on the invoice. Blank on running (POS) sales — t_SOMstr and
+       *  t_SOMstV carry no customer at all, those are walk-in counter sales. */
+      clientName: string;
       itemName: string;
       uom: string;
       qty: number;
@@ -1303,7 +1306,7 @@ export class ReportsService {
     /** Turn one invoice into its item rows. `pay` names the column(s) each
      *  line's total is booked into; the caller decides them from the ledger. */
     const pushInvoice = (
-      header: { date: Date | null; invoiceNo: string; branchId: string | null },
+      header: { date: Date | null; invoiceNo: string; clientName?: string; branchId: string | null },
       rawLines: { itemName: string; uom: string; qty: number; price: number; amount: number; discount: number; vat: number }[],
       invoiceDiscount: number,
       payColumns: string[],
@@ -1316,6 +1319,7 @@ export class ReportsService {
         allItems.push({
           date: header.date,
           invoiceNo: header.invoiceNo,
+          clientName: header.clientName ?? '',
           itemName: line.itemName,
           uom: line.uom,
           qty: line.qty,
@@ -1371,7 +1375,7 @@ export class ReportsService {
     for (const s of creditSales) {
       const channel = ReportsService.channelColumn(s.customer?.name);
       pushInvoice(
-        { date: s.invDate, invoiceNo: s.invNo ?? '', branchId: s.branchId },
+        { date: s.invDate, invoiceNo: s.invNo ?? '', clientName: s.customer?.name ?? '', branchId: s.branchId },
         s.details.map((d) => ({
           itemName: d.item?.itmName || d.item?.itmCode || '',
           uom: d.item?.itmUOM ?? '',
@@ -1394,7 +1398,7 @@ export class ReportsService {
     for (const s of vatCreditSales) {
       const channel = ReportsService.channelColumn(s.customer?.name);
       pushInvoice(
-        { date: s.invDate, invoiceNo: s.invNo ?? '', branchId: s.branchId },
+        { date: s.invDate, invoiceNo: s.invNo ?? '', clientName: s.customer?.name ?? '', branchId: s.branchId },
         s.details.map((d) => {
           const item = vatItemById.get(d.itemOId ?? '');
           return {
