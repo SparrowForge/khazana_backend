@@ -446,6 +446,20 @@ export class SalesService {
    *  billing details, the branch letterhead (VAT Reg No / Mushak 6.3), and the
    *  priced lines. CSMaster.branchId has no Prisma relation, so the branch is
    *  looked up separately. */
+  /**
+   * The customer-facing copy, served without authentication.
+   *
+   * Everything here reaches anyone holding the link, so the payload is limited
+   * to what is printed on the paper invoice the customer already has. The
+   * internal row id is dropped: they have it in the URL, and echoing it in the
+   * body invites it into logs, screenshots and forwarded pages as a *value*
+   * rather than a secret.
+   */
+  async getPublicCreditSaleInvoice(id: string) {
+    const { id: _internalId, ...invoice } = await this.getCreditSaleInvoice(id);
+    return invoice;
+  }
+
   async getCreditSaleInvoice(id: string) {
     const sale = await this.prisma.cSMaster.findUnique({
       where: { id },

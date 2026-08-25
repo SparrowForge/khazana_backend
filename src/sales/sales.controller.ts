@@ -9,7 +9,7 @@ import { SalesQueryDto } from './dto/sales-query.dto';
 import { UpdateSalesDto } from './dto/update-sales.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
-import { CurrentUser, RequiredPermission } from '../common/decorators';
+import { CurrentUser, Public, RequiredPermission } from '../common/decorators';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Sales')
@@ -113,6 +113,23 @@ export class SalesController {
   @ApiResponse({ status: 404, description: 'Credit sale not found' })
   getCreditSaleInvoice(@Param('id') id: string) {
     return this.salesService.getCreditSaleInvoice(id);
+  }
+
+  // UNAUTHENTICATED — this is the link a customer is sent, so it answers anyone
+  // on the internet who has the URL.
+  //
+  // The sale's UUID is the whole of the access control: 122 random bits, so it
+  // can't be guessed or walked, but equally it can't be revoked once sent and it
+  // never expires. That makes the id a bearer token, which is why this is a
+  // separate route from the staff one above rather than `@Public()` bolted onto
+  // it — the two must be able to return different things, and the trimming below
+  // must never silently follow a change made for staff.
+  @Public()
+  @Get('public/credit/:id/invoice')
+  @ApiOperation({ summary: 'PUBLIC: a credit sale invoice, for the share link sent to the customer' })
+  @ApiResponse({ status: 404, description: 'Credit sale not found' })
+  getPublicCreditSaleInvoice(@Param('id') id: string) {
+    return this.salesService.getPublicCreditSaleInvoice(id);
   }
 
   @Patch('credit/:id')
