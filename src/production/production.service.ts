@@ -198,9 +198,23 @@ export class ProductionService {
     const rows = await this.findRows(serialNo);
     const [first] = rows;
     const nameByItemId = await this.itemNamesByIds(rows.map((r) => r.itemId).filter((id): id is string => !!id));
+
+    let branchName: string | undefined;
+    let branchAddress: string | undefined;
+    if (first.branchId) {
+      const branch = await this.prisma.branch.findUnique({
+        where: { id: first.branchId },
+        select: { branchName: true, address: true },
+      });
+      branchName = branch?.branchName;
+      branchAddress = branch?.address ?? undefined;
+    }
+
     return {
       serialNo: first.serialNo || first.id,
       branchId: first.branchId,
+      branchName,
+      branchAddress,
       productionDate: first.productionDate,
       remarks: first.remarks,
       items: rows.map((r) => ({
