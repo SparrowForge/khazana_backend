@@ -555,16 +555,34 @@ export class InventoryService {
     // Item_Receive.itemName is a denormalized column the create/update flows
     // never populate (the frontend only ever sends itemId) — join through
     // Item_Information for the real name instead of trusting that column.
-    const nameByItemId = await this.itemNamesByIds(rows.map((r) => r.itemId).filter((id): id is string => !!id));
+    const itemIds = rows.map((r) => r.itemId).filter((id): id is string => !!id);
+    const nameByItemId = await this.itemNamesByIds(itemIds);
+    // The Goods Received Note prints the unit next to the item name, the same
+    // way the Delivery Challan it is checked against does.
+    const uomByItemId = await this.itemUomsByIds(itemIds);
+
+    // The receiving branch owns this document, so its name and address are the
+    // letterhead of the printed pad.
+    const receiveBranchId = first.receiveBranchID;
+    const branch = receiveBranchId
+      ? await this.prisma.branch.findUnique({
+          where: { id: receiveBranchId },
+          select: { branchName: true, address: true },
+        })
+      : null;
+
     return {
       serialNo: first.serialNo || first.id,
       voucherNo: first.voucharNo,
       purDate: first.purDate,
-      branchId: first.receiveBranchID,
+      branchId: receiveBranchId,
+      branchName: branch?.branchName ?? undefined,
+      branchAddress: branch?.address ?? undefined,
       fromBranchId: first.branchId,
       items: rows.map((r) => ({
         itemId: r.itemId,
         itemName: (r.itemId ? nameByItemId.get(r.itemId) : undefined) || r.itemName || undefined,
+        uom: r.itemId ? uomByItemId.get(r.itemId) : undefined,
         qty: Number(r.qty ?? 0),
       })),
     };
