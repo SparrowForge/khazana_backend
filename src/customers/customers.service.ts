@@ -163,6 +163,9 @@ export class CustomersService {
   }
 
   // Ledger formula: outstanding = credit sales − money receipts − order advances.
+  // A credit sale's debit is TotalAmount + TotalVat − TotalDiscount: TotalAmount
+  // is net of VAT, so dropping TotalVat under-bills the customer by the whole
+  // VAT of every invoice.
   // Debits are net credit sales (CSMaster + CSVMaster, net of discount); credits
   // are money receipts (Customer_Transaction) and order advance payments
   // (OrderReceive_Master.advance). CSVMaster still keys on the string
@@ -173,11 +176,11 @@ export class CustomersService {
     const [sales, vatSales, payments, advances] = await this.prisma.$transaction([
       this.prisma.cSMaster.findMany({
         where: { customerId: customer.id, isActive: 1 },
-        select: { id: true, invNo: true, invDate: true, totalAmount: true, totalDiscount: true },
+        select: { id: true, invNo: true, invDate: true, totalAmount: true, totalVat: true, totalDiscount: true },
       }),
       this.prisma.cSVMaster.findMany({
         where: { clientCode: customer.code },
-        select: { id: true, invNo: true, invDate: true, totalAmount: true, totalDiscount: true },
+        select: { id: true, invNo: true, invDate: true, totalAmount: true, totalVat: true, totalDiscount: true },
       }),
       this.prisma.customer_Transaction.findMany({
         where: { customerId: customer.id },
@@ -194,14 +197,14 @@ export class CustomersService {
         id: s.id,
         date: s.invDate,
         description: `Credit Sale — Inv ${s.invNo}`,
-        debit: num(s.totalAmount) - num(s.totalDiscount),
+        debit: num(s.totalAmount) + num(s.totalVat) - num(s.totalDiscount),
         credit: 0,
       })),
       ...vatSales.map((s) => ({
         id: s.id,
         date: s.invDate,
         description: `Credit Sale (VAT) — Inv ${s.invNo}`,
-        debit: num(s.totalAmount) - num(s.totalDiscount),
+        debit: num(s.totalAmount) + num(s.totalVat) - num(s.totalDiscount),
         credit: 0,
       })),
       ...payments.map((p) => ({
@@ -242,11 +245,11 @@ export class CustomersService {
     const [salesTotal, vatSalesTotal, paidTotal, advanceTotal] = await this.prisma.$transaction([
       this.prisma.cSMaster.aggregate({
         where: { customerId: customer.id, isActive: 1 },
-        _sum: { totalAmount: true, totalDiscount: true },
+        _sum: { totalAmount: true, totalVat: true, totalDiscount: true },
       }),
       this.prisma.cSVMaster.aggregate({
         where: { clientCode: customer.code },
-        _sum: { totalAmount: true, totalDiscount: true },
+        _sum: { totalAmount: true, totalVat: true, totalDiscount: true },
       }),
       this.prisma.customer_Transaction.aggregate({
         where: { customerId: customer.id },
@@ -258,8 +261,8 @@ export class CustomersService {
       }),
     ]);
     const totalSales =
-      num(salesTotal._sum.totalAmount) - num(salesTotal._sum.totalDiscount) +
-      num(vatSalesTotal._sum.totalAmount) - num(vatSalesTotal._sum.totalDiscount);
+      num(salesTotal._sum.totalAmount) + num(salesTotal._sum.totalVat) - num(salesTotal._sum.totalDiscount) +
+      num(vatSalesTotal._sum.totalAmount) + num(vatSalesTotal._sum.totalVat) - num(vatSalesTotal._sum.totalDiscount);
     const totalPaid = num(paidTotal._sum.receiveAmount);
     const totalAdvance = num(advanceTotal._sum.advance);
     return {

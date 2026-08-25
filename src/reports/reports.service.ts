@@ -1079,38 +1079,105 @@ export class ReportsService {
 
   // ── Customer Statement (running ledger of invoices and payments) ─────
 
+  /** What a credit invoice actually adds to the customer's outstanding.
+   *  TotalAmount is net of VAT, so the VAT must be added back before the
+   *  discount comes off — the same formula the sales list and the invoice
+   *  print use. Omitting TotalVat under-states every invoice on the
+   *  statement. */
+  private static invoiceDebit(m: { totalAmount?: unknown; totalVat?: unknown; totalDiscount?: unknown }): number {
+    return r2signed(num(m.totalAmount) + num(m.totalVat) - num(m.totalDiscount));
+  }
+
+  /**
+   * Customer statement for a date range.
+   *
+   * Returns the opening balance (everything dated before `from`), the debit /
+   * credit entries inside the range with a running balance carried on from that
+   * opening, and the period totals. Debits are credit sales (CSMaster +
+   * CSVMaster); credits are money receipts and order advances — the same three
+   * components as the customer ledger, so the closing balance here agrees with
+   * the customer's outstanding.
+   */
   async getCustomerStatement(clientCode: string | undefined, query: DateRangeQuery) {
     if (!clientCode) throw new BadRequestException('`customerCode` is required');
     const { from, to } = this.parseRange(query);
 
-    const [invoices, vatInvoices, payments] = await this.prisma.$transaction([
+    const customer = await this.prisma.customer.findFirst({
+      where: { code: clientCode },
+      select: { id: true, code: true, name: true },
+    });
+    if (!customer) throw new BadRequestException(`Customer '${clientCode}' not found`);
+
+    // Everything strictly before the range start rolls up into one figure.
+    const [openInv, openVatInv, openPay, openAdv] = await this.prisma.$transaction([
+      this.prisma.cSMaster.aggregate({
+        where: { customerId: customer.id, invDate: { lt: from }, isActive: 1 },
+        _sum: { totalAmount: true, totalVat: true, totalDiscount: true },
+      }),
+      this.prisma.cSVMaster.aggregate({
+        where: { clientCode: customer.code, invDate: { lt: from } },
+        _sum: { totalAmount: true, totalVat: true, totalDiscount: true },
+      }),
+      this.prisma.customer_Transaction.aggregate({
+        where: { customerId: customer.id, receiveDate: { lt: from } },
+        _sum: { receiveAmount: true },
+      }),
+      this.prisma.orderReceive_Master.aggregate({
+        where: { clientId: customer.id, orderDate: { lt: from }, isActive: 1, advance: { gt: 0 } },
+        _sum: { advance: true },
+      }),
+    ]);
+
+    const openingBalance = r2signed(
+      ReportsService.invoiceDebit(openInv._sum) +
+        ReportsService.invoiceDebit(openVatInv._sum) -
+        num(openPay._sum.receiveAmount) -
+        num(openAdv._sum.advance),
+    );
+
+    const [invoices, vatInvoices, payments, advances] = await this.prisma.$transaction([
       this.prisma.cSMaster.findMany({
-        where: { customer: { code: clientCode }, invDate: { gte: from, lte: to }, isActive: 1 },
+        where: { customerId: customer.id, invDate: { gte: from, lte: to }, isActive: 1 },
         orderBy: { invDate: 'asc' },
       }),
       this.prisma.cSVMaster.findMany({
-        where: { clientCode, invDate: { gte: from, lte: to } },
+        where: { clientCode: customer.code, invDate: { gte: from, lte: to } },
         orderBy: { invDate: 'asc' },
       }),
       this.prisma.customer_Transaction.findMany({
-        where: { customer: { code: clientCode }, receiveDate: { gte: from, lte: to } },
+        where: { customerId: customer.id, receiveDate: { gte: from, lte: to } },
         orderBy: { receiveDate: 'asc' },
+      }),
+      this.prisma.orderReceive_Master.findMany({
+        where: { clientId: customer.id, orderDate: { gte: from, lte: to }, isActive: 1, advance: { gt: 0 } },
+        orderBy: { orderDate: 'asc' },
       }),
     ]);
 
     const entries = [
-      ...invoices.map((i) => ({ id: i.id, date: i.invDate, description: 'Invoice', invoiceNo: i.invNo, debit: num(i.totalAmount) - num(i.totalDiscount), credit: 0 })),
-      ...vatInvoices.map((i) => ({ id: i.id, date: i.invDate, description: 'Invoice (VAT)', invoiceNo: i.invNo, debit: num(i.totalAmount) - num(i.totalDiscount), credit: 0 })),
-      ...payments.map((p) => ({ id: p.id, date: p.receiveDate, description: p.tType ?? 'Payment', invoiceNo: p.moneyReceptNo ?? '', debit: 0, credit: num(p.receiveAmount) })),
+      ...invoices.map((i) => ({ id: i.id, date: i.invDate, description: 'Invoice', invoiceNo: i.invNo, debit: ReportsService.invoiceDebit(i), credit: 0 })),
+      ...vatInvoices.map((i) => ({ id: i.id, date: i.invDate, description: 'Invoice (VAT)', invoiceNo: i.invNo, debit: ReportsService.invoiceDebit(i), credit: 0 })),
+      ...payments.map((p) => ({ id: p.id, date: p.receiveDate, description: p.tType ?? 'Payment', invoiceNo: p.moneyReceptNo ?? '', debit: 0, credit: r2signed(num(p.receiveAmount)) })),
+      ...advances.map((o) => ({ id: o.id, date: o.orderDate, description: 'Order Advance', invoiceNo: o.serialNo ?? '', debit: 0, credit: r2signed(num(o.advance)) })),
     ];
 
     entries.sort((a, b) => (a.date?.getTime() ?? 0) - (b.date?.getTime() ?? 0));
 
-    let balance = 0;
-    return entries.map((e) => {
-      balance += e.debit - e.credit;
+    let balance = openingBalance;
+    const items = entries.map((e) => {
+      balance = r2signed(balance + e.debit - e.credit);
       return { ...e, balance };
     });
+
+    const totalDebit = r2signed(items.reduce((s, e) => s + e.debit, 0));
+    const totalCredit = r2signed(items.reduce((s, e) => s + e.credit, 0));
+
+    return {
+      customer,
+      openingBalance,
+      items,
+      totals: { debit: totalDebit, credit: totalCredit, closingBalance: balance },
+    };
   }
 
   // ── Packet Analysis (received vs issued per packet) ──────────────────
