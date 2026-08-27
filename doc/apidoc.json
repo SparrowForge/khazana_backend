@@ -8732,7 +8732,7 @@
           "vehicleNo": {
             "type": "string",
             "example": "DHAKA METRO-TA-11-2233",
-            "description": "Registration of the vehicle leaving the factory"
+            "description": "Registration of the vehicle leaving the factory. Optional — a challan can be raised before the van is assigned."
           },
           "driverName": {
             "type": "string",
@@ -8766,7 +8766,6 @@
         },
         "required": [
           "challanDate",
-          "vehicleNo",
           "items"
         ]
       },
@@ -8786,7 +8785,7 @@
           "vehicleNo": {
             "type": "string",
             "example": "DHAKA METRO-TA-11-2233",
-            "description": "Registration of the vehicle leaving the factory"
+            "description": "Registration of the vehicle leaving the factory. Optional — a challan can be raised before the van is assigned."
           },
           "driverName": {
             "type": "string",
@@ -8816,7 +8815,6 @@
         },
         "required": [
           "challanDate",
-          "vehicleNo",
           "items"
         ]
       },
