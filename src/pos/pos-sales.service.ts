@@ -69,6 +69,11 @@ export class PosSalesService {
         id: d.id,
         itemId: d.sodetItemOID,
         productName: d.item?.itmName ?? d.item?.itmCode ?? '',
+        // Code and unit are surplus to the 80mm receipt but the A4 invoice
+        // prints the code beside the name and the challan prints the unit
+        // beside the quantity.
+        itemCode: d.item?.itmCode ?? '',
+        uom: d.item?.itmUOM ?? d.sodetUOM ?? '',
         qty: Number(d.sodetQTY ?? 0),
         rate: Number(d.sodetPrice ?? 0),
         vatPct: Number(d.sodetVATValue ?? 0),
