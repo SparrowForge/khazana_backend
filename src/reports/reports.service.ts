@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import { isFactoryBranch } from '../common/helpers';
+import { compareBranchesForDisplay, isFactoryBranch } from '../common/helpers';
 
 export interface DateRangeQuery {
   fromDate?: string;
@@ -2234,11 +2234,16 @@ export class ReportsService {
     // so the sheet keeps the same shape run to run, exactly like the printed form
     // with its fixed outlet columns. Narrowed to one column when a specific
     // "Demand From" branch was chosen.
-    const allBranches = await this.prisma.branch.findMany({
-      where: query.fromBranchId ? { id: query.fromBranchId } : {},
-      select: { id: true, branchCode: true, branchName: true },
-      orderBy: { branchCode: 'asc' },
-    });
+    //
+    // Sorted in app code rather than by Prisma: the columns run in the fixed
+    // reading order of the printed form (GMS1, GMS2, BMS, UMS, KMS, KhMS), which
+    // no `orderBy` can express.
+    const allBranches = (
+      await this.prisma.branch.findMany({
+        where: query.fromBranchId ? { id: query.fromBranchId } : {},
+        select: { id: true, branchCode: true, branchName: true },
+      })
+    ).sort(compareBranchesForDisplay);
     // A branch that actually raised a demand ALWAYS gets a column, even when it
     // is the branch being demanded from — the factory does raise demands on
     // itself, and dropping its column would silently hide those quantities from
