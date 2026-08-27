@@ -9133,6 +9133,11 @@
             "example": 50,
             "description": "Discount value — flat amount or percentage (0–100)"
           },
+          "guestName": {
+            "type": "string",
+            "example": "Mr. Rahman",
+            "description": "Walk-in customer's name → t_SOMstr.SoMstr_GuestName. Optional on every sale, and unrelated to the discount authoriser below — a running sale has no Customer row, so this is the only identity it carries. Shown in Sales History Summary; not printed on the receipt."
+          },
           "discountRemarks": {
             "type": "string",
             "example": "Manager Karim",
@@ -9193,6 +9198,11 @@
             "type": "number",
             "example": 50,
             "description": "Discount value — flat amount or percentage (0–100)"
+          },
+          "guestName": {
+            "type": "string",
+            "example": "Mr. Rahman",
+            "description": "Walk-in customer's name → t_SOMstr.SoMstr_GuestName. Optional on every sale, and unrelated to the discount authoriser below — a running sale has no Customer row, so this is the only identity it carries. Shown in Sales History Summary; not printed on the receipt."
           },
           "discountRemarks": {
             "type": "string",
@@ -9273,6 +9283,11 @@
             "type": "number",
             "example": 50,
             "description": "Discount value — flat ৳ amount or percentage (0–100)"
+          },
+          "guestName": {
+            "type": "string",
+            "example": "Mr. Rahman",
+            "description": "Walk-in customer's name → SoMstr_GuestName. Optional, and unrelated to the discount authoriser below."
           },
           "discountRemarks": {
             "type": "string",
