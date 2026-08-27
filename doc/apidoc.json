@@ -8703,16 +8703,25 @@
           "itemId": {
             "type": "string",
             "format": "uuid",
-            "description": "Item_Information UUID of the item loaded onto the vehicle"
+            "description": "Item_Information UUID when the line was picked from the catalogue. Omit for an ad-hoc line — goods typed straight onto the challan are NOT added to the Item table."
+          },
+          "itemName": {
+            "type": "string",
+            "example": "Soan Papri 200gm",
+            "description": "Printed description. Required when there is no itemId; sent for catalogue lines too, and stored as the line snapshot."
+          },
+          "uom": {
+            "type": "string",
+            "example": "Pcs",
+            "description": "Unit printed in the UOM column"
           },
           "qty": {
             "type": "number",
             "example": 25,
-            "description": "Quantity loaded (must be > 0)"
+            "description": "Quantity (must be > 0)"
           }
         },
         "required": [
-          "itemId",
           "qty"
         ]
       },
@@ -8724,10 +8733,24 @@
             "example": "2026-08-27",
             "description": "Challan date (ISO 8601)"
           },
+          "customerName": {
+            "type": "string",
+            "example": "Mr. Kabir",
+            "description": "Who the challan is made out to. Typed by hand — no Customer record is required."
+          },
+          "customerAddress": {
+            "type": "string",
+            "example": "Dhaka"
+          },
+          "deliveryAddress": {
+            "type": "string",
+            "example": "Gazipur",
+            "description": "Where the goods are being delivered"
+          },
           "route": {
             "type": "string",
             "example": "Mirpur-Uttara Route",
-            "description": "Where the van is headed; prints as the \"To:\" heading"
+            "description": "Where the van is headed"
           },
           "vehicleNo": {
             "type": "string",
@@ -8777,10 +8800,24 @@
             "example": "2026-08-27",
             "description": "Challan date (ISO 8601)"
           },
+          "customerName": {
+            "type": "string",
+            "example": "Mr. Kabir",
+            "description": "Who the challan is made out to. Typed by hand — no Customer record is required."
+          },
+          "customerAddress": {
+            "type": "string",
+            "example": "Dhaka"
+          },
+          "deliveryAddress": {
+            "type": "string",
+            "example": "Gazipur",
+            "description": "Where the goods are being delivered"
+          },
           "route": {
             "type": "string",
             "example": "Mirpur-Uttara Route",
-            "description": "Where the van is headed; prints as the \"To:\" heading"
+            "description": "Where the van is headed"
           },
           "vehicleNo": {
             "type": "string",

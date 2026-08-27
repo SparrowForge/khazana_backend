@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import { CreateVehicleChallanDto, UpdateVehicleChallanDto } from './dto/vehicle-challan.dto';
+import { CreateVehicleChallanDto, UpdateVehicleChallanDto, VehicleChallanLineDto } from './dto/vehicle-challan.dto';
 import { DateRangeQueryDto, dateRangeFilter } from '../common/dto';
 import { buildPaginationMeta, isFactoryBranch } from '../common/helpers';
 
@@ -61,17 +61,44 @@ export class VehicleChallanService {
     return new Map(rows.map((r) => [r.id, { name: r.itmName ?? r.itmCode, uom: r.itmUOM ?? undefined }]));
   }
 
-  /** Rejects unknown item ids up front — a bad id would otherwise surface as an
-   *  opaque FK violation halfway through writing the document. */
-  private async assertItemsExist(ids: string[]) {
-    const uniqueIds = [...new Set(ids)];
-    const found = await this.prisma.item_Information.findMany({
-      where: { id: { in: uniqueIds } },
-      select: { id: true },
-    });
-    const known = new Set(found.map((r) => r.id));
-    const missing = uniqueIds.filter((id) => !known.has(id));
+  /**
+   * Resolve the lines to write.
+   *
+   * A line either points at a catalogue item or is ad-hoc — goods typed straight
+   * onto the challan, which are deliberately NOT written to Item_Information.
+   * Either way the description and unit are stored on the line: the ad-hoc line
+   * has nowhere else to keep them, and snapshotting the catalogue line means the
+   * challan still reads as it was issued after the item is renamed.
+   *
+   * A catalogue id is verified here rather than left to surface as an opaque FK
+   * violation halfway through writing the document.
+   */
+  private async resolveLines(items: VehicleChallanLineDto[]) {
+    const ids = [...new Set(items.map((l) => l.itemId).filter((id): id is string => !!id))];
+    const catalogue = ids.length
+      ? await this.prisma.item_Information.findMany({
+          where: { id: { in: ids } },
+          select: { id: true, itmName: true, itmCode: true, itmUOM: true },
+        })
+      : [];
+    const byId = new Map(catalogue.map((r) => [r.id, r]));
+    const missing = ids.filter((id) => !byId.has(id));
     if (missing.length) throw new BadRequestException(`Unknown item id(s): ${missing.join(', ')}`);
+
+    return items.map((line, i) => {
+      const item = line.itemId ? byId.get(line.itemId)! : null;
+      const itemName = (line.itemName ?? '').trim() || item?.itmName || item?.itmCode || '';
+      // Nothing to print in the Description column is not a challan line.
+      if (!itemName) {
+        throw new BadRequestException(`Line ${i + 1}: pick an item or type a description`);
+      }
+      return {
+        itemId: line.itemId ?? null,
+        itemName,
+        uom: (line.uom ?? '').trim() || item?.itmUOM || null,
+        qty: line.qty,
+      };
+    });
   }
 
   private buildSerialNo(branchCode: string, seq: number): string {
@@ -127,7 +154,7 @@ export class VehicleChallanService {
   async create(dto: CreateVehicleChallanDto, createdBy: string, sessionBranchId: string) {
     if (!dto.items?.length) throw new BadRequestException('No items on this challan');
     const branch = await this.assertFactoryBranch(sessionBranchId);
-    await this.assertItemsExist(dto.items.map((i) => i.itemId));
+    const lines = await this.resolveLines(dto.items);
 
     const challanDate = new Date(dto.challanDate);
     const baseCount = await this.prisma.vehicle_Challan.count();
@@ -138,14 +165,19 @@ export class VehicleChallanService {
     // One transaction, but no Inventory writes anywhere inside it — see the
     // class comment. Loading a van is not a stock movement.
     await this.prisma.$transaction(
-      dto.items.map((line) =>
+      lines.map((line) =>
         this.prisma.vehicle_Challan.create({
           data: {
             serialNo,
             branchId: branch.id,
             challanDate,
             itemId: line.itemId,
+            itemName: line.itemName,
+            uom: line.uom,
             qty: line.qty,
+            customerName: dto.customerName,
+            customerAddress: dto.customerAddress,
+            deliveryAddress: dto.deliveryAddress,
             route: dto.route,
             vehicleNo: dto.vehicleNo,
             driverName: dto.driverName,
@@ -185,14 +217,17 @@ export class VehicleChallanService {
   async findOne(serialNo: string) {
     const rows = await this.findRows(serialNo);
     const [first] = rows;
+    // Only needed for rows written before ItemName existed; everything since
+    // carries its own description.
     const itemById = await this.itemNamesByIds(
-      rows.map((r) => r.itemId).filter((id): id is string => !!id),
+      rows.filter((r) => !r.itemName).map((r) => r.itemId).filter((id): id is string => !!id),
     );
 
     const branch = first.branchId
       ? await this.prisma.branch.findUnique({
           where: { id: first.branchId },
-          select: { branchName: true, address: true },
+          // vatNo/mobileNo head the printed challan alongside the address.
+          select: { branchName: true, address: true, vatNo: true, mobileNo: true },
         })
       : null;
 
@@ -203,6 +238,11 @@ export class VehicleChallanService {
       branchId: first.branchId,
       branchName: branch?.branchName ?? undefined,
       branchAddress: branch?.address ?? undefined,
+      branchVatNo: branch?.vatNo ?? undefined,
+      branchMobileNo: branch?.mobileNo ?? undefined,
+      customerName: first.customerName,
+      customerAddress: first.customerAddress,
+      deliveryAddress: first.deliveryAddress,
       route: first.route,
       vehicleNo: first.vehicleNo,
       driverName: first.driverName,
@@ -210,8 +250,8 @@ export class VehicleChallanService {
       remarks: first.remarks,
       items: rows.map((r) => ({
         itemId: r.itemId,
-        itemName: r.itemId ? itemById.get(r.itemId)?.name : undefined,
-        uom: r.itemId ? itemById.get(r.itemId)?.uom : undefined,
+        itemName: r.itemName ?? (r.itemId ? itemById.get(r.itemId)?.name : undefined),
+        uom: r.uom ?? (r.itemId ? itemById.get(r.itemId)?.uom : undefined),
         qty: Number(r.qty ?? 0),
       })),
     };
@@ -224,7 +264,7 @@ export class VehicleChallanService {
     const branch = await this.assertFactoryBranch(sessionBranchId);
     const existing = await this.findRows(serialNo);
     const key = existing[0].serialNo || existing[0].id;
-    await this.assertItemsExist(dto.items.map((i) => i.itemId));
+    const lines = await this.resolveLines(dto.items);
 
     const challanDate = new Date(dto.challanDate);
 
@@ -233,14 +273,19 @@ export class VehicleChallanService {
     // taken from it.
     await this.prisma.$transaction([
       this.prisma.vehicle_Challan.deleteMany({ where: { serialNo: key } }),
-      ...dto.items.map((line) =>
+      ...lines.map((line) =>
         this.prisma.vehicle_Challan.create({
           data: {
             serialNo: key,
             branchId: existing[0].branchId ?? branch.id,
             challanDate,
             itemId: line.itemId,
+            itemName: line.itemName,
+            uom: line.uom,
             qty: line.qty,
+            customerName: dto.customerName,
+            customerAddress: dto.customerAddress,
+            deliveryAddress: dto.deliveryAddress,
             route: dto.route,
             vehicleNo: dto.vehicleNo,
             driverName: dto.driverName,

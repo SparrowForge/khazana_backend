@@ -3,11 +3,31 @@ import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class VehicleChallanLineDto {
-  @ApiProperty({ format: 'uuid', description: 'Item_Information UUID of the item loaded onto the vehicle' })
+  @ApiPropertyOptional({
+    format: 'uuid',
+    description:
+      'Item_Information UUID when the line was picked from the catalogue. Omit for an ad-hoc line — goods typed straight onto the challan are NOT added to the Item table.',
+  })
   @IsUUID()
-  itemId: string;
+  @IsOptional()
+  itemId?: string;
 
-  @ApiProperty({ example: 25, description: 'Quantity loaded (must be > 0)' })
+  @ApiPropertyOptional({
+    example: 'Soan Papri 200gm',
+    description: 'Printed description. Required when there is no itemId; sent for catalogue lines too, and stored as the line snapshot.',
+  })
+  @IsString()
+  @IsOptional()
+  @MaxLength(200)
+  itemName?: string;
+
+  @ApiPropertyOptional({ example: 'Pcs', description: 'Unit printed in the UOM column' })
+  @IsString()
+  @IsOptional()
+  @MaxLength(30)
+  uom?: string;
+
+  @ApiProperty({ example: 25, description: 'Quantity (must be > 0)' })
   @IsNumber()
   @IsPositive()
   qty: number;
@@ -20,7 +40,25 @@ class VehicleChallanHeaderDto {
   @IsDateString()
   challanDate: string;
 
-  @ApiPropertyOptional({ example: 'Mirpur-Uttara Route', description: 'Where the van is headed; prints as the "To:" heading' })
+  @ApiPropertyOptional({ example: 'Mr. Kabir', description: 'Who the challan is made out to. Typed by hand — no Customer record is required.' })
+  @IsString()
+  @IsOptional()
+  @MaxLength(200)
+  customerName?: string;
+
+  @ApiPropertyOptional({ example: 'Dhaka' })
+  @IsString()
+  @IsOptional()
+  @MaxLength(300)
+  customerAddress?: string;
+
+  @ApiPropertyOptional({ example: 'Gazipur', description: 'Where the goods are being delivered' })
+  @IsString()
+  @IsOptional()
+  @MaxLength(300)
+  deliveryAddress?: string;
+
+  @ApiPropertyOptional({ example: 'Mirpur-Uttara Route', description: 'Where the van is headed' })
   @IsString()
   @IsOptional()
   @MaxLength(200)

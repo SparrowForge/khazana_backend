@@ -80,8 +80,24 @@ export class InventoryService {
   // ── Items ─────────────────────────────────────────────────────
 
   async findAllItems(query: ItemQueryDto) {
-    const { page, limit, isActive } = query;
-    const where = isActive ? { isActive } : undefined;
+    const { page, limit, isActive, search } = query;
+    const term = (search ?? '').trim();
+    // `undefined` rather than `{}` when nothing is filtered, so the count query
+    // and the page query keep the shape they had before search existed.
+    const where =
+      isActive || term
+        ? {
+            ...(isActive ? { isActive } : {}),
+            ...(term
+              ? {
+                  OR: [
+                    { itmCode: { contains: term, mode: 'insensitive' as const } },
+                    { itmName: { contains: term, mode: 'insensitive' as const } },
+                  ],
+                }
+              : {}),
+          }
+        : undefined;
     const [rows, total] = await Promise.all([
       this.prisma.item_Information.findMany({
         where,

@@ -47840,8 +47840,13 @@ export namespace Prisma {
     serialNo: string | null
     voucharNo: string | null
     itemId: string | null
+    itemName: string | null
+    uom: string | null
     qty: Decimal | null
     challanDate: Date | null
+    customerName: string | null
+    customerAddress: string | null
+    deliveryAddress: string | null
     branchId: string | null
     route: string | null
     vehicleNo: string | null
@@ -47860,8 +47865,13 @@ export namespace Prisma {
     serialNo: string | null
     voucharNo: string | null
     itemId: string | null
+    itemName: string | null
+    uom: string | null
     qty: Decimal | null
     challanDate: Date | null
+    customerName: string | null
+    customerAddress: string | null
+    deliveryAddress: string | null
     branchId: string | null
     route: string | null
     vehicleNo: string | null
@@ -47880,8 +47890,13 @@ export namespace Prisma {
     serialNo: number
     voucharNo: number
     itemId: number
+    itemName: number
+    uom: number
     qty: number
     challanDate: number
+    customerName: number
+    customerAddress: number
+    deliveryAddress: number
     branchId: number
     route: number
     vehicleNo: number
@@ -47912,8 +47927,13 @@ export namespace Prisma {
     serialNo?: true
     voucharNo?: true
     itemId?: true
+    itemName?: true
+    uom?: true
     qty?: true
     challanDate?: true
+    customerName?: true
+    customerAddress?: true
+    deliveryAddress?: true
     branchId?: true
     route?: true
     vehicleNo?: true
@@ -47932,8 +47952,13 @@ export namespace Prisma {
     serialNo?: true
     voucharNo?: true
     itemId?: true
+    itemName?: true
+    uom?: true
     qty?: true
     challanDate?: true
+    customerName?: true
+    customerAddress?: true
+    deliveryAddress?: true
     branchId?: true
     route?: true
     vehicleNo?: true
@@ -47952,8 +47977,13 @@ export namespace Prisma {
     serialNo?: true
     voucharNo?: true
     itemId?: true
+    itemName?: true
+    uom?: true
     qty?: true
     challanDate?: true
+    customerName?: true
+    customerAddress?: true
+    deliveryAddress?: true
     branchId?: true
     route?: true
     vehicleNo?: true
@@ -48059,8 +48089,13 @@ export namespace Prisma {
     serialNo: string | null
     voucharNo: string | null
     itemId: string | null
+    itemName: string | null
+    uom: string | null
     qty: Decimal | null
     challanDate: Date | null
+    customerName: string | null
+    customerAddress: string | null
+    deliveryAddress: string | null
     branchId: string
     route: string | null
     vehicleNo: string | null
@@ -48098,8 +48133,13 @@ export namespace Prisma {
     serialNo?: boolean
     voucharNo?: boolean
     itemId?: boolean
+    itemName?: boolean
+    uom?: boolean
     qty?: boolean
     challanDate?: boolean
+    customerName?: boolean
+    customerAddress?: boolean
+    deliveryAddress?: boolean
     branchId?: boolean
     route?: boolean
     vehicleNo?: boolean
@@ -48119,8 +48159,13 @@ export namespace Prisma {
     serialNo?: boolean
     voucharNo?: boolean
     itemId?: boolean
+    itemName?: boolean
+    uom?: boolean
     qty?: boolean
     challanDate?: boolean
+    customerName?: boolean
+    customerAddress?: boolean
+    deliveryAddress?: boolean
     branchId?: boolean
     route?: boolean
     vehicleNo?: boolean
@@ -48140,8 +48185,13 @@ export namespace Prisma {
     serialNo?: boolean
     voucharNo?: boolean
     itemId?: boolean
+    itemName?: boolean
+    uom?: boolean
     qty?: boolean
     challanDate?: boolean
+    customerName?: boolean
+    customerAddress?: boolean
+    deliveryAddress?: boolean
     branchId?: boolean
     route?: boolean
     vehicleNo?: boolean
@@ -48161,8 +48211,13 @@ export namespace Prisma {
     serialNo?: boolean
     voucharNo?: boolean
     itemId?: boolean
+    itemName?: boolean
+    uom?: boolean
     qty?: boolean
     challanDate?: boolean
+    customerName?: boolean
+    customerAddress?: boolean
+    deliveryAddress?: boolean
     branchId?: boolean
     route?: boolean
     vehicleNo?: boolean
@@ -48176,7 +48231,7 @@ export namespace Prisma {
     updateDate?: boolean
   }
 
-  export type Vehicle_ChallanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemId" | "qty" | "challanDate" | "branchId" | "route" | "vehicleNo" | "driverName" | "driverMobile" | "remarks" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["vehicle_Challan"]>
+  export type Vehicle_ChallanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemId" | "itemName" | "uom" | "qty" | "challanDate" | "customerName" | "customerAddress" | "deliveryAddress" | "branchId" | "route" | "vehicleNo" | "driverName" | "driverMobile" | "remarks" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["vehicle_Challan"]>
   export type Vehicle_ChallanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | Vehicle_Challan$itemArgs<ExtArgs>
   }
@@ -48196,9 +48251,27 @@ export namespace Prisma {
       id: string
       serialNo: string | null
       voucharNo: string | null
+      /**
+       * Catalogue item, when the line was picked from Item_Information. NULL for
+       * an ad-hoc line typed straight onto the challan.
+       */
       itemId: string | null
+      /**
+       * Printed description. Always written, catalogue or not: an ad-hoc line has
+       * nowhere else to keep its name, and snapshotting a catalogue one means the
+       * challan still reads as it was issued after the item is renamed.
+       */
+      itemName: string | null
+      uom: string | null
       qty: Prisma.Decimal | null
       challanDate: Date | null
+      /**
+       * Who the challan is made out to. Typed by hand — a challan can be raised
+       * for a party that has no Customer record.
+       */
+      customerName: string | null
+      customerAddress: string | null
+      deliveryAddress: string | null
       /**
        * The despatching branch (the factory). There is no receiving branch.
        */
@@ -48644,8 +48717,13 @@ export namespace Prisma {
     readonly serialNo: FieldRef<"Vehicle_Challan", 'String'>
     readonly voucharNo: FieldRef<"Vehicle_Challan", 'String'>
     readonly itemId: FieldRef<"Vehicle_Challan", 'String'>
+    readonly itemName: FieldRef<"Vehicle_Challan", 'String'>
+    readonly uom: FieldRef<"Vehicle_Challan", 'String'>
     readonly qty: FieldRef<"Vehicle_Challan", 'Decimal'>
     readonly challanDate: FieldRef<"Vehicle_Challan", 'DateTime'>
+    readonly customerName: FieldRef<"Vehicle_Challan", 'String'>
+    readonly customerAddress: FieldRef<"Vehicle_Challan", 'String'>
+    readonly deliveryAddress: FieldRef<"Vehicle_Challan", 'String'>
     readonly branchId: FieldRef<"Vehicle_Challan", 'String'>
     readonly route: FieldRef<"Vehicle_Challan", 'String'>
     readonly vehicleNo: FieldRef<"Vehicle_Challan", 'String'>
@@ -66643,8 +66721,13 @@ export namespace Prisma {
     serialNo: 'serialNo',
     voucharNo: 'voucharNo',
     itemId: 'itemId',
+    itemName: 'itemName',
+    uom: 'uom',
     qty: 'qty',
     challanDate: 'challanDate',
+    customerName: 'customerName',
+    customerAddress: 'customerAddress',
+    deliveryAddress: 'deliveryAddress',
     branchId: 'branchId',
     route: 'route',
     vehicleNo: 'vehicleNo',
@@ -70173,8 +70256,13 @@ export namespace Prisma {
     serialNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
     voucharNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
     itemId?: UuidNullableFilter<"Vehicle_Challan"> | string | null
+    itemName?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    uom?: StringNullableFilter<"Vehicle_Challan"> | string | null
     qty?: DecimalNullableFilter<"Vehicle_Challan"> | Decimal | DecimalJsLike | number | string | null
     challanDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
+    customerName?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    customerAddress?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    deliveryAddress?: StringNullableFilter<"Vehicle_Challan"> | string | null
     branchId?: UuidFilter<"Vehicle_Challan"> | string
     route?: StringNullableFilter<"Vehicle_Challan"> | string | null
     vehicleNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
@@ -70194,8 +70282,13 @@ export namespace Prisma {
     serialNo?: SortOrderInput | SortOrder
     voucharNo?: SortOrderInput | SortOrder
     itemId?: SortOrderInput | SortOrder
+    itemName?: SortOrderInput | SortOrder
+    uom?: SortOrderInput | SortOrder
     qty?: SortOrderInput | SortOrder
     challanDate?: SortOrderInput | SortOrder
+    customerName?: SortOrderInput | SortOrder
+    customerAddress?: SortOrderInput | SortOrder
+    deliveryAddress?: SortOrderInput | SortOrder
     branchId?: SortOrder
     route?: SortOrderInput | SortOrder
     vehicleNo?: SortOrderInput | SortOrder
@@ -70218,8 +70311,13 @@ export namespace Prisma {
     serialNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
     voucharNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
     itemId?: UuidNullableFilter<"Vehicle_Challan"> | string | null
+    itemName?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    uom?: StringNullableFilter<"Vehicle_Challan"> | string | null
     qty?: DecimalNullableFilter<"Vehicle_Challan"> | Decimal | DecimalJsLike | number | string | null
     challanDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
+    customerName?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    customerAddress?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    deliveryAddress?: StringNullableFilter<"Vehicle_Challan"> | string | null
     branchId?: UuidFilter<"Vehicle_Challan"> | string
     route?: StringNullableFilter<"Vehicle_Challan"> | string | null
     vehicleNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
@@ -70239,8 +70337,13 @@ export namespace Prisma {
     serialNo?: SortOrderInput | SortOrder
     voucharNo?: SortOrderInput | SortOrder
     itemId?: SortOrderInput | SortOrder
+    itemName?: SortOrderInput | SortOrder
+    uom?: SortOrderInput | SortOrder
     qty?: SortOrderInput | SortOrder
     challanDate?: SortOrderInput | SortOrder
+    customerName?: SortOrderInput | SortOrder
+    customerAddress?: SortOrderInput | SortOrder
+    deliveryAddress?: SortOrderInput | SortOrder
     branchId?: SortOrder
     route?: SortOrderInput | SortOrder
     vehicleNo?: SortOrderInput | SortOrder
@@ -70267,8 +70370,13 @@ export namespace Prisma {
     serialNo?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
     voucharNo?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
     itemId?: UuidNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    itemName?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    uom?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
     qty?: DecimalNullableWithAggregatesFilter<"Vehicle_Challan"> | Decimal | DecimalJsLike | number | string | null
     challanDate?: DateTimeNullableWithAggregatesFilter<"Vehicle_Challan"> | Date | string | null
+    customerName?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    customerAddress?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    deliveryAddress?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
     branchId?: UuidWithAggregatesFilter<"Vehicle_Challan"> | string
     route?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
     vehicleNo?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
@@ -75142,8 +75250,13 @@ export namespace Prisma {
     id?: string
     serialNo?: string | null
     voucharNo?: string | null
+    itemName?: string | null
+    uom?: string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     challanDate?: Date | string | null
+    customerName?: string | null
+    customerAddress?: string | null
+    deliveryAddress?: string | null
     branchId: string
     route?: string | null
     vehicleNo?: string | null
@@ -75163,8 +75276,13 @@ export namespace Prisma {
     serialNo?: string | null
     voucharNo?: string | null
     itemId?: string | null
+    itemName?: string | null
+    uom?: string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     challanDate?: Date | string | null
+    customerName?: string | null
+    customerAddress?: string | null
+    deliveryAddress?: string | null
     branchId: string
     route?: string | null
     vehicleNo?: string | null
@@ -75182,8 +75300,13 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
+    itemName?: NullableStringFieldUpdateOperationsInput | string | null
+    uom?: NullableStringFieldUpdateOperationsInput | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     challanDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     route?: NullableStringFieldUpdateOperationsInput | string | null
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75203,8 +75326,13 @@ export namespace Prisma {
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
     itemId?: NullableStringFieldUpdateOperationsInput | string | null
+    itemName?: NullableStringFieldUpdateOperationsInput | string | null
+    uom?: NullableStringFieldUpdateOperationsInput | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     challanDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     route?: NullableStringFieldUpdateOperationsInput | string | null
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75223,8 +75351,13 @@ export namespace Prisma {
     serialNo?: string | null
     voucharNo?: string | null
     itemId?: string | null
+    itemName?: string | null
+    uom?: string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     challanDate?: Date | string | null
+    customerName?: string | null
+    customerAddress?: string | null
+    deliveryAddress?: string | null
     branchId: string
     route?: string | null
     vehicleNo?: string | null
@@ -75242,8 +75375,13 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
+    itemName?: NullableStringFieldUpdateOperationsInput | string | null
+    uom?: NullableStringFieldUpdateOperationsInput | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     challanDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     route?: NullableStringFieldUpdateOperationsInput | string | null
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75262,8 +75400,13 @@ export namespace Prisma {
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
     itemId?: NullableStringFieldUpdateOperationsInput | string | null
+    itemName?: NullableStringFieldUpdateOperationsInput | string | null
+    uom?: NullableStringFieldUpdateOperationsInput | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     challanDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     route?: NullableStringFieldUpdateOperationsInput | string | null
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -79328,8 +79471,13 @@ export namespace Prisma {
     serialNo?: SortOrder
     voucharNo?: SortOrder
     itemId?: SortOrder
+    itemName?: SortOrder
+    uom?: SortOrder
     qty?: SortOrder
     challanDate?: SortOrder
+    customerName?: SortOrder
+    customerAddress?: SortOrder
+    deliveryAddress?: SortOrder
     branchId?: SortOrder
     route?: SortOrder
     vehicleNo?: SortOrder
@@ -79353,8 +79501,13 @@ export namespace Prisma {
     serialNo?: SortOrder
     voucharNo?: SortOrder
     itemId?: SortOrder
+    itemName?: SortOrder
+    uom?: SortOrder
     qty?: SortOrder
     challanDate?: SortOrder
+    customerName?: SortOrder
+    customerAddress?: SortOrder
+    deliveryAddress?: SortOrder
     branchId?: SortOrder
     route?: SortOrder
     vehicleNo?: SortOrder
@@ -79373,8 +79526,13 @@ export namespace Prisma {
     serialNo?: SortOrder
     voucharNo?: SortOrder
     itemId?: SortOrder
+    itemName?: SortOrder
+    uom?: SortOrder
     qty?: SortOrder
     challanDate?: SortOrder
+    customerName?: SortOrder
+    customerAddress?: SortOrder
+    deliveryAddress?: SortOrder
     branchId?: SortOrder
     route?: SortOrder
     vehicleNo?: SortOrder
@@ -85093,8 +85251,13 @@ export namespace Prisma {
     id?: string
     serialNo?: string | null
     voucharNo?: string | null
+    itemName?: string | null
+    uom?: string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     challanDate?: Date | string | null
+    customerName?: string | null
+    customerAddress?: string | null
+    deliveryAddress?: string | null
     branchId: string
     route?: string | null
     vehicleNo?: string | null
@@ -85112,8 +85275,13 @@ export namespace Prisma {
     id?: string
     serialNo?: string | null
     voucharNo?: string | null
+    itemName?: string | null
+    uom?: string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     challanDate?: Date | string | null
+    customerName?: string | null
+    customerAddress?: string | null
+    deliveryAddress?: string | null
     branchId: string
     route?: string | null
     vehicleNo?: string | null
@@ -85679,8 +85847,13 @@ export namespace Prisma {
     serialNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
     voucharNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
     itemId?: UuidNullableFilter<"Vehicle_Challan"> | string | null
+    itemName?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    uom?: StringNullableFilter<"Vehicle_Challan"> | string | null
     qty?: DecimalNullableFilter<"Vehicle_Challan"> | Decimal | DecimalJsLike | number | string | null
     challanDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
+    customerName?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    customerAddress?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    deliveryAddress?: StringNullableFilter<"Vehicle_Challan"> | string | null
     branchId?: UuidFilter<"Vehicle_Challan"> | string
     route?: StringNullableFilter<"Vehicle_Challan"> | string | null
     vehicleNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
@@ -90511,8 +90684,13 @@ export namespace Prisma {
     id?: string
     serialNo?: string | null
     voucharNo?: string | null
+    itemName?: string | null
+    uom?: string | null
     qty?: Decimal | DecimalJsLike | number | string | null
     challanDate?: Date | string | null
+    customerName?: string | null
+    customerAddress?: string | null
+    deliveryAddress?: string | null
     branchId: string
     route?: string | null
     vehicleNo?: string | null
@@ -91046,8 +91224,13 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
+    itemName?: NullableStringFieldUpdateOperationsInput | string | null
+    uom?: NullableStringFieldUpdateOperationsInput | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     challanDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     route?: NullableStringFieldUpdateOperationsInput | string | null
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91065,8 +91248,13 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
+    itemName?: NullableStringFieldUpdateOperationsInput | string | null
+    uom?: NullableStringFieldUpdateOperationsInput | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     challanDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     route?: NullableStringFieldUpdateOperationsInput | string | null
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91084,8 +91272,13 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
     voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
+    itemName?: NullableStringFieldUpdateOperationsInput | string | null
+    uom?: NullableStringFieldUpdateOperationsInput | string | null
     qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     challanDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     route?: NullableStringFieldUpdateOperationsInput | string | null
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null

@@ -707,26 +707,38 @@ model Item_Issue {
 /// Shares Item_Issue's shape: one row per item line, every line of a document
 /// carrying the same SerialNo, which is what the API addresses.
 model Vehicle_Challan {
-  id           String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  serialNo     String?           @map("SerialNo")
-  voucharNo    String?           @map("VoucharNo")
-  itemId       String?           @map("ItemId") @db.Uuid
-  qty          Decimal?          @map("Qty") @db.Decimal(18, 6)
-  challanDate  DateTime?         @map("ChallanDate")
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  serialNo        String?           @map("SerialNo")
+  voucharNo       String?           @map("VoucharNo")
+  /// Catalogue item, when the line was picked from Item_Information. NULL for
+  /// an ad-hoc line typed straight onto the challan.
+  itemId          String?           @map("ItemId") @db.Uuid
+  /// Printed description. Always written, catalogue or not: an ad-hoc line has
+  /// nowhere else to keep its name, and snapshotting a catalogue one means the
+  /// challan still reads as it was issued after the item is renamed.
+  itemName        String?           @map("ItemName")
+  uom             String?           @map("Uom")
+  qty             Decimal?          @map("Qty") @db.Decimal(18, 6)
+  challanDate     DateTime?         @map("ChallanDate")
+  /// Who the challan is made out to. Typed by hand — a challan can be raised
+  /// for a party that has no Customer record.
+  customerName    String?           @map("CustomerName")
+  customerAddress String?           @map("CustomerAddress")
+  deliveryAddress String?           @map("DeliveryAddress")
   /// The despatching branch (the factory). There is no receiving branch.
-  branchId     String            @map("BranchId") @db.Uuid
+  branchId        String            @map("BranchId") @db.Uuid
   /// Where the van is headed — free text, printed as the "To:" heading.
-  route        String?           @map("Route")
-  vehicleNo    String?           @map("VehicleNo")
-  driverName   String?           @map("DriverName")
-  driverMobile String?           @map("DriverMobile")
-  remarks      String?           @map("Remarks")
-  isActive     Int?              @map("IsActive")
-  createBy     String?           @map("CreateBy")
-  createDate   DateTime?         @map("CreateDate")
-  updateBy     String?           @map("UpdateBy")
-  updateDate   DateTime?         @map("UpdateDate")
-  item         Item_Information? @relation(fields: [itemId], references: [id])
+  route           String?           @map("Route")
+  vehicleNo       String?           @map("VehicleNo")
+  driverName      String?           @map("DriverName")
+  driverMobile    String?           @map("DriverMobile")
+  remarks         String?           @map("Remarks")
+  isActive        Int?              @map("IsActive")
+  createBy        String?           @map("CreateBy")
+  createDate      DateTime?         @map("CreateDate")
+  updateBy        String?           @map("UpdateBy")
+  updateDate      DateTime?         @map("UpdateDate")
+  item            Item_Information? @relation(fields: [itemId], references: [id])
 
   @@index([branchId, challanDate])
   @@index([serialNo])

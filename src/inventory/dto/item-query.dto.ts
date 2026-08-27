@@ -7,4 +7,12 @@ export class ItemQueryDto extends PaginationQueryDto {
   @IsOptional()
   @IsString()
   isActive?: string;
+
+  @ApiPropertyOptional({
+    description:
+      'Type-ahead filter on item code or name (case-insensitive, contains). Lets a picker fetch a handful of matches instead of walking the whole catalogue.',
+  })
+  @IsOptional()
+  @IsString()
+  search?: string;
 }
