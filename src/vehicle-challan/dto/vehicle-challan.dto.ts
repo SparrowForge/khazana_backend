@@ -26,10 +26,14 @@ class VehicleChallanHeaderDto {
   @MaxLength(200)
   route?: string;
 
-  @ApiProperty({ example: 'DHAKA METRO-TA-11-2233', description: 'Registration of the vehicle leaving the factory' })
+  @ApiPropertyOptional({
+    example: 'DHAKA METRO-TA-11-2233',
+    description: 'Registration of the vehicle leaving the factory. Optional — a challan can be raised before the van is assigned.',
+  })
   @IsString()
+  @IsOptional()
   @MaxLength(100)
-  vehicleNo: string;
+  vehicleNo?: string;
 
   @ApiPropertyOptional({ example: 'Abdul Karim' })
   @IsString()
