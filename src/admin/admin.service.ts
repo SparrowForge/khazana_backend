@@ -3,6 +3,7 @@ import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { PaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
+import { isFactoryBranch } from '../common/helpers/branch.helper';
 
 export class CreateBranchDto {
   @IsString()
@@ -12,6 +13,34 @@ export class CreateBranchDto {
   @IsString()
   @IsNotEmpty()
   branchName: string;
+
+  @IsString()
+  @IsOptional()
+  address?: string;
+
+  @IsString()
+  @IsOptional()
+  vatNo?: string;
+
+  @IsString()
+  @IsOptional()
+  mobileNo?: string;
+}
+
+/** PATCH body for a branch. Every field is optional, but it must be a real
+ *  class: `Partial<CreateBranchDto>` loses its runtime type, so the global
+ *  whitelist/forbidNonWhitelisted ValidationPipe would silently skip the body
+ *  and pass unknown keys straight through to Prisma. */
+export class UpdateBranchDto {
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  branchCode?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  branchName?: string;
 
   @IsString()
   @IsOptional()
@@ -59,12 +88,56 @@ export class AdminService {
     return { items: branches, meta: buildPaginationMeta(total, page, limit) };
   }
 
-  createBranch(dto: CreateBranchDto) {
-    return this.prisma.branch.create({ data: dto });
+  private async findOneBranch(id: string) {
+    const branch = await this.prisma.branch.findUnique({ where: { id } });
+    if (!branch) throw new NotFoundException('Branch not found');
+    return branch;
   }
 
-  updateBranch(id: string, dto: Partial<CreateBranchDto>) {
-    return this.prisma.branch.update({ where: { id }, data: dto });
+  /** BranchCode is @unique. Reject a duplicate here so it comes back as a 409
+   *  with a readable message instead of an opaque Prisma P2002 500. */
+  private async assertBranchCodeFree(code: string, exceptId?: string) {
+    const clash = await this.prisma.branch.findFirst({
+      where: { branchCode: code, ...(exceptId ? { id: { not: exceptId } } : {}) },
+      select: { branchName: true },
+    });
+    if (clash) throw new ConflictException(`Branch code "${code}" is already used by ${clash.branchName ?? 'another branch'}`);
+  }
+
+  async createBranch(dto: CreateBranchDto) {
+    const branchCode = dto.branchCode.trim();
+    await this.assertBranchCodeFree(branchCode);
+    return this.prisma.branch.create({ data: { ...dto, branchCode } });
+  }
+
+  /** Branch code is editable. Nothing references it as a foreign key — every
+   *  other table stores the Branch UUID (`BranchId`) — so a rename is safe for
+   *  referential integrity. Two side effects are worth knowing about:
+   *  1. Document serials (GRN-/ISS-/TRF-/ADJ-/MR-/POS…) embed the code at the
+   *     moment they are generated. Existing documents keep the old code; new
+   *     ones get the new one. That is a display/numbering change only.
+   *  2. The factory is identified by convention on code/name (isFactoryBranch),
+   *     not by a column, so an edit that would stop the factory looking like the
+   *     factory is refused — it would silently disable the factory-only screens. */
+  async updateBranch(id: string, dto: UpdateBranchDto) {
+    const existing = await this.findOneBranch(id);
+    const data: UpdateBranchDto = { ...dto };
+
+    if (data.branchCode !== undefined) {
+      data.branchCode = data.branchCode.trim();
+      if (data.branchCode !== existing.branchCode) {
+        await this.assertBranchCodeFree(data.branchCode, id);
+      }
+    }
+
+    const after = { branchCode: data.branchCode ?? existing.branchCode, branchName: data.branchName ?? existing.branchName };
+    if (isFactoryBranch(existing) && !isFactoryBranch(after)) {
+      throw new ConflictException(
+        'This is the factory branch — keep "FAC" as its code or "Factory" in its name, otherwise the factory-only screens (Production, Demand, Branchwise Delivery) stop working',
+      );
+    }
+
+    return this.prisma.branch.update({ where: { id }, data });
   }
 
   // ── System Settings ───────────────────────────────────────────

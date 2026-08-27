@@ -274,6 +274,7 @@ model Item_Information {
   productions           Production[]
   orderDetails          OrderReceive_Detail[]
   demandOrderDetails    DemandOrder_Detail[]
+  vehicleChallans       Vehicle_Challan[]
   // Relations using Item_Information.itmCode (varchar)
   inventory             Inventory?
   prices                t_Price[]             @relation("ItemPrices")
@@ -681,6 +682,43 @@ model Item_Issue {
 
   @@index([receiveBranchId, isReceived])
   @@map("Item_Issue")
+}
+
+/// Vehicle Challan — the gate pass for a loaded van leaving the factory on a
+/// route, before anyone knows which outlet will take what.
+///
+/// Deliberately has NO destination branch and NO stock effect. The van tours the
+/// outlets; whatever an outlet keeps is entered as a real Stock Issue at that
+/// point, and the rest comes back. This document exists only so security and
+/// the factory can account for what physically left on the vehicle.
+///
+/// Shares Item_Issue's shape: one row per item line, every line of a document
+/// carrying the same SerialNo, which is what the API addresses.
+model Vehicle_Challan {
+  id           String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  serialNo     String?           @map("SerialNo")
+  voucharNo    String?           @map("VoucharNo")
+  itemId       String?           @map("ItemId") @db.Uuid
+  qty          Decimal?          @map("Qty") @db.Decimal(18, 6)
+  challanDate  DateTime?         @map("ChallanDate")
+  /// The despatching branch (the factory). There is no receiving branch.
+  branchId     String            @map("BranchId") @db.Uuid
+  /// Where the van is headed — free text, printed as the "To:" heading.
+  route        String?           @map("Route")
+  vehicleNo    String?           @map("VehicleNo")
+  driverName   String?           @map("DriverName")
+  driverMobile String?           @map("DriverMobile")
+  remarks      String?           @map("Remarks")
+  isActive     Int?              @map("IsActive")
+  createBy     String?           @map("CreateBy")
+  createDate   DateTime?         @map("CreateDate")
+  updateBy     String?           @map("UpdateBy")
+  updateDate   DateTime?         @map("UpdateDate")
+  item         Item_Information? @relation(fields: [itemId], references: [id])
+
+  @@index([branchId, challanDate])
+  @@index([serialNo])
+  @@map("Vehicle_Challan")
 }
 
 /// Production Entry — factory-only record of manufactured output. One row per

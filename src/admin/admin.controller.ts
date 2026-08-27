@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam, ApiQuery } from '@nestjs/swagger';
-import { AdminService, CreateBranchDto, UpdateSystemDto } from './admin.service';
+import { AdminService, CreateBranchDto, UpdateBranchDto, UpdateSystemDto } from './admin.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { CurrentUser, Public, RequiredPermission } from '../common/decorators';
@@ -27,6 +27,7 @@ export class AdminController {
   @RequiredPermission({ control: 'Branches', action: 'addAccess' })
   @ApiOperation({ summary: 'Create a new branch' })
   @ApiResponse({ status: 201, description: 'Branch created successfully' })
+  @ApiResponse({ status: 409, description: 'Branch code already in use' })
   createBranch(@Body() dto: CreateBranchDto) { return this.adminService.createBranch(dto); }
 
   @Patch('branches/:id')
@@ -34,7 +35,9 @@ export class AdminController {
   @ApiOperation({ summary: 'Update branch by ID' })
   @ApiParam({ name: 'id', description: 'Branch UUID' })
   @ApiResponse({ status: 200, description: 'Branch updated successfully' })
-  updateBranch(@Param('id') id: string, @Body() dto: Partial<CreateBranchDto>) {
+  @ApiResponse({ status: 404, description: 'Branch not found' })
+  @ApiResponse({ status: 409, description: 'Branch code already in use' })
+  updateBranch(@Param('id') id: string, @Body() dto: UpdateBranchDto) {
     return this.adminService.updateBranch(id, dto);
   }
 

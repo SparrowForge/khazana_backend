@@ -3143,6 +3143,225 @@
         ]
       }
     },
+    "/vehicle-challans": {
+      "get": {
+        "operationId": "VehicleChallanController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by branch UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Range start (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of vehicle challans"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get paginated vehicle challans (one row per serial number)",
+        "tags": [
+          "Vehicle Challan"
+        ]
+      },
+      "post": {
+        "operationId": "VehicleChallanController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVehicleChallanDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Vehicle challan saved successfully"
+          },
+          "400": {
+            "description": "No items, or an unknown item id"
+          },
+          "403": {
+            "description": "Session branch is not the Factory, or no create permission"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Raise a vehicle challan (gate pass only — does NOT move stock)",
+        "tags": [
+          "Vehicle Challan"
+        ]
+      }
+    },
+    "/vehicle-challans/{serialNo}": {
+      "get": {
+        "operationId": "VehicleChallanController_findOne",
+        "parameters": [
+          {
+            "name": "serialNo",
+            "required": true,
+            "in": "path",
+            "description": "Vehicle challan serial number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vehicle challan found"
+          },
+          "404": {
+            "description": "Vehicle challan not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get a single vehicle challan (all lines) by serial number",
+        "tags": [
+          "Vehicle Challan"
+        ]
+      },
+      "patch": {
+        "operationId": "VehicleChallanController_update",
+        "parameters": [
+          {
+            "name": "serialNo",
+            "required": true,
+            "in": "path",
+            "description": "Vehicle challan serial number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateVehicleChallanDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Vehicle challan updated successfully"
+          },
+          "403": {
+            "description": "Session branch is not the Factory, or no edit permission"
+          },
+          "404": {
+            "description": "Vehicle challan not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Replace all lines of a vehicle challan by serial number",
+        "tags": [
+          "Vehicle Challan"
+        ]
+      },
+      "delete": {
+        "operationId": "VehicleChallanController_remove",
+        "parameters": [
+          {
+            "name": "serialNo",
+            "required": true,
+            "in": "path",
+            "description": "Vehicle challan serial number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Vehicle challan deleted successfully"
+          },
+          "403": {
+            "description": "Session branch is not the Factory, or no delete permission"
+          },
+          "404": {
+            "description": "Vehicle challan not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete a whole vehicle challan by serial number",
+        "tags": [
+          "Vehicle Challan"
+        ]
+      }
+    },
     "/customers": {
       "get": {
         "operationId": "CustomersController_findAll",
@@ -4269,6 +4488,516 @@
         ]
       }
     },
+    "/packets/receive": {
+      "get": {
+        "operationId": "PacketsController_findAllReceives",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by branch UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Range start (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of packet receive entries"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get paginated packet receive entries (one row per serial number)",
+        "tags": [
+          "Packets"
+        ]
+      },
+      "post": {
+        "operationId": "PacketsController_createReceive",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePacketReceiveDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Packets received successfully"
+          },
+          "400": {
+            "description": "No lines, or an unknown packet code"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Receive packets into the session branch",
+        "tags": [
+          "Packets"
+        ]
+      }
+    },
+    "/packets/receive/{serialNo}": {
+      "get": {
+        "operationId": "PacketsController_findOneReceive",
+        "parameters": [
+          {
+            "name": "serialNo",
+            "required": true,
+            "in": "path",
+            "description": "Packet receive serial number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Packet receive entry found"
+          },
+          "404": {
+            "description": "Packet receive entry not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get one packet receive entry (all lines) by serial number",
+        "tags": [
+          "Packets"
+        ]
+      },
+      "patch": {
+        "operationId": "PacketsController_updateReceive",
+        "parameters": [
+          {
+            "name": "serialNo",
+            "required": true,
+            "in": "path",
+            "description": "Packet receive serial number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePacketReceiveDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Packet receive entry updated successfully"
+          },
+          "400": {
+            "description": "Reducing the receipt would drive the packet balance negative"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Replace all lines of a packet receive entry",
+        "tags": [
+          "Packets"
+        ]
+      },
+      "delete": {
+        "operationId": "PacketsController_removeReceive",
+        "parameters": [
+          {
+            "name": "serialNo",
+            "required": true,
+            "in": "path",
+            "description": "Packet receive serial number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Packet receive entry deleted successfully"
+          },
+          "400": {
+            "description": "The received packets have already been issued"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete a packet receive entry (all lines)",
+        "tags": [
+          "Packets"
+        ]
+      }
+    },
+    "/packets/issue": {
+      "get": {
+        "operationId": "PacketsController_findAllIssues",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by branch UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Range start (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end (inclusive), YYYY-MM-DD",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of packet issue entries"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get paginated packet issue entries (one row per serial number)",
+        "tags": [
+          "Packets"
+        ]
+      },
+      "post": {
+        "operationId": "PacketsController_createIssue",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePacketIssueDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Packets issued successfully"
+          },
+          "400": {
+            "description": "No lines, an unknown packet code, or not enough packet stock"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Issue packets out of the session branch",
+        "tags": [
+          "Packets"
+        ]
+      }
+    },
+    "/packets/issue/{serialNo}": {
+      "get": {
+        "operationId": "PacketsController_findOneIssue",
+        "parameters": [
+          {
+            "name": "serialNo",
+            "required": true,
+            "in": "path",
+            "description": "Packet issue serial number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Packet issue entry found"
+          },
+          "404": {
+            "description": "Packet issue entry not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get one packet issue entry (all lines) by serial number",
+        "tags": [
+          "Packets"
+        ]
+      },
+      "patch": {
+        "operationId": "PacketsController_updateIssue",
+        "parameters": [
+          {
+            "name": "serialNo",
+            "required": true,
+            "in": "path",
+            "description": "Packet issue serial number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePacketIssueDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Packet issue entry updated successfully"
+          },
+          "400": {
+            "description": "The new lines would drive the packet balance negative"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Replace all lines of a packet issue entry",
+        "tags": [
+          "Packets"
+        ]
+      },
+      "delete": {
+        "operationId": "PacketsController_removeIssue",
+        "parameters": [
+          {
+            "name": "serialNo",
+            "required": true,
+            "in": "path",
+            "description": "Packet issue serial number",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Packet issue entry deleted successfully"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete a packet issue entry (all lines)",
+        "tags": [
+          "Packets"
+        ]
+      }
+    },
+    "/packets/stock": {
+      "get": {
+        "operationId": "PacketsController_getStock",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by branch UUID",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "code",
+            "required": false,
+            "in": "query",
+            "description": "Restrict to a single packet code",
+            "schema": {
+              "example": "P001",
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Period start (inclusive). Movement before this date is the opening balance.",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Period end (inclusive)",
+            "schema": {
+              "format": "date",
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeEmpty",
+            "required": false,
+            "in": "query",
+            "description": "Set 1 to list every active packet, including those with no movement and no balance",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Packet stock levels"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Packet stock register: opening / received / issued / balance for a branch and date window",
+        "tags": [
+          "Packets"
+        ]
+      }
+    },
     "/packets": {
       "get": {
         "operationId": "PacketsController_findAll",
@@ -4341,23 +5070,13 @@
         ]
       }
     },
-    "/packets/stock": {
+    "/packets/next-code": {
       "get": {
-        "operationId": "PacketsController_getStock",
-        "parameters": [
-          {
-            "name": "code",
-            "required": false,
-            "in": "query",
-            "description": "Filter by packet code",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "operationId": "PacketsController_getNextCode",
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "Packet stock levels"
+            "description": "Suggested packet code"
           }
         },
         "security": [
@@ -4365,7 +5084,7 @@
             "access-token": []
           }
         ],
-        "summary": "Get packet stock balance",
+        "summary": "Suggest the next packet code (P001, P002, ...)",
         "tags": [
           "Packets"
         ]
@@ -4416,6 +5135,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePacketDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Packet updated successfully"
@@ -4458,46 +5187,6 @@
           }
         ],
         "summary": "Delete (deactivate) packet by code",
-        "tags": [
-          "Packets"
-        ]
-      }
-    },
-    "/packets/receive": {
-      "post": {
-        "operationId": "PacketsController_receive",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": "Packets received successfully"
-          }
-        },
-        "security": [
-          {
-            "access-token": []
-          }
-        ],
-        "summary": "Receive packets into stock",
-        "tags": [
-          "Packets"
-        ]
-      }
-    },
-    "/packets/issue": {
-      "post": {
-        "operationId": "PacketsController_issue",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": "Packets issued successfully"
-          }
-        },
-        "security": [
-          {
-            "access-token": []
-          }
-        ],
-        "summary": "Issue packets from stock",
         "tags": [
           "Packets"
         ]
@@ -5839,6 +6528,9 @@
         "responses": {
           "201": {
             "description": "Branch created successfully"
+          },
+          "409": {
+            "description": "Branch code already in use"
           }
         },
         "security": [
@@ -5866,9 +6558,25 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBranchDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Branch updated successfully"
+          },
+          "404": {
+            "description": "Branch not found"
+          },
+          "409": {
+            "description": "Branch code already in use"
           }
         },
         "security": [
@@ -7989,6 +8697,129 @@
           "items"
         ]
       },
+      "VehicleChallanLineDto": {
+        "type": "object",
+        "properties": {
+          "itemId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Item_Information UUID of the item loaded onto the vehicle"
+          },
+          "qty": {
+            "type": "number",
+            "example": 25,
+            "description": "Quantity loaded (must be > 0)"
+          }
+        },
+        "required": [
+          "itemId",
+          "qty"
+        ]
+      },
+      "CreateVehicleChallanDto": {
+        "type": "object",
+        "properties": {
+          "challanDate": {
+            "type": "string",
+            "example": "2026-08-27",
+            "description": "Challan date (ISO 8601)"
+          },
+          "route": {
+            "type": "string",
+            "example": "Mirpur-Uttara Route",
+            "description": "Where the van is headed; prints as the \"To:\" heading"
+          },
+          "vehicleNo": {
+            "type": "string",
+            "example": "DHAKA METRO-TA-11-2233",
+            "description": "Registration of the vehicle leaving the factory"
+          },
+          "driverName": {
+            "type": "string",
+            "example": "Abdul Karim"
+          },
+          "driverMobile": {
+            "type": "string",
+            "example": "01711-000000"
+          },
+          "voucherNo": {
+            "type": "string",
+            "example": "CH-0012",
+            "description": "Manual voucher number; prints as the challan number when set"
+          },
+          "remarks": {
+            "type": "string",
+            "example": "Morning trip",
+            "description": "Free-text note stored on every line of this challan"
+          },
+          "serialNo": {
+            "type": "string",
+            "example": "VCH-FAC-202608-00001",
+            "description": "Serial number; generated when omitted"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VehicleChallanLineDto"
+            }
+          }
+        },
+        "required": [
+          "challanDate",
+          "vehicleNo",
+          "items"
+        ]
+      },
+      "UpdateVehicleChallanDto": {
+        "type": "object",
+        "properties": {
+          "challanDate": {
+            "type": "string",
+            "example": "2026-08-27",
+            "description": "Challan date (ISO 8601)"
+          },
+          "route": {
+            "type": "string",
+            "example": "Mirpur-Uttara Route",
+            "description": "Where the van is headed; prints as the \"To:\" heading"
+          },
+          "vehicleNo": {
+            "type": "string",
+            "example": "DHAKA METRO-TA-11-2233",
+            "description": "Registration of the vehicle leaving the factory"
+          },
+          "driverName": {
+            "type": "string",
+            "example": "Abdul Karim"
+          },
+          "driverMobile": {
+            "type": "string",
+            "example": "01711-000000"
+          },
+          "voucherNo": {
+            "type": "string",
+            "example": "CH-0012",
+            "description": "Manual voucher number; prints as the challan number when set"
+          },
+          "remarks": {
+            "type": "string",
+            "example": "Morning trip",
+            "description": "Free-text note stored on every line of this challan"
+          },
+          "items": {
+            "description": "Full replacement set of lines for this serial number",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VehicleChallanLineDto"
+            }
+          }
+        },
+        "required": [
+          "challanDate",
+          "vehicleNo",
+          "items"
+        ]
+      },
       "CreateCustomerDto": {
         "type": "object",
         "properties": {
@@ -8066,7 +8897,147 @@
         "type": "object",
         "properties": {}
       },
+      "PacketLineDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "P001",
+            "description": "PacketInfo.code of the packet"
+          },
+          "qty": {
+            "type": "number",
+            "example": 25,
+            "description": "Quantity (must be > 0)"
+          }
+        },
+        "required": [
+          "code",
+          "qty"
+        ]
+      },
+      "CreatePacketReceiveDto": {
+        "type": "object",
+        "properties": {
+          "serialNo": {
+            "type": "string",
+            "example": "PKR-FAC-202608-00001",
+            "description": "Serial number; generated when omitted"
+          },
+          "voucharNo": {
+            "type": "string",
+            "example": "VCH-1043",
+            "description": "Supplier voucher / challan number"
+          },
+          "receiveDate": {
+            "type": "string",
+            "example": "2026-08-27",
+            "description": "Receive date (ISO 8601)"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PacketLineDto"
+            }
+          }
+        },
+        "required": [
+          "receiveDate",
+          "items"
+        ]
+      },
+      "UpdatePacketReceiveDto": {
+        "type": "object",
+        "properties": {
+          "voucharNo": {
+            "type": "string",
+            "example": "VCH-1043"
+          },
+          "receiveDate": {
+            "type": "string",
+            "example": "2026-08-27"
+          },
+          "items": {
+            "description": "Full replacement set of lines for this serial number",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PacketLineDto"
+            }
+          }
+        },
+        "required": [
+          "receiveDate",
+          "items"
+        ]
+      },
+      "CreatePacketIssueDto": {
+        "type": "object",
+        "properties": {
+          "serialNo": {
+            "type": "string",
+            "example": "PKI-FAC-202608-00001",
+            "description": "Serial number; generated when omitted"
+          },
+          "invoiceNo": {
+            "type": "string",
+            "example": "INV-2201",
+            "description": "Related sale invoice number, when the issue backs one"
+          },
+          "issueType": {
+            "type": "string",
+            "example": "Sale",
+            "description": "Sale | Internal | Damaged"
+          },
+          "issueDate": {
+            "type": "string",
+            "example": "2026-08-27",
+            "description": "Issue date (ISO 8601)"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PacketLineDto"
+            }
+          }
+        },
+        "required": [
+          "issueDate",
+          "items"
+        ]
+      },
+      "UpdatePacketIssueDto": {
+        "type": "object",
+        "properties": {
+          "invoiceNo": {
+            "type": "string",
+            "example": "INV-2201"
+          },
+          "issueType": {
+            "type": "string",
+            "example": "Sale"
+          },
+          "issueDate": {
+            "type": "string",
+            "example": "2026-08-27"
+          },
+          "items": {
+            "description": "Full replacement set of lines for this serial number",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PacketLineDto"
+            }
+          }
+        },
+        "required": [
+          "issueDate",
+          "items"
+        ]
+      },
       "CreatePacketDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdatePacketDto": {
         "type": "object",
         "properties": {}
       },
@@ -8087,6 +9058,10 @@
         "properties": {}
       },
       "CreateBranchDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateBranchDto": {
         "type": "object",
         "properties": {}
       },

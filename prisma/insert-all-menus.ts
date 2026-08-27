@@ -24,6 +24,9 @@ const newMenus = [
   // Factory-only: the sidebar hides it unless the session branch is the
   // factory, and ProductionService rejects any other branch outright.
   { menuName: 'Production Entry', controlName: 'ProductionEntry', order: 8, parentMenu: 'Inventory', module: 'Inventory' },
+  // Factory-only as well: the gate pass for a loaded van, which records what
+  // physically left the factory without moving any stock.
+  { menuName: 'Vehicle Challan', controlName: 'VehicleChallan', order: 9, parentMenu: 'Inventory', module: 'Inventory' },
   // Factory Report — a top-level group (parentMenu null) whose every leaf is
   // factory-only, so the sidebar drops the whole group for any other branch.
   { menuName: 'Factory Report', controlName: 'FactoryReport', order: 12, parentMenu: null, module: 'Inventory' },

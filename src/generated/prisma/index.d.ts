@@ -189,6 +189,20 @@ export type Item_Receive = $Result.DefaultSelection<Prisma.$Item_ReceivePayload>
  */
 export type Item_Issue = $Result.DefaultSelection<Prisma.$Item_IssuePayload>
 /**
+ * Model Vehicle_Challan
+ * Vehicle Challan — the gate pass for a loaded van leaving the factory on a
+ * route, before anyone knows which outlet will take what.
+ * 
+ * Deliberately has NO destination branch and NO stock effect. The van tours the
+ * outlets; whatever an outlet keeps is entered as a real Stock Issue at that
+ * point, and the rest comes back. This document exists only so security and
+ * the factory can account for what physically left on the vehicle.
+ * 
+ * Shares Item_Issue's shape: one row per item line, every line of a document
+ * carrying the same SerialNo, which is what the API addresses.
+ */
+export type Vehicle_Challan = $Result.DefaultSelection<Prisma.$Vehicle_ChallanPayload>
+/**
  * Model Production
  * Production Entry — factory-only record of manufactured output. One row per
  * item line; all lines of one entry share a `serialNo` (PRD-...) so the
@@ -729,6 +743,16 @@ export class PrismaClient<
     * ```
     */
   get item_Issue(): Prisma.Item_IssueDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.vehicle_Challan`: Exposes CRUD operations for the **Vehicle_Challan** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Vehicle_Challans
+    * const vehicle_Challans = await prisma.vehicle_Challan.findMany()
+    * ```
+    */
+  get vehicle_Challan(): Prisma.Vehicle_ChallanDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.production`: Exposes CRUD operations for the **Production** model.
@@ -1345,6 +1369,7 @@ export namespace Prisma {
     t_NCDet: 't_NCDet',
     Item_Receive: 'Item_Receive',
     Item_Issue: 'Item_Issue',
+    Vehicle_Challan: 'Vehicle_Challan',
     Production: 'Production',
     ItemReject: 'ItemReject',
     PacketInfo: 'PacketInfo',
@@ -1377,7 +1402,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "customer_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "production" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "demandOrder_Master" | "demandOrder_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
+      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "customer_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "vehicle_Challan" | "production" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "demandOrder_Master" | "demandOrder_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3971,6 +3996,80 @@ export namespace Prisma {
           }
         }
       }
+      Vehicle_Challan: {
+        payload: Prisma.$Vehicle_ChallanPayload<ExtArgs>
+        fields: Prisma.Vehicle_ChallanFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.Vehicle_ChallanFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Vehicle_ChallanPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.Vehicle_ChallanFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Vehicle_ChallanPayload>
+          }
+          findFirst: {
+            args: Prisma.Vehicle_ChallanFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Vehicle_ChallanPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.Vehicle_ChallanFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Vehicle_ChallanPayload>
+          }
+          findMany: {
+            args: Prisma.Vehicle_ChallanFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Vehicle_ChallanPayload>[]
+          }
+          create: {
+            args: Prisma.Vehicle_ChallanCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Vehicle_ChallanPayload>
+          }
+          createMany: {
+            args: Prisma.Vehicle_ChallanCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.Vehicle_ChallanCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Vehicle_ChallanPayload>[]
+          }
+          delete: {
+            args: Prisma.Vehicle_ChallanDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Vehicle_ChallanPayload>
+          }
+          update: {
+            args: Prisma.Vehicle_ChallanUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Vehicle_ChallanPayload>
+          }
+          deleteMany: {
+            args: Prisma.Vehicle_ChallanDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.Vehicle_ChallanUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.Vehicle_ChallanUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Vehicle_ChallanPayload>[]
+          }
+          upsert: {
+            args: Prisma.Vehicle_ChallanUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Vehicle_ChallanPayload>
+          }
+          aggregate: {
+            args: Prisma.Vehicle_ChallanAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVehicle_Challan>
+          }
+          groupBy: {
+            args: Prisma.Vehicle_ChallanGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Vehicle_ChallanGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.Vehicle_ChallanCountArgs<ExtArgs>
+            result: $Utils.Optional<Vehicle_ChallanCountAggregateOutputType> | number
+          }
+        }
+      }
       Production: {
         payload: Prisma.$ProductionPayload<ExtArgs>
         fields: Prisma.ProductionFieldRefs
@@ -5138,6 +5237,7 @@ export namespace Prisma {
     t_NCDet?: t_NCDetOmit
     item_Receive?: Item_ReceiveOmit
     item_Issue?: Item_IssueOmit
+    vehicle_Challan?: Vehicle_ChallanOmit
     production?: ProductionOmit
     itemReject?: ItemRejectOmit
     packetInfo?: PacketInfoOmit
@@ -5514,6 +5614,7 @@ export namespace Prisma {
     productions: number
     orderDetails: number
     demandOrderDetails: number
+    vehicleChallans: number
     prices: number
     costPrices: number
   }
@@ -5530,6 +5631,7 @@ export namespace Prisma {
     productions?: boolean | Item_InformationCountOutputTypeCountProductionsArgs
     orderDetails?: boolean | Item_InformationCountOutputTypeCountOrderDetailsArgs
     demandOrderDetails?: boolean | Item_InformationCountOutputTypeCountDemandOrderDetailsArgs
+    vehicleChallans?: boolean | Item_InformationCountOutputTypeCountVehicleChallansArgs
     prices?: boolean | Item_InformationCountOutputTypeCountPricesArgs
     costPrices?: boolean | Item_InformationCountOutputTypeCountCostPricesArgs
   }
@@ -5620,6 +5722,13 @@ export namespace Prisma {
    */
   export type Item_InformationCountOutputTypeCountDemandOrderDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DemandOrder_DetailWhereInput
+  }
+
+  /**
+   * Item_InformationCountOutputType without action
+   */
+  export type Item_InformationCountOutputTypeCountVehicleChallansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: Vehicle_ChallanWhereInput
   }
 
   /**
@@ -22954,6 +23063,7 @@ export namespace Prisma {
     productions?: boolean | Item_Information$productionsArgs<ExtArgs>
     orderDetails?: boolean | Item_Information$orderDetailsArgs<ExtArgs>
     demandOrderDetails?: boolean | Item_Information$demandOrderDetailsArgs<ExtArgs>
+    vehicleChallans?: boolean | Item_Information$vehicleChallansArgs<ExtArgs>
     inventory?: boolean | Item_Information$inventoryArgs<ExtArgs>
     prices?: boolean | Item_Information$pricesArgs<ExtArgs>
     costPrices?: boolean | Item_Information$costPricesArgs<ExtArgs>
@@ -23018,6 +23128,7 @@ export namespace Prisma {
     productions?: boolean | Item_Information$productionsArgs<ExtArgs>
     orderDetails?: boolean | Item_Information$orderDetailsArgs<ExtArgs>
     demandOrderDetails?: boolean | Item_Information$demandOrderDetailsArgs<ExtArgs>
+    vehicleChallans?: boolean | Item_Information$vehicleChallansArgs<ExtArgs>
     inventory?: boolean | Item_Information$inventoryArgs<ExtArgs>
     prices?: boolean | Item_Information$pricesArgs<ExtArgs>
     costPrices?: boolean | Item_Information$costPricesArgs<ExtArgs>
@@ -23045,6 +23156,7 @@ export namespace Prisma {
       productions: Prisma.$ProductionPayload<ExtArgs>[]
       orderDetails: Prisma.$OrderReceive_DetailPayload<ExtArgs>[]
       demandOrderDetails: Prisma.$DemandOrder_DetailPayload<ExtArgs>[]
+      vehicleChallans: Prisma.$Vehicle_ChallanPayload<ExtArgs>[]
       inventory: Prisma.$InventoryPayload<ExtArgs> | null
       prices: Prisma.$t_PricePayload<ExtArgs>[]
       costPrices: Prisma.$t_CostPrPayload<ExtArgs>[]
@@ -23467,6 +23579,7 @@ export namespace Prisma {
     productions<T extends Item_Information$productionsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$productionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orderDetails<T extends Item_Information$orderDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$orderDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderReceive_DetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     demandOrderDetails<T extends Item_Information$demandOrderDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$demandOrderDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    vehicleChallans<T extends Item_Information$vehicleChallansArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$vehicleChallansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Vehicle_ChallanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     inventory<T extends Item_Information$inventoryArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$inventoryArgs<ExtArgs>>): Prisma__InventoryClient<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     prices<T extends Item_Information$pricesArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$pricesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_PricePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     costPrices<T extends Item_Information$costPricesArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$costPricesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_CostPrPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -24186,6 +24299,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: DemandOrder_DetailScalarFieldEnum | DemandOrder_DetailScalarFieldEnum[]
+  }
+
+  /**
+   * Item_Information.vehicleChallans
+   */
+  export type Item_Information$vehicleChallansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vehicle_Challan
+     */
+    select?: Vehicle_ChallanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vehicle_Challan
+     */
+    omit?: Vehicle_ChallanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Vehicle_ChallanInclude<ExtArgs> | null
+    where?: Vehicle_ChallanWhereInput
+    orderBy?: Vehicle_ChallanOrderByWithRelationInput | Vehicle_ChallanOrderByWithRelationInput[]
+    cursor?: Vehicle_ChallanWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Vehicle_ChallanScalarFieldEnum | Vehicle_ChallanScalarFieldEnum[]
   }
 
   /**
@@ -47603,6 +47740,1283 @@ export namespace Prisma {
 
 
   /**
+   * Model Vehicle_Challan
+   */
+
+  export type AggregateVehicle_Challan = {
+    _count: Vehicle_ChallanCountAggregateOutputType | null
+    _avg: Vehicle_ChallanAvgAggregateOutputType | null
+    _sum: Vehicle_ChallanSumAggregateOutputType | null
+    _min: Vehicle_ChallanMinAggregateOutputType | null
+    _max: Vehicle_ChallanMaxAggregateOutputType | null
+  }
+
+  export type Vehicle_ChallanAvgAggregateOutputType = {
+    qty: Decimal | null
+    isActive: number | null
+  }
+
+  export type Vehicle_ChallanSumAggregateOutputType = {
+    qty: Decimal | null
+    isActive: number | null
+  }
+
+  export type Vehicle_ChallanMinAggregateOutputType = {
+    id: string | null
+    serialNo: string | null
+    voucharNo: string | null
+    itemId: string | null
+    qty: Decimal | null
+    challanDate: Date | null
+    branchId: string | null
+    route: string | null
+    vehicleNo: string | null
+    driverName: string | null
+    driverMobile: string | null
+    remarks: string | null
+    isActive: number | null
+    createBy: string | null
+    createDate: Date | null
+    updateBy: string | null
+    updateDate: Date | null
+  }
+
+  export type Vehicle_ChallanMaxAggregateOutputType = {
+    id: string | null
+    serialNo: string | null
+    voucharNo: string | null
+    itemId: string | null
+    qty: Decimal | null
+    challanDate: Date | null
+    branchId: string | null
+    route: string | null
+    vehicleNo: string | null
+    driverName: string | null
+    driverMobile: string | null
+    remarks: string | null
+    isActive: number | null
+    createBy: string | null
+    createDate: Date | null
+    updateBy: string | null
+    updateDate: Date | null
+  }
+
+  export type Vehicle_ChallanCountAggregateOutputType = {
+    id: number
+    serialNo: number
+    voucharNo: number
+    itemId: number
+    qty: number
+    challanDate: number
+    branchId: number
+    route: number
+    vehicleNo: number
+    driverName: number
+    driverMobile: number
+    remarks: number
+    isActive: number
+    createBy: number
+    createDate: number
+    updateBy: number
+    updateDate: number
+    _all: number
+  }
+
+
+  export type Vehicle_ChallanAvgAggregateInputType = {
+    qty?: true
+    isActive?: true
+  }
+
+  export type Vehicle_ChallanSumAggregateInputType = {
+    qty?: true
+    isActive?: true
+  }
+
+  export type Vehicle_ChallanMinAggregateInputType = {
+    id?: true
+    serialNo?: true
+    voucharNo?: true
+    itemId?: true
+    qty?: true
+    challanDate?: true
+    branchId?: true
+    route?: true
+    vehicleNo?: true
+    driverName?: true
+    driverMobile?: true
+    remarks?: true
+    isActive?: true
+    createBy?: true
+    createDate?: true
+    updateBy?: true
+    updateDate?: true
+  }
+
+  export type Vehicle_ChallanMaxAggregateInputType = {
+    id?: true
+    serialNo?: true
+    voucharNo?: true
+    itemId?: true
+    qty?: true
+    challanDate?: true
+    branchId?: true
+    route?: true
+    vehicleNo?: true
+    driverName?: true
+    driverMobile?: true
+    remarks?: true
+    isActive?: true
+    createBy?: true
+    createDate?: true
+    updateBy?: true
+    updateDate?: true
+  }
+
+  export type Vehicle_ChallanCountAggregateInputType = {
+    id?: true
+    serialNo?: true
+    voucharNo?: true
+    itemId?: true
+    qty?: true
+    challanDate?: true
+    branchId?: true
+    route?: true
+    vehicleNo?: true
+    driverName?: true
+    driverMobile?: true
+    remarks?: true
+    isActive?: true
+    createBy?: true
+    createDate?: true
+    updateBy?: true
+    updateDate?: true
+    _all?: true
+  }
+
+  export type Vehicle_ChallanAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Vehicle_Challan to aggregate.
+     */
+    where?: Vehicle_ChallanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Vehicle_Challans to fetch.
+     */
+    orderBy?: Vehicle_ChallanOrderByWithRelationInput | Vehicle_ChallanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: Vehicle_ChallanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Vehicle_Challans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Vehicle_Challans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Vehicle_Challans
+    **/
+    _count?: true | Vehicle_ChallanCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Vehicle_ChallanAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Vehicle_ChallanSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Vehicle_ChallanMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Vehicle_ChallanMaxAggregateInputType
+  }
+
+  export type GetVehicle_ChallanAggregateType<T extends Vehicle_ChallanAggregateArgs> = {
+        [P in keyof T & keyof AggregateVehicle_Challan]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVehicle_Challan[P]>
+      : GetScalarType<T[P], AggregateVehicle_Challan[P]>
+  }
+
+
+
+
+  export type Vehicle_ChallanGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: Vehicle_ChallanWhereInput
+    orderBy?: Vehicle_ChallanOrderByWithAggregationInput | Vehicle_ChallanOrderByWithAggregationInput[]
+    by: Vehicle_ChallanScalarFieldEnum[] | Vehicle_ChallanScalarFieldEnum
+    having?: Vehicle_ChallanScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Vehicle_ChallanCountAggregateInputType | true
+    _avg?: Vehicle_ChallanAvgAggregateInputType
+    _sum?: Vehicle_ChallanSumAggregateInputType
+    _min?: Vehicle_ChallanMinAggregateInputType
+    _max?: Vehicle_ChallanMaxAggregateInputType
+  }
+
+  export type Vehicle_ChallanGroupByOutputType = {
+    id: string
+    serialNo: string | null
+    voucharNo: string | null
+    itemId: string | null
+    qty: Decimal | null
+    challanDate: Date | null
+    branchId: string
+    route: string | null
+    vehicleNo: string | null
+    driverName: string | null
+    driverMobile: string | null
+    remarks: string | null
+    isActive: number | null
+    createBy: string | null
+    createDate: Date | null
+    updateBy: string | null
+    updateDate: Date | null
+    _count: Vehicle_ChallanCountAggregateOutputType | null
+    _avg: Vehicle_ChallanAvgAggregateOutputType | null
+    _sum: Vehicle_ChallanSumAggregateOutputType | null
+    _min: Vehicle_ChallanMinAggregateOutputType | null
+    _max: Vehicle_ChallanMaxAggregateOutputType | null
+  }
+
+  type GetVehicle_ChallanGroupByPayload<T extends Vehicle_ChallanGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Vehicle_ChallanGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Vehicle_ChallanGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Vehicle_ChallanGroupByOutputType[P]>
+            : GetScalarType<T[P], Vehicle_ChallanGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type Vehicle_ChallanSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    serialNo?: boolean
+    voucharNo?: boolean
+    itemId?: boolean
+    qty?: boolean
+    challanDate?: boolean
+    branchId?: boolean
+    route?: boolean
+    vehicleNo?: boolean
+    driverName?: boolean
+    driverMobile?: boolean
+    remarks?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+    updateBy?: boolean
+    updateDate?: boolean
+    item?: boolean | Vehicle_Challan$itemArgs<ExtArgs>
+  }, ExtArgs["result"]["vehicle_Challan"]>
+
+  export type Vehicle_ChallanSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    serialNo?: boolean
+    voucharNo?: boolean
+    itemId?: boolean
+    qty?: boolean
+    challanDate?: boolean
+    branchId?: boolean
+    route?: boolean
+    vehicleNo?: boolean
+    driverName?: boolean
+    driverMobile?: boolean
+    remarks?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+    updateBy?: boolean
+    updateDate?: boolean
+    item?: boolean | Vehicle_Challan$itemArgs<ExtArgs>
+  }, ExtArgs["result"]["vehicle_Challan"]>
+
+  export type Vehicle_ChallanSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    serialNo?: boolean
+    voucharNo?: boolean
+    itemId?: boolean
+    qty?: boolean
+    challanDate?: boolean
+    branchId?: boolean
+    route?: boolean
+    vehicleNo?: boolean
+    driverName?: boolean
+    driverMobile?: boolean
+    remarks?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+    updateBy?: boolean
+    updateDate?: boolean
+    item?: boolean | Vehicle_Challan$itemArgs<ExtArgs>
+  }, ExtArgs["result"]["vehicle_Challan"]>
+
+  export type Vehicle_ChallanSelectScalar = {
+    id?: boolean
+    serialNo?: boolean
+    voucharNo?: boolean
+    itemId?: boolean
+    qty?: boolean
+    challanDate?: boolean
+    branchId?: boolean
+    route?: boolean
+    vehicleNo?: boolean
+    driverName?: boolean
+    driverMobile?: boolean
+    remarks?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+    updateBy?: boolean
+    updateDate?: boolean
+  }
+
+  export type Vehicle_ChallanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemId" | "qty" | "challanDate" | "branchId" | "route" | "vehicleNo" | "driverName" | "driverMobile" | "remarks" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["vehicle_Challan"]>
+  export type Vehicle_ChallanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    item?: boolean | Vehicle_Challan$itemArgs<ExtArgs>
+  }
+  export type Vehicle_ChallanIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    item?: boolean | Vehicle_Challan$itemArgs<ExtArgs>
+  }
+  export type Vehicle_ChallanIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    item?: boolean | Vehicle_Challan$itemArgs<ExtArgs>
+  }
+
+  export type $Vehicle_ChallanPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Vehicle_Challan"
+    objects: {
+      item: Prisma.$Item_InformationPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      serialNo: string | null
+      voucharNo: string | null
+      itemId: string | null
+      qty: Prisma.Decimal | null
+      challanDate: Date | null
+      /**
+       * The despatching branch (the factory). There is no receiving branch.
+       */
+      branchId: string
+      /**
+       * Where the van is headed — free text, printed as the "To:" heading.
+       */
+      route: string | null
+      vehicleNo: string | null
+      driverName: string | null
+      driverMobile: string | null
+      remarks: string | null
+      isActive: number | null
+      createBy: string | null
+      createDate: Date | null
+      updateBy: string | null
+      updateDate: Date | null
+    }, ExtArgs["result"]["vehicle_Challan"]>
+    composites: {}
+  }
+
+  type Vehicle_ChallanGetPayload<S extends boolean | null | undefined | Vehicle_ChallanDefaultArgs> = $Result.GetResult<Prisma.$Vehicle_ChallanPayload, S>
+
+  type Vehicle_ChallanCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<Vehicle_ChallanFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Vehicle_ChallanCountAggregateInputType | true
+    }
+
+  export interface Vehicle_ChallanDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Vehicle_Challan'], meta: { name: 'Vehicle_Challan' } }
+    /**
+     * Find zero or one Vehicle_Challan that matches the filter.
+     * @param {Vehicle_ChallanFindUniqueArgs} args - Arguments to find a Vehicle_Challan
+     * @example
+     * // Get one Vehicle_Challan
+     * const vehicle_Challan = await prisma.vehicle_Challan.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends Vehicle_ChallanFindUniqueArgs>(args: SelectSubset<T, Vehicle_ChallanFindUniqueArgs<ExtArgs>>): Prisma__Vehicle_ChallanClient<$Result.GetResult<Prisma.$Vehicle_ChallanPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Vehicle_Challan that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {Vehicle_ChallanFindUniqueOrThrowArgs} args - Arguments to find a Vehicle_Challan
+     * @example
+     * // Get one Vehicle_Challan
+     * const vehicle_Challan = await prisma.vehicle_Challan.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends Vehicle_ChallanFindUniqueOrThrowArgs>(args: SelectSubset<T, Vehicle_ChallanFindUniqueOrThrowArgs<ExtArgs>>): Prisma__Vehicle_ChallanClient<$Result.GetResult<Prisma.$Vehicle_ChallanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Vehicle_Challan that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Vehicle_ChallanFindFirstArgs} args - Arguments to find a Vehicle_Challan
+     * @example
+     * // Get one Vehicle_Challan
+     * const vehicle_Challan = await prisma.vehicle_Challan.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends Vehicle_ChallanFindFirstArgs>(args?: SelectSubset<T, Vehicle_ChallanFindFirstArgs<ExtArgs>>): Prisma__Vehicle_ChallanClient<$Result.GetResult<Prisma.$Vehicle_ChallanPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Vehicle_Challan that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Vehicle_ChallanFindFirstOrThrowArgs} args - Arguments to find a Vehicle_Challan
+     * @example
+     * // Get one Vehicle_Challan
+     * const vehicle_Challan = await prisma.vehicle_Challan.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends Vehicle_ChallanFindFirstOrThrowArgs>(args?: SelectSubset<T, Vehicle_ChallanFindFirstOrThrowArgs<ExtArgs>>): Prisma__Vehicle_ChallanClient<$Result.GetResult<Prisma.$Vehicle_ChallanPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Vehicle_Challans that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Vehicle_ChallanFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Vehicle_Challans
+     * const vehicle_Challans = await prisma.vehicle_Challan.findMany()
+     * 
+     * // Get first 10 Vehicle_Challans
+     * const vehicle_Challans = await prisma.vehicle_Challan.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const vehicle_ChallanWithIdOnly = await prisma.vehicle_Challan.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends Vehicle_ChallanFindManyArgs>(args?: SelectSubset<T, Vehicle_ChallanFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Vehicle_ChallanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Vehicle_Challan.
+     * @param {Vehicle_ChallanCreateArgs} args - Arguments to create a Vehicle_Challan.
+     * @example
+     * // Create one Vehicle_Challan
+     * const Vehicle_Challan = await prisma.vehicle_Challan.create({
+     *   data: {
+     *     // ... data to create a Vehicle_Challan
+     *   }
+     * })
+     * 
+     */
+    create<T extends Vehicle_ChallanCreateArgs>(args: SelectSubset<T, Vehicle_ChallanCreateArgs<ExtArgs>>): Prisma__Vehicle_ChallanClient<$Result.GetResult<Prisma.$Vehicle_ChallanPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Vehicle_Challans.
+     * @param {Vehicle_ChallanCreateManyArgs} args - Arguments to create many Vehicle_Challans.
+     * @example
+     * // Create many Vehicle_Challans
+     * const vehicle_Challan = await prisma.vehicle_Challan.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends Vehicle_ChallanCreateManyArgs>(args?: SelectSubset<T, Vehicle_ChallanCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Vehicle_Challans and returns the data saved in the database.
+     * @param {Vehicle_ChallanCreateManyAndReturnArgs} args - Arguments to create many Vehicle_Challans.
+     * @example
+     * // Create many Vehicle_Challans
+     * const vehicle_Challan = await prisma.vehicle_Challan.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Vehicle_Challans and only return the `id`
+     * const vehicle_ChallanWithIdOnly = await prisma.vehicle_Challan.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends Vehicle_ChallanCreateManyAndReturnArgs>(args?: SelectSubset<T, Vehicle_ChallanCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Vehicle_ChallanPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Vehicle_Challan.
+     * @param {Vehicle_ChallanDeleteArgs} args - Arguments to delete one Vehicle_Challan.
+     * @example
+     * // Delete one Vehicle_Challan
+     * const Vehicle_Challan = await prisma.vehicle_Challan.delete({
+     *   where: {
+     *     // ... filter to delete one Vehicle_Challan
+     *   }
+     * })
+     * 
+     */
+    delete<T extends Vehicle_ChallanDeleteArgs>(args: SelectSubset<T, Vehicle_ChallanDeleteArgs<ExtArgs>>): Prisma__Vehicle_ChallanClient<$Result.GetResult<Prisma.$Vehicle_ChallanPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Vehicle_Challan.
+     * @param {Vehicle_ChallanUpdateArgs} args - Arguments to update one Vehicle_Challan.
+     * @example
+     * // Update one Vehicle_Challan
+     * const vehicle_Challan = await prisma.vehicle_Challan.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends Vehicle_ChallanUpdateArgs>(args: SelectSubset<T, Vehicle_ChallanUpdateArgs<ExtArgs>>): Prisma__Vehicle_ChallanClient<$Result.GetResult<Prisma.$Vehicle_ChallanPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Vehicle_Challans.
+     * @param {Vehicle_ChallanDeleteManyArgs} args - Arguments to filter Vehicle_Challans to delete.
+     * @example
+     * // Delete a few Vehicle_Challans
+     * const { count } = await prisma.vehicle_Challan.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends Vehicle_ChallanDeleteManyArgs>(args?: SelectSubset<T, Vehicle_ChallanDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Vehicle_Challans.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Vehicle_ChallanUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Vehicle_Challans
+     * const vehicle_Challan = await prisma.vehicle_Challan.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends Vehicle_ChallanUpdateManyArgs>(args: SelectSubset<T, Vehicle_ChallanUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Vehicle_Challans and returns the data updated in the database.
+     * @param {Vehicle_ChallanUpdateManyAndReturnArgs} args - Arguments to update many Vehicle_Challans.
+     * @example
+     * // Update many Vehicle_Challans
+     * const vehicle_Challan = await prisma.vehicle_Challan.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Vehicle_Challans and only return the `id`
+     * const vehicle_ChallanWithIdOnly = await prisma.vehicle_Challan.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends Vehicle_ChallanUpdateManyAndReturnArgs>(args: SelectSubset<T, Vehicle_ChallanUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Vehicle_ChallanPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Vehicle_Challan.
+     * @param {Vehicle_ChallanUpsertArgs} args - Arguments to update or create a Vehicle_Challan.
+     * @example
+     * // Update or create a Vehicle_Challan
+     * const vehicle_Challan = await prisma.vehicle_Challan.upsert({
+     *   create: {
+     *     // ... data to create a Vehicle_Challan
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Vehicle_Challan we want to update
+     *   }
+     * })
+     */
+    upsert<T extends Vehicle_ChallanUpsertArgs>(args: SelectSubset<T, Vehicle_ChallanUpsertArgs<ExtArgs>>): Prisma__Vehicle_ChallanClient<$Result.GetResult<Prisma.$Vehicle_ChallanPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Vehicle_Challans.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Vehicle_ChallanCountArgs} args - Arguments to filter Vehicle_Challans to count.
+     * @example
+     * // Count the number of Vehicle_Challans
+     * const count = await prisma.vehicle_Challan.count({
+     *   where: {
+     *     // ... the filter for the Vehicle_Challans we want to count
+     *   }
+     * })
+    **/
+    count<T extends Vehicle_ChallanCountArgs>(
+      args?: Subset<T, Vehicle_ChallanCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Vehicle_ChallanCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Vehicle_Challan.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Vehicle_ChallanAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Vehicle_ChallanAggregateArgs>(args: Subset<T, Vehicle_ChallanAggregateArgs>): Prisma.PrismaPromise<GetVehicle_ChallanAggregateType<T>>
+
+    /**
+     * Group by Vehicle_Challan.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Vehicle_ChallanGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends Vehicle_ChallanGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: Vehicle_ChallanGroupByArgs['orderBy'] }
+        : { orderBy?: Vehicle_ChallanGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, Vehicle_ChallanGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVehicle_ChallanGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Vehicle_Challan model
+   */
+  readonly fields: Vehicle_ChallanFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Vehicle_Challan.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__Vehicle_ChallanClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    item<T extends Vehicle_Challan$itemArgs<ExtArgs> = {}>(args?: Subset<T, Vehicle_Challan$itemArgs<ExtArgs>>): Prisma__Item_InformationClient<$Result.GetResult<Prisma.$Item_InformationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Vehicle_Challan model
+   */
+  interface Vehicle_ChallanFieldRefs {
+    readonly id: FieldRef<"Vehicle_Challan", 'String'>
+    readonly serialNo: FieldRef<"Vehicle_Challan", 'String'>
+    readonly voucharNo: FieldRef<"Vehicle_Challan", 'String'>
+    readonly itemId: FieldRef<"Vehicle_Challan", 'String'>
+    readonly qty: FieldRef<"Vehicle_Challan", 'Decimal'>
+    readonly challanDate: FieldRef<"Vehicle_Challan", 'DateTime'>
+    readonly branchId: FieldRef<"Vehicle_Challan", 'String'>
+    readonly route: FieldRef<"Vehicle_Challan", 'String'>
+    readonly vehicleNo: FieldRef<"Vehicle_Challan", 'String'>
+    readonly driverName: FieldRef<"Vehicle_Challan", 'String'>
+    readonly driverMobile: FieldRef<"Vehicle_Challan", 'String'>
+    readonly remarks: FieldRef<"Vehicle_Challan", 'String'>
+    readonly isActive: FieldRef<"Vehicle_Challan", 'Int'>
+    readonly createBy: FieldRef<"Vehicle_Challan", 'String'>
+    readonly createDate: FieldRef<"Vehicle_Challan", 'DateTime'>
+    readonly updateBy: FieldRef<"Vehicle_Challan", 'String'>
+    readonly updateDate: FieldRef<"Vehicle_Challan", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Vehicle_Challan findUnique
+   */
+  export type Vehicle_ChallanFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vehicle_Challan
+     */
+    select?: Vehicle_ChallanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vehicle_Challan
+     */
+    omit?: Vehicle_ChallanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Vehicle_ChallanInclude<ExtArgs> | null
+    /**
+     * Filter, which Vehicle_Challan to fetch.
+     */
+    where: Vehicle_ChallanWhereUniqueInput
+  }
+
+  /**
+   * Vehicle_Challan findUniqueOrThrow
+   */
+  export type Vehicle_ChallanFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vehicle_Challan
+     */
+    select?: Vehicle_ChallanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vehicle_Challan
+     */
+    omit?: Vehicle_ChallanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Vehicle_ChallanInclude<ExtArgs> | null
+    /**
+     * Filter, which Vehicle_Challan to fetch.
+     */
+    where: Vehicle_ChallanWhereUniqueInput
+  }
+
+  /**
+   * Vehicle_Challan findFirst
+   */
+  export type Vehicle_ChallanFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vehicle_Challan
+     */
+    select?: Vehicle_ChallanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vehicle_Challan
+     */
+    omit?: Vehicle_ChallanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Vehicle_ChallanInclude<ExtArgs> | null
+    /**
+     * Filter, which Vehicle_Challan to fetch.
+     */
+    where?: Vehicle_ChallanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Vehicle_Challans to fetch.
+     */
+    orderBy?: Vehicle_ChallanOrderByWithRelationInput | Vehicle_ChallanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Vehicle_Challans.
+     */
+    cursor?: Vehicle_ChallanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Vehicle_Challans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Vehicle_Challans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Vehicle_Challans.
+     */
+    distinct?: Vehicle_ChallanScalarFieldEnum | Vehicle_ChallanScalarFieldEnum[]
+  }
+
+  /**
+   * Vehicle_Challan findFirstOrThrow
+   */
+  export type Vehicle_ChallanFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vehicle_Challan
+     */
+    select?: Vehicle_ChallanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vehicle_Challan
+     */
+    omit?: Vehicle_ChallanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Vehicle_ChallanInclude<ExtArgs> | null
+    /**
+     * Filter, which Vehicle_Challan to fetch.
+     */
+    where?: Vehicle_ChallanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Vehicle_Challans to fetch.
+     */
+    orderBy?: Vehicle_ChallanOrderByWithRelationInput | Vehicle_ChallanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Vehicle_Challans.
+     */
+    cursor?: Vehicle_ChallanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Vehicle_Challans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Vehicle_Challans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Vehicle_Challans.
+     */
+    distinct?: Vehicle_ChallanScalarFieldEnum | Vehicle_ChallanScalarFieldEnum[]
+  }
+
+  /**
+   * Vehicle_Challan findMany
+   */
+  export type Vehicle_ChallanFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vehicle_Challan
+     */
+    select?: Vehicle_ChallanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vehicle_Challan
+     */
+    omit?: Vehicle_ChallanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Vehicle_ChallanInclude<ExtArgs> | null
+    /**
+     * Filter, which Vehicle_Challans to fetch.
+     */
+    where?: Vehicle_ChallanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Vehicle_Challans to fetch.
+     */
+    orderBy?: Vehicle_ChallanOrderByWithRelationInput | Vehicle_ChallanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Vehicle_Challans.
+     */
+    cursor?: Vehicle_ChallanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Vehicle_Challans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Vehicle_Challans.
+     */
+    skip?: number
+    distinct?: Vehicle_ChallanScalarFieldEnum | Vehicle_ChallanScalarFieldEnum[]
+  }
+
+  /**
+   * Vehicle_Challan create
+   */
+  export type Vehicle_ChallanCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vehicle_Challan
+     */
+    select?: Vehicle_ChallanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vehicle_Challan
+     */
+    omit?: Vehicle_ChallanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Vehicle_ChallanInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Vehicle_Challan.
+     */
+    data: XOR<Vehicle_ChallanCreateInput, Vehicle_ChallanUncheckedCreateInput>
+  }
+
+  /**
+   * Vehicle_Challan createMany
+   */
+  export type Vehicle_ChallanCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Vehicle_Challans.
+     */
+    data: Vehicle_ChallanCreateManyInput | Vehicle_ChallanCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Vehicle_Challan createManyAndReturn
+   */
+  export type Vehicle_ChallanCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vehicle_Challan
+     */
+    select?: Vehicle_ChallanSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vehicle_Challan
+     */
+    omit?: Vehicle_ChallanOmit<ExtArgs> | null
+    /**
+     * The data used to create many Vehicle_Challans.
+     */
+    data: Vehicle_ChallanCreateManyInput | Vehicle_ChallanCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Vehicle_ChallanIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Vehicle_Challan update
+   */
+  export type Vehicle_ChallanUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vehicle_Challan
+     */
+    select?: Vehicle_ChallanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vehicle_Challan
+     */
+    omit?: Vehicle_ChallanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Vehicle_ChallanInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Vehicle_Challan.
+     */
+    data: XOR<Vehicle_ChallanUpdateInput, Vehicle_ChallanUncheckedUpdateInput>
+    /**
+     * Choose, which Vehicle_Challan to update.
+     */
+    where: Vehicle_ChallanWhereUniqueInput
+  }
+
+  /**
+   * Vehicle_Challan updateMany
+   */
+  export type Vehicle_ChallanUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Vehicle_Challans.
+     */
+    data: XOR<Vehicle_ChallanUpdateManyMutationInput, Vehicle_ChallanUncheckedUpdateManyInput>
+    /**
+     * Filter which Vehicle_Challans to update
+     */
+    where?: Vehicle_ChallanWhereInput
+    /**
+     * Limit how many Vehicle_Challans to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Vehicle_Challan updateManyAndReturn
+   */
+  export type Vehicle_ChallanUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vehicle_Challan
+     */
+    select?: Vehicle_ChallanSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vehicle_Challan
+     */
+    omit?: Vehicle_ChallanOmit<ExtArgs> | null
+    /**
+     * The data used to update Vehicle_Challans.
+     */
+    data: XOR<Vehicle_ChallanUpdateManyMutationInput, Vehicle_ChallanUncheckedUpdateManyInput>
+    /**
+     * Filter which Vehicle_Challans to update
+     */
+    where?: Vehicle_ChallanWhereInput
+    /**
+     * Limit how many Vehicle_Challans to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Vehicle_ChallanIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Vehicle_Challan upsert
+   */
+  export type Vehicle_ChallanUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vehicle_Challan
+     */
+    select?: Vehicle_ChallanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vehicle_Challan
+     */
+    omit?: Vehicle_ChallanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Vehicle_ChallanInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Vehicle_Challan to update in case it exists.
+     */
+    where: Vehicle_ChallanWhereUniqueInput
+    /**
+     * In case the Vehicle_Challan found by the `where` argument doesn't exist, create a new Vehicle_Challan with this data.
+     */
+    create: XOR<Vehicle_ChallanCreateInput, Vehicle_ChallanUncheckedCreateInput>
+    /**
+     * In case the Vehicle_Challan was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<Vehicle_ChallanUpdateInput, Vehicle_ChallanUncheckedUpdateInput>
+  }
+
+  /**
+   * Vehicle_Challan delete
+   */
+  export type Vehicle_ChallanDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vehicle_Challan
+     */
+    select?: Vehicle_ChallanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vehicle_Challan
+     */
+    omit?: Vehicle_ChallanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Vehicle_ChallanInclude<ExtArgs> | null
+    /**
+     * Filter which Vehicle_Challan to delete.
+     */
+    where: Vehicle_ChallanWhereUniqueInput
+  }
+
+  /**
+   * Vehicle_Challan deleteMany
+   */
+  export type Vehicle_ChallanDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Vehicle_Challans to delete
+     */
+    where?: Vehicle_ChallanWhereInput
+    /**
+     * Limit how many Vehicle_Challans to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Vehicle_Challan.item
+   */
+  export type Vehicle_Challan$itemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_Information
+     */
+    select?: Item_InformationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_Information
+     */
+    omit?: Item_InformationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Item_InformationInclude<ExtArgs> | null
+    where?: Item_InformationWhereInput
+  }
+
+  /**
+   * Vehicle_Challan without action
+   */
+  export type Vehicle_ChallanDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Vehicle_Challan
+     */
+    select?: Vehicle_ChallanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Vehicle_Challan
+     */
+    omit?: Vehicle_ChallanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Vehicle_ChallanInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Production
    */
 
@@ -65148,6 +66562,29 @@ export namespace Prisma {
   export type Item_IssueScalarFieldEnum = (typeof Item_IssueScalarFieldEnum)[keyof typeof Item_IssueScalarFieldEnum]
 
 
+  export const Vehicle_ChallanScalarFieldEnum: {
+    id: 'id',
+    serialNo: 'serialNo',
+    voucharNo: 'voucharNo',
+    itemId: 'itemId',
+    qty: 'qty',
+    challanDate: 'challanDate',
+    branchId: 'branchId',
+    route: 'route',
+    vehicleNo: 'vehicleNo',
+    driverName: 'driverName',
+    driverMobile: 'driverMobile',
+    remarks: 'remarks',
+    isActive: 'isActive',
+    createBy: 'createBy',
+    createDate: 'createDate',
+    updateBy: 'updateBy',
+    updateDate: 'updateDate'
+  };
+
+  export type Vehicle_ChallanScalarFieldEnum = (typeof Vehicle_ChallanScalarFieldEnum)[keyof typeof Vehicle_ChallanScalarFieldEnum]
+
+
   export const ProductionScalarFieldEnum: {
     id: 'id',
     serialNo: 'serialNo',
@@ -66678,6 +68115,7 @@ export namespace Prisma {
     productions?: ProductionListRelationFilter
     orderDetails?: OrderReceive_DetailListRelationFilter
     demandOrderDetails?: DemandOrder_DetailListRelationFilter
+    vehicleChallans?: Vehicle_ChallanListRelationFilter
     inventory?: XOR<InventoryNullableScalarRelationFilter, InventoryWhereInput> | null
     prices?: T_PriceListRelationFilter
     costPrices?: T_CostPrListRelationFilter
@@ -66707,6 +68145,7 @@ export namespace Prisma {
     productions?: ProductionOrderByRelationAggregateInput
     orderDetails?: OrderReceive_DetailOrderByRelationAggregateInput
     demandOrderDetails?: DemandOrder_DetailOrderByRelationAggregateInput
+    vehicleChallans?: Vehicle_ChallanOrderByRelationAggregateInput
     inventory?: InventoryOrderByWithRelationInput
     prices?: t_PriceOrderByRelationAggregateInput
     costPrices?: t_CostPrOrderByRelationAggregateInput
@@ -66739,6 +68178,7 @@ export namespace Prisma {
     productions?: ProductionListRelationFilter
     orderDetails?: OrderReceive_DetailListRelationFilter
     demandOrderDetails?: DemandOrder_DetailListRelationFilter
+    vehicleChallans?: Vehicle_ChallanListRelationFilter
     inventory?: XOR<InventoryNullableScalarRelationFilter, InventoryWhereInput> | null
     prices?: T_PriceListRelationFilter
     costPrices?: T_CostPrListRelationFilter
@@ -68635,6 +70075,123 @@ export namespace Prisma {
     createDate?: DateTimeNullableWithAggregatesFilter<"Item_Issue"> | Date | string | null
     updateBy?: StringNullableWithAggregatesFilter<"Item_Issue"> | string | null
     updateDate?: DateTimeNullableWithAggregatesFilter<"Item_Issue"> | Date | string | null
+  }
+
+  export type Vehicle_ChallanWhereInput = {
+    AND?: Vehicle_ChallanWhereInput | Vehicle_ChallanWhereInput[]
+    OR?: Vehicle_ChallanWhereInput[]
+    NOT?: Vehicle_ChallanWhereInput | Vehicle_ChallanWhereInput[]
+    id?: UuidFilter<"Vehicle_Challan"> | string
+    serialNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    voucharNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    itemId?: UuidNullableFilter<"Vehicle_Challan"> | string | null
+    qty?: DecimalNullableFilter<"Vehicle_Challan"> | Decimal | DecimalJsLike | number | string | null
+    challanDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
+    branchId?: UuidFilter<"Vehicle_Challan"> | string
+    route?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    vehicleNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    driverName?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    driverMobile?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    remarks?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    isActive?: IntNullableFilter<"Vehicle_Challan"> | number | null
+    createBy?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    createDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
+    updateBy?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    updateDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
+    item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
+  }
+
+  export type Vehicle_ChallanOrderByWithRelationInput = {
+    id?: SortOrder
+    serialNo?: SortOrderInput | SortOrder
+    voucharNo?: SortOrderInput | SortOrder
+    itemId?: SortOrderInput | SortOrder
+    qty?: SortOrderInput | SortOrder
+    challanDate?: SortOrderInput | SortOrder
+    branchId?: SortOrder
+    route?: SortOrderInput | SortOrder
+    vehicleNo?: SortOrderInput | SortOrder
+    driverName?: SortOrderInput | SortOrder
+    driverMobile?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    isActive?: SortOrderInput | SortOrder
+    createBy?: SortOrderInput | SortOrder
+    createDate?: SortOrderInput | SortOrder
+    updateBy?: SortOrderInput | SortOrder
+    updateDate?: SortOrderInput | SortOrder
+    item?: Item_InformationOrderByWithRelationInput
+  }
+
+  export type Vehicle_ChallanWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: Vehicle_ChallanWhereInput | Vehicle_ChallanWhereInput[]
+    OR?: Vehicle_ChallanWhereInput[]
+    NOT?: Vehicle_ChallanWhereInput | Vehicle_ChallanWhereInput[]
+    serialNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    voucharNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    itemId?: UuidNullableFilter<"Vehicle_Challan"> | string | null
+    qty?: DecimalNullableFilter<"Vehicle_Challan"> | Decimal | DecimalJsLike | number | string | null
+    challanDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
+    branchId?: UuidFilter<"Vehicle_Challan"> | string
+    route?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    vehicleNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    driverName?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    driverMobile?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    remarks?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    isActive?: IntNullableFilter<"Vehicle_Challan"> | number | null
+    createBy?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    createDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
+    updateBy?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    updateDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
+    item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
+  }, "id">
+
+  export type Vehicle_ChallanOrderByWithAggregationInput = {
+    id?: SortOrder
+    serialNo?: SortOrderInput | SortOrder
+    voucharNo?: SortOrderInput | SortOrder
+    itemId?: SortOrderInput | SortOrder
+    qty?: SortOrderInput | SortOrder
+    challanDate?: SortOrderInput | SortOrder
+    branchId?: SortOrder
+    route?: SortOrderInput | SortOrder
+    vehicleNo?: SortOrderInput | SortOrder
+    driverName?: SortOrderInput | SortOrder
+    driverMobile?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    isActive?: SortOrderInput | SortOrder
+    createBy?: SortOrderInput | SortOrder
+    createDate?: SortOrderInput | SortOrder
+    updateBy?: SortOrderInput | SortOrder
+    updateDate?: SortOrderInput | SortOrder
+    _count?: Vehicle_ChallanCountOrderByAggregateInput
+    _avg?: Vehicle_ChallanAvgOrderByAggregateInput
+    _max?: Vehicle_ChallanMaxOrderByAggregateInput
+    _min?: Vehicle_ChallanMinOrderByAggregateInput
+    _sum?: Vehicle_ChallanSumOrderByAggregateInput
+  }
+
+  export type Vehicle_ChallanScalarWhereWithAggregatesInput = {
+    AND?: Vehicle_ChallanScalarWhereWithAggregatesInput | Vehicle_ChallanScalarWhereWithAggregatesInput[]
+    OR?: Vehicle_ChallanScalarWhereWithAggregatesInput[]
+    NOT?: Vehicle_ChallanScalarWhereWithAggregatesInput | Vehicle_ChallanScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Vehicle_Challan"> | string
+    serialNo?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    voucharNo?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    itemId?: UuidNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    qty?: DecimalNullableWithAggregatesFilter<"Vehicle_Challan"> | Decimal | DecimalJsLike | number | string | null
+    challanDate?: DateTimeNullableWithAggregatesFilter<"Vehicle_Challan"> | Date | string | null
+    branchId?: UuidWithAggregatesFilter<"Vehicle_Challan"> | string
+    route?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    vehicleNo?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    driverName?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    driverMobile?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    remarks?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    isActive?: IntNullableWithAggregatesFilter<"Vehicle_Challan"> | number | null
+    createBy?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    createDate?: DateTimeNullableWithAggregatesFilter<"Vehicle_Challan"> | Date | string | null
+    updateBy?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    updateDate?: DateTimeNullableWithAggregatesFilter<"Vehicle_Challan"> | Date | string | null
   }
 
   export type ProductionWhereInput = {
@@ -71212,6 +72769,7 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -71240,6 +72798,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -71268,6 +72827,7 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -71296,6 +72856,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -73468,6 +75029,145 @@ export namespace Prisma {
     isReceived?: IntFieldUpdateOperationsInput | number
     receivedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     receivedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Vehicle_ChallanCreateInput = {
+    id?: string
+    serialNo?: string | null
+    voucharNo?: string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    challanDate?: Date | string | null
+    branchId: string
+    route?: string | null
+    vehicleNo?: string | null
+    driverName?: string | null
+    driverMobile?: string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+    item?: Item_InformationCreateNestedOneWithoutVehicleChallansInput
+  }
+
+  export type Vehicle_ChallanUncheckedCreateInput = {
+    id?: string
+    serialNo?: string | null
+    voucharNo?: string | null
+    itemId?: string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    challanDate?: Date | string | null
+    branchId: string
+    route?: string | null
+    vehicleNo?: string | null
+    driverName?: string | null
+    driverMobile?: string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+  }
+
+  export type Vehicle_ChallanUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    challanDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branchId?: StringFieldUpdateOperationsInput | string
+    route?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    driverName?: NullableStringFieldUpdateOperationsInput | string | null
+    driverMobile?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    item?: Item_InformationUpdateOneWithoutVehicleChallansNestedInput
+  }
+
+  export type Vehicle_ChallanUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    challanDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branchId?: StringFieldUpdateOperationsInput | string
+    route?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    driverName?: NullableStringFieldUpdateOperationsInput | string | null
+    driverMobile?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Vehicle_ChallanCreateManyInput = {
+    id?: string
+    serialNo?: string | null
+    voucharNo?: string | null
+    itemId?: string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    challanDate?: Date | string | null
+    branchId: string
+    route?: string | null
+    vehicleNo?: string | null
+    driverName?: string | null
+    driverMobile?: string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+  }
+
+  export type Vehicle_ChallanUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    challanDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branchId?: StringFieldUpdateOperationsInput | string
+    route?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    driverName?: NullableStringFieldUpdateOperationsInput | string | null
+    driverMobile?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Vehicle_ChallanUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
+    itemId?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    challanDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branchId?: StringFieldUpdateOperationsInput | string
+    route?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    driverName?: NullableStringFieldUpdateOperationsInput | string | null
+    driverMobile?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -76073,6 +77773,12 @@ export namespace Prisma {
     none?: DemandOrder_DetailWhereInput
   }
 
+  export type Vehicle_ChallanListRelationFilter = {
+    every?: Vehicle_ChallanWhereInput
+    some?: Vehicle_ChallanWhereInput
+    none?: Vehicle_ChallanWhereInput
+  }
+
   export type InventoryNullableScalarRelationFilter = {
     is?: InventoryWhereInput | null
     isNot?: InventoryWhereInput | null
@@ -76131,6 +77837,10 @@ export namespace Prisma {
   }
 
   export type DemandOrder_DetailOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type Vehicle_ChallanOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -77494,6 +79204,76 @@ export namespace Prisma {
     qty?: SortOrder
     isProduction?: SortOrder
     isReceived?: SortOrder
+    isActive?: SortOrder
+  }
+
+  export type Vehicle_ChallanCountOrderByAggregateInput = {
+    id?: SortOrder
+    serialNo?: SortOrder
+    voucharNo?: SortOrder
+    itemId?: SortOrder
+    qty?: SortOrder
+    challanDate?: SortOrder
+    branchId?: SortOrder
+    route?: SortOrder
+    vehicleNo?: SortOrder
+    driverName?: SortOrder
+    driverMobile?: SortOrder
+    remarks?: SortOrder
+    isActive?: SortOrder
+    createBy?: SortOrder
+    createDate?: SortOrder
+    updateBy?: SortOrder
+    updateDate?: SortOrder
+  }
+
+  export type Vehicle_ChallanAvgOrderByAggregateInput = {
+    qty?: SortOrder
+    isActive?: SortOrder
+  }
+
+  export type Vehicle_ChallanMaxOrderByAggregateInput = {
+    id?: SortOrder
+    serialNo?: SortOrder
+    voucharNo?: SortOrder
+    itemId?: SortOrder
+    qty?: SortOrder
+    challanDate?: SortOrder
+    branchId?: SortOrder
+    route?: SortOrder
+    vehicleNo?: SortOrder
+    driverName?: SortOrder
+    driverMobile?: SortOrder
+    remarks?: SortOrder
+    isActive?: SortOrder
+    createBy?: SortOrder
+    createDate?: SortOrder
+    updateBy?: SortOrder
+    updateDate?: SortOrder
+  }
+
+  export type Vehicle_ChallanMinOrderByAggregateInput = {
+    id?: SortOrder
+    serialNo?: SortOrder
+    voucharNo?: SortOrder
+    itemId?: SortOrder
+    qty?: SortOrder
+    challanDate?: SortOrder
+    branchId?: SortOrder
+    route?: SortOrder
+    vehicleNo?: SortOrder
+    driverName?: SortOrder
+    driverMobile?: SortOrder
+    remarks?: SortOrder
+    isActive?: SortOrder
+    createBy?: SortOrder
+    createDate?: SortOrder
+    updateBy?: SortOrder
+    updateDate?: SortOrder
+  }
+
+  export type Vehicle_ChallanSumOrderByAggregateInput = {
+    qty?: SortOrder
     isActive?: SortOrder
   }
 
@@ -79200,6 +80980,13 @@ export namespace Prisma {
     connect?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
   }
 
+  export type Vehicle_ChallanCreateNestedManyWithoutItemInput = {
+    create?: XOR<Vehicle_ChallanCreateWithoutItemInput, Vehicle_ChallanUncheckedCreateWithoutItemInput> | Vehicle_ChallanCreateWithoutItemInput[] | Vehicle_ChallanUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: Vehicle_ChallanCreateOrConnectWithoutItemInput | Vehicle_ChallanCreateOrConnectWithoutItemInput[]
+    createMany?: Vehicle_ChallanCreateManyItemInputEnvelope
+    connect?: Vehicle_ChallanWhereUniqueInput | Vehicle_ChallanWhereUniqueInput[]
+  }
+
   export type InventoryCreateNestedOneWithoutItemInput = {
     create?: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
     connectOrCreate?: InventoryCreateOrConnectWithoutItemInput
@@ -79295,6 +81082,13 @@ export namespace Prisma {
     connectOrCreate?: DemandOrder_DetailCreateOrConnectWithoutItemInput | DemandOrder_DetailCreateOrConnectWithoutItemInput[]
     createMany?: DemandOrder_DetailCreateManyItemInputEnvelope
     connect?: DemandOrder_DetailWhereUniqueInput | DemandOrder_DetailWhereUniqueInput[]
+  }
+
+  export type Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput = {
+    create?: XOR<Vehicle_ChallanCreateWithoutItemInput, Vehicle_ChallanUncheckedCreateWithoutItemInput> | Vehicle_ChallanCreateWithoutItemInput[] | Vehicle_ChallanUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: Vehicle_ChallanCreateOrConnectWithoutItemInput | Vehicle_ChallanCreateOrConnectWithoutItemInput[]
+    createMany?: Vehicle_ChallanCreateManyItemInputEnvelope
+    connect?: Vehicle_ChallanWhereUniqueInput | Vehicle_ChallanWhereUniqueInput[]
   }
 
   export type InventoryUncheckedCreateNestedOneWithoutItemInput = {
@@ -79479,6 +81273,20 @@ export namespace Prisma {
     update?: DemandOrder_DetailUpdateWithWhereUniqueWithoutItemInput | DemandOrder_DetailUpdateWithWhereUniqueWithoutItemInput[]
     updateMany?: DemandOrder_DetailUpdateManyWithWhereWithoutItemInput | DemandOrder_DetailUpdateManyWithWhereWithoutItemInput[]
     deleteMany?: DemandOrder_DetailScalarWhereInput | DemandOrder_DetailScalarWhereInput[]
+  }
+
+  export type Vehicle_ChallanUpdateManyWithoutItemNestedInput = {
+    create?: XOR<Vehicle_ChallanCreateWithoutItemInput, Vehicle_ChallanUncheckedCreateWithoutItemInput> | Vehicle_ChallanCreateWithoutItemInput[] | Vehicle_ChallanUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: Vehicle_ChallanCreateOrConnectWithoutItemInput | Vehicle_ChallanCreateOrConnectWithoutItemInput[]
+    upsert?: Vehicle_ChallanUpsertWithWhereUniqueWithoutItemInput | Vehicle_ChallanUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: Vehicle_ChallanCreateManyItemInputEnvelope
+    set?: Vehicle_ChallanWhereUniqueInput | Vehicle_ChallanWhereUniqueInput[]
+    disconnect?: Vehicle_ChallanWhereUniqueInput | Vehicle_ChallanWhereUniqueInput[]
+    delete?: Vehicle_ChallanWhereUniqueInput | Vehicle_ChallanWhereUniqueInput[]
+    connect?: Vehicle_ChallanWhereUniqueInput | Vehicle_ChallanWhereUniqueInput[]
+    update?: Vehicle_ChallanUpdateWithWhereUniqueWithoutItemInput | Vehicle_ChallanUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: Vehicle_ChallanUpdateManyWithWhereWithoutItemInput | Vehicle_ChallanUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: Vehicle_ChallanScalarWhereInput | Vehicle_ChallanScalarWhereInput[]
   }
 
   export type InventoryUpdateOneWithoutItemNestedInput = {
@@ -79671,6 +81479,20 @@ export namespace Prisma {
     update?: DemandOrder_DetailUpdateWithWhereUniqueWithoutItemInput | DemandOrder_DetailUpdateWithWhereUniqueWithoutItemInput[]
     updateMany?: DemandOrder_DetailUpdateManyWithWhereWithoutItemInput | DemandOrder_DetailUpdateManyWithWhereWithoutItemInput[]
     deleteMany?: DemandOrder_DetailScalarWhereInput | DemandOrder_DetailScalarWhereInput[]
+  }
+
+  export type Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput = {
+    create?: XOR<Vehicle_ChallanCreateWithoutItemInput, Vehicle_ChallanUncheckedCreateWithoutItemInput> | Vehicle_ChallanCreateWithoutItemInput[] | Vehicle_ChallanUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: Vehicle_ChallanCreateOrConnectWithoutItemInput | Vehicle_ChallanCreateOrConnectWithoutItemInput[]
+    upsert?: Vehicle_ChallanUpsertWithWhereUniqueWithoutItemInput | Vehicle_ChallanUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: Vehicle_ChallanCreateManyItemInputEnvelope
+    set?: Vehicle_ChallanWhereUniqueInput | Vehicle_ChallanWhereUniqueInput[]
+    disconnect?: Vehicle_ChallanWhereUniqueInput | Vehicle_ChallanWhereUniqueInput[]
+    delete?: Vehicle_ChallanWhereUniqueInput | Vehicle_ChallanWhereUniqueInput[]
+    connect?: Vehicle_ChallanWhereUniqueInput | Vehicle_ChallanWhereUniqueInput[]
+    update?: Vehicle_ChallanUpdateWithWhereUniqueWithoutItemInput | Vehicle_ChallanUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: Vehicle_ChallanUpdateManyWithWhereWithoutItemInput | Vehicle_ChallanUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: Vehicle_ChallanScalarWhereInput | Vehicle_ChallanScalarWhereInput[]
   }
 
   export type InventoryUncheckedUpdateOneWithoutItemNestedInput = {
@@ -80277,6 +82099,22 @@ export namespace Prisma {
     delete?: Item_InformationWhereInput | boolean
     connect?: Item_InformationWhereUniqueInput
     update?: XOR<XOR<Item_InformationUpdateToOneWithWhereWithoutItemIssuesInput, Item_InformationUpdateWithoutItemIssuesInput>, Item_InformationUncheckedUpdateWithoutItemIssuesInput>
+  }
+
+  export type Item_InformationCreateNestedOneWithoutVehicleChallansInput = {
+    create?: XOR<Item_InformationCreateWithoutVehicleChallansInput, Item_InformationUncheckedCreateWithoutVehicleChallansInput>
+    connectOrCreate?: Item_InformationCreateOrConnectWithoutVehicleChallansInput
+    connect?: Item_InformationWhereUniqueInput
+  }
+
+  export type Item_InformationUpdateOneWithoutVehicleChallansNestedInput = {
+    create?: XOR<Item_InformationCreateWithoutVehicleChallansInput, Item_InformationUncheckedCreateWithoutVehicleChallansInput>
+    connectOrCreate?: Item_InformationCreateOrConnectWithoutVehicleChallansInput
+    upsert?: Item_InformationUpsertWithoutVehicleChallansInput
+    disconnect?: Item_InformationWhereInput | boolean
+    delete?: Item_InformationWhereInput | boolean
+    connect?: Item_InformationWhereUniqueInput
+    update?: XOR<XOR<Item_InformationUpdateToOneWithWhereWithoutVehicleChallansInput, Item_InformationUpdateWithoutVehicleChallansInput>, Item_InformationUncheckedUpdateWithoutVehicleChallansInput>
   }
 
   export type Item_InformationCreateNestedOneWithoutProductionsInput = {
@@ -81159,6 +82997,7 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -81186,6 +83025,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -83126,6 +84966,54 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type Vehicle_ChallanCreateWithoutItemInput = {
+    id?: string
+    serialNo?: string | null
+    voucharNo?: string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    challanDate?: Date | string | null
+    branchId: string
+    route?: string | null
+    vehicleNo?: string | null
+    driverName?: string | null
+    driverMobile?: string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+  }
+
+  export type Vehicle_ChallanUncheckedCreateWithoutItemInput = {
+    id?: string
+    serialNo?: string | null
+    voucharNo?: string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    challanDate?: Date | string | null
+    branchId: string
+    route?: string | null
+    vehicleNo?: string | null
+    driverName?: string | null
+    driverMobile?: string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+  }
+
+  export type Vehicle_ChallanCreateOrConnectWithoutItemInput = {
+    where: Vehicle_ChallanWhereUniqueInput
+    create: XOR<Vehicle_ChallanCreateWithoutItemInput, Vehicle_ChallanUncheckedCreateWithoutItemInput>
+  }
+
+  export type Vehicle_ChallanCreateManyItemInputEnvelope = {
+    data: Vehicle_ChallanCreateManyItemInput | Vehicle_ChallanCreateManyItemInput[]
+    skipDuplicates?: boolean
+  }
+
   export type InventoryCreateWithoutItemInput = {
     quantity?: Decimal | DecimalJsLike | number | string
   }
@@ -83644,6 +85532,45 @@ export namespace Prisma {
     serialNo?: StringNullableFilter<"DemandOrder_Detail"> | string | null
   }
 
+  export type Vehicle_ChallanUpsertWithWhereUniqueWithoutItemInput = {
+    where: Vehicle_ChallanWhereUniqueInput
+    update: XOR<Vehicle_ChallanUpdateWithoutItemInput, Vehicle_ChallanUncheckedUpdateWithoutItemInput>
+    create: XOR<Vehicle_ChallanCreateWithoutItemInput, Vehicle_ChallanUncheckedCreateWithoutItemInput>
+  }
+
+  export type Vehicle_ChallanUpdateWithWhereUniqueWithoutItemInput = {
+    where: Vehicle_ChallanWhereUniqueInput
+    data: XOR<Vehicle_ChallanUpdateWithoutItemInput, Vehicle_ChallanUncheckedUpdateWithoutItemInput>
+  }
+
+  export type Vehicle_ChallanUpdateManyWithWhereWithoutItemInput = {
+    where: Vehicle_ChallanScalarWhereInput
+    data: XOR<Vehicle_ChallanUpdateManyMutationInput, Vehicle_ChallanUncheckedUpdateManyWithoutItemInput>
+  }
+
+  export type Vehicle_ChallanScalarWhereInput = {
+    AND?: Vehicle_ChallanScalarWhereInput | Vehicle_ChallanScalarWhereInput[]
+    OR?: Vehicle_ChallanScalarWhereInput[]
+    NOT?: Vehicle_ChallanScalarWhereInput | Vehicle_ChallanScalarWhereInput[]
+    id?: UuidFilter<"Vehicle_Challan"> | string
+    serialNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    voucharNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    itemId?: UuidNullableFilter<"Vehicle_Challan"> | string | null
+    qty?: DecimalNullableFilter<"Vehicle_Challan"> | Decimal | DecimalJsLike | number | string | null
+    challanDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
+    branchId?: UuidFilter<"Vehicle_Challan"> | string
+    route?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    vehicleNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    driverName?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    driverMobile?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    remarks?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    isActive?: IntNullableFilter<"Vehicle_Challan"> | number | null
+    createBy?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    createDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
+    updateBy?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    updateDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
+  }
+
   export type InventoryUpsertWithoutItemInput = {
     update: XOR<InventoryUpdateWithoutItemInput, InventoryUncheckedUpdateWithoutItemInput>
     create: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
@@ -83756,6 +85683,7 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
   }
@@ -83783,6 +85711,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
   }
@@ -83826,6 +85755,7 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
   }
@@ -83853,6 +85783,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
   }
@@ -83880,6 +85811,7 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
   }
@@ -83907,6 +85839,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
   }
@@ -83950,6 +85883,7 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
   }
@@ -83977,6 +85911,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
   }
@@ -84004,6 +85939,7 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
   }
@@ -84031,6 +85967,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
   }
@@ -84074,6 +86011,7 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
   }
@@ -84101,6 +86039,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
   }
@@ -84284,6 +86223,7 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -84311,6 +86251,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -84401,6 +86342,7 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -84428,6 +86370,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -84821,6 +86764,7 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -84848,6 +86792,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -84952,6 +86897,7 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -84979,6 +86925,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -85119,6 +87066,7 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -85146,6 +87094,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -85248,6 +87197,7 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -85275,6 +87225,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -85360,6 +87311,7 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -85387,6 +87339,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -85479,6 +87432,7 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -85506,6 +87460,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -85683,6 +87638,7 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -85710,6 +87666,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -85794,6 +87751,7 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -85821,6 +87779,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -85848,6 +87807,7 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -85875,6 +87835,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -85918,6 +87879,7 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -85945,6 +87907,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -85972,6 +87935,7 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -85999,6 +87963,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -86042,6 +88007,7 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -86066,6 +88032,135 @@ export namespace Prisma {
     asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
     itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
     itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
+    productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
+    prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
+    costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+  }
+
+  export type Item_InformationCreateWithoutVehicleChallansInput = {
+    id?: string
+    itmCode: string
+    itmName?: string | null
+    itmCategory?: string | null
+    itmType?: string | null
+    itmUOM?: string | null
+    itmRemarks?: string | null
+    itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: string | null
+    isActive?: string | null
+    image?: MediaFileCreateNestedOneWithoutItemsInput
+    runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
+    runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
+    ncDetails?: t_NCDetCreateNestedManyWithoutItemInput
+    asstDetails?: AsstDetCreateNestedManyWithoutItemInput
+    itemRejects?: ItemRejectCreateNestedManyWithoutItemInput
+    itemReceives?: Item_ReceiveCreateNestedManyWithoutItemInput
+    itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
+    productions?: ProductionCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
+    prices?: t_PriceCreateNestedManyWithoutItemInput
+    costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+  }
+
+  export type Item_InformationUncheckedCreateWithoutVehicleChallansInput = {
+    id?: string
+    itmCode: string
+    itmName?: string | null
+    itmCategory?: string | null
+    itmType?: string | null
+    itmUOM?: string | null
+    itmRemarks?: string | null
+    imageId?: string | null
+    itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: string | null
+    isActive?: string | null
+    runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
+    runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
+    creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
+    ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
+    asstDetails?: AsstDetUncheckedCreateNestedManyWithoutItemInput
+    itemRejects?: ItemRejectUncheckedCreateNestedManyWithoutItemInput
+    itemReceives?: Item_ReceiveUncheckedCreateNestedManyWithoutItemInput
+    itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
+    productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
+    orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
+    prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
+    costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+  }
+
+  export type Item_InformationCreateOrConnectWithoutVehicleChallansInput = {
+    where: Item_InformationWhereUniqueInput
+    create: XOR<Item_InformationCreateWithoutVehicleChallansInput, Item_InformationUncheckedCreateWithoutVehicleChallansInput>
+  }
+
+  export type Item_InformationUpsertWithoutVehicleChallansInput = {
+    update: XOR<Item_InformationUpdateWithoutVehicleChallansInput, Item_InformationUncheckedUpdateWithoutVehicleChallansInput>
+    create: XOR<Item_InformationCreateWithoutVehicleChallansInput, Item_InformationUncheckedCreateWithoutVehicleChallansInput>
+    where?: Item_InformationWhereInput
+  }
+
+  export type Item_InformationUpdateToOneWithWhereWithoutVehicleChallansInput = {
+    where?: Item_InformationWhereInput
+    data: XOR<Item_InformationUpdateWithoutVehicleChallansInput, Item_InformationUncheckedUpdateWithoutVehicleChallansInput>
+  }
+
+  export type Item_InformationUpdateWithoutVehicleChallansInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itmCode?: StringFieldUpdateOperationsInput | string
+    itmName?: NullableStringFieldUpdateOperationsInput | string | null
+    itmCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    itmType?: NullableStringFieldUpdateOperationsInput | string | null
+    itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: MediaFileUpdateOneWithoutItemsNestedInput
+    runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
+    runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
+    ncDetails?: t_NCDetUpdateManyWithoutItemNestedInput
+    asstDetails?: AsstDetUpdateManyWithoutItemNestedInput
+    itemRejects?: ItemRejectUpdateManyWithoutItemNestedInput
+    itemReceives?: Item_ReceiveUpdateManyWithoutItemNestedInput
+    itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
+    productions?: ProductionUpdateManyWithoutItemNestedInput
+    orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
+    prices?: t_PriceUpdateManyWithoutItemNestedInput
+    costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+  }
+
+  export type Item_InformationUncheckedUpdateWithoutVehicleChallansInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itmCode?: StringFieldUpdateOperationsInput | string
+    itmName?: NullableStringFieldUpdateOperationsInput | string | null
+    itmCategory?: NullableStringFieldUpdateOperationsInput | string | null
+    itmType?: NullableStringFieldUpdateOperationsInput | string | null
+    itmUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    itmRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    imageId?: NullableStringFieldUpdateOperationsInput | string | null
+    itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
+    runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
+    creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
+    ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
+    asstDetails?: AsstDetUncheckedUpdateManyWithoutItemNestedInput
+    itemRejects?: ItemRejectUncheckedUpdateManyWithoutItemNestedInput
+    itemReceives?: Item_ReceiveUncheckedUpdateManyWithoutItemNestedInput
+    itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
@@ -86096,6 +88191,7 @@ export namespace Prisma {
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -86123,6 +88219,7 @@ export namespace Prisma {
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -86166,6 +88263,7 @@ export namespace Prisma {
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -86193,6 +88291,7 @@ export namespace Prisma {
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -86220,6 +88319,7 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -86247,6 +88347,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -86290,6 +88391,7 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -86317,6 +88419,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -86806,6 +88909,7 @@ export namespace Prisma {
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     productions?: ProductionCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -86833,6 +88937,7 @@ export namespace Prisma {
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -86927,6 +89032,7 @@ export namespace Prisma {
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     productions?: ProductionUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -86954,6 +89060,7 @@ export namespace Prisma {
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -87058,6 +89165,7 @@ export namespace Prisma {
     itemIssues?: Item_IssueCreateNestedManyWithoutItemInput
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
     inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
@@ -87085,6 +89193,7 @@ export namespace Prisma {
     itemIssues?: Item_IssueUncheckedCreateNestedManyWithoutItemInput
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
+    vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
     inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
@@ -87169,6 +89278,7 @@ export namespace Prisma {
     itemIssues?: Item_IssueUpdateManyWithoutItemNestedInput
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -87196,6 +89306,7 @@ export namespace Prisma {
     itemIssues?: Item_IssueUncheckedUpdateManyWithoutItemNestedInput
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -87484,6 +89595,7 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
     inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
@@ -87511,6 +89623,7 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
+    vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
     inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
@@ -88263,6 +90376,25 @@ export namespace Prisma {
     serialNo?: string | null
   }
 
+  export type Vehicle_ChallanCreateManyItemInput = {
+    id?: string
+    serialNo?: string | null
+    voucharNo?: string | null
+    qty?: Decimal | DecimalJsLike | number | string | null
+    challanDate?: Date | string | null
+    branchId: string
+    route?: string | null
+    vehicleNo?: string | null
+    driverName?: string | null
+    driverMobile?: string | null
+    remarks?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    updateBy?: string | null
+    updateDate?: Date | string | null
+  }
+
   export type t_PriceCreateManyItemInput = {
     id?: string
     priceFromDate?: Date | string | null
@@ -88777,6 +90909,63 @@ export namespace Prisma {
     qty?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Vehicle_ChallanUpdateWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    challanDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branchId?: StringFieldUpdateOperationsInput | string
+    route?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    driverName?: NullableStringFieldUpdateOperationsInput | string | null
+    driverMobile?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Vehicle_ChallanUncheckedUpdateWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    challanDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branchId?: StringFieldUpdateOperationsInput | string
+    route?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    driverName?: NullableStringFieldUpdateOperationsInput | string | null
+    driverMobile?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Vehicle_ChallanUncheckedUpdateManyWithoutItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serialNo?: NullableStringFieldUpdateOperationsInput | string | null
+    voucharNo?: NullableStringFieldUpdateOperationsInput | string | null
+    qty?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    challanDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    branchId?: StringFieldUpdateOperationsInput | string
+    route?: NullableStringFieldUpdateOperationsInput | string | null
+    vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
+    driverName?: NullableStringFieldUpdateOperationsInput | string | null
+    driverMobile?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type t_PriceUpdateWithoutItemInput = {

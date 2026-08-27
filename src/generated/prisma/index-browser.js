@@ -610,6 +610,26 @@ exports.Prisma.Item_IssueScalarFieldEnum = {
   updateDate: 'updateDate'
 };
 
+exports.Prisma.Vehicle_ChallanScalarFieldEnum = {
+  id: 'id',
+  serialNo: 'serialNo',
+  voucharNo: 'voucharNo',
+  itemId: 'itemId',
+  qty: 'qty',
+  challanDate: 'challanDate',
+  branchId: 'branchId',
+  route: 'route',
+  vehicleNo: 'vehicleNo',
+  driverName: 'driverName',
+  driverMobile: 'driverMobile',
+  remarks: 'remarks',
+  isActive: 'isActive',
+  createBy: 'createBy',
+  createDate: 'createDate',
+  updateBy: 'updateBy',
+  updateDate: 'updateDate'
+};
+
 exports.Prisma.ProductionScalarFieldEnum = {
   id: 'id',
   serialNo: 'serialNo',
@@ -887,6 +907,7 @@ exports.Prisma.ModelName = {
   t_NCDet: 't_NCDet',
   Item_Receive: 'Item_Receive',
   Item_Issue: 'Item_Issue',
+  Vehicle_Challan: 'Vehicle_Challan',
   Production: 'Production',
   ItemReject: 'ItemReject',
   PacketInfo: 'PacketInfo',
