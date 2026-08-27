@@ -192,6 +192,54 @@ export class ReportsController {
     return this.reportsService.getItemRejectReport({ fromDate, toDate, branchId: branchId || undefined });
   }
 
+  // The 80mm counter print of the same ItemReject data `item-reject` pivots
+  // for A4 — grouped by day with a Sub Total per day and a Grand Total.
+  @Get('reject-pos')
+  @ApiOperation({ summary: 'Get the Reject Report (POS): rejects grouped by date with per-day sub totals, for the 80mm roll' })
+  @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
+  @ApiQuery({ name: 'toDate', required: true, description: 'Range end date, inclusive (ISO 8601)' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch the rejects were recorded at — omit to aggregate all branches' })
+  @ApiResponse({ status: 200, description: 'Date-grouped reject lines with sub totals, grand total and the branch header block' })
+  getRejectReportPos(
+    @Query('fromDate') fromDate: string,
+    @Query('toDate') toDate: string,
+    @Query('branchId') branchId?: string,
+  ) {
+    return this.reportsService.getRejectReportPos({ fromDate, toDate, branchId: branchId || undefined });
+  }
+
+  // The Excess twin of `reject-pos` — the other column of the same ItemReject
+  // row, on the same form.
+  @Get('excess-pos')
+  @ApiOperation({ summary: 'Get the Excess Report (POS): excess grouped by date with per-day sub totals, for the 80mm roll' })
+  @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
+  @ApiQuery({ name: 'toDate', required: true, description: 'Range end date, inclusive (ISO 8601)' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch the excess was recorded at — omit to aggregate all branches' })
+  @ApiResponse({ status: 200, description: 'Date-grouped excess lines with sub totals, grand total and the branch header block' })
+  getExcessReportPos(
+    @Query('fromDate') fromDate: string,
+    @Query('toDate') toDate: string,
+    @Query('branchId') branchId?: string,
+  ) {
+    return this.reportsService.getExcessReportPos({ fromDate, toDate, branchId: branchId || undefined });
+  }
+
+  // The Short twin of `reject-pos` / `excess-pos` — the third column of the
+  // same ItemReject row, on the same form.
+  @Get('short-pos')
+  @ApiOperation({ summary: 'Get the Short Report (POS): shortages grouped by date with per-day sub totals, for the 80mm roll' })
+  @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
+  @ApiQuery({ name: 'toDate', required: true, description: 'Range end date, inclusive (ISO 8601)' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch the shortage was recorded at — omit to aggregate all branches' })
+  @ApiResponse({ status: 200, description: 'Date-grouped short lines with sub totals, grand total and the branch header block' })
+  getShortReportPos(
+    @Query('fromDate') fromDate: string,
+    @Query('toDate') toDate: string,
+    @Query('branchId') branchId?: string,
+  ) {
+    return this.reportsService.getShortReportPos({ fromDate, toDate, branchId: branchId || undefined });
+  }
+
   @Get('nc')
   @ApiOperation({ summary: 'Get the NC (non-charge) report: a flat list of NC lines with VAT-inclusive amounts' })
   @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })

@@ -1788,6 +1788,141 @@ export class ReportsService {
     };
   }
 
+  // ── Reject / Excess Report (POS) — the legacy "History ... Report" ───
+  // Same ItemReject source as getItemRejectReport, turned inside out: that one
+  // is an items × dates pivot for an A4 sheet, these are the 80mm receipts the
+  // counter prints — a date-grouped list with a Sub Total per day and a Grand
+  // Total. Only days that actually have movement appear; an empty day is a
+  // blank line on a roll, not a column that must be held open.
+  //
+  // Reject, Excess and Short are three columns of the same row and print on
+  // the same form, so they share one implementation rather than being kept in
+  // step by hand. `field` picks which column is being reported.
+  private async posAdjustmentReport(
+    field: 'reject' | 'excess' | 'short',
+    query: { fromDate?: string; toDate?: string; branchId?: string },
+  ) {
+    const { from, to } = this.parseRange({ fromDate: query.fromDate, toDate: query.toDate });
+
+    const rows = await this.prisma.itemReject.findMany({
+      where: {
+        isActive: 1,
+        date: { gte: from, lte: to },
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+      },
+      select: { itmOId: true, reject: true, excess: true, short: true, date: true },
+    });
+
+    // date -> itemId -> qty. Several entries for one item on one day are one
+    // printed line, the way the legacy sheet reads. A row whose column for this
+    // report is zero/NULL is not a line at all — it was written for one of the
+    // OTHER columns, and printing it would put a 0.00 line on the receipt.
+    const byDate = new Map<string, Map<string, number>>();
+    for (const r of rows) {
+      if (!r.itmOId || !r.date) continue;
+      const qty = num(r[field]);
+      if (qty === 0) continue;
+      const dateStr = r.date.toISOString().split('T')[0];
+      if (!byDate.has(dateStr)) byDate.set(dateStr, new Map());
+      const items = byDate.get(dateStr)!;
+      items.set(r.itmOId, r2signed((items.get(r.itmOId) ?? 0) + qty));
+    }
+
+    // Catalogue + current VAT-inclusive rate, for the items actually affected —
+    // the same basis the A4 Item Reject Report prices its Amount column on, so
+    // the reports can never disagree on a total.
+    const itemIds = [...new Set([...byDate.values()].flatMap((m) => [...m.keys()]))];
+    const items = itemIds.length
+      ? await this.prisma.item_Information.findMany({
+          where: { id: { in: itemIds } },
+          select: {
+            id: true, itmCode: true, itmName: true, itmUOM: true,
+            prices: {
+              where: { priceIsActive: 1 },
+              orderBy: { priceFromDate: 'desc' },
+              take: 1,
+              select: { priceListPrice: true, priceVatPercent: true },
+            },
+          },
+        })
+      : [];
+    const byId = new Map(items.map((i) => [i.id, i]));
+    const rateOf = (i: (typeof items)[number] | undefined) => {
+      const p = i?.prices[0];
+      return r2signed(num(p?.priceListPrice) * (1 + num(p?.priceVatPercent) / 100));
+    };
+
+    const days = [...byDate.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([date, itemQty]) => {
+        const lines = [...itemQty.entries()]
+          .map(([itemId, qty]) => {
+            const it = byId.get(itemId);
+            const rate = rateOf(it);
+            return {
+              itemCode: it?.itmCode ?? '',
+              itemName: it?.itmName ?? it?.itmCode ?? '',
+              uom: it?.itmUOM ?? '',
+              qty,
+              rate,
+              amount: r2signed(qty * rate),
+            };
+          })
+          .sort((a, b) => a.itemName.localeCompare(b.itemName));
+
+        return {
+          date,
+          items: lines,
+          // Qty is summed across mixed units (KG and Pcs on one day) exactly as
+          // the legacy report does — the Sub Total is a count of lines' worth of
+          // goods, not a weight.
+          subTotalQty: r2signed(lines.reduce((s, l) => s + l.qty, 0)),
+          subTotalAmount: r2signed(lines.reduce((s, l) => s + l.amount, 0)),
+        };
+      });
+
+    const branch = query.branchId
+      ? await this.prisma.branch.findUnique({
+          where: { id: query.branchId },
+          select: { branchName: true, address: true, vatNo: true, mobileNo: true },
+        })
+      : null;
+
+    return {
+      kind: field,
+      fromDate: from.toISOString().split('T')[0],
+      toDate: to.toISOString().split('T')[0],
+      // The receipt header prints the branch's own address/VAT/cell block, so
+      // those travel with the report rather than being looked up again client-side.
+      branch: query.branchId
+        ? {
+            id: query.branchId,
+            name: branch?.branchName ?? '',
+            address: branch?.address ?? '',
+            vatNo: branch?.vatNo ?? '',
+            mobileNo: branch?.mobileNo ?? '',
+          }
+        : { id: '', name: 'All Branches', address: '', vatNo: '', mobileNo: '' },
+      days,
+      grandTotal: {
+        qty: r2signed(days.reduce((s, d) => s + d.subTotalQty, 0)),
+        amount: r2signed(days.reduce((s, d) => s + d.subTotalAmount, 0)),
+      },
+    };
+  }
+
+  getRejectReportPos(query: { fromDate?: string; toDate?: string; branchId?: string }) {
+    return this.posAdjustmentReport('reject', query);
+  }
+
+  getExcessReportPos(query: { fromDate?: string; toDate?: string; branchId?: string }) {
+    return this.posAdjustmentReport('excess', query);
+  }
+
+  getShortReportPos(query: { fromDate?: string; toDate?: string; branchId?: string }) {
+    return this.posAdjustmentReport('short', query);
+  }
+
   // ── NC Report (per-line list, one row per NC line item) ───────────────
   // Reproduces the legacy "Branch Wise NC Report": a flat list of every NC
   // (non-charge) line in the range — Date/Invoice/Item/Qty/Amount plus the

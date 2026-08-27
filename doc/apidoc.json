@@ -1761,6 +1761,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Type-ahead filter on item code or name (case-insensitive, contains). Lets a picker fetch a handful of matches instead of walking the whole catalogue.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -6248,6 +6257,150 @@
           }
         ],
         "summary": "Get the datewise Item Reject report (items × date, current VAT-inclusive price)",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/reports/reject-pos": {
+      "get": {
+        "operationId": "ReportsController_getRejectReportPos",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "required": true,
+            "in": "query",
+            "description": "Range start date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": true,
+            "in": "query",
+            "description": "Range end date, inclusive (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Branch the rejects were recorded at — omit to aggregate all branches",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Date-grouped reject lines with sub totals, grand total and the branch header block"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get the Reject Report (POS): rejects grouped by date with per-day sub totals, for the 80mm roll",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/reports/excess-pos": {
+      "get": {
+        "operationId": "ReportsController_getExcessReportPos",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "required": true,
+            "in": "query",
+            "description": "Range start date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": true,
+            "in": "query",
+            "description": "Range end date, inclusive (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Branch the excess was recorded at — omit to aggregate all branches",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Date-grouped excess lines with sub totals, grand total and the branch header block"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get the Excess Report (POS): excess grouped by date with per-day sub totals, for the 80mm roll",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/reports/short-pos": {
+      "get": {
+        "operationId": "ReportsController_getShortReportPos",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "required": true,
+            "in": "query",
+            "description": "Range start date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": true,
+            "in": "query",
+            "description": "Range end date, inclusive (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Branch the shortage was recorded at — omit to aggregate all branches",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Date-grouped short lines with sub totals, grand total and the branch header block"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get the Short Report (POS): shortages grouped by date with per-day sub totals, for the 80mm roll",
         "tags": [
           "Reports"
         ]

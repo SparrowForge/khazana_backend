@@ -59,6 +59,12 @@ const newMenus = [
   { menuName: 'Stock Analysis', controlName: 'StockAnalysis', order: 4, parentMenu: 'Reports', module: null },
   { menuName: 'Item Receive Report', controlName: 'ItemReceiveReport', order: 10, parentMenu: 'Reports', module: null },
   { menuName: 'Item Reject Report', controlName: 'ItemRejectReport', order: 11, parentMenu: 'Reports', module: null },
+  // The 80mm counter print of the same rejects. Its own ControlName: that
+  // column is unique, so reusing 'ItemRejectReport' would match the existing
+  // row and this upsert would silently insert nothing.
+  { menuName: 'Reject Report(POS)', controlName: 'RejectReportPOS', order: 14, parentMenu: 'Reports', module: null },
+  { menuName: 'Excess Report(POS)', controlName: 'ExcessReportPOS', order: 15, parentMenu: 'Reports', module: null },
+  { menuName: 'Short Report(POS)', controlName: 'ShortReportPOS', order: 16, parentMenu: 'Reports', module: null },
   { menuName: 'NC Report', controlName: 'NCReport', order: 12, parentMenu: 'Reports', module: null },
   { menuName: 'Discount Summary', controlName: 'DiscountSummary', order: 13, parentMenu: 'Reports', module: null },
   { menuName: 'Customer Statement', controlName: 'CustomerStatement', order: 5, parentMenu: 'Reports', module: null },
