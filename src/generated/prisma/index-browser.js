@@ -142,7 +142,8 @@ exports.Prisma.BranchScalarFieldEnum = {
   branchName: 'branchName',
   address: 'address',
   vatNo: 'vatNo',
-  mobileNo: 'mobileNo'
+  mobileNo: 'mobileNo',
+  sortingNo: 'sortingNo'
 };
 
 exports.Prisma.BankScalarFieldEnum = {
@@ -435,6 +436,7 @@ exports.Prisma.T_SOMstrScalarFieldEnum = {
   soMstrDiscountRemarks: 'soMstrDiscountRemarks',
   soMstrModifyRemarks: 'soMstrModifyRemarks',
   soMstrDiscountContact: 'soMstrDiscountContact',
+  soMstrGuestName: 'soMstrGuestName',
   mtype: 'mtype',
   soMstrMBank: 'soMstrMBank'
 };

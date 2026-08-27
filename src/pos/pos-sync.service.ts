@@ -92,6 +92,7 @@ export class PosSyncService {
           discountValue: order.discountValue,
           discountRemarks: order.discountRemarks,
           discountContact: order.discountContact,
+          guestName: order.guestName,
           createdBy: dto.userName,
           enforceStock: false,
         });

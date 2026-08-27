@@ -7335,8 +7335,18 @@ export namespace Prisma {
 
   export type AggregateBranch = {
     _count: BranchCountAggregateOutputType | null
+    _avg: BranchAvgAggregateOutputType | null
+    _sum: BranchSumAggregateOutputType | null
     _min: BranchMinAggregateOutputType | null
     _max: BranchMaxAggregateOutputType | null
+  }
+
+  export type BranchAvgAggregateOutputType = {
+    sortingNo: number | null
+  }
+
+  export type BranchSumAggregateOutputType = {
+    sortingNo: number | null
   }
 
   export type BranchMinAggregateOutputType = {
@@ -7346,6 +7356,7 @@ export namespace Prisma {
     address: string | null
     vatNo: string | null
     mobileNo: string | null
+    sortingNo: number | null
   }
 
   export type BranchMaxAggregateOutputType = {
@@ -7355,6 +7366,7 @@ export namespace Prisma {
     address: string | null
     vatNo: string | null
     mobileNo: string | null
+    sortingNo: number | null
   }
 
   export type BranchCountAggregateOutputType = {
@@ -7364,9 +7376,18 @@ export namespace Prisma {
     address: number
     vatNo: number
     mobileNo: number
+    sortingNo: number
     _all: number
   }
 
+
+  export type BranchAvgAggregateInputType = {
+    sortingNo?: true
+  }
+
+  export type BranchSumAggregateInputType = {
+    sortingNo?: true
+  }
 
   export type BranchMinAggregateInputType = {
     id?: true
@@ -7375,6 +7396,7 @@ export namespace Prisma {
     address?: true
     vatNo?: true
     mobileNo?: true
+    sortingNo?: true
   }
 
   export type BranchMaxAggregateInputType = {
@@ -7384,6 +7406,7 @@ export namespace Prisma {
     address?: true
     vatNo?: true
     mobileNo?: true
+    sortingNo?: true
   }
 
   export type BranchCountAggregateInputType = {
@@ -7393,6 +7416,7 @@ export namespace Prisma {
     address?: true
     vatNo?: true
     mobileNo?: true
+    sortingNo?: true
     _all?: true
   }
 
@@ -7434,6 +7458,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: BranchAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: BranchSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: BranchMinAggregateInputType
@@ -7464,6 +7500,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: BranchCountAggregateInputType | true
+    _avg?: BranchAvgAggregateInputType
+    _sum?: BranchSumAggregateInputType
     _min?: BranchMinAggregateInputType
     _max?: BranchMaxAggregateInputType
   }
@@ -7475,7 +7513,10 @@ export namespace Prisma {
     address: string | null
     vatNo: string | null
     mobileNo: string | null
+    sortingNo: number | null
     _count: BranchCountAggregateOutputType | null
+    _avg: BranchAvgAggregateOutputType | null
+    _sum: BranchSumAggregateOutputType | null
     _min: BranchMinAggregateOutputType | null
     _max: BranchMaxAggregateOutputType | null
   }
@@ -7501,6 +7542,7 @@ export namespace Prisma {
     address?: boolean
     vatNo?: boolean
     mobileNo?: boolean
+    sortingNo?: boolean
     userMappings?: boolean | Branch$userMappingsArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["branch"]>
@@ -7512,6 +7554,7 @@ export namespace Prisma {
     address?: boolean
     vatNo?: boolean
     mobileNo?: boolean
+    sortingNo?: boolean
   }, ExtArgs["result"]["branch"]>
 
   export type BranchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7521,6 +7564,7 @@ export namespace Prisma {
     address?: boolean
     vatNo?: boolean
     mobileNo?: boolean
+    sortingNo?: boolean
   }, ExtArgs["result"]["branch"]>
 
   export type BranchSelectScalar = {
@@ -7530,9 +7574,10 @@ export namespace Prisma {
     address?: boolean
     vatNo?: boolean
     mobileNo?: boolean
+    sortingNo?: boolean
   }
 
-  export type BranchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "branchCode" | "branchName" | "address" | "vatNo" | "mobileNo", ExtArgs["result"]["branch"]>
+  export type BranchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "branchCode" | "branchName" | "address" | "vatNo" | "mobileNo" | "sortingNo", ExtArgs["result"]["branch"]>
   export type BranchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userMappings?: boolean | Branch$userMappingsArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
@@ -7552,6 +7597,14 @@ export namespace Prisma {
       address: string | null
       vatNo: string | null
       mobileNo: string | null
+      /**
+       * Display position on the reports and pickers that show one column or row
+       * per branch — the reading order of the printed factory forms, which is not
+       * alphabetical. Lowest first; NULL sorts LAST, so a branch created without
+       * one lands at the end of a report rather than the head of it. Query it as
+       * `orderBy: { sortingNo: { sort: 'asc', nulls: 'last' } }`.
+       */
+      sortingNo: number | null
     }, ExtArgs["result"]["branch"]>
     composites: {}
   }
@@ -7982,6 +8035,7 @@ export namespace Prisma {
     readonly address: FieldRef<"Branch", 'String'>
     readonly vatNo: FieldRef<"Branch", 'String'>
     readonly mobileNo: FieldRef<"Branch", 'String'>
+    readonly sortingNo: FieldRef<"Branch", 'Int'>
   }
     
 
@@ -34897,6 +34951,7 @@ export namespace Prisma {
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
+    soMstrGuestName: string | null
     mtype: string | null
     soMstrMBank: string | null
   }
@@ -34922,6 +34977,7 @@ export namespace Prisma {
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
+    soMstrGuestName: string | null
     mtype: string | null
     soMstrMBank: string | null
   }
@@ -34947,6 +35003,7 @@ export namespace Prisma {
     soMstrDiscountRemarks: number
     soMstrModifyRemarks: number
     soMstrDiscountContact: number
+    soMstrGuestName: number
     mtype: number
     soMstrMBank: number
     _all: number
@@ -34990,6 +35047,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: true
     soMstrModifyRemarks?: true
     soMstrDiscountContact?: true
+    soMstrGuestName?: true
     mtype?: true
     soMstrMBank?: true
   }
@@ -35015,6 +35073,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: true
     soMstrModifyRemarks?: true
     soMstrDiscountContact?: true
+    soMstrGuestName?: true
     mtype?: true
     soMstrMBank?: true
   }
@@ -35040,6 +35099,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: true
     soMstrModifyRemarks?: true
     soMstrDiscountContact?: true
+    soMstrGuestName?: true
     mtype?: true
     soMstrMBank?: true
     _all?: true
@@ -35152,6 +35212,7 @@ export namespace Prisma {
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
+    soMstrGuestName: string | null
     mtype: string | null
     soMstrMBank: string | null
     _count: T_SOMstrCountAggregateOutputType | null
@@ -35196,6 +35257,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: boolean
     soMstrModifyRemarks?: boolean
     soMstrDiscountContact?: boolean
+    soMstrGuestName?: boolean
     mtype?: boolean
     soMstrMBank?: boolean
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
@@ -35224,6 +35286,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: boolean
     soMstrModifyRemarks?: boolean
     soMstrDiscountContact?: boolean
+    soMstrGuestName?: boolean
     mtype?: boolean
     soMstrMBank?: boolean
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
@@ -35250,6 +35313,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: boolean
     soMstrModifyRemarks?: boolean
     soMstrDiscountContact?: boolean
+    soMstrGuestName?: boolean
     mtype?: boolean
     soMstrMBank?: boolean
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
@@ -35276,11 +35340,12 @@ export namespace Prisma {
     soMstrDiscountRemarks?: boolean
     soMstrModifyRemarks?: boolean
     soMstrDiscountContact?: boolean
+    soMstrGuestName?: boolean
     mtype?: boolean
     soMstrMBank?: boolean
   }
 
-  export type t_SOMstrOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "somstrCode" | "somstrDate" | "somstrTotalAmt" | "somstrDiscAmt" | "somstrNetAmt" | "somstrVatClnNo" | "somstrVatDate" | "somstrPricingDate" | "somstrCreator" | "somstrCreationDate" | "somstrUpdateBy" | "somstrUpdateDate" | "somstrIsActive" | "somstrCustomerpay" | "somstrChange" | "branchId" | "soMstrDiscountRemarks" | "soMstrModifyRemarks" | "soMstrDiscountContact" | "mtype" | "soMstrMBank", ExtArgs["result"]["t_SOMstr"]>
+  export type t_SOMstrOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "somstrCode" | "somstrDate" | "somstrTotalAmt" | "somstrDiscAmt" | "somstrNetAmt" | "somstrVatClnNo" | "somstrVatDate" | "somstrPricingDate" | "somstrCreator" | "somstrCreationDate" | "somstrUpdateBy" | "somstrUpdateDate" | "somstrIsActive" | "somstrCustomerpay" | "somstrChange" | "branchId" | "soMstrDiscountRemarks" | "soMstrModifyRemarks" | "soMstrDiscountContact" | "soMstrGuestName" | "mtype" | "soMstrMBank", ExtArgs["result"]["t_SOMstr"]>
   export type t_SOMstrInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
     details?: boolean | t_SOMstr$detailsArgs<ExtArgs>
@@ -35320,6 +35385,14 @@ export namespace Prisma {
       soMstrDiscountRemarks: string | null
       soMstrModifyRemarks: string | null
       soMstrDiscountContact: string | null
+      /**
+       * Walk-in customer's name, typed on the POS checkout panel. A running sale
+       * has no Customer row, so this is the only identity it carries. Optional and
+       * independent of the discount authoriser above (SoMstr_DiscountRemarks),
+       * which is only ever written when a discount is applied. Reports only — it
+       * is not printed on the receipt.
+       */
+      soMstrGuestName: string | null
       mtype: string | null
       soMstrMBank: string | null
     }, ExtArgs["result"]["t_SOMstr"]>
@@ -35767,6 +35840,7 @@ export namespace Prisma {
     readonly soMstrDiscountRemarks: FieldRef<"t_SOMstr", 'String'>
     readonly soMstrModifyRemarks: FieldRef<"t_SOMstr", 'String'>
     readonly soMstrDiscountContact: FieldRef<"t_SOMstr", 'String'>
+    readonly soMstrGuestName: FieldRef<"t_SOMstr", 'String'>
     readonly mtype: FieldRef<"t_SOMstr", 'String'>
     readonly soMstrMBank: FieldRef<"t_SOMstr", 'String'>
   }
@@ -65992,7 +66066,8 @@ export namespace Prisma {
     branchName: 'branchName',
     address: 'address',
     vatNo: 'vatNo',
-    mobileNo: 'mobileNo'
+    mobileNo: 'mobileNo',
+    sortingNo: 'sortingNo'
   };
 
   export type BranchScalarFieldEnum = (typeof BranchScalarFieldEnum)[keyof typeof BranchScalarFieldEnum]
@@ -66357,6 +66432,7 @@ export namespace Prisma {
     soMstrDiscountRemarks: 'soMstrDiscountRemarks',
     soMstrModifyRemarks: 'soMstrModifyRemarks',
     soMstrDiscountContact: 'soMstrDiscountContact',
+    soMstrGuestName: 'soMstrGuestName',
     mtype: 'mtype',
     soMstrMBank: 'soMstrMBank'
   };
@@ -67089,6 +67165,7 @@ export namespace Prisma {
     address?: StringNullableFilter<"Branch"> | string | null
     vatNo?: StringNullableFilter<"Branch"> | string | null
     mobileNo?: StringNullableFilter<"Branch"> | string | null
+    sortingNo?: IntNullableFilter<"Branch"> | number | null
     userMappings?: UserBranchMappingListRelationFilter
   }
 
@@ -67099,6 +67176,7 @@ export namespace Prisma {
     address?: SortOrderInput | SortOrder
     vatNo?: SortOrderInput | SortOrder
     mobileNo?: SortOrderInput | SortOrder
+    sortingNo?: SortOrderInput | SortOrder
     userMappings?: UserBranchMappingOrderByRelationAggregateInput
   }
 
@@ -67112,6 +67190,7 @@ export namespace Prisma {
     address?: StringNullableFilter<"Branch"> | string | null
     vatNo?: StringNullableFilter<"Branch"> | string | null
     mobileNo?: StringNullableFilter<"Branch"> | string | null
+    sortingNo?: IntNullableFilter<"Branch"> | number | null
     userMappings?: UserBranchMappingListRelationFilter
   }, "id" | "branchCode">
 
@@ -67122,9 +67201,12 @@ export namespace Prisma {
     address?: SortOrderInput | SortOrder
     vatNo?: SortOrderInput | SortOrder
     mobileNo?: SortOrderInput | SortOrder
+    sortingNo?: SortOrderInput | SortOrder
     _count?: BranchCountOrderByAggregateInput
+    _avg?: BranchAvgOrderByAggregateInput
     _max?: BranchMaxOrderByAggregateInput
     _min?: BranchMinOrderByAggregateInput
+    _sum?: BranchSumOrderByAggregateInput
   }
 
   export type BranchScalarWhereWithAggregatesInput = {
@@ -67137,6 +67219,7 @@ export namespace Prisma {
     address?: StringNullableWithAggregatesFilter<"Branch"> | string | null
     vatNo?: StringNullableWithAggregatesFilter<"Branch"> | string | null
     mobileNo?: StringNullableWithAggregatesFilter<"Branch"> | string | null
+    sortingNo?: IntNullableWithAggregatesFilter<"Branch"> | number | null
   }
 
   export type BankWhereInput = {
@@ -68938,6 +69021,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableFilter<"t_SOMstr"> | string | null
+    soMstrGuestName?: StringNullableFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrMBank?: UuidNullableFilter<"t_SOMstr"> | string | null
     bank?: XOR<BankNullableScalarRelationFilter, BankWhereInput> | null
@@ -68965,6 +69049,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrderInput | SortOrder
     soMstrModifyRemarks?: SortOrderInput | SortOrder
     soMstrDiscountContact?: SortOrderInput | SortOrder
+    soMstrGuestName?: SortOrderInput | SortOrder
     mtype?: SortOrderInput | SortOrder
     soMstrMBank?: SortOrderInput | SortOrder
     bank?: BankOrderByWithRelationInput
@@ -68995,6 +69080,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableFilter<"t_SOMstr"> | string | null
+    soMstrGuestName?: StringNullableFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrMBank?: UuidNullableFilter<"t_SOMstr"> | string | null
     bank?: XOR<BankNullableScalarRelationFilter, BankWhereInput> | null
@@ -69022,6 +69108,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrderInput | SortOrder
     soMstrModifyRemarks?: SortOrderInput | SortOrder
     soMstrDiscountContact?: SortOrderInput | SortOrder
+    soMstrGuestName?: SortOrderInput | SortOrder
     mtype?: SortOrderInput | SortOrder
     soMstrMBank?: SortOrderInput | SortOrder
     _count?: t_SOMstrCountOrderByAggregateInput
@@ -69055,6 +69142,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
+    soMstrGuestName?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     soMstrMBank?: UuidNullableWithAggregatesFilter<"t_SOMstr"> | string | null
   }
@@ -71624,6 +71712,7 @@ export namespace Prisma {
     address?: string | null
     vatNo?: string | null
     mobileNo?: string | null
+    sortingNo?: number | null
     userMappings?: UserBranchMappingCreateNestedManyWithoutBranchInput
   }
 
@@ -71634,6 +71723,7 @@ export namespace Prisma {
     address?: string | null
     vatNo?: string | null
     mobileNo?: string | null
+    sortingNo?: number | null
     userMappings?: UserBranchMappingUncheckedCreateNestedManyWithoutBranchInput
   }
 
@@ -71644,6 +71734,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     vatNo?: NullableStringFieldUpdateOperationsInput | string | null
     mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
+    sortingNo?: NullableIntFieldUpdateOperationsInput | number | null
     userMappings?: UserBranchMappingUpdateManyWithoutBranchNestedInput
   }
 
@@ -71654,6 +71745,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     vatNo?: NullableStringFieldUpdateOperationsInput | string | null
     mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
+    sortingNo?: NullableIntFieldUpdateOperationsInput | number | null
     userMappings?: UserBranchMappingUncheckedUpdateManyWithoutBranchNestedInput
   }
 
@@ -71664,6 +71756,7 @@ export namespace Prisma {
     address?: string | null
     vatNo?: string | null
     mobileNo?: string | null
+    sortingNo?: number | null
   }
 
   export type BranchUpdateManyMutationInput = {
@@ -71673,6 +71766,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     vatNo?: NullableStringFieldUpdateOperationsInput | string | null
     mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
+    sortingNo?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type BranchUncheckedUpdateManyInput = {
@@ -71682,6 +71776,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     vatNo?: NullableStringFieldUpdateOperationsInput | string | null
     mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
+    sortingNo?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type BankCreateInput = {
@@ -73680,6 +73775,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    soMstrGuestName?: string | null
     mtype?: string | null
     bank?: BankCreateNestedOneWithoutSalesInput
     details?: t_SODetCreateNestedManyWithoutSaleInput
@@ -73706,6 +73802,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    soMstrGuestName?: string | null
     mtype?: string | null
     soMstrMBank?: string | null
     details?: t_SODetUncheckedCreateNestedManyWithoutSaleInput
@@ -73732,6 +73829,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: BankUpdateOneWithoutSalesNestedInput
     details?: t_SODetUpdateManyWithoutSaleNestedInput
@@ -73758,6 +73856,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
     details?: t_SODetUncheckedUpdateManyWithoutSaleNestedInput
@@ -73784,6 +73883,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    soMstrGuestName?: string | null
     mtype?: string | null
     soMstrMBank?: string | null
   }
@@ -73809,6 +73909,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -73833,6 +73934,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -76951,6 +77053,17 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type UserBranchMappingListRelationFilter = {
     every?: UserBranchMappingWhereInput
     some?: UserBranchMappingWhereInput
@@ -76968,6 +77081,11 @@ export namespace Prisma {
     address?: SortOrder
     vatNo?: SortOrder
     mobileNo?: SortOrder
+    sortingNo?: SortOrder
+  }
+
+  export type BranchAvgOrderByAggregateInput = {
+    sortingNo?: SortOrder
   }
 
   export type BranchMaxOrderByAggregateInput = {
@@ -76977,6 +77095,7 @@ export namespace Prisma {
     address?: SortOrder
     vatNo?: SortOrder
     mobileNo?: SortOrder
+    sortingNo?: SortOrder
   }
 
   export type BranchMinOrderByAggregateInput = {
@@ -76986,6 +77105,27 @@ export namespace Prisma {
     address?: SortOrder
     vatNo?: SortOrder
     mobileNo?: SortOrder
+    sortingNo?: SortOrder
+  }
+
+  export type BranchSumOrderByAggregateInput = {
+    sortingNo?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -77362,17 +77502,6 @@ export namespace Prisma {
     _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type BoolNullableFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
@@ -77430,22 +77559,6 @@ export namespace Prisma {
 
   export type MenuSumOrderByAggregateInput = {
     order?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -78450,6 +78563,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrder
     soMstrModifyRemarks?: SortOrder
     soMstrDiscountContact?: SortOrder
+    soMstrGuestName?: SortOrder
     mtype?: SortOrder
     soMstrMBank?: SortOrder
   }
@@ -78483,6 +78597,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrder
     soMstrModifyRemarks?: SortOrder
     soMstrDiscountContact?: SortOrder
+    soMstrGuestName?: SortOrder
     mtype?: SortOrder
     soMstrMBank?: SortOrder
   }
@@ -78508,6 +78623,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrder
     soMstrModifyRemarks?: SortOrder
     soMstrDiscountContact?: SortOrder
+    soMstrGuestName?: SortOrder
     mtype?: SortOrder
     soMstrMBank?: SortOrder
   }
@@ -80323,6 +80439,14 @@ export namespace Prisma {
     connect?: UserBranchMappingWhereUniqueInput | UserBranchMappingWhereUniqueInput[]
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type UserBranchMappingUpdateManyWithoutBranchNestedInput = {
     create?: XOR<UserBranchMappingCreateWithoutBranchInput, UserBranchMappingUncheckedCreateWithoutBranchInput> | UserBranchMappingCreateWithoutBranchInput[] | UserBranchMappingUncheckedCreateWithoutBranchInput[]
     connectOrCreate?: UserBranchMappingCreateOrConnectWithoutBranchInput | UserBranchMappingCreateOrConnectWithoutBranchInput[]
@@ -80593,14 +80717,6 @@ export namespace Prisma {
     connectOrCreate?: PermissionCreateOrConnectWithoutMenuInput | PermissionCreateOrConnectWithoutMenuInput[]
     createMany?: PermissionCreateManyMenuInputEnvelope
     connect?: PermissionWhereUniqueInput | PermissionWhereUniqueInput[]
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type NullableBoolFieldUpdateOperationsInput = {
@@ -82686,6 +82802,33 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -82737,33 +82880,6 @@ export namespace Prisma {
   export type NestedBoolNullableFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
-  }
-
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -83261,6 +83377,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    soMstrGuestName?: string | null
     mtype?: string | null
     details?: t_SODetCreateNestedManyWithoutSaleInput
   }
@@ -83286,6 +83403,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    soMstrGuestName?: string | null
     mtype?: string | null
     details?: t_SODetUncheckedCreateNestedManyWithoutSaleInput
   }
@@ -83340,6 +83458,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableFilter<"t_SOMstr"> | string | null
+    soMstrGuestName?: StringNullableFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrMBank?: UuidNullableFilter<"t_SOMstr"> | string | null
   }
@@ -83664,6 +83783,7 @@ export namespace Prisma {
     address?: string | null
     vatNo?: string | null
     mobileNo?: string | null
+    sortingNo?: number | null
   }
 
   export type BranchUncheckedCreateWithoutUserMappingsInput = {
@@ -83673,6 +83793,7 @@ export namespace Prisma {
     address?: string | null
     vatNo?: string | null
     mobileNo?: string | null
+    sortingNo?: number | null
   }
 
   export type BranchCreateOrConnectWithoutUserMappingsInput = {
@@ -83767,6 +83888,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     vatNo?: NullableStringFieldUpdateOperationsInput | string | null
     mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
+    sortingNo?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type BranchUncheckedUpdateWithoutUserMappingsInput = {
@@ -83776,6 +83898,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     vatNo?: NullableStringFieldUpdateOperationsInput | string | null
     mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
+    sortingNo?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type UserCreateWithoutUserRolesInput = {
@@ -86708,6 +86831,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    soMstrGuestName?: string | null
     mtype?: string | null
     bank?: BankCreateNestedOneWithoutSalesInput
   }
@@ -86733,6 +86857,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    soMstrGuestName?: string | null
     mtype?: string | null
     soMstrMBank?: string | null
   }
@@ -86835,6 +86960,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: BankUpdateOneWithoutSalesNestedInput
   }
@@ -86860,6 +86986,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -89691,6 +89818,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    soMstrGuestName?: string | null
     mtype?: string | null
   }
 
@@ -89715,6 +89843,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     details?: t_SODetUpdateManyWithoutSaleNestedInput
   }
@@ -89740,6 +89869,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     details?: t_SODetUncheckedUpdateManyWithoutSaleNestedInput
   }
@@ -89765,6 +89895,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
   }
 

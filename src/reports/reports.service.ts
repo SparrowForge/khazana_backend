@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import { compareBranchesForDisplay, isFactoryBranch } from '../common/helpers';
+import { isFactoryBranch } from '../common/helpers';
 
 export interface DateRangeQuery {
   fromDate?: string;
@@ -14,6 +14,25 @@ const num = (d: unknown): number => (d == null ? 0 : Number(d));
 // become 0/abs. Used by the stock ledger roll-forward so opening/closing carry
 // clean signed values free of float noise (e.g. -0.999999 → -1.00).
 const r2signed = (n: number): number => Math.round(n * 100) / 100;
+
+/** Client name for a POS terminal sale.
+ *
+ *  A running sale has no customer record — it is a walk-in — so the name comes
+ *  from whichever of two fields holds one, in this order:
+ *
+ *   1. `SoMstr_GuestName`, typed on the POS checkout panel. Optional, available
+ *      on every sale.
+ *   2. `SoMstr_DiscountRemarks`, the discount authoriser. Only ever written when
+ *      a discount was applied, which is why (1) exists — but it is still the
+ *      best name available on every sale rung up before (1) was added.
+ *
+ *  Failing both, 'POS'. Not a blank: an empty cell looks like missing data on a
+ *  sheet whose whole point is that every row is identified.
+ *
+ *  Blank and whitespace-only count as no name — the discount column does hold ''
+ *  on some rows, which would otherwise print an empty cell. */
+const posClientName = (guestName?: string | null, discountAuthoriser?: string | null): string =>
+  (guestName ?? '').trim() || (discountAuthoriser ?? '').trim() || 'POS';
 
 @Injectable()
 export class ReportsService {
@@ -1405,7 +1424,7 @@ export class ReportsService {
     // ── Cash (running) sales ─────────────────────────────────────────────
     for (const s of cashSales) {
       pushInvoice(
-        { date: s.somstrDate, invoiceNo: s.somstrCode ?? '', branchId: s.branchId },
+        { date: s.somstrDate, invoiceNo: s.somstrCode ?? '', clientName: posClientName(s.soMstrGuestName, s.soMstrDiscountRemarks), branchId: s.branchId },
         s.details.map((d) => ({
           itemName: d.item?.itmName || d.item?.itmCode || '',
           uom: d.item?.itmUOM ?? d.sodetUOM ?? '',
@@ -1423,7 +1442,9 @@ export class ReportsService {
     // ── VAT cash (running) sales ─────────────────────────────────────────
     for (const s of vatCashSales) {
       pushInvoice(
-        { date: s.somstrDate, invoiceNo: s.somstrCode ?? '', branchId: s.branchId },
+        // t_SOMstV carries no guest name: it is written by the VAT cash form,
+        // not the POS terminal, so only the discount authoriser is available.
+        { date: s.somstrDate, invoiceNo: s.somstrCode ?? '', clientName: posClientName(null, s.soMstrDiscountRemarks), branchId: s.branchId },
         s.details.map((d) => ({
           itemName: d.item?.itmName || d.item?.itmCode || '',
           uom: d.item?.itmUOM ?? d.sodetUOM ?? '',
@@ -2235,15 +2256,14 @@ export class ReportsService {
     // with its fixed outlet columns. Narrowed to one column when a specific
     // "Demand From" branch was chosen.
     //
-    // Sorted in app code rather than by Prisma: the columns run in the fixed
-    // reading order of the printed form (GMS1, GMS2, BMS, UMS, KMS, KhMS), which
-    // no `orderBy` can express.
-    const allBranches = (
-      await this.prisma.branch.findMany({
-        where: query.fromBranchId ? { id: query.fromBranchId } : {},
-        select: { id: true, branchCode: true, branchName: true },
-      })
-    ).sort(compareBranchesForDisplay);
+    // Ordered by Branch.SortingNo — the reading order of the printed form, which
+    // is not alphabetical. A branch with no SortingNo sorts last rather than
+    // first, so a newly created branch lands at the end of the sheet.
+    const allBranches = await this.prisma.branch.findMany({
+      where: query.fromBranchId ? { id: query.fromBranchId } : {},
+      select: { id: true, branchCode: true, branchName: true, sortingNo: true },
+      orderBy: [{ sortingNo: { sort: 'asc', nulls: 'last' } }, { branchCode: 'asc' }],
+    });
     // A branch that actually raised a demand ALWAYS gets a column, even when it
     // is the branch being demanded from — the factory does raise demands on
     // itself, and dropping its column would silently hide those quantities from

@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import {
-  IsString, IsNumber, IsArray, ValidateNested, IsPositive, Min, IsOptional, IsIn, IsUUID, IsNotEmpty,
+  IsString, IsNumber, IsArray, ValidateNested, IsPositive, Min, IsOptional, IsIn, IsUUID, IsNotEmpty, MaxLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -63,6 +63,16 @@ export class CreatePosSaleDto {
   @Min(0)
   @IsOptional()
   discountValue?: number;
+
+  @ApiPropertyOptional({
+    example: 'Mr. Rahman',
+    description:
+      "Walk-in customer's name → t_SOMstr.SoMstr_GuestName. Optional on every sale, and unrelated to the discount authoriser below — a running sale has no Customer row, so this is the only identity it carries. Shown in Sales History Summary; not printed on the receipt.",
+  })
+  @IsString()
+  @IsOptional()
+  @MaxLength(100)
+  guestName?: string;
 
   @ApiPropertyOptional({
     example: 'Manager Karim',

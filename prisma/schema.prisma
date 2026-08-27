@@ -41,6 +41,12 @@ model Branch {
   address      String?             @map("Address")
   vatNo        String?             @map("VatNo")
   mobileNo     String?             @map("MobileNo")
+  /// Display position on the reports and pickers that show one column or row
+  /// per branch — the reading order of the printed factory forms, which is not
+  /// alphabetical. Lowest first; NULL sorts LAST, so a branch created without
+  /// one lands at the end of a report rather than the head of it. Query it as
+  /// `orderBy: { sortingNo: { sort: 'asc', nulls: 'last' } }`.
+  sortingNo    Int?                @map("SortingNo")
   userMappings UserBranchMapping[]
 
   @@map("Branch")
@@ -457,6 +463,12 @@ model t_SOMstr {
   soMstrDiscountRemarks String?   @map("SoMstr_DiscountRemarks")
   soMstrModifyRemarks   String?   @map("SoMstr_ModifyRemarks")
   soMstrDiscountContact String?   @map("SoMstr_DiscountContact")
+  /// Walk-in customer's name, typed on the POS checkout panel. A running sale
+  /// has no Customer row, so this is the only identity it carries. Optional and
+  /// independent of the discount authoriser above (SoMstr_DiscountRemarks),
+  /// which is only ever written when a discount is applied. Reports only — it
+  /// is not printed on the receipt.
+  soMstrGuestName       String?   @map("SoMstr_GuestName")
   mtype                 String?   @map("Mtype")
   soMstrMBank           String?   @map("SoMstr_MBank") @db.Uuid
   bank                  Bank?     @relation(fields: [soMstrMBank], references: [id])

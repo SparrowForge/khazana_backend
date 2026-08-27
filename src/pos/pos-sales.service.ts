@@ -54,6 +54,7 @@ export class PosSalesService {
       salesType: sale.mtype ?? 'Cash',
       bankId: sale.soMstrMBank ?? null,
       bankName: sale.bank?.name ?? null,
+      guestName: sale.soMstrGuestName ?? null,
       discountRemarks: sale.soMstrDiscountRemarks ?? null,
       discountContact: sale.soMstrDiscountContact ?? null,
       modifyRemarks: sale.soMstrModifyRemarks ?? null,
@@ -98,6 +99,7 @@ export class PosSalesService {
       discountValue: dto.discountValue,
       discountRemarks: dto.discountRemarks,
       discountContact: dto.discountContact,
+      guestName: dto.guestName,
       createdBy: userName,
     });
   }
@@ -128,6 +130,10 @@ export class PosSalesService {
     discountValue?: number;
     discountRemarks?: string;
     discountContact?: string;
+    /** Walk-in customer's name. Unrelated to the discount authoriser above:
+     *  this one is optional on every sale, that one only exists when a discount
+     *  was applied. */
+    guestName?: string;
     createdBy: string;
     enforceStock?: boolean;
   }) {
@@ -205,6 +211,9 @@ export class PosSalesService {
           // Discount authoriser audit (only meaningful when a discount applied).
           soMstrDiscountRemarks: discountAmount > 0 ? (p.discountRemarks ?? null) : null,
           soMstrDiscountContact: discountAmount > 0 ? (p.discountContact ?? null) : null,
+          // Walk-in's name — stored whether or not a discount was applied, and
+          // blank stored as NULL so the report's fallback to 'POS' still fires.
+          soMstrGuestName: p.guestName?.trim() || null,
           somstrCreator: p.servedBy || p.createdBy,
           somstrCreationDate: new Date(),
           somstrIsActive: true,
@@ -411,6 +420,7 @@ export class PosSalesService {
           // Discount authoriser audit — kept in step with the (re-applied) discount.
           soMstrDiscountRemarks: discountAmount > 0 ? (dto.discountRemarks ?? null) : null,
           soMstrDiscountContact: discountAmount > 0 ? (dto.discountContact ?? null) : null,
+          soMstrGuestName: dto.guestName?.trim() || null,
           somstrUpdateBy: userName,
           somstrUpdateDate: new Date(),
           details: {

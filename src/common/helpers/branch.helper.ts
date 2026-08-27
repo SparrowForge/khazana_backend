@@ -24,52 +24,6 @@ export function isFactoryBranch(branch?: { branchCode?: string | null; branchNam
   return /^fac(tory)?$/i.test(code) || /factory/i.test(name);
 }
 
-/** The order branches are read in on the printed factory forms:
- *  Gulshan-1, Gulshan-2, Banani, Uttara, Kolabagan, Khilgaon.
- *
- *  Alphabetical by code is not it — that leads with Banani and splits the two
- *  Gulshan shops around the Factory, so whoever is scanning the sheet has to
- *  hunt for a column instead of reading across.
- *
- *  An outlet is matched on its CODE first (normalised: case-folded, and
- *  punctuation stripped so 'GMS-2' and 'GMS2' are the same branch), then on its
- *  NAME. The name fallback is what keeps this working when a code is edited —
- *  branch codes are editable from the Branches page, and these have already
- *  changed once ('KhMS' -> 'KHILMS'). A branch matching neither sorts AFTER the
- *  listed ones, so the Factory and any newly opened branch appear at the end
- *  rather than silently vanishing off the sheet. */
-export const BRANCH_DISPLAY_ORDER: { codes: string[]; name: RegExp }[] = [
-  { codes: ['GMS1'], name: /gulshan[^\d]*1/i },
-  { codes: ['GMS2'], name: /gulshan[^\d]*2/i },
-  { codes: ['BMS'], name: /banani/i },
-  { codes: ['UMS'], name: /uttara/i },
-  { codes: ['KMS'], name: /kolabagan|kalabagan/i },
-  { codes: ['KHMS', 'KHILMS'], name: /khilgaon/i },
-];
-
-/** Position of a branch in {@link BRANCH_DISPLAY_ORDER}; unlisted branches rank
- *  last. Codes are checked across every entry before names, so a code that
- *  matches always wins over a name that happens to. */
-export function branchDisplayRank(branch: { branchCode?: string | null; branchName?: string | null }): number {
-  const code = (branch.branchCode ?? '').replace(/[^a-z0-9]/gi, '').toUpperCase();
-  const name = (branch.branchName ?? '').trim();
-  const byCode = code ? BRANCH_DISPLAY_ORDER.findIndex((e) => e.codes.includes(code)) : -1;
-  if (byCode !== -1) return byCode;
-  const byName = name ? BRANCH_DISPLAY_ORDER.findIndex((e) => e.name.test(name)) : -1;
-  return byName !== -1 ? byName : BRANCH_DISPLAY_ORDER.length;
-}
-
-/** Comparator putting branches in {@link BRANCH_DISPLAY_ORDER}. Pass straight to
- *  `Array#sort` — Prisma cannot express this ordering, so it is applied in app
- *  code after the rows come back. */
-export function compareBranchesForDisplay(
-  a: { branchCode?: string | null; branchName?: string | null },
-  b: { branchCode?: string | null; branchName?: string | null },
-): number {
-  const byRank = branchDisplayRank(a) - branchDisplayRank(b);
-  return byRank !== 0 ? byRank : (a.branchCode ?? '').localeCompare(b.branchCode ?? '');
-}
-
 /**
  * Prisma `where` fragment restricting rows to the branches a user may see.
  *

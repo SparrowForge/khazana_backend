@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsInt, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 import { PrismaService } from '../database/prisma.service';
 import { PaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta } from '../common/helpers';
@@ -25,6 +26,14 @@ export class CreateBranchDto {
   @IsString()
   @IsOptional()
   mobileNo?: string;
+
+  /** Display position on the reports and pickers that show one column per
+   *  branch. Lowest first; leave it unset and the branch sorts last. */
+  @IsInt()
+  @Min(0)
+  @IsOptional()
+  @Type(() => Number)
+  sortingNo?: number;
 }
 
 /** PATCH body for a branch. Every field is optional, but it must be a real
@@ -53,6 +62,14 @@ export class UpdateBranchDto {
   @IsString()
   @IsOptional()
   mobileNo?: string;
+
+  /** Display position on the reports and pickers that show one column per
+   *  branch. Lowest first; leave it unset and the branch sorts last. */
+  @IsInt()
+  @Min(0)
+  @IsOptional()
+  @Type(() => Number)
+  sortingNo?: number;
 }
 
 export class UpdateSystemDto {
@@ -82,7 +99,13 @@ export class AdminService {
   async findAllBranches(query: PaginationQueryDto) {
     const { page, limit } = query;
     const [branches, total] = await Promise.all([
-      this.prisma.branch.findMany({ orderBy: { branchName: 'asc' }, skip: (page - 1) * limit, take: limit }),
+      // Ordered the way the reports order their branch columns, so the screen
+      // that maintains SortingNo shows the sequence it controls.
+      this.prisma.branch.findMany({
+        orderBy: [{ sortingNo: { sort: 'asc', nulls: 'last' } }, { branchName: 'asc' }],
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
       this.prisma.branch.count(),
     ]);
     return { items: branches, meta: buildPaginationMeta(total, page, limit) };

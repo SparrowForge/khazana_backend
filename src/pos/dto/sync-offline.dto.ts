@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsString, IsNotEmpty, IsNumber, IsArray, ValidateNested,
-  IsOptional, IsIn, Min, IsDateString, ArrayMinSize, IsUUID,
+  IsOptional, IsIn, Min, IsDateString, ArrayMinSize, IsUUID, MaxLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PosCartItemDto } from './create-pos-sale.dto';
@@ -62,6 +62,12 @@ export class OfflineSaleDto {
   @Min(0)
   @IsOptional()
   discountValue?: number;
+
+  @ApiPropertyOptional({ example: 'Mr. Rahman', description: "Walk-in customer's name → SoMstr_GuestName. Optional, and unrelated to the discount authoriser below." })
+  @IsString()
+  @IsOptional()
+  @MaxLength(100)
+  guestName?: string;
 
   @ApiPropertyOptional({ example: 'Manager Karim', description: 'Discount authoriser name → SoMstr_DiscountRemarks.' })
   @IsString()
