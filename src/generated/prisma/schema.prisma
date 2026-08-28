@@ -725,6 +725,13 @@ model Vehicle_Challan {
   customerName    String?           @map("CustomerName")
   customerAddress String?           @map("CustomerAddress")
   deliveryAddress String?           @map("DeliveryAddress")
+  /// Who to ask for on delivery, and the customer purchase order the goods go
+  /// against. Printed on the A4 challan, which carried the labels blank before
+  /// these columns existed.
+  contactPerson   String?           @map("ContactPerson")
+  contactNo       String?           @map("ContactNo")
+  poNo            String?           @map("PoNo")
+  poDate          DateTime?         @map("PoDate")
   /// The despatching branch (the factory). There is no receiving branch.
   branchId        String            @map("BranchId") @db.Uuid
   /// Where the van is headed — free text, printed as the "To:" heading.

@@ -8900,6 +8900,26 @@
             "example": "Gazipur",
             "description": "Where the goods are being delivered"
           },
+          "contactPerson": {
+            "type": "string",
+            "example": "Mr. Rahman",
+            "description": "Who to ask for on delivery"
+          },
+          "contactNo": {
+            "type": "string",
+            "example": "01711-000000",
+            "description": "The contact person's number"
+          },
+          "poNo": {
+            "type": "string",
+            "example": "PO-4471",
+            "description": "Customer purchase order the goods go against"
+          },
+          "poDate": {
+            "type": "string",
+            "example": "2026-08-20",
+            "description": "Date of that purchase order (ISO 8601)"
+          },
           "route": {
             "type": "string",
             "example": "Mirpur-Uttara Route",
@@ -8966,6 +8986,26 @@
             "type": "string",
             "example": "Gazipur",
             "description": "Where the goods are being delivered"
+          },
+          "contactPerson": {
+            "type": "string",
+            "example": "Mr. Rahman",
+            "description": "Who to ask for on delivery"
+          },
+          "contactNo": {
+            "type": "string",
+            "example": "01711-000000",
+            "description": "The contact person's number"
+          },
+          "poNo": {
+            "type": "string",
+            "example": "PO-4471",
+            "description": "Customer purchase order the goods go against"
+          },
+          "poDate": {
+            "type": "string",
+            "example": "2026-08-20",
+            "description": "Date of that purchase order (ISO 8601)"
           },
           "route": {
             "type": "string",

@@ -47847,6 +47847,10 @@ export namespace Prisma {
     customerName: string | null
     customerAddress: string | null
     deliveryAddress: string | null
+    contactPerson: string | null
+    contactNo: string | null
+    poNo: string | null
+    poDate: Date | null
     branchId: string | null
     route: string | null
     vehicleNo: string | null
@@ -47872,6 +47876,10 @@ export namespace Prisma {
     customerName: string | null
     customerAddress: string | null
     deliveryAddress: string | null
+    contactPerson: string | null
+    contactNo: string | null
+    poNo: string | null
+    poDate: Date | null
     branchId: string | null
     route: string | null
     vehicleNo: string | null
@@ -47897,6 +47905,10 @@ export namespace Prisma {
     customerName: number
     customerAddress: number
     deliveryAddress: number
+    contactPerson: number
+    contactNo: number
+    poNo: number
+    poDate: number
     branchId: number
     route: number
     vehicleNo: number
@@ -47934,6 +47946,10 @@ export namespace Prisma {
     customerName?: true
     customerAddress?: true
     deliveryAddress?: true
+    contactPerson?: true
+    contactNo?: true
+    poNo?: true
+    poDate?: true
     branchId?: true
     route?: true
     vehicleNo?: true
@@ -47959,6 +47975,10 @@ export namespace Prisma {
     customerName?: true
     customerAddress?: true
     deliveryAddress?: true
+    contactPerson?: true
+    contactNo?: true
+    poNo?: true
+    poDate?: true
     branchId?: true
     route?: true
     vehicleNo?: true
@@ -47984,6 +48004,10 @@ export namespace Prisma {
     customerName?: true
     customerAddress?: true
     deliveryAddress?: true
+    contactPerson?: true
+    contactNo?: true
+    poNo?: true
+    poDate?: true
     branchId?: true
     route?: true
     vehicleNo?: true
@@ -48096,6 +48120,10 @@ export namespace Prisma {
     customerName: string | null
     customerAddress: string | null
     deliveryAddress: string | null
+    contactPerson: string | null
+    contactNo: string | null
+    poNo: string | null
+    poDate: Date | null
     branchId: string
     route: string | null
     vehicleNo: string | null
@@ -48140,6 +48168,10 @@ export namespace Prisma {
     customerName?: boolean
     customerAddress?: boolean
     deliveryAddress?: boolean
+    contactPerson?: boolean
+    contactNo?: boolean
+    poNo?: boolean
+    poDate?: boolean
     branchId?: boolean
     route?: boolean
     vehicleNo?: boolean
@@ -48166,6 +48198,10 @@ export namespace Prisma {
     customerName?: boolean
     customerAddress?: boolean
     deliveryAddress?: boolean
+    contactPerson?: boolean
+    contactNo?: boolean
+    poNo?: boolean
+    poDate?: boolean
     branchId?: boolean
     route?: boolean
     vehicleNo?: boolean
@@ -48192,6 +48228,10 @@ export namespace Prisma {
     customerName?: boolean
     customerAddress?: boolean
     deliveryAddress?: boolean
+    contactPerson?: boolean
+    contactNo?: boolean
+    poNo?: boolean
+    poDate?: boolean
     branchId?: boolean
     route?: boolean
     vehicleNo?: boolean
@@ -48218,6 +48258,10 @@ export namespace Prisma {
     customerName?: boolean
     customerAddress?: boolean
     deliveryAddress?: boolean
+    contactPerson?: boolean
+    contactNo?: boolean
+    poNo?: boolean
+    poDate?: boolean
     branchId?: boolean
     route?: boolean
     vehicleNo?: boolean
@@ -48231,7 +48275,7 @@ export namespace Prisma {
     updateDate?: boolean
   }
 
-  export type Vehicle_ChallanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemId" | "itemName" | "uom" | "qty" | "challanDate" | "customerName" | "customerAddress" | "deliveryAddress" | "branchId" | "route" | "vehicleNo" | "driverName" | "driverMobile" | "remarks" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["vehicle_Challan"]>
+  export type Vehicle_ChallanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "voucharNo" | "itemId" | "itemName" | "uom" | "qty" | "challanDate" | "customerName" | "customerAddress" | "deliveryAddress" | "contactPerson" | "contactNo" | "poNo" | "poDate" | "branchId" | "route" | "vehicleNo" | "driverName" | "driverMobile" | "remarks" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["vehicle_Challan"]>
   export type Vehicle_ChallanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | Vehicle_Challan$itemArgs<ExtArgs>
   }
@@ -48272,6 +48316,15 @@ export namespace Prisma {
       customerName: string | null
       customerAddress: string | null
       deliveryAddress: string | null
+      /**
+       * Who to ask for on delivery, and the customer purchase order the goods go
+       * against. Printed on the A4 challan, which carried the labels blank before
+       * these columns existed.
+       */
+      contactPerson: string | null
+      contactNo: string | null
+      poNo: string | null
+      poDate: Date | null
       /**
        * The despatching branch (the factory). There is no receiving branch.
        */
@@ -48724,6 +48777,10 @@ export namespace Prisma {
     readonly customerName: FieldRef<"Vehicle_Challan", 'String'>
     readonly customerAddress: FieldRef<"Vehicle_Challan", 'String'>
     readonly deliveryAddress: FieldRef<"Vehicle_Challan", 'String'>
+    readonly contactPerson: FieldRef<"Vehicle_Challan", 'String'>
+    readonly contactNo: FieldRef<"Vehicle_Challan", 'String'>
+    readonly poNo: FieldRef<"Vehicle_Challan", 'String'>
+    readonly poDate: FieldRef<"Vehicle_Challan", 'DateTime'>
     readonly branchId: FieldRef<"Vehicle_Challan", 'String'>
     readonly route: FieldRef<"Vehicle_Challan", 'String'>
     readonly vehicleNo: FieldRef<"Vehicle_Challan", 'String'>
@@ -66728,6 +66785,10 @@ export namespace Prisma {
     customerName: 'customerName',
     customerAddress: 'customerAddress',
     deliveryAddress: 'deliveryAddress',
+    contactPerson: 'contactPerson',
+    contactNo: 'contactNo',
+    poNo: 'poNo',
+    poDate: 'poDate',
     branchId: 'branchId',
     route: 'route',
     vehicleNo: 'vehicleNo',
@@ -70263,6 +70324,10 @@ export namespace Prisma {
     customerName?: StringNullableFilter<"Vehicle_Challan"> | string | null
     customerAddress?: StringNullableFilter<"Vehicle_Challan"> | string | null
     deliveryAddress?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    contactPerson?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    contactNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    poNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    poDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
     branchId?: UuidFilter<"Vehicle_Challan"> | string
     route?: StringNullableFilter<"Vehicle_Challan"> | string | null
     vehicleNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
@@ -70289,6 +70354,10 @@ export namespace Prisma {
     customerName?: SortOrderInput | SortOrder
     customerAddress?: SortOrderInput | SortOrder
     deliveryAddress?: SortOrderInput | SortOrder
+    contactPerson?: SortOrderInput | SortOrder
+    contactNo?: SortOrderInput | SortOrder
+    poNo?: SortOrderInput | SortOrder
+    poDate?: SortOrderInput | SortOrder
     branchId?: SortOrder
     route?: SortOrderInput | SortOrder
     vehicleNo?: SortOrderInput | SortOrder
@@ -70318,6 +70387,10 @@ export namespace Prisma {
     customerName?: StringNullableFilter<"Vehicle_Challan"> | string | null
     customerAddress?: StringNullableFilter<"Vehicle_Challan"> | string | null
     deliveryAddress?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    contactPerson?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    contactNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    poNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    poDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
     branchId?: UuidFilter<"Vehicle_Challan"> | string
     route?: StringNullableFilter<"Vehicle_Challan"> | string | null
     vehicleNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
@@ -70344,6 +70417,10 @@ export namespace Prisma {
     customerName?: SortOrderInput | SortOrder
     customerAddress?: SortOrderInput | SortOrder
     deliveryAddress?: SortOrderInput | SortOrder
+    contactPerson?: SortOrderInput | SortOrder
+    contactNo?: SortOrderInput | SortOrder
+    poNo?: SortOrderInput | SortOrder
+    poDate?: SortOrderInput | SortOrder
     branchId?: SortOrder
     route?: SortOrderInput | SortOrder
     vehicleNo?: SortOrderInput | SortOrder
@@ -70377,6 +70454,10 @@ export namespace Prisma {
     customerName?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
     customerAddress?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
     deliveryAddress?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    contactPerson?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    contactNo?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    poNo?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
+    poDate?: DateTimeNullableWithAggregatesFilter<"Vehicle_Challan"> | Date | string | null
     branchId?: UuidWithAggregatesFilter<"Vehicle_Challan"> | string
     route?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
     vehicleNo?: StringNullableWithAggregatesFilter<"Vehicle_Challan"> | string | null
@@ -75257,6 +75338,10 @@ export namespace Prisma {
     customerName?: string | null
     customerAddress?: string | null
     deliveryAddress?: string | null
+    contactPerson?: string | null
+    contactNo?: string | null
+    poNo?: string | null
+    poDate?: Date | string | null
     branchId: string
     route?: string | null
     vehicleNo?: string | null
@@ -75283,6 +75368,10 @@ export namespace Prisma {
     customerName?: string | null
     customerAddress?: string | null
     deliveryAddress?: string | null
+    contactPerson?: string | null
+    contactNo?: string | null
+    poNo?: string | null
+    poDate?: Date | string | null
     branchId: string
     route?: string | null
     vehicleNo?: string | null
@@ -75307,6 +75396,10 @@ export namespace Prisma {
     customerName?: NullableStringFieldUpdateOperationsInput | string | null
     customerAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPerson?: NullableStringFieldUpdateOperationsInput | string | null
+    contactNo?: NullableStringFieldUpdateOperationsInput | string | null
+    poNo?: NullableStringFieldUpdateOperationsInput | string | null
+    poDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     route?: NullableStringFieldUpdateOperationsInput | string | null
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75333,6 +75426,10 @@ export namespace Prisma {
     customerName?: NullableStringFieldUpdateOperationsInput | string | null
     customerAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPerson?: NullableStringFieldUpdateOperationsInput | string | null
+    contactNo?: NullableStringFieldUpdateOperationsInput | string | null
+    poNo?: NullableStringFieldUpdateOperationsInput | string | null
+    poDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     route?: NullableStringFieldUpdateOperationsInput | string | null
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75358,6 +75455,10 @@ export namespace Prisma {
     customerName?: string | null
     customerAddress?: string | null
     deliveryAddress?: string | null
+    contactPerson?: string | null
+    contactNo?: string | null
+    poNo?: string | null
+    poDate?: Date | string | null
     branchId: string
     route?: string | null
     vehicleNo?: string | null
@@ -75382,6 +75483,10 @@ export namespace Prisma {
     customerName?: NullableStringFieldUpdateOperationsInput | string | null
     customerAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPerson?: NullableStringFieldUpdateOperationsInput | string | null
+    contactNo?: NullableStringFieldUpdateOperationsInput | string | null
+    poNo?: NullableStringFieldUpdateOperationsInput | string | null
+    poDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     route?: NullableStringFieldUpdateOperationsInput | string | null
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -75407,6 +75512,10 @@ export namespace Prisma {
     customerName?: NullableStringFieldUpdateOperationsInput | string | null
     customerAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPerson?: NullableStringFieldUpdateOperationsInput | string | null
+    contactNo?: NullableStringFieldUpdateOperationsInput | string | null
+    poNo?: NullableStringFieldUpdateOperationsInput | string | null
+    poDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     route?: NullableStringFieldUpdateOperationsInput | string | null
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -79478,6 +79587,10 @@ export namespace Prisma {
     customerName?: SortOrder
     customerAddress?: SortOrder
     deliveryAddress?: SortOrder
+    contactPerson?: SortOrder
+    contactNo?: SortOrder
+    poNo?: SortOrder
+    poDate?: SortOrder
     branchId?: SortOrder
     route?: SortOrder
     vehicleNo?: SortOrder
@@ -79508,6 +79621,10 @@ export namespace Prisma {
     customerName?: SortOrder
     customerAddress?: SortOrder
     deliveryAddress?: SortOrder
+    contactPerson?: SortOrder
+    contactNo?: SortOrder
+    poNo?: SortOrder
+    poDate?: SortOrder
     branchId?: SortOrder
     route?: SortOrder
     vehicleNo?: SortOrder
@@ -79533,6 +79650,10 @@ export namespace Prisma {
     customerName?: SortOrder
     customerAddress?: SortOrder
     deliveryAddress?: SortOrder
+    contactPerson?: SortOrder
+    contactNo?: SortOrder
+    poNo?: SortOrder
+    poDate?: SortOrder
     branchId?: SortOrder
     route?: SortOrder
     vehicleNo?: SortOrder
@@ -85258,6 +85379,10 @@ export namespace Prisma {
     customerName?: string | null
     customerAddress?: string | null
     deliveryAddress?: string | null
+    contactPerson?: string | null
+    contactNo?: string | null
+    poNo?: string | null
+    poDate?: Date | string | null
     branchId: string
     route?: string | null
     vehicleNo?: string | null
@@ -85282,6 +85407,10 @@ export namespace Prisma {
     customerName?: string | null
     customerAddress?: string | null
     deliveryAddress?: string | null
+    contactPerson?: string | null
+    contactNo?: string | null
+    poNo?: string | null
+    poDate?: Date | string | null
     branchId: string
     route?: string | null
     vehicleNo?: string | null
@@ -85854,6 +85983,10 @@ export namespace Prisma {
     customerName?: StringNullableFilter<"Vehicle_Challan"> | string | null
     customerAddress?: StringNullableFilter<"Vehicle_Challan"> | string | null
     deliveryAddress?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    contactPerson?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    contactNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    poNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
+    poDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
     branchId?: UuidFilter<"Vehicle_Challan"> | string
     route?: StringNullableFilter<"Vehicle_Challan"> | string | null
     vehicleNo?: StringNullableFilter<"Vehicle_Challan"> | string | null
@@ -90691,6 +90824,10 @@ export namespace Prisma {
     customerName?: string | null
     customerAddress?: string | null
     deliveryAddress?: string | null
+    contactPerson?: string | null
+    contactNo?: string | null
+    poNo?: string | null
+    poDate?: Date | string | null
     branchId: string
     route?: string | null
     vehicleNo?: string | null
@@ -91231,6 +91368,10 @@ export namespace Prisma {
     customerName?: NullableStringFieldUpdateOperationsInput | string | null
     customerAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPerson?: NullableStringFieldUpdateOperationsInput | string | null
+    contactNo?: NullableStringFieldUpdateOperationsInput | string | null
+    poNo?: NullableStringFieldUpdateOperationsInput | string | null
+    poDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     route?: NullableStringFieldUpdateOperationsInput | string | null
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91255,6 +91396,10 @@ export namespace Prisma {
     customerName?: NullableStringFieldUpdateOperationsInput | string | null
     customerAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPerson?: NullableStringFieldUpdateOperationsInput | string | null
+    contactNo?: NullableStringFieldUpdateOperationsInput | string | null
+    poNo?: NullableStringFieldUpdateOperationsInput | string | null
+    poDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     route?: NullableStringFieldUpdateOperationsInput | string | null
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null
@@ -91279,6 +91424,10 @@ export namespace Prisma {
     customerName?: NullableStringFieldUpdateOperationsInput | string | null
     customerAddress?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    contactPerson?: NullableStringFieldUpdateOperationsInput | string | null
+    contactNo?: NullableStringFieldUpdateOperationsInput | string | null
+    poNo?: NullableStringFieldUpdateOperationsInput | string | null
+    poDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     branchId?: StringFieldUpdateOperationsInput | string
     route?: NullableStringFieldUpdateOperationsInput | string | null
     vehicleNo?: NullableStringFieldUpdateOperationsInput | string | null

@@ -58,6 +58,29 @@ class VehicleChallanHeaderDto {
   @MaxLength(300)
   deliveryAddress?: string;
 
+  @ApiPropertyOptional({ example: 'Mr. Rahman', description: 'Who to ask for on delivery' })
+  @IsString()
+  @IsOptional()
+  @MaxLength(200)
+  contactPerson?: string;
+
+  @ApiPropertyOptional({ example: '01711-000000', description: "The contact person's number" })
+  @IsString()
+  @IsOptional()
+  @MaxLength(30)
+  contactNo?: string;
+
+  @ApiPropertyOptional({ example: 'PO-4471', description: 'Customer purchase order the goods go against' })
+  @IsString()
+  @IsOptional()
+  @MaxLength(50)
+  poNo?: string;
+
+  @ApiPropertyOptional({ example: '2026-08-20', description: 'Date of that purchase order (ISO 8601)' })
+  @IsDateString()
+  @IsOptional()
+  poDate?: string;
+
   @ApiPropertyOptional({ example: 'Mirpur-Uttara Route', description: 'Where the van is headed' })
   @IsString()
   @IsOptional()
