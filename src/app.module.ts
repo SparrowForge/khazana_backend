@@ -20,6 +20,7 @@ import { PacketsModule } from './packets/packets.module';
 import { NcAdjustmentModule } from './nc-adjustment/nc-adjustment.module';
 import { AssortmentModule } from './assortment/assortment.module';
 import { ReportsModule } from './reports/reports.module';
+import { ReportSharesModule } from './report-shares/report-shares.module';
 import { AdminModule } from './admin/admin.module';
 import { CategoriesModule } from './categories/categories.module';
 import { UomsModule } from './uoms/uoms.module';
@@ -50,6 +51,7 @@ import { UploadModule } from './upload/upload.module';
     NcAdjustmentModule,
     AssortmentModule,
     ReportsModule,
+    ReportSharesModule,
     AdminModule,
     CategoriesModule,
     UomsModule,

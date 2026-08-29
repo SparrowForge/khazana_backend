@@ -2431,9 +2431,12 @@ export class ReportsService {
       }
     }
 
-    // Every item, demanded or not — the sheet is the whole price list, with the
-    // blank cells that make it readable as the form it was ported from.
+    // Only the items actually demanded in the window. The sheet used to list the
+    // whole catalogue, blank cells and all, the way the paper form does — but on
+    // screen that buries a handful of real lines in hundreds of empty ones, and
+    // every blank Amount reads as a broken column rather than an absent demand.
     const items = await this.prisma.item_Information.findMany({
+      where: { id: { in: [...demandByItem.keys()] } },
       orderBy: { itmName: 'asc' },
       select: {
         id: true,

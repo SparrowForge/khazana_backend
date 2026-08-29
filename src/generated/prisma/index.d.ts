@@ -250,6 +250,22 @@ export type OrderReceive_Master = $Result.DefaultSelection<Prisma.$OrderReceive_
  */
 export type OrderReceive_Detail = $Result.DefaultSelection<Prisma.$OrderReceive_DetailPayload>
 /**
+ * Model Report_Share
+ * A saved, shareable run of a report.
+ * 
+ * The row's own UUID is the share token, and it is the whole of the access
+ * control — 122 random bits, unguessable and un-enumerable, but equally
+ * un-revokable once sent (short of deleting the row) and never expiring. Same
+ * bearer-token model as the public credit-sale invoice link.
+ * 
+ * The report is NOT snapshotted: `params` holds the query it was generated
+ * from and the public route re-runs it, so a link always shows current data.
+ * `sessionBranchId` is the branch of whoever created the share — the public
+ * run has no session, and the factory-only gate has to be checked against
+ * something.
+ */
+export type Report_Share = $Result.DefaultSelection<Prisma.$Report_SharePayload>
+/**
  * Model DemandOrder_Master
  * 
  */
@@ -844,6 +860,16 @@ export class PrismaClient<
   get orderReceive_Detail(): Prisma.OrderReceive_DetailDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.report_Share`: Exposes CRUD operations for the **Report_Share** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Report_Shares
+    * const report_Shares = await prisma.report_Share.findMany()
+    * ```
+    */
+  get report_Share(): Prisma.Report_ShareDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.demandOrder_Master`: Exposes CRUD operations for the **DemandOrder_Master** model.
     * Example usage:
     * ```ts
@@ -1397,6 +1423,7 @@ export namespace Prisma {
     Packet_Issue: 'Packet_Issue',
     OrderReceive_Master: 'OrderReceive_Master',
     OrderReceive_Detail: 'OrderReceive_Detail',
+    Report_Share: 'Report_Share',
     DemandOrder_Master: 'DemandOrder_Master',
     DemandOrder_Detail: 'DemandOrder_Detail',
     VOrderReceive_Master: 'VOrderReceive_Master',
@@ -1422,7 +1449,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "customer_Transaction" | "employee" | "item_Information" | "item_UOM" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "vehicle_Challan" | "production" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "demandOrder_Master" | "demandOrder_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
+      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "customer_Transaction" | "employee" | "item_Information" | "item_UOM" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "vehicle_Challan" | "production" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "report_Share" | "demandOrder_Master" | "demandOrder_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4682,6 +4709,80 @@ export namespace Prisma {
           }
         }
       }
+      Report_Share: {
+        payload: Prisma.$Report_SharePayload<ExtArgs>
+        fields: Prisma.Report_ShareFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.Report_ShareFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Report_SharePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.Report_ShareFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Report_SharePayload>
+          }
+          findFirst: {
+            args: Prisma.Report_ShareFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Report_SharePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.Report_ShareFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Report_SharePayload>
+          }
+          findMany: {
+            args: Prisma.Report_ShareFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Report_SharePayload>[]
+          }
+          create: {
+            args: Prisma.Report_ShareCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Report_SharePayload>
+          }
+          createMany: {
+            args: Prisma.Report_ShareCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.Report_ShareCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Report_SharePayload>[]
+          }
+          delete: {
+            args: Prisma.Report_ShareDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Report_SharePayload>
+          }
+          update: {
+            args: Prisma.Report_ShareUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Report_SharePayload>
+          }
+          deleteMany: {
+            args: Prisma.Report_ShareDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.Report_ShareUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.Report_ShareUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Report_SharePayload>[]
+          }
+          upsert: {
+            args: Prisma.Report_ShareUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Report_SharePayload>
+          }
+          aggregate: {
+            args: Prisma.Report_ShareAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateReport_Share>
+          }
+          groupBy: {
+            args: Prisma.Report_ShareGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Report_ShareGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.Report_ShareCountArgs<ExtArgs>
+            result: $Utils.Optional<Report_ShareCountAggregateOutputType> | number
+          }
+        }
+      }
       DemandOrder_Master: {
         payload: Prisma.$DemandOrder_MasterPayload<ExtArgs>
         fields: Prisma.DemandOrder_MasterFieldRefs
@@ -5340,6 +5441,7 @@ export namespace Prisma {
     packet_Issue?: Packet_IssueOmit
     orderReceive_Master?: OrderReceive_MasterOmit
     orderReceive_Detail?: OrderReceive_DetailOmit
+    report_Share?: Report_ShareOmit
     demandOrder_Master?: DemandOrder_MasterOmit
     demandOrder_Detail?: DemandOrder_DetailOmit
     vOrderReceive_Master?: VOrderReceive_MasterOmit
@@ -58881,6 +58983,1070 @@ export namespace Prisma {
 
 
   /**
+   * Model Report_Share
+   */
+
+  export type AggregateReport_Share = {
+    _count: Report_ShareCountAggregateOutputType | null
+    _avg: Report_ShareAvgAggregateOutputType | null
+    _sum: Report_ShareSumAggregateOutputType | null
+    _min: Report_ShareMinAggregateOutputType | null
+    _max: Report_ShareMaxAggregateOutputType | null
+  }
+
+  export type Report_ShareAvgAggregateOutputType = {
+    isActive: number | null
+  }
+
+  export type Report_ShareSumAggregateOutputType = {
+    isActive: number | null
+  }
+
+  export type Report_ShareMinAggregateOutputType = {
+    id: string | null
+    reportKey: string | null
+    params: string | null
+    sessionBranchId: string | null
+    isActive: number | null
+    createBy: string | null
+    createDate: Date | null
+  }
+
+  export type Report_ShareMaxAggregateOutputType = {
+    id: string | null
+    reportKey: string | null
+    params: string | null
+    sessionBranchId: string | null
+    isActive: number | null
+    createBy: string | null
+    createDate: Date | null
+  }
+
+  export type Report_ShareCountAggregateOutputType = {
+    id: number
+    reportKey: number
+    params: number
+    sessionBranchId: number
+    isActive: number
+    createBy: number
+    createDate: number
+    _all: number
+  }
+
+
+  export type Report_ShareAvgAggregateInputType = {
+    isActive?: true
+  }
+
+  export type Report_ShareSumAggregateInputType = {
+    isActive?: true
+  }
+
+  export type Report_ShareMinAggregateInputType = {
+    id?: true
+    reportKey?: true
+    params?: true
+    sessionBranchId?: true
+    isActive?: true
+    createBy?: true
+    createDate?: true
+  }
+
+  export type Report_ShareMaxAggregateInputType = {
+    id?: true
+    reportKey?: true
+    params?: true
+    sessionBranchId?: true
+    isActive?: true
+    createBy?: true
+    createDate?: true
+  }
+
+  export type Report_ShareCountAggregateInputType = {
+    id?: true
+    reportKey?: true
+    params?: true
+    sessionBranchId?: true
+    isActive?: true
+    createBy?: true
+    createDate?: true
+    _all?: true
+  }
+
+  export type Report_ShareAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Report_Share to aggregate.
+     */
+    where?: Report_ShareWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Report_Shares to fetch.
+     */
+    orderBy?: Report_ShareOrderByWithRelationInput | Report_ShareOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: Report_ShareWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Report_Shares from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Report_Shares.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Report_Shares
+    **/
+    _count?: true | Report_ShareCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Report_ShareAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Report_ShareSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Report_ShareMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Report_ShareMaxAggregateInputType
+  }
+
+  export type GetReport_ShareAggregateType<T extends Report_ShareAggregateArgs> = {
+        [P in keyof T & keyof AggregateReport_Share]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateReport_Share[P]>
+      : GetScalarType<T[P], AggregateReport_Share[P]>
+  }
+
+
+
+
+  export type Report_ShareGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: Report_ShareWhereInput
+    orderBy?: Report_ShareOrderByWithAggregationInput | Report_ShareOrderByWithAggregationInput[]
+    by: Report_ShareScalarFieldEnum[] | Report_ShareScalarFieldEnum
+    having?: Report_ShareScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Report_ShareCountAggregateInputType | true
+    _avg?: Report_ShareAvgAggregateInputType
+    _sum?: Report_ShareSumAggregateInputType
+    _min?: Report_ShareMinAggregateInputType
+    _max?: Report_ShareMaxAggregateInputType
+  }
+
+  export type Report_ShareGroupByOutputType = {
+    id: string
+    reportKey: string
+    params: string
+    sessionBranchId: string | null
+    isActive: number | null
+    createBy: string | null
+    createDate: Date | null
+    _count: Report_ShareCountAggregateOutputType | null
+    _avg: Report_ShareAvgAggregateOutputType | null
+    _sum: Report_ShareSumAggregateOutputType | null
+    _min: Report_ShareMinAggregateOutputType | null
+    _max: Report_ShareMaxAggregateOutputType | null
+  }
+
+  type GetReport_ShareGroupByPayload<T extends Report_ShareGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Report_ShareGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Report_ShareGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Report_ShareGroupByOutputType[P]>
+            : GetScalarType<T[P], Report_ShareGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type Report_ShareSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reportKey?: boolean
+    params?: boolean
+    sessionBranchId?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+  }, ExtArgs["result"]["report_Share"]>
+
+  export type Report_ShareSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reportKey?: boolean
+    params?: boolean
+    sessionBranchId?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+  }, ExtArgs["result"]["report_Share"]>
+
+  export type Report_ShareSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    reportKey?: boolean
+    params?: boolean
+    sessionBranchId?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+  }, ExtArgs["result"]["report_Share"]>
+
+  export type Report_ShareSelectScalar = {
+    id?: boolean
+    reportKey?: boolean
+    params?: boolean
+    sessionBranchId?: boolean
+    isActive?: boolean
+    createBy?: boolean
+    createDate?: boolean
+  }
+
+  export type Report_ShareOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reportKey" | "params" | "sessionBranchId" | "isActive" | "createBy" | "createDate", ExtArgs["result"]["report_Share"]>
+
+  export type $Report_SharePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Report_Share"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      /**
+       * Which report. 'demand' is the only one so far.
+       */
+      reportKey: string
+      /**
+       * The report's query, as JSON text.
+       */
+      params: string
+      /**
+       * Branch the sharer was logged in at, for gates that read the session branch.
+       */
+      sessionBranchId: string | null
+      isActive: number | null
+      createBy: string | null
+      createDate: Date | null
+    }, ExtArgs["result"]["report_Share"]>
+    composites: {}
+  }
+
+  type Report_ShareGetPayload<S extends boolean | null | undefined | Report_ShareDefaultArgs> = $Result.GetResult<Prisma.$Report_SharePayload, S>
+
+  type Report_ShareCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<Report_ShareFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Report_ShareCountAggregateInputType | true
+    }
+
+  export interface Report_ShareDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Report_Share'], meta: { name: 'Report_Share' } }
+    /**
+     * Find zero or one Report_Share that matches the filter.
+     * @param {Report_ShareFindUniqueArgs} args - Arguments to find a Report_Share
+     * @example
+     * // Get one Report_Share
+     * const report_Share = await prisma.report_Share.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends Report_ShareFindUniqueArgs>(args: SelectSubset<T, Report_ShareFindUniqueArgs<ExtArgs>>): Prisma__Report_ShareClient<$Result.GetResult<Prisma.$Report_SharePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Report_Share that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {Report_ShareFindUniqueOrThrowArgs} args - Arguments to find a Report_Share
+     * @example
+     * // Get one Report_Share
+     * const report_Share = await prisma.report_Share.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends Report_ShareFindUniqueOrThrowArgs>(args: SelectSubset<T, Report_ShareFindUniqueOrThrowArgs<ExtArgs>>): Prisma__Report_ShareClient<$Result.GetResult<Prisma.$Report_SharePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Report_Share that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Report_ShareFindFirstArgs} args - Arguments to find a Report_Share
+     * @example
+     * // Get one Report_Share
+     * const report_Share = await prisma.report_Share.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends Report_ShareFindFirstArgs>(args?: SelectSubset<T, Report_ShareFindFirstArgs<ExtArgs>>): Prisma__Report_ShareClient<$Result.GetResult<Prisma.$Report_SharePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Report_Share that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Report_ShareFindFirstOrThrowArgs} args - Arguments to find a Report_Share
+     * @example
+     * // Get one Report_Share
+     * const report_Share = await prisma.report_Share.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends Report_ShareFindFirstOrThrowArgs>(args?: SelectSubset<T, Report_ShareFindFirstOrThrowArgs<ExtArgs>>): Prisma__Report_ShareClient<$Result.GetResult<Prisma.$Report_SharePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Report_Shares that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Report_ShareFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Report_Shares
+     * const report_Shares = await prisma.report_Share.findMany()
+     * 
+     * // Get first 10 Report_Shares
+     * const report_Shares = await prisma.report_Share.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const report_ShareWithIdOnly = await prisma.report_Share.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends Report_ShareFindManyArgs>(args?: SelectSubset<T, Report_ShareFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Report_SharePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Report_Share.
+     * @param {Report_ShareCreateArgs} args - Arguments to create a Report_Share.
+     * @example
+     * // Create one Report_Share
+     * const Report_Share = await prisma.report_Share.create({
+     *   data: {
+     *     // ... data to create a Report_Share
+     *   }
+     * })
+     * 
+     */
+    create<T extends Report_ShareCreateArgs>(args: SelectSubset<T, Report_ShareCreateArgs<ExtArgs>>): Prisma__Report_ShareClient<$Result.GetResult<Prisma.$Report_SharePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Report_Shares.
+     * @param {Report_ShareCreateManyArgs} args - Arguments to create many Report_Shares.
+     * @example
+     * // Create many Report_Shares
+     * const report_Share = await prisma.report_Share.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends Report_ShareCreateManyArgs>(args?: SelectSubset<T, Report_ShareCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Report_Shares and returns the data saved in the database.
+     * @param {Report_ShareCreateManyAndReturnArgs} args - Arguments to create many Report_Shares.
+     * @example
+     * // Create many Report_Shares
+     * const report_Share = await prisma.report_Share.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Report_Shares and only return the `id`
+     * const report_ShareWithIdOnly = await prisma.report_Share.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends Report_ShareCreateManyAndReturnArgs>(args?: SelectSubset<T, Report_ShareCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Report_SharePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Report_Share.
+     * @param {Report_ShareDeleteArgs} args - Arguments to delete one Report_Share.
+     * @example
+     * // Delete one Report_Share
+     * const Report_Share = await prisma.report_Share.delete({
+     *   where: {
+     *     // ... filter to delete one Report_Share
+     *   }
+     * })
+     * 
+     */
+    delete<T extends Report_ShareDeleteArgs>(args: SelectSubset<T, Report_ShareDeleteArgs<ExtArgs>>): Prisma__Report_ShareClient<$Result.GetResult<Prisma.$Report_SharePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Report_Share.
+     * @param {Report_ShareUpdateArgs} args - Arguments to update one Report_Share.
+     * @example
+     * // Update one Report_Share
+     * const report_Share = await prisma.report_Share.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends Report_ShareUpdateArgs>(args: SelectSubset<T, Report_ShareUpdateArgs<ExtArgs>>): Prisma__Report_ShareClient<$Result.GetResult<Prisma.$Report_SharePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Report_Shares.
+     * @param {Report_ShareDeleteManyArgs} args - Arguments to filter Report_Shares to delete.
+     * @example
+     * // Delete a few Report_Shares
+     * const { count } = await prisma.report_Share.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends Report_ShareDeleteManyArgs>(args?: SelectSubset<T, Report_ShareDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Report_Shares.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Report_ShareUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Report_Shares
+     * const report_Share = await prisma.report_Share.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends Report_ShareUpdateManyArgs>(args: SelectSubset<T, Report_ShareUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Report_Shares and returns the data updated in the database.
+     * @param {Report_ShareUpdateManyAndReturnArgs} args - Arguments to update many Report_Shares.
+     * @example
+     * // Update many Report_Shares
+     * const report_Share = await prisma.report_Share.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Report_Shares and only return the `id`
+     * const report_ShareWithIdOnly = await prisma.report_Share.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends Report_ShareUpdateManyAndReturnArgs>(args: SelectSubset<T, Report_ShareUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Report_SharePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Report_Share.
+     * @param {Report_ShareUpsertArgs} args - Arguments to update or create a Report_Share.
+     * @example
+     * // Update or create a Report_Share
+     * const report_Share = await prisma.report_Share.upsert({
+     *   create: {
+     *     // ... data to create a Report_Share
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Report_Share we want to update
+     *   }
+     * })
+     */
+    upsert<T extends Report_ShareUpsertArgs>(args: SelectSubset<T, Report_ShareUpsertArgs<ExtArgs>>): Prisma__Report_ShareClient<$Result.GetResult<Prisma.$Report_SharePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Report_Shares.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Report_ShareCountArgs} args - Arguments to filter Report_Shares to count.
+     * @example
+     * // Count the number of Report_Shares
+     * const count = await prisma.report_Share.count({
+     *   where: {
+     *     // ... the filter for the Report_Shares we want to count
+     *   }
+     * })
+    **/
+    count<T extends Report_ShareCountArgs>(
+      args?: Subset<T, Report_ShareCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Report_ShareCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Report_Share.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Report_ShareAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Report_ShareAggregateArgs>(args: Subset<T, Report_ShareAggregateArgs>): Prisma.PrismaPromise<GetReport_ShareAggregateType<T>>
+
+    /**
+     * Group by Report_Share.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Report_ShareGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends Report_ShareGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: Report_ShareGroupByArgs['orderBy'] }
+        : { orderBy?: Report_ShareGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, Report_ShareGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReport_ShareGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Report_Share model
+   */
+  readonly fields: Report_ShareFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Report_Share.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__Report_ShareClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Report_Share model
+   */
+  interface Report_ShareFieldRefs {
+    readonly id: FieldRef<"Report_Share", 'String'>
+    readonly reportKey: FieldRef<"Report_Share", 'String'>
+    readonly params: FieldRef<"Report_Share", 'String'>
+    readonly sessionBranchId: FieldRef<"Report_Share", 'String'>
+    readonly isActive: FieldRef<"Report_Share", 'Int'>
+    readonly createBy: FieldRef<"Report_Share", 'String'>
+    readonly createDate: FieldRef<"Report_Share", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Report_Share findUnique
+   */
+  export type Report_ShareFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_Share
+     */
+    select?: Report_ShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report_Share
+     */
+    omit?: Report_ShareOmit<ExtArgs> | null
+    /**
+     * Filter, which Report_Share to fetch.
+     */
+    where: Report_ShareWhereUniqueInput
+  }
+
+  /**
+   * Report_Share findUniqueOrThrow
+   */
+  export type Report_ShareFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_Share
+     */
+    select?: Report_ShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report_Share
+     */
+    omit?: Report_ShareOmit<ExtArgs> | null
+    /**
+     * Filter, which Report_Share to fetch.
+     */
+    where: Report_ShareWhereUniqueInput
+  }
+
+  /**
+   * Report_Share findFirst
+   */
+  export type Report_ShareFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_Share
+     */
+    select?: Report_ShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report_Share
+     */
+    omit?: Report_ShareOmit<ExtArgs> | null
+    /**
+     * Filter, which Report_Share to fetch.
+     */
+    where?: Report_ShareWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Report_Shares to fetch.
+     */
+    orderBy?: Report_ShareOrderByWithRelationInput | Report_ShareOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Report_Shares.
+     */
+    cursor?: Report_ShareWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Report_Shares from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Report_Shares.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Report_Shares.
+     */
+    distinct?: Report_ShareScalarFieldEnum | Report_ShareScalarFieldEnum[]
+  }
+
+  /**
+   * Report_Share findFirstOrThrow
+   */
+  export type Report_ShareFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_Share
+     */
+    select?: Report_ShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report_Share
+     */
+    omit?: Report_ShareOmit<ExtArgs> | null
+    /**
+     * Filter, which Report_Share to fetch.
+     */
+    where?: Report_ShareWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Report_Shares to fetch.
+     */
+    orderBy?: Report_ShareOrderByWithRelationInput | Report_ShareOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Report_Shares.
+     */
+    cursor?: Report_ShareWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Report_Shares from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Report_Shares.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Report_Shares.
+     */
+    distinct?: Report_ShareScalarFieldEnum | Report_ShareScalarFieldEnum[]
+  }
+
+  /**
+   * Report_Share findMany
+   */
+  export type Report_ShareFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_Share
+     */
+    select?: Report_ShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report_Share
+     */
+    omit?: Report_ShareOmit<ExtArgs> | null
+    /**
+     * Filter, which Report_Shares to fetch.
+     */
+    where?: Report_ShareWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Report_Shares to fetch.
+     */
+    orderBy?: Report_ShareOrderByWithRelationInput | Report_ShareOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Report_Shares.
+     */
+    cursor?: Report_ShareWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Report_Shares from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Report_Shares.
+     */
+    skip?: number
+    distinct?: Report_ShareScalarFieldEnum | Report_ShareScalarFieldEnum[]
+  }
+
+  /**
+   * Report_Share create
+   */
+  export type Report_ShareCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_Share
+     */
+    select?: Report_ShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report_Share
+     */
+    omit?: Report_ShareOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Report_Share.
+     */
+    data: XOR<Report_ShareCreateInput, Report_ShareUncheckedCreateInput>
+  }
+
+  /**
+   * Report_Share createMany
+   */
+  export type Report_ShareCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Report_Shares.
+     */
+    data: Report_ShareCreateManyInput | Report_ShareCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Report_Share createManyAndReturn
+   */
+  export type Report_ShareCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_Share
+     */
+    select?: Report_ShareSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report_Share
+     */
+    omit?: Report_ShareOmit<ExtArgs> | null
+    /**
+     * The data used to create many Report_Shares.
+     */
+    data: Report_ShareCreateManyInput | Report_ShareCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Report_Share update
+   */
+  export type Report_ShareUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_Share
+     */
+    select?: Report_ShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report_Share
+     */
+    omit?: Report_ShareOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Report_Share.
+     */
+    data: XOR<Report_ShareUpdateInput, Report_ShareUncheckedUpdateInput>
+    /**
+     * Choose, which Report_Share to update.
+     */
+    where: Report_ShareWhereUniqueInput
+  }
+
+  /**
+   * Report_Share updateMany
+   */
+  export type Report_ShareUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Report_Shares.
+     */
+    data: XOR<Report_ShareUpdateManyMutationInput, Report_ShareUncheckedUpdateManyInput>
+    /**
+     * Filter which Report_Shares to update
+     */
+    where?: Report_ShareWhereInput
+    /**
+     * Limit how many Report_Shares to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Report_Share updateManyAndReturn
+   */
+  export type Report_ShareUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_Share
+     */
+    select?: Report_ShareSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report_Share
+     */
+    omit?: Report_ShareOmit<ExtArgs> | null
+    /**
+     * The data used to update Report_Shares.
+     */
+    data: XOR<Report_ShareUpdateManyMutationInput, Report_ShareUncheckedUpdateManyInput>
+    /**
+     * Filter which Report_Shares to update
+     */
+    where?: Report_ShareWhereInput
+    /**
+     * Limit how many Report_Shares to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Report_Share upsert
+   */
+  export type Report_ShareUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_Share
+     */
+    select?: Report_ShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report_Share
+     */
+    omit?: Report_ShareOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Report_Share to update in case it exists.
+     */
+    where: Report_ShareWhereUniqueInput
+    /**
+     * In case the Report_Share found by the `where` argument doesn't exist, create a new Report_Share with this data.
+     */
+    create: XOR<Report_ShareCreateInput, Report_ShareUncheckedCreateInput>
+    /**
+     * In case the Report_Share was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<Report_ShareUpdateInput, Report_ShareUncheckedUpdateInput>
+  }
+
+  /**
+   * Report_Share delete
+   */
+  export type Report_ShareDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_Share
+     */
+    select?: Report_ShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report_Share
+     */
+    omit?: Report_ShareOmit<ExtArgs> | null
+    /**
+     * Filter which Report_Share to delete.
+     */
+    where: Report_ShareWhereUniqueInput
+  }
+
+  /**
+   * Report_Share deleteMany
+   */
+  export type Report_ShareDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Report_Shares to delete
+     */
+    where?: Report_ShareWhereInput
+    /**
+     * Limit how many Report_Shares to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Report_Share without action
+   */
+  export type Report_ShareDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Report_Share
+     */
+    select?: Report_ShareSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Report_Share
+     */
+    omit?: Report_ShareOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model DemandOrder_Master
    */
 
@@ -59217,8 +60383,9 @@ export namespace Prisma {
       /**
        * Which round of demand this is: 'First', 'Second' or 'Special'. Free text in
        * the column, constrained to those three by the DTO, so adding a fourth round
-       * later needs no migration. NULL on every order raised before the field
-       * existed, which the report treats as "not typed" rather than as First.
+       * later needs no migration. Orders raised before the column existed were
+       * back-filled as 'First' (see prisma/migrations/demand_order_type.sql), so a
+       * type-filtered Demand Report covers the whole history.
        */
       orderType: string | null
       remarks: string | null
@@ -68038,6 +69205,19 @@ export namespace Prisma {
   export type OrderReceive_DetailScalarFieldEnum = (typeof OrderReceive_DetailScalarFieldEnum)[keyof typeof OrderReceive_DetailScalarFieldEnum]
 
 
+  export const Report_ShareScalarFieldEnum: {
+    id: 'id',
+    reportKey: 'reportKey',
+    params: 'params',
+    sessionBranchId: 'sessionBranchId',
+    isActive: 'isActive',
+    createBy: 'createBy',
+    createDate: 'createDate'
+  };
+
+  export type Report_ShareScalarFieldEnum = (typeof Report_ShareScalarFieldEnum)[keyof typeof Report_ShareScalarFieldEnum]
+
+
   export const DemandOrder_MasterScalarFieldEnum: {
     id: 'id',
     serialNo: 'serialNo',
@@ -72281,6 +73461,70 @@ export namespace Prisma {
     vatPrice?: DecimalNullableWithAggregatesFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     amount?: DecimalNullableWithAggregatesFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
     discount?: DecimalNullableWithAggregatesFilter<"OrderReceive_Detail"> | Decimal | DecimalJsLike | number | string | null
+  }
+
+  export type Report_ShareWhereInput = {
+    AND?: Report_ShareWhereInput | Report_ShareWhereInput[]
+    OR?: Report_ShareWhereInput[]
+    NOT?: Report_ShareWhereInput | Report_ShareWhereInput[]
+    id?: UuidFilter<"Report_Share"> | string
+    reportKey?: StringFilter<"Report_Share"> | string
+    params?: StringFilter<"Report_Share"> | string
+    sessionBranchId?: UuidNullableFilter<"Report_Share"> | string | null
+    isActive?: IntNullableFilter<"Report_Share"> | number | null
+    createBy?: StringNullableFilter<"Report_Share"> | string | null
+    createDate?: DateTimeNullableFilter<"Report_Share"> | Date | string | null
+  }
+
+  export type Report_ShareOrderByWithRelationInput = {
+    id?: SortOrder
+    reportKey?: SortOrder
+    params?: SortOrder
+    sessionBranchId?: SortOrderInput | SortOrder
+    isActive?: SortOrderInput | SortOrder
+    createBy?: SortOrderInput | SortOrder
+    createDate?: SortOrderInput | SortOrder
+  }
+
+  export type Report_ShareWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: Report_ShareWhereInput | Report_ShareWhereInput[]
+    OR?: Report_ShareWhereInput[]
+    NOT?: Report_ShareWhereInput | Report_ShareWhereInput[]
+    reportKey?: StringFilter<"Report_Share"> | string
+    params?: StringFilter<"Report_Share"> | string
+    sessionBranchId?: UuidNullableFilter<"Report_Share"> | string | null
+    isActive?: IntNullableFilter<"Report_Share"> | number | null
+    createBy?: StringNullableFilter<"Report_Share"> | string | null
+    createDate?: DateTimeNullableFilter<"Report_Share"> | Date | string | null
+  }, "id">
+
+  export type Report_ShareOrderByWithAggregationInput = {
+    id?: SortOrder
+    reportKey?: SortOrder
+    params?: SortOrder
+    sessionBranchId?: SortOrderInput | SortOrder
+    isActive?: SortOrderInput | SortOrder
+    createBy?: SortOrderInput | SortOrder
+    createDate?: SortOrderInput | SortOrder
+    _count?: Report_ShareCountOrderByAggregateInput
+    _avg?: Report_ShareAvgOrderByAggregateInput
+    _max?: Report_ShareMaxOrderByAggregateInput
+    _min?: Report_ShareMinOrderByAggregateInput
+    _sum?: Report_ShareSumOrderByAggregateInput
+  }
+
+  export type Report_ShareScalarWhereWithAggregatesInput = {
+    AND?: Report_ShareScalarWhereWithAggregatesInput | Report_ShareScalarWhereWithAggregatesInput[]
+    OR?: Report_ShareScalarWhereWithAggregatesInput[]
+    NOT?: Report_ShareScalarWhereWithAggregatesInput | Report_ShareScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Report_Share"> | string
+    reportKey?: StringWithAggregatesFilter<"Report_Share"> | string
+    params?: StringWithAggregatesFilter<"Report_Share"> | string
+    sessionBranchId?: UuidNullableWithAggregatesFilter<"Report_Share"> | string | null
+    isActive?: IntNullableWithAggregatesFilter<"Report_Share"> | number | null
+    createBy?: StringNullableWithAggregatesFilter<"Report_Share"> | string | null
+    createDate?: DateTimeNullableWithAggregatesFilter<"Report_Share"> | Date | string | null
   }
 
   export type DemandOrder_MasterWhereInput = {
@@ -77484,6 +78728,76 @@ export namespace Prisma {
     discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
+  export type Report_ShareCreateInput = {
+    id?: string
+    reportKey: string
+    params: string
+    sessionBranchId?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+  }
+
+  export type Report_ShareUncheckedCreateInput = {
+    id?: string
+    reportKey: string
+    params: string
+    sessionBranchId?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+  }
+
+  export type Report_ShareUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportKey?: StringFieldUpdateOperationsInput | string
+    params?: StringFieldUpdateOperationsInput | string
+    sessionBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Report_ShareUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportKey?: StringFieldUpdateOperationsInput | string
+    params?: StringFieldUpdateOperationsInput | string
+    sessionBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Report_ShareCreateManyInput = {
+    id?: string
+    reportKey: string
+    params: string
+    sessionBranchId?: string | null
+    isActive?: number | null
+    createBy?: string | null
+    createDate?: Date | string | null
+  }
+
+  export type Report_ShareUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportKey?: StringFieldUpdateOperationsInput | string
+    params?: StringFieldUpdateOperationsInput | string
+    sessionBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Report_ShareUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reportKey?: StringFieldUpdateOperationsInput | string
+    params?: StringFieldUpdateOperationsInput | string
+    sessionBranchId?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: NullableIntFieldUpdateOperationsInput | number | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type DemandOrder_MasterCreateInput = {
     id?: string
     serialNo?: string | null
@@ -81344,6 +82658,44 @@ export namespace Prisma {
     vatPrice?: SortOrder
     amount?: SortOrder
     discount?: SortOrder
+  }
+
+  export type Report_ShareCountOrderByAggregateInput = {
+    id?: SortOrder
+    reportKey?: SortOrder
+    params?: SortOrder
+    sessionBranchId?: SortOrder
+    isActive?: SortOrder
+    createBy?: SortOrder
+    createDate?: SortOrder
+  }
+
+  export type Report_ShareAvgOrderByAggregateInput = {
+    isActive?: SortOrder
+  }
+
+  export type Report_ShareMaxOrderByAggregateInput = {
+    id?: SortOrder
+    reportKey?: SortOrder
+    params?: SortOrder
+    sessionBranchId?: SortOrder
+    isActive?: SortOrder
+    createBy?: SortOrder
+    createDate?: SortOrder
+  }
+
+  export type Report_ShareMinOrderByAggregateInput = {
+    id?: SortOrder
+    reportKey?: SortOrder
+    params?: SortOrder
+    sessionBranchId?: SortOrder
+    isActive?: SortOrder
+    createBy?: SortOrder
+    createDate?: SortOrder
+  }
+
+  export type Report_ShareSumOrderByAggregateInput = {
+    isActive?: SortOrder
   }
 
   export type DemandOrder_MasterCountOrderByAggregateInput = {

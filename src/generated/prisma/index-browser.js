@@ -754,6 +754,16 @@ exports.Prisma.OrderReceive_DetailScalarFieldEnum = {
   discount: 'discount'
 };
 
+exports.Prisma.Report_ShareScalarFieldEnum = {
+  id: 'id',
+  reportKey: 'reportKey',
+  params: 'params',
+  sessionBranchId: 'sessionBranchId',
+  isActive: 'isActive',
+  createBy: 'createBy',
+  createDate: 'createDate'
+};
+
 exports.Prisma.DemandOrder_MasterScalarFieldEnum = {
   id: 'id',
   serialNo: 'serialNo',
@@ -935,6 +945,7 @@ exports.Prisma.ModelName = {
   Packet_Issue: 'Packet_Issue',
   OrderReceive_Master: 'OrderReceive_Master',
   OrderReceive_Detail: 'OrderReceive_Detail',
+  Report_Share: 'Report_Share',
   DemandOrder_Master: 'DemandOrder_Master',
   DemandOrder_Detail: 'DemandOrder_Detail',
   VOrderReceive_Master: 'VOrderReceive_Master',

@@ -918,6 +918,34 @@ model OrderReceive_Detail {
 // Demand Order (DO): a branch's stock requisition submitted to the factory.
 // Separate from OrderReceive_Master (customer sales orders) — no customer or
 // pricing involved, just item + qty requested from one branch to another.
+/// A saved, shareable run of a report.
+///
+/// The row's own UUID is the share token, and it is the whole of the access
+/// control — 122 random bits, unguessable and un-enumerable, but equally
+/// un-revokable once sent (short of deleting the row) and never expiring. Same
+/// bearer-token model as the public credit-sale invoice link.
+///
+/// The report is NOT snapshotted: `params` holds the query it was generated
+/// from and the public route re-runs it, so a link always shows current data.
+/// `sessionBranchId` is the branch of whoever created the share — the public
+/// run has no session, and the factory-only gate has to be checked against
+/// something.
+model Report_Share {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  /// Which report. 'demand' is the only one so far.
+  reportKey       String    @map("ReportKey")
+  /// The report's query, as JSON text.
+  params          String    @map("Params")
+  /// Branch the sharer was logged in at, for gates that read the session branch.
+  sessionBranchId String?   @map("SessionBranchId") @db.Uuid
+  isActive        Int?      @map("IsActive")
+  createBy        String?   @map("CreateBy")
+  createDate      DateTime? @map("CreateDate")
+
+  @@index([reportKey])
+  @@map("Report_Share")
+}
+
 model DemandOrder_Master {
   id           String                @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   serialNo     String?               @map("SerialNo")
