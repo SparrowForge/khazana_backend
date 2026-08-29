@@ -919,7 +919,7 @@ export class ReportsService {
       fromDate,
       toDate: toDate || fromDate,
       company: {
-        name: company?.companyName ?? 'Khazana Mithai Limited',
+        name: company?.companyName ?? 'Khazana Mithai',
         address: company?.companyAddress ?? '',
       },
       branch: { name: branch?.branchName ?? '', address: branch?.address ?? '', vatNo: branch?.vatNo ?? '' },
