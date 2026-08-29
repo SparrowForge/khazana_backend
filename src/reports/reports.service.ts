@@ -2389,8 +2389,9 @@ export class ReportsService {
         demandDate: { gte: from, lt: toExclusive },
         ...(toBranchId ? { toBranchId } : {}),
         ...(query.fromBranchId ? { fromBranchId: query.fromBranchId } : {}),
-        // Orders raised before OrderType existed are NULL, so they drop out of a
-        // filtered run rather than being counted as a round they never had.
+        // Every historical order was back-filled as 'First', so a filtered run
+        // covers the whole history; only a row that had its type cleared by hand
+        // would fall outside every filter.
         ...(query.orderType ? { orderType: query.orderType } : {}),
       },
       select: { fromBranchId: true, details: { select: { itemId: true, qty: true } } },

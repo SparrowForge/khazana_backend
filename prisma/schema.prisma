@@ -927,8 +927,9 @@ model DemandOrder_Master {
   requiredDate DateTime?             @map("RequiredDate")
   /// Which round of demand this is: 'First', 'Second' or 'Special'. Free text in
   /// the column, constrained to those three by the DTO, so adding a fourth round
-  /// later needs no migration. NULL on every order raised before the field
-  /// existed, which the report treats as "not typed" rather than as First.
+  /// later needs no migration. Orders raised before the column existed were
+  /// back-filled as 'First' (see prisma/migrations/demand_order_type.sql), so a
+  /// type-filtered Demand Report covers the whole history.
   orderType    String?               @map("OrderType")
   remarks      String?               @map("Remarks")
   isActive     Int?                  @map("IsActive")
