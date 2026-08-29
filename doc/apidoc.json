@@ -6641,6 +6641,67 @@
         ]
       }
     },
+    "/report-shares": {
+      "post": {
+        "operationId": "ReportSharesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReportShareDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Share token created"
+          },
+          "400": {
+            "description": "Report is not shareable, or its query is invalid"
+          },
+          "403": {
+            "description": "The report itself refused this session (e.g. not the Factory)"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Create a public share link for a generated report",
+        "tags": [
+          "Report Shares"
+        ]
+      }
+    },
+    "/report-shares/public/{token}": {
+      "get": {
+        "operationId": "ReportSharesController_resolve",
+        "parameters": [
+          {
+            "name": "token",
+            "required": true,
+            "in": "path",
+            "description": "Share token (the Report_Share UUID)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Link is not valid"
+          }
+        },
+        "summary": "PUBLIC: the report behind a share link",
+        "tags": [
+          "Report Shares"
+        ]
+      }
+    },
     "/admin/branches": {
       "get": {
         "operationId": "AdminController_findAllBranches",
@@ -9455,6 +9516,28 @@
       "UpdateAssortmentDto": {
         "type": "object",
         "properties": {}
+      },
+      "CreateReportShareDto": {
+        "type": "object",
+        "properties": {
+          "reportKey": {
+            "type": "string",
+            "example": "demand",
+            "description": "Which report to share"
+          },
+          "params": {
+            "type": "object",
+            "example": {
+              "fromDate": "2026-08-01",
+              "toDate": "2026-08-31",
+              "orderType": "First"
+            },
+            "description": "The report's query. Stored as-is and replayed when the link is opened."
+          }
+        },
+        "required": [
+          "reportKey"
+        ]
       },
       "CreateBranchDto": {
         "type": "object",
