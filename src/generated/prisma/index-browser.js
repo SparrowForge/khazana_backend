@@ -307,6 +307,13 @@ exports.Prisma.Item_InformationScalarFieldEnum = {
   isActive: 'isActive'
 };
 
+exports.Prisma.Item_UOMScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  remarks: 'remarks'
+};
+
 exports.Prisma.Item_CategoryScalarFieldEnum = {
   id: 'id',
   code: 'code',
@@ -899,6 +906,7 @@ exports.Prisma.ModelName = {
   Customer_Transaction: 'Customer_Transaction',
   Employee: 'Employee',
   Item_Information: 'Item_Information',
+  Item_UOM: 'Item_UOM',
   Item_Category: 'Item_Category',
   RW_Stock: 'RW_Stock',
   Inventory: 'Inventory',

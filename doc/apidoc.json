@@ -3208,6 +3208,16 @@
               "format": "date",
               "type": "string"
             }
+          },
+          {
+            "name": "customerName",
+            "required": false,
+            "in": "query",
+            "description": "Partial, case-insensitive match on the customer the challan was made out to",
+            "schema": {
+              "example": "Kabir",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -7076,6 +7086,158 @@
         ]
       }
     },
+    "/uoms": {
+      "get": {
+        "operationId": "UomsController_findAll",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of UOMs"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Get all units of measure",
+        "tags": [
+          "UOM"
+        ]
+      },
+      "post": {
+        "operationId": "UomsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUomDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "UOM created successfully"
+          },
+          "409": {
+            "description": "UOM code already exists"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Add a unit of measure",
+        "tags": [
+          "UOM"
+        ]
+      }
+    },
+    "/uoms/{id}": {
+      "patch": {
+        "operationId": "UomsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UOM UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUomDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "UOM updated successfully"
+          },
+          "404": {
+            "description": "UOM not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Update a unit of measure (name/remarks only — the code is fixed)",
+        "tags": [
+          "UOM"
+        ]
+      },
+      "delete": {
+        "operationId": "UomsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "UOM UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "UOM deleted successfully"
+          },
+          "404": {
+            "description": "UOM not found"
+          },
+          "409": {
+            "description": "UOM is in use by one or more items"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete a unit of measure",
+        "tags": [
+          "UOM"
+        ]
+      }
+    },
     "/dashboard": {
       "get": {
         "operationId": "DashboardController_getStats",
@@ -9296,6 +9458,41 @@
       "UpdateSystemDto": {
         "type": "object",
         "properties": {}
+      },
+      "CreateUomDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "Box",
+            "description": "The unit as it is written onto an item (Item_Information.itmUOM) and printed on documents. Unique."
+          },
+          "name": {
+            "type": "string",
+            "example": "Box",
+            "description": "Spelled-out name, shown only on this screen"
+          },
+          "remarks": {
+            "type": "string",
+            "example": "Cartons of 12"
+          }
+        },
+        "required": [
+          "code"
+        ]
+      },
+      "UpdateUomDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Box"
+          },
+          "remarks": {
+            "type": "string",
+            "example": "Cartons of 12"
+          }
+        }
       },
       "PosCartItemDto": {
         "type": "object",

@@ -21,6 +21,10 @@ const newMenus = [
   { menuName: 'New Assortment', controlName: 'AssortmentNew', order: 1, parentMenu: 'Assortment', module: 'Sale' },
   { menuName: 'Assortment List', controlName: 'AssortmentList', order: 2, parentMenu: 'Assortment', module: 'Sale' },
   { menuName: 'Categories', controlName: 'Categories', order: 7, parentMenu: 'Inventory', module: 'Inventory' },
+  // Units of measure. The list itself is readable without this permission —
+  // every item form needs it to fill its dropdown — so the menu only gates who
+  // may add or remove a unit.
+  { menuName: 'UOM', controlName: 'UOM', order: 10, parentMenu: 'Inventory', module: 'Inventory' },
   // Factory-only: the sidebar hides it unless the session branch is the
   // factory, and ProductionService rejects any other branch outright.
   { menuName: 'Production Entry', controlName: 'ProductionEntry', order: 8, parentMenu: 'Inventory', module: 'Inventory' },

@@ -289,6 +289,20 @@ model Item_Information {
   @@map("Item_Information")
 }
 
+/// Units of measure offered when an item is created, and stored on the item as
+/// plain text (Item_Information.itmUOM). Kept as a table so a new unit — a Box,
+/// a Tray — is an entry the office makes, not a code change. `Code` is the
+/// string that lands on the item, so renaming one here does NOT rewrite the
+/// items already carrying it.
+model Item_UOM {
+  id      String  @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  code    String  @unique @map("Code")
+  name    String? @map("Name")
+  remarks String? @map("Remarks")
+
+  @@map("Item_UOM")
+}
+
 model Item_Category {
   id      String  @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   code    String  @unique @map("Code")

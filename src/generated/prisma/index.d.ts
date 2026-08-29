@@ -94,6 +94,15 @@ export type Employee = $Result.DefaultSelection<Prisma.$EmployeePayload>
  */
 export type Item_Information = $Result.DefaultSelection<Prisma.$Item_InformationPayload>
 /**
+ * Model Item_UOM
+ * Units of measure offered when an item is created, and stored on the item as
+ * plain text (Item_Information.itmUOM). Kept as a table so a new unit — a Box,
+ * a Tray — is an entry the office makes, not a code change. `Code` is the
+ * string that lands on the item, so renaming one here does NOT rewrite the
+ * items already carrying it.
+ */
+export type Item_UOM = $Result.DefaultSelection<Prisma.$Item_UOMPayload>
+/**
  * Model Item_Category
  * 
  */
@@ -553,6 +562,16 @@ export class PrismaClient<
     * ```
     */
   get item_Information(): Prisma.Item_InformationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.item_UOM`: Exposes CRUD operations for the **Item_UOM** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Item_UOMS
+    * const item_UOMS = await prisma.item_UOM.findMany()
+    * ```
+    */
+  get item_UOM(): Prisma.Item_UOMDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.item_Category`: Exposes CRUD operations for the **Item_Category** model.
@@ -1350,6 +1369,7 @@ export namespace Prisma {
     Customer_Transaction: 'Customer_Transaction',
     Employee: 'Employee',
     Item_Information: 'Item_Information',
+    Item_UOM: 'Item_UOM',
     Item_Category: 'Item_Category',
     RW_Stock: 'RW_Stock',
     Inventory: 'Inventory',
@@ -1402,7 +1422,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "customer_Transaction" | "employee" | "item_Information" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "vehicle_Challan" | "production" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "demandOrder_Master" | "demandOrder_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
+      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "customer_Transaction" | "employee" | "item_Information" | "item_UOM" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "vehicle_Challan" | "production" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "demandOrder_Master" | "demandOrder_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2587,6 +2607,80 @@ export namespace Prisma {
           count: {
             args: Prisma.Item_InformationCountArgs<ExtArgs>
             result: $Utils.Optional<Item_InformationCountAggregateOutputType> | number
+          }
+        }
+      }
+      Item_UOM: {
+        payload: Prisma.$Item_UOMPayload<ExtArgs>
+        fields: Prisma.Item_UOMFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.Item_UOMFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Item_UOMPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.Item_UOMFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Item_UOMPayload>
+          }
+          findFirst: {
+            args: Prisma.Item_UOMFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Item_UOMPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.Item_UOMFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Item_UOMPayload>
+          }
+          findMany: {
+            args: Prisma.Item_UOMFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Item_UOMPayload>[]
+          }
+          create: {
+            args: Prisma.Item_UOMCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Item_UOMPayload>
+          }
+          createMany: {
+            args: Prisma.Item_UOMCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.Item_UOMCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Item_UOMPayload>[]
+          }
+          delete: {
+            args: Prisma.Item_UOMDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Item_UOMPayload>
+          }
+          update: {
+            args: Prisma.Item_UOMUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Item_UOMPayload>
+          }
+          deleteMany: {
+            args: Prisma.Item_UOMDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.Item_UOMUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.Item_UOMUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Item_UOMPayload>[]
+          }
+          upsert: {
+            args: Prisma.Item_UOMUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Item_UOMPayload>
+          }
+          aggregate: {
+            args: Prisma.Item_UOMAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateItem_UOM>
+          }
+          groupBy: {
+            args: Prisma.Item_UOMGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Item_UOMGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.Item_UOMCountArgs<ExtArgs>
+            result: $Utils.Optional<Item_UOMCountAggregateOutputType> | number
           }
         }
       }
@@ -5218,6 +5312,7 @@ export namespace Prisma {
     customer_Transaction?: Customer_TransactionOmit
     employee?: EmployeeOmit
     item_Information?: Item_InformationOmit
+    item_UOM?: Item_UOMOmit
     item_Category?: Item_CategoryOmit
     rW_Stock?: RW_StockOmit
     inventory?: InventoryOmit
@@ -24462,6 +24557,988 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: Item_InformationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Item_UOM
+   */
+
+  export type AggregateItem_UOM = {
+    _count: Item_UOMCountAggregateOutputType | null
+    _min: Item_UOMMinAggregateOutputType | null
+    _max: Item_UOMMaxAggregateOutputType | null
+  }
+
+  export type Item_UOMMinAggregateOutputType = {
+    id: string | null
+    code: string | null
+    name: string | null
+    remarks: string | null
+  }
+
+  export type Item_UOMMaxAggregateOutputType = {
+    id: string | null
+    code: string | null
+    name: string | null
+    remarks: string | null
+  }
+
+  export type Item_UOMCountAggregateOutputType = {
+    id: number
+    code: number
+    name: number
+    remarks: number
+    _all: number
+  }
+
+
+  export type Item_UOMMinAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    remarks?: true
+  }
+
+  export type Item_UOMMaxAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    remarks?: true
+  }
+
+  export type Item_UOMCountAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    remarks?: true
+    _all?: true
+  }
+
+  export type Item_UOMAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Item_UOM to aggregate.
+     */
+    where?: Item_UOMWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Item_UOMS to fetch.
+     */
+    orderBy?: Item_UOMOrderByWithRelationInput | Item_UOMOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: Item_UOMWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Item_UOMS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Item_UOMS.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Item_UOMS
+    **/
+    _count?: true | Item_UOMCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Item_UOMMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Item_UOMMaxAggregateInputType
+  }
+
+  export type GetItem_UOMAggregateType<T extends Item_UOMAggregateArgs> = {
+        [P in keyof T & keyof AggregateItem_UOM]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateItem_UOM[P]>
+      : GetScalarType<T[P], AggregateItem_UOM[P]>
+  }
+
+
+
+
+  export type Item_UOMGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: Item_UOMWhereInput
+    orderBy?: Item_UOMOrderByWithAggregationInput | Item_UOMOrderByWithAggregationInput[]
+    by: Item_UOMScalarFieldEnum[] | Item_UOMScalarFieldEnum
+    having?: Item_UOMScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Item_UOMCountAggregateInputType | true
+    _min?: Item_UOMMinAggregateInputType
+    _max?: Item_UOMMaxAggregateInputType
+  }
+
+  export type Item_UOMGroupByOutputType = {
+    id: string
+    code: string
+    name: string | null
+    remarks: string | null
+    _count: Item_UOMCountAggregateOutputType | null
+    _min: Item_UOMMinAggregateOutputType | null
+    _max: Item_UOMMaxAggregateOutputType | null
+  }
+
+  type GetItem_UOMGroupByPayload<T extends Item_UOMGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Item_UOMGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Item_UOMGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Item_UOMGroupByOutputType[P]>
+            : GetScalarType<T[P], Item_UOMGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type Item_UOMSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    remarks?: boolean
+  }, ExtArgs["result"]["item_UOM"]>
+
+  export type Item_UOMSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    remarks?: boolean
+  }, ExtArgs["result"]["item_UOM"]>
+
+  export type Item_UOMSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    remarks?: boolean
+  }, ExtArgs["result"]["item_UOM"]>
+
+  export type Item_UOMSelectScalar = {
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    remarks?: boolean
+  }
+
+  export type Item_UOMOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "name" | "remarks", ExtArgs["result"]["item_UOM"]>
+
+  export type $Item_UOMPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Item_UOM"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      code: string
+      name: string | null
+      remarks: string | null
+    }, ExtArgs["result"]["item_UOM"]>
+    composites: {}
+  }
+
+  type Item_UOMGetPayload<S extends boolean | null | undefined | Item_UOMDefaultArgs> = $Result.GetResult<Prisma.$Item_UOMPayload, S>
+
+  type Item_UOMCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<Item_UOMFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Item_UOMCountAggregateInputType | true
+    }
+
+  export interface Item_UOMDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Item_UOM'], meta: { name: 'Item_UOM' } }
+    /**
+     * Find zero or one Item_UOM that matches the filter.
+     * @param {Item_UOMFindUniqueArgs} args - Arguments to find a Item_UOM
+     * @example
+     * // Get one Item_UOM
+     * const item_UOM = await prisma.item_UOM.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends Item_UOMFindUniqueArgs>(args: SelectSubset<T, Item_UOMFindUniqueArgs<ExtArgs>>): Prisma__Item_UOMClient<$Result.GetResult<Prisma.$Item_UOMPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Item_UOM that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {Item_UOMFindUniqueOrThrowArgs} args - Arguments to find a Item_UOM
+     * @example
+     * // Get one Item_UOM
+     * const item_UOM = await prisma.item_UOM.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends Item_UOMFindUniqueOrThrowArgs>(args: SelectSubset<T, Item_UOMFindUniqueOrThrowArgs<ExtArgs>>): Prisma__Item_UOMClient<$Result.GetResult<Prisma.$Item_UOMPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Item_UOM that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Item_UOMFindFirstArgs} args - Arguments to find a Item_UOM
+     * @example
+     * // Get one Item_UOM
+     * const item_UOM = await prisma.item_UOM.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends Item_UOMFindFirstArgs>(args?: SelectSubset<T, Item_UOMFindFirstArgs<ExtArgs>>): Prisma__Item_UOMClient<$Result.GetResult<Prisma.$Item_UOMPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Item_UOM that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Item_UOMFindFirstOrThrowArgs} args - Arguments to find a Item_UOM
+     * @example
+     * // Get one Item_UOM
+     * const item_UOM = await prisma.item_UOM.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends Item_UOMFindFirstOrThrowArgs>(args?: SelectSubset<T, Item_UOMFindFirstOrThrowArgs<ExtArgs>>): Prisma__Item_UOMClient<$Result.GetResult<Prisma.$Item_UOMPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Item_UOMS that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Item_UOMFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Item_UOMS
+     * const item_UOMS = await prisma.item_UOM.findMany()
+     * 
+     * // Get first 10 Item_UOMS
+     * const item_UOMS = await prisma.item_UOM.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const item_UOMWithIdOnly = await prisma.item_UOM.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends Item_UOMFindManyArgs>(args?: SelectSubset<T, Item_UOMFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Item_UOMPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Item_UOM.
+     * @param {Item_UOMCreateArgs} args - Arguments to create a Item_UOM.
+     * @example
+     * // Create one Item_UOM
+     * const Item_UOM = await prisma.item_UOM.create({
+     *   data: {
+     *     // ... data to create a Item_UOM
+     *   }
+     * })
+     * 
+     */
+    create<T extends Item_UOMCreateArgs>(args: SelectSubset<T, Item_UOMCreateArgs<ExtArgs>>): Prisma__Item_UOMClient<$Result.GetResult<Prisma.$Item_UOMPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Item_UOMS.
+     * @param {Item_UOMCreateManyArgs} args - Arguments to create many Item_UOMS.
+     * @example
+     * // Create many Item_UOMS
+     * const item_UOM = await prisma.item_UOM.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends Item_UOMCreateManyArgs>(args?: SelectSubset<T, Item_UOMCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Item_UOMS and returns the data saved in the database.
+     * @param {Item_UOMCreateManyAndReturnArgs} args - Arguments to create many Item_UOMS.
+     * @example
+     * // Create many Item_UOMS
+     * const item_UOM = await prisma.item_UOM.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Item_UOMS and only return the `id`
+     * const item_UOMWithIdOnly = await prisma.item_UOM.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends Item_UOMCreateManyAndReturnArgs>(args?: SelectSubset<T, Item_UOMCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Item_UOMPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Item_UOM.
+     * @param {Item_UOMDeleteArgs} args - Arguments to delete one Item_UOM.
+     * @example
+     * // Delete one Item_UOM
+     * const Item_UOM = await prisma.item_UOM.delete({
+     *   where: {
+     *     // ... filter to delete one Item_UOM
+     *   }
+     * })
+     * 
+     */
+    delete<T extends Item_UOMDeleteArgs>(args: SelectSubset<T, Item_UOMDeleteArgs<ExtArgs>>): Prisma__Item_UOMClient<$Result.GetResult<Prisma.$Item_UOMPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Item_UOM.
+     * @param {Item_UOMUpdateArgs} args - Arguments to update one Item_UOM.
+     * @example
+     * // Update one Item_UOM
+     * const item_UOM = await prisma.item_UOM.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends Item_UOMUpdateArgs>(args: SelectSubset<T, Item_UOMUpdateArgs<ExtArgs>>): Prisma__Item_UOMClient<$Result.GetResult<Prisma.$Item_UOMPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Item_UOMS.
+     * @param {Item_UOMDeleteManyArgs} args - Arguments to filter Item_UOMS to delete.
+     * @example
+     * // Delete a few Item_UOMS
+     * const { count } = await prisma.item_UOM.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends Item_UOMDeleteManyArgs>(args?: SelectSubset<T, Item_UOMDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Item_UOMS.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Item_UOMUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Item_UOMS
+     * const item_UOM = await prisma.item_UOM.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends Item_UOMUpdateManyArgs>(args: SelectSubset<T, Item_UOMUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Item_UOMS and returns the data updated in the database.
+     * @param {Item_UOMUpdateManyAndReturnArgs} args - Arguments to update many Item_UOMS.
+     * @example
+     * // Update many Item_UOMS
+     * const item_UOM = await prisma.item_UOM.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Item_UOMS and only return the `id`
+     * const item_UOMWithIdOnly = await prisma.item_UOM.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends Item_UOMUpdateManyAndReturnArgs>(args: SelectSubset<T, Item_UOMUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Item_UOMPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Item_UOM.
+     * @param {Item_UOMUpsertArgs} args - Arguments to update or create a Item_UOM.
+     * @example
+     * // Update or create a Item_UOM
+     * const item_UOM = await prisma.item_UOM.upsert({
+     *   create: {
+     *     // ... data to create a Item_UOM
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Item_UOM we want to update
+     *   }
+     * })
+     */
+    upsert<T extends Item_UOMUpsertArgs>(args: SelectSubset<T, Item_UOMUpsertArgs<ExtArgs>>): Prisma__Item_UOMClient<$Result.GetResult<Prisma.$Item_UOMPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Item_UOMS.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Item_UOMCountArgs} args - Arguments to filter Item_UOMS to count.
+     * @example
+     * // Count the number of Item_UOMS
+     * const count = await prisma.item_UOM.count({
+     *   where: {
+     *     // ... the filter for the Item_UOMS we want to count
+     *   }
+     * })
+    **/
+    count<T extends Item_UOMCountArgs>(
+      args?: Subset<T, Item_UOMCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Item_UOMCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Item_UOM.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Item_UOMAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Item_UOMAggregateArgs>(args: Subset<T, Item_UOMAggregateArgs>): Prisma.PrismaPromise<GetItem_UOMAggregateType<T>>
+
+    /**
+     * Group by Item_UOM.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Item_UOMGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends Item_UOMGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: Item_UOMGroupByArgs['orderBy'] }
+        : { orderBy?: Item_UOMGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, Item_UOMGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetItem_UOMGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Item_UOM model
+   */
+  readonly fields: Item_UOMFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Item_UOM.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__Item_UOMClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Item_UOM model
+   */
+  interface Item_UOMFieldRefs {
+    readonly id: FieldRef<"Item_UOM", 'String'>
+    readonly code: FieldRef<"Item_UOM", 'String'>
+    readonly name: FieldRef<"Item_UOM", 'String'>
+    readonly remarks: FieldRef<"Item_UOM", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Item_UOM findUnique
+   */
+  export type Item_UOMFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_UOM
+     */
+    select?: Item_UOMSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_UOM
+     */
+    omit?: Item_UOMOmit<ExtArgs> | null
+    /**
+     * Filter, which Item_UOM to fetch.
+     */
+    where: Item_UOMWhereUniqueInput
+  }
+
+  /**
+   * Item_UOM findUniqueOrThrow
+   */
+  export type Item_UOMFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_UOM
+     */
+    select?: Item_UOMSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_UOM
+     */
+    omit?: Item_UOMOmit<ExtArgs> | null
+    /**
+     * Filter, which Item_UOM to fetch.
+     */
+    where: Item_UOMWhereUniqueInput
+  }
+
+  /**
+   * Item_UOM findFirst
+   */
+  export type Item_UOMFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_UOM
+     */
+    select?: Item_UOMSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_UOM
+     */
+    omit?: Item_UOMOmit<ExtArgs> | null
+    /**
+     * Filter, which Item_UOM to fetch.
+     */
+    where?: Item_UOMWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Item_UOMS to fetch.
+     */
+    orderBy?: Item_UOMOrderByWithRelationInput | Item_UOMOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Item_UOMS.
+     */
+    cursor?: Item_UOMWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Item_UOMS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Item_UOMS.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Item_UOMS.
+     */
+    distinct?: Item_UOMScalarFieldEnum | Item_UOMScalarFieldEnum[]
+  }
+
+  /**
+   * Item_UOM findFirstOrThrow
+   */
+  export type Item_UOMFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_UOM
+     */
+    select?: Item_UOMSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_UOM
+     */
+    omit?: Item_UOMOmit<ExtArgs> | null
+    /**
+     * Filter, which Item_UOM to fetch.
+     */
+    where?: Item_UOMWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Item_UOMS to fetch.
+     */
+    orderBy?: Item_UOMOrderByWithRelationInput | Item_UOMOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Item_UOMS.
+     */
+    cursor?: Item_UOMWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Item_UOMS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Item_UOMS.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Item_UOMS.
+     */
+    distinct?: Item_UOMScalarFieldEnum | Item_UOMScalarFieldEnum[]
+  }
+
+  /**
+   * Item_UOM findMany
+   */
+  export type Item_UOMFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_UOM
+     */
+    select?: Item_UOMSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_UOM
+     */
+    omit?: Item_UOMOmit<ExtArgs> | null
+    /**
+     * Filter, which Item_UOMS to fetch.
+     */
+    where?: Item_UOMWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Item_UOMS to fetch.
+     */
+    orderBy?: Item_UOMOrderByWithRelationInput | Item_UOMOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Item_UOMS.
+     */
+    cursor?: Item_UOMWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Item_UOMS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Item_UOMS.
+     */
+    skip?: number
+    distinct?: Item_UOMScalarFieldEnum | Item_UOMScalarFieldEnum[]
+  }
+
+  /**
+   * Item_UOM create
+   */
+  export type Item_UOMCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_UOM
+     */
+    select?: Item_UOMSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_UOM
+     */
+    omit?: Item_UOMOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Item_UOM.
+     */
+    data: XOR<Item_UOMCreateInput, Item_UOMUncheckedCreateInput>
+  }
+
+  /**
+   * Item_UOM createMany
+   */
+  export type Item_UOMCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Item_UOMS.
+     */
+    data: Item_UOMCreateManyInput | Item_UOMCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Item_UOM createManyAndReturn
+   */
+  export type Item_UOMCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_UOM
+     */
+    select?: Item_UOMSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_UOM
+     */
+    omit?: Item_UOMOmit<ExtArgs> | null
+    /**
+     * The data used to create many Item_UOMS.
+     */
+    data: Item_UOMCreateManyInput | Item_UOMCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Item_UOM update
+   */
+  export type Item_UOMUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_UOM
+     */
+    select?: Item_UOMSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_UOM
+     */
+    omit?: Item_UOMOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Item_UOM.
+     */
+    data: XOR<Item_UOMUpdateInput, Item_UOMUncheckedUpdateInput>
+    /**
+     * Choose, which Item_UOM to update.
+     */
+    where: Item_UOMWhereUniqueInput
+  }
+
+  /**
+   * Item_UOM updateMany
+   */
+  export type Item_UOMUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Item_UOMS.
+     */
+    data: XOR<Item_UOMUpdateManyMutationInput, Item_UOMUncheckedUpdateManyInput>
+    /**
+     * Filter which Item_UOMS to update
+     */
+    where?: Item_UOMWhereInput
+    /**
+     * Limit how many Item_UOMS to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Item_UOM updateManyAndReturn
+   */
+  export type Item_UOMUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_UOM
+     */
+    select?: Item_UOMSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_UOM
+     */
+    omit?: Item_UOMOmit<ExtArgs> | null
+    /**
+     * The data used to update Item_UOMS.
+     */
+    data: XOR<Item_UOMUpdateManyMutationInput, Item_UOMUncheckedUpdateManyInput>
+    /**
+     * Filter which Item_UOMS to update
+     */
+    where?: Item_UOMWhereInput
+    /**
+     * Limit how many Item_UOMS to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Item_UOM upsert
+   */
+  export type Item_UOMUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_UOM
+     */
+    select?: Item_UOMSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_UOM
+     */
+    omit?: Item_UOMOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Item_UOM to update in case it exists.
+     */
+    where: Item_UOMWhereUniqueInput
+    /**
+     * In case the Item_UOM found by the `where` argument doesn't exist, create a new Item_UOM with this data.
+     */
+    create: XOR<Item_UOMCreateInput, Item_UOMUncheckedCreateInput>
+    /**
+     * In case the Item_UOM was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<Item_UOMUpdateInput, Item_UOMUncheckedUpdateInput>
+  }
+
+  /**
+   * Item_UOM delete
+   */
+  export type Item_UOMDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_UOM
+     */
+    select?: Item_UOMSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_UOM
+     */
+    omit?: Item_UOMOmit<ExtArgs> | null
+    /**
+     * Filter which Item_UOM to delete.
+     */
+    where: Item_UOMWhereUniqueInput
+  }
+
+  /**
+   * Item_UOM deleteMany
+   */
+  export type Item_UOMDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Item_UOMS to delete
+     */
+    where?: Item_UOMWhereInput
+    /**
+     * Limit how many Item_UOMS to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Item_UOM without action
+   */
+  export type Item_UOMDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Item_UOM
+     */
+    select?: Item_UOMSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Item_UOM
+     */
+    omit?: Item_UOMOmit<ExtArgs> | null
   }
 
 
@@ -66411,6 +67488,16 @@ export namespace Prisma {
   export type Item_InformationScalarFieldEnum = (typeof Item_InformationScalarFieldEnum)[keyof typeof Item_InformationScalarFieldEnum]
 
 
+  export const Item_UOMScalarFieldEnum: {
+    id: 'id',
+    code: 'code',
+    name: 'name',
+    remarks: 'remarks'
+  };
+
+  export type Item_UOMScalarFieldEnum = (typeof Item_UOMScalarFieldEnum)[keyof typeof Item_UOMScalarFieldEnum]
+
+
   export const Item_CategoryScalarFieldEnum: {
     id: 'id',
     code: 'code',
@@ -68445,6 +69532,53 @@ export namespace Prisma {
     itmOrderLevel?: DecimalNullableWithAggregatesFilter<"Item_Information"> | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: StringNullableWithAggregatesFilter<"Item_Information"> | string | null
     isActive?: StringNullableWithAggregatesFilter<"Item_Information"> | string | null
+  }
+
+  export type Item_UOMWhereInput = {
+    AND?: Item_UOMWhereInput | Item_UOMWhereInput[]
+    OR?: Item_UOMWhereInput[]
+    NOT?: Item_UOMWhereInput | Item_UOMWhereInput[]
+    id?: UuidFilter<"Item_UOM"> | string
+    code?: StringFilter<"Item_UOM"> | string
+    name?: StringNullableFilter<"Item_UOM"> | string | null
+    remarks?: StringNullableFilter<"Item_UOM"> | string | null
+  }
+
+  export type Item_UOMOrderByWithRelationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+  }
+
+  export type Item_UOMWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    AND?: Item_UOMWhereInput | Item_UOMWhereInput[]
+    OR?: Item_UOMWhereInput[]
+    NOT?: Item_UOMWhereInput | Item_UOMWhereInput[]
+    name?: StringNullableFilter<"Item_UOM"> | string | null
+    remarks?: StringNullableFilter<"Item_UOM"> | string | null
+  }, "id" | "code">
+
+  export type Item_UOMOrderByWithAggregationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
+    _count?: Item_UOMCountOrderByAggregateInput
+    _max?: Item_UOMMaxOrderByAggregateInput
+    _min?: Item_UOMMinOrderByAggregateInput
+  }
+
+  export type Item_UOMScalarWhereWithAggregatesInput = {
+    AND?: Item_UOMScalarWhereWithAggregatesInput | Item_UOMScalarWhereWithAggregatesInput[]
+    OR?: Item_UOMScalarWhereWithAggregatesInput[]
+    NOT?: Item_UOMScalarWhereWithAggregatesInput | Item_UOMScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Item_UOM"> | string
+    code?: StringWithAggregatesFilter<"Item_UOM"> | string
+    name?: StringNullableWithAggregatesFilter<"Item_UOM"> | string | null
+    remarks?: StringNullableWithAggregatesFilter<"Item_UOM"> | string | null
   }
 
   export type Item_CategoryWhereInput = {
@@ -73185,6 +74319,55 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Item_UOMCreateInput = {
+    id?: string
+    code: string
+    name?: string | null
+    remarks?: string | null
+  }
+
+  export type Item_UOMUncheckedCreateInput = {
+    id?: string
+    code: string
+    name?: string | null
+    remarks?: string | null
+  }
+
+  export type Item_UOMUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Item_UOMUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Item_UOMCreateManyInput = {
+    id?: string
+    code: string
+    name?: string | null
+    remarks?: string | null
+  }
+
+  export type Item_UOMUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Item_UOMUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type Item_CategoryCreateInput = {
@@ -78265,6 +79448,27 @@ export namespace Prisma {
 
   export type Item_InformationSumOrderByAggregateInput = {
     itmOrderLevel?: SortOrder
+  }
+
+  export type Item_UOMCountOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    remarks?: SortOrder
+  }
+
+  export type Item_UOMMaxOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    remarks?: SortOrder
+  }
+
+  export type Item_UOMMinOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    remarks?: SortOrder
   }
 
   export type Item_CategoryCountOrderByAggregateInput = {

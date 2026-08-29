@@ -22,6 +22,7 @@ import { AssortmentModule } from './assortment/assortment.module';
 import { ReportsModule } from './reports/reports.module';
 import { AdminModule } from './admin/admin.module';
 import { CategoriesModule } from './categories/categories.module';
+import { UomsModule } from './uoms/uoms.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { PosModule } from './pos/pos.module';
 import { UploadModule } from './upload/upload.module';
@@ -51,6 +52,7 @@ import { UploadModule } from './upload/upload.module';
     ReportsModule,
     AdminModule,
     CategoriesModule,
+    UomsModule,
     DashboardModule,
     PosModule,
     UploadModule,
