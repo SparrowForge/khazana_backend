@@ -2322,7 +2322,7 @@ export class ReportsService {
       toDate: dayKey(to),
       days,
       company: {
-        name: company?.companyName ?? 'Khazana Mithai Limited',
+        name: company?.companyName ?? 'Khazana Mithai',
         address: company?.companyAddress ?? '',
       },
       // The letterhead names the issuing branch; the title line names where the

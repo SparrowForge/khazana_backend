@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import { CreateVehicleChallanDto, UpdateVehicleChallanDto, VehicleChallanLineDto } from './dto/vehicle-challan.dto';
-import { DateRangeQueryDto, dateRangeFilter } from '../common/dto';
+import { CreateVehicleChallanDto, UpdateVehicleChallanDto, VehicleChallanLineDto, VehicleChallanQueryDto } from './dto/vehicle-challan.dto';
+import { dateRangeFilter } from '../common/dto';
 import { buildPaginationMeta, isFactoryBranch } from '../common/helpers';
 
 /**
@@ -204,14 +204,19 @@ export class VehicleChallanService {
 
   // ── Read ──────────────────────────────────────────────────────
 
-  async findAll(query: DateRangeQueryDto) {
-    const { page, limit, branchId, fromDate, toDate } = query;
+  async findAll(query: VehicleChallanQueryDto) {
+    const { page, limit, branchId, fromDate, toDate, customerName } = query;
     const challanDate = dateRangeFilter(fromDate, toDate);
+    // Matched on the line rows, before grouping: every line of a challan carries
+    // the same header, so a partial match either keeps the whole document or
+    // drops it — a serial can never come back with some of its lines missing.
+    const customer = customerName?.trim();
     const rows = await this.prisma.vehicle_Challan.findMany({
       where: {
         isActive: 1,
         ...(branchId && { branchId }),
         ...(challanDate && { challanDate }),
+        ...(customer && { customerName: { contains: customer, mode: 'insensitive' as const } }),
       },
       orderBy: { createDate: 'desc' },
     });

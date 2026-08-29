@@ -1,11 +1,10 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { VehicleChallanService } from './vehicle-challan.service';
-import { CreateVehicleChallanDto, UpdateVehicleChallanDto } from './dto/vehicle-challan.dto';
+import { CreateVehicleChallanDto, UpdateVehicleChallanDto, VehicleChallanQueryDto } from './dto/vehicle-challan.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { CurrentUser, RequiredPermission } from '../common/decorators';
-import { DateRangeQueryDto } from '../common/dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Vehicle Challan')
@@ -18,7 +17,7 @@ export class VehicleChallanController {
   @Get()
   @ApiOperation({ summary: 'Get paginated vehicle challans (one row per serial number)' })
   @ApiResponse({ status: 200, description: 'Paginated list of vehicle challans' })
-  async findAll(@Query() query: DateRangeQueryDto) {
+  async findAll(@Query() query: VehicleChallanQueryDto) {
     const { items, meta } = await this.vehicleChallanService.findAll(query);
     return paginatedResponse(items, meta, 'VehicleChallan');
   }

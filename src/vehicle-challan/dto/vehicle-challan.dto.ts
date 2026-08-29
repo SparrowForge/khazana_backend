@@ -1,6 +1,7 @@
 import { IsString, IsNumber, IsPositive, IsOptional, IsDateString, IsUUID, IsArray, ValidateNested, MaxLength } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { DateRangeQueryDto } from '../../common/dto';
 
 export class VehicleChallanLineDto {
   @ApiPropertyOptional({
@@ -141,4 +142,22 @@ export class UpdateVehicleChallanDto extends VehicleChallanHeaderDto {
   @ValidateNested({ each: true })
   @Type(() => VehicleChallanLineDto)
   items: VehicleChallanLineDto[];
+}
+
+/** List query for the Challan Entry landing page.
+ *
+ *  Kept local to this module rather than added to the shared DateRangeQueryDto:
+ *  the customer name is typed by hand onto the challan, so no other list has
+ *  the column to filter on. The global ValidationPipe runs with
+ *  `forbidNonWhitelisted`, so the param has to be declared somewhere or the
+ *  request 400s. */
+export class VehicleChallanQueryDto extends DateRangeQueryDto {
+  @ApiPropertyOptional({
+    example: 'Kabir',
+    description: 'Partial, case-insensitive match on the customer the challan was made out to',
+  })
+  @IsString()
+  @IsOptional()
+  @MaxLength(200)
+  customerName?: string;
 }
