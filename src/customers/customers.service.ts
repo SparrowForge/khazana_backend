@@ -3,7 +3,7 @@ import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PrismaService } from '../database/prisma.service';
 import { PaginationQueryDto } from '../common/dto';
-import { buildPaginationMeta, toBranchUuid } from '../common/helpers';
+import { buildPaginationMeta, roundPayable, toBranchUuid } from '../common/helpers';
 
 export class CreateCustomerDto {
   @ApiPropertyOptional({
@@ -197,14 +197,16 @@ export class CustomersService {
         id: s.id,
         date: s.invDate,
         description: `Credit Sale — Inv ${s.invNo}`,
-        debit: num(s.totalAmount) + num(s.totalVat) - num(s.totalDiscount),
+        // Rounded to the whole taka, matching what the invoice charges — the
+        // ledger and the invoice a customer holds must not disagree.
+        debit: roundPayable(num(s.totalAmount) + num(s.totalVat) - num(s.totalDiscount)),
         credit: 0,
       })),
       ...vatSales.map((s) => ({
         id: s.id,
         date: s.invDate,
         description: `Credit Sale (VAT) — Inv ${s.invNo}`,
-        debit: num(s.totalAmount) + num(s.totalVat) - num(s.totalDiscount),
+        debit: roundPayable(num(s.totalAmount) + num(s.totalVat) - num(s.totalDiscount)),
         credit: 0,
       })),
       ...payments.map((p) => ({
@@ -242,14 +244,18 @@ export class CustomersService {
 
   async getBalance(idOrCode: string) {
     const customer = await this.resolveCustomer(idOrCode);
-    const [salesTotal, vatSalesTotal, paidTotal, advanceTotal] = await this.prisma.$transaction([
-      this.prisma.cSMaster.aggregate({
+    // Read per invoice rather than aggregating in SQL: each invoice's payable is
+    // rounded to the whole taka, and the sum of the rounded amounts is not the
+    // rounding of the sum. A _sum here would drift from the ledger, which is the
+    // same figures listed one by one.
+    const [sales, vatSales, paidTotal, advanceTotal] = await this.prisma.$transaction([
+      this.prisma.cSMaster.findMany({
         where: { customerId: customer.id, isActive: 1 },
-        _sum: { totalAmount: true, totalVat: true, totalDiscount: true },
+        select: { totalAmount: true, totalVat: true, totalDiscount: true },
       }),
-      this.prisma.cSVMaster.aggregate({
+      this.prisma.cSVMaster.findMany({
         where: { clientCode: customer.code },
-        _sum: { totalAmount: true, totalVat: true, totalDiscount: true },
+        select: { totalAmount: true, totalVat: true, totalDiscount: true },
       }),
       this.prisma.customer_Transaction.aggregate({
         where: { customerId: customer.id },
@@ -260,9 +266,12 @@ export class CustomersService {
         _sum: { advance: true },
       }),
     ]);
-    const totalSales =
-      num(salesTotal._sum.totalAmount) + num(salesTotal._sum.totalVat) - num(salesTotal._sum.totalDiscount) +
-      num(vatSalesTotal._sum.totalAmount) + num(vatSalesTotal._sum.totalVat) - num(vatSalesTotal._sum.totalDiscount);
+    const invoiceTotal = (rows: { totalAmount: unknown; totalVat: unknown; totalDiscount: unknown }[]) =>
+      rows.reduce(
+        (s, r) => s + roundPayable(num(r.totalAmount) + num(r.totalVat) - num(r.totalDiscount)),
+        0,
+      );
+    const totalSales = invoiceTotal(sales) + invoiceTotal(vatSales);
     const totalPaid = num(paidTotal._sum.receiveAmount);
     const totalAdvance = num(advanceTotal._sum.advance);
     return {

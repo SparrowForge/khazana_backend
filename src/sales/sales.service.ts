@@ -6,7 +6,7 @@ import { CreateVatCashSaleDto } from './dto/create-vat-cash-sale.dto';
 import { CreateVatCreditSaleDto } from './dto/create-vat-credit-sale.dto';
 import { SalesQueryDto } from './dto/sales-query.dto';
 import { UpdateSalesDto } from './dto/update-sales.dto';
-import { allocateDiscount, assertStockAvailable, buildPaginationMeta, toBranchUuid, branchScope } from '../common/helpers';
+import { allocateDiscount, assertStockAvailable, buildPaginationMeta, roundPayable, toBranchUuid, branchScope } from '../common/helpers';
 import { dateRangeFilter } from '../common/dto';
 import type { PaginationMeta } from '../common/helpers';
 import type { Prisma } from '../generated/prisma';
@@ -513,7 +513,12 @@ export class SalesService {
       Math.max(r2(storedTotalDiscount - lineDiscount), 0),
       grossAmount,
     );
-    const payableAmount = r2(grossAmount - invoiceDiscount);
+    // Rounded to the whole taka, the same as a POS bill. A credit sale stores no
+    // payable column — every consumer derives it — so the rounding is applied
+    // here and in the two other places a customer is shown what they owe (the
+    // ledger and the statement), and NOT to the stored line/master columns,
+    // which item-level reporting reads.
+    const payableAmount = roundPayable(grossAmount - invoiceDiscount);
     // A credit sale is unpaid at issue — the only money already collected is the
     // advance on the order it was raised against (PO No carries the order no).
     const paidAmount = await this.orderAdvanceFor(sale.poNo);

@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import { isFactoryBranch } from '../common/helpers';
+import { isFactoryBranch, roundPayable } from '../common/helpers';
 
 export interface DateRangeQuery {
   fromDate?: string;
@@ -1104,7 +1104,10 @@ export class ReportsService {
    *  print use. Omitting TotalVat under-states every invoice on the
    *  statement. */
   private static invoiceDebit(m: { totalAmount?: unknown; totalVat?: unknown; totalDiscount?: unknown }): number {
-    return r2signed(num(m.totalAmount) + num(m.totalVat) - num(m.totalDiscount));
+    // Rounded to the whole taka, the same as the invoice itself charges and the
+    // customer ledger records. Takes ONE invoice — never a _sum aggregate, since
+    // the sum of the rounded amounts is not the rounding of the sum.
+    return roundPayable(r2signed(num(m.totalAmount) + num(m.totalVat) - num(m.totalDiscount)));
   }
 
   /**
@@ -1129,13 +1132,13 @@ export class ReportsService {
 
     // Everything strictly before the range start rolls up into one figure.
     const [openInv, openVatInv, openPay, openAdv] = await this.prisma.$transaction([
-      this.prisma.cSMaster.aggregate({
+      this.prisma.cSMaster.findMany({
         where: { customerId: customer.id, invDate: { lt: from }, isActive: 1 },
-        _sum: { totalAmount: true, totalVat: true, totalDiscount: true },
+        select: { totalAmount: true, totalVat: true, totalDiscount: true },
       }),
-      this.prisma.cSVMaster.aggregate({
+      this.prisma.cSVMaster.findMany({
         where: { clientCode: customer.code, invDate: { lt: from } },
-        _sum: { totalAmount: true, totalVat: true, totalDiscount: true },
+        select: { totalAmount: true, totalVat: true, totalDiscount: true },
       }),
       this.prisma.customer_Transaction.aggregate({
         where: { customerId: customer.id, receiveDate: { lt: from } },
@@ -1147,9 +1150,11 @@ export class ReportsService {
       }),
     ]);
 
+    const openedDebit = (rows: { totalAmount: unknown; totalVat: unknown; totalDiscount: unknown }[]) =>
+      rows.reduce((sum, r) => sum + ReportsService.invoiceDebit(r), 0);
     const openingBalance = r2signed(
-      ReportsService.invoiceDebit(openInv._sum) +
-        ReportsService.invoiceDebit(openVatInv._sum) -
+      openedDebit(openInv) +
+        openedDebit(openVatInv) -
         num(openPay._sum.receiveAmount) -
         num(openAdv._sum.advance),
     );

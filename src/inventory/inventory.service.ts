@@ -720,10 +720,9 @@ export class InventoryService {
 
     const issueDate = new Date(dto.issueDate);
     const branchCode = await this.resolveBranchCode(dto.issueBranchId);
-    const baseCount = await this.prisma.item_Issue.count();
     // Every line in this request shares one serial number so the whole
     // document can be looked up / edited / deleted together later.
-    const serialNo = dto.serialNo || this.buildSerialNo('ISS', branchCode, baseCount + 1);
+    const serialNo = dto.serialNo || (await this.nextIssueSerialNo(branchCode));
     const producedAt = await this.assertMayProduce(dto.items, dto.issueBranchId);
 
     return this.issueTransaction(async (tx) => {
@@ -1349,5 +1348,29 @@ export class InventoryService {
 
   private buildSerialNo(prefix: string, branchCode: string, seq: number): string {
     return [prefix, branchCode, this.yyyymm(), String(seq).padStart(5, '0')].filter(Boolean).join('-');
+  }
+
+  /**
+   * Stock Issue serial: ISS-<branch>-00101, with no year-month segment.
+   *
+   * The sequence is the highest number already issued plus one, NOT a row
+   * count. Editing or deleting a document deletes its rows (the whole group is
+   * rewritten), so a count can go down and hand out a number that already
+   * exists — harmless while the month segment separated them, but these serials
+   * have nothing else to tell two documents apart, and the list groups by
+   * SerialNo, so a repeat would fuse two issues into one.
+   *
+   * Serials in the old ISS-<branch>-202608-00101 form end in the same 5-digit
+   * sequence, so they are read by the same expression and the short serials
+   * simply carry on from the highest one already on file.
+   */
+  private async nextIssueSerialNo(branchCode: string): Promise<string> {
+    const prefix = ['ISS', branchCode].filter(Boolean).join('-');
+    const [row] = await this.prisma.$queryRaw<{ max: number | null }[]>`
+      SELECT MAX(substring("SerialNo" from '[0-9]+$')::int) AS max
+      FROM "Item_Issue"
+      WHERE "SerialNo" LIKE ${`${prefix}-%`}
+    `;
+    return `${prefix}-${String((row?.max ?? 0) + 1).padStart(5, '0')}`;
   }
 }

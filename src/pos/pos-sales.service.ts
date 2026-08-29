@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { CreatePosSaleDto, UpdatePosSaleDto } from './dto/create-pos-sale.dto';
-import { allocateDiscount, assertStockAvailable, toBranchUuid } from '../common/helpers';
+import { allocateDiscount, assertStockAvailable, roundPayable, toBranchUuid } from '../common/helpers';
 import { dateRangeFilter } from '../common/dto';
 import { PosSalesQueryDto } from './dto/pos-sales-query.dto';
 import type { Prisma, t_SOMstr, t_SODet, Item_Information } from '../generated/prisma';
@@ -18,6 +18,7 @@ export class PosSalesService {
   private r2(n: number) {
     return Math.round(n * 100) / 100;
   }
+
 
   /** Resolve the session branch (Branch UUID) to its sanitized code, or '' when
    *  it can't be resolved. */
@@ -180,7 +181,7 @@ export class PosSalesService {
       );
     }
 
-    const netAmount = this.r2(grossAmount - discountAmount);
+    const netAmount = roundPayable(grossAmount - discountAmount);
     const changeAmount = this.r2(p.paidAmount - netAmount);
 
     // Push the invoice-level discount down onto the lines, pro-rata by each
@@ -383,7 +384,7 @@ export class PosSalesService {
     if (discType === 'percentage' && discValue > 100) throw new BadRequestException('Percentage discount cannot exceed 100%');
     const discountAmount = discType === 'percentage' ? this.r2((grossAmount * discValue) / 100) : this.r2(discValue);
     if (discountAmount > grossAmount) throw new BadRequestException(`Discount (৳${discountAmount}) cannot exceed the total (৳${grossAmount})`);
-    const netAmount = this.r2(grossAmount - discountAmount);
+    const netAmount = roundPayable(grossAmount - discountAmount);
     const changeAmount = this.r2(dto.paidAmount - netAmount);
     if (dto.paidAmount < netAmount) throw new BadRequestException(`Insufficient payment — payable: ৳${netAmount}, paid: ৳${dto.paidAmount}`);
 
