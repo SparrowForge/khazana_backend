@@ -6611,6 +6611,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "orderType",
+            "required": false,
+            "in": "query",
+            "description": "Demand round: 'First' | 'Second' | 'Special'; omit for every round",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {

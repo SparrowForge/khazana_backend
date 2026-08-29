@@ -761,6 +761,7 @@ exports.Prisma.DemandOrder_MasterScalarFieldEnum = {
   toBranchId: 'toBranchId',
   demandDate: 'demandDate',
   requiredDate: 'requiredDate',
+  orderType: 'orderType',
   remarks: 'remarks',
   isActive: 'isActive',
   createBy: 'createBy',

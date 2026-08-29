@@ -58907,6 +58907,7 @@ export namespace Prisma {
     toBranchId: string | null
     demandDate: Date | null
     requiredDate: Date | null
+    orderType: string | null
     remarks: string | null
     isActive: number | null
     createBy: string | null
@@ -58922,6 +58923,7 @@ export namespace Prisma {
     toBranchId: string | null
     demandDate: Date | null
     requiredDate: Date | null
+    orderType: string | null
     remarks: string | null
     isActive: number | null
     createBy: string | null
@@ -58937,6 +58939,7 @@ export namespace Prisma {
     toBranchId: number
     demandDate: number
     requiredDate: number
+    orderType: number
     remarks: number
     isActive: number
     createBy: number
@@ -58962,6 +58965,7 @@ export namespace Prisma {
     toBranchId?: true
     demandDate?: true
     requiredDate?: true
+    orderType?: true
     remarks?: true
     isActive?: true
     createBy?: true
@@ -58977,6 +58981,7 @@ export namespace Prisma {
     toBranchId?: true
     demandDate?: true
     requiredDate?: true
+    orderType?: true
     remarks?: true
     isActive?: true
     createBy?: true
@@ -58992,6 +58997,7 @@ export namespace Prisma {
     toBranchId?: true
     demandDate?: true
     requiredDate?: true
+    orderType?: true
     remarks?: true
     isActive?: true
     createBy?: true
@@ -59094,6 +59100,7 @@ export namespace Prisma {
     toBranchId: string | null
     demandDate: Date | null
     requiredDate: Date | null
+    orderType: string | null
     remarks: string | null
     isActive: number | null
     createBy: string | null
@@ -59128,6 +59135,7 @@ export namespace Prisma {
     toBranchId?: boolean
     demandDate?: boolean
     requiredDate?: boolean
+    orderType?: boolean
     remarks?: boolean
     isActive?: boolean
     createBy?: boolean
@@ -59145,6 +59153,7 @@ export namespace Prisma {
     toBranchId?: boolean
     demandDate?: boolean
     requiredDate?: boolean
+    orderType?: boolean
     remarks?: boolean
     isActive?: boolean
     createBy?: boolean
@@ -59160,6 +59169,7 @@ export namespace Prisma {
     toBranchId?: boolean
     demandDate?: boolean
     requiredDate?: boolean
+    orderType?: boolean
     remarks?: boolean
     isActive?: boolean
     createBy?: boolean
@@ -59175,6 +59185,7 @@ export namespace Prisma {
     toBranchId?: boolean
     demandDate?: boolean
     requiredDate?: boolean
+    orderType?: boolean
     remarks?: boolean
     isActive?: boolean
     createBy?: boolean
@@ -59183,7 +59194,7 @@ export namespace Prisma {
     updateDate?: boolean
   }
 
-  export type DemandOrder_MasterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "fromBranchId" | "toBranchId" | "demandDate" | "requiredDate" | "remarks" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["demandOrder_Master"]>
+  export type DemandOrder_MasterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "serialNo" | "fromBranchId" | "toBranchId" | "demandDate" | "requiredDate" | "orderType" | "remarks" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["demandOrder_Master"]>
   export type DemandOrder_MasterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     details?: boolean | DemandOrder_Master$detailsArgs<ExtArgs>
     _count?: boolean | DemandOrder_MasterCountOutputTypeDefaultArgs<ExtArgs>
@@ -59203,6 +59214,13 @@ export namespace Prisma {
       toBranchId: string | null
       demandDate: Date | null
       requiredDate: Date | null
+      /**
+       * Which round of demand this is: 'First', 'Second' or 'Special'. Free text in
+       * the column, constrained to those three by the DTO, so adding a fourth round
+       * later needs no migration. NULL on every order raised before the field
+       * existed, which the report treats as "not typed" rather than as First.
+       */
+      orderType: string | null
       remarks: string | null
       isActive: number | null
       createBy: string | null
@@ -59639,6 +59657,7 @@ export namespace Prisma {
     readonly toBranchId: FieldRef<"DemandOrder_Master", 'String'>
     readonly demandDate: FieldRef<"DemandOrder_Master", 'DateTime'>
     readonly requiredDate: FieldRef<"DemandOrder_Master", 'DateTime'>
+    readonly orderType: FieldRef<"DemandOrder_Master", 'String'>
     readonly remarks: FieldRef<"DemandOrder_Master", 'String'>
     readonly isActive: FieldRef<"DemandOrder_Master", 'Int'>
     readonly createBy: FieldRef<"DemandOrder_Master", 'String'>
@@ -68026,6 +68045,7 @@ export namespace Prisma {
     toBranchId: 'toBranchId',
     demandDate: 'demandDate',
     requiredDate: 'requiredDate',
+    orderType: 'orderType',
     remarks: 'remarks',
     isActive: 'isActive',
     createBy: 'createBy',
@@ -72273,6 +72293,7 @@ export namespace Prisma {
     toBranchId?: UuidNullableFilter<"DemandOrder_Master"> | string | null
     demandDate?: DateTimeNullableFilter<"DemandOrder_Master"> | Date | string | null
     requiredDate?: DateTimeNullableFilter<"DemandOrder_Master"> | Date | string | null
+    orderType?: StringNullableFilter<"DemandOrder_Master"> | string | null
     remarks?: StringNullableFilter<"DemandOrder_Master"> | string | null
     isActive?: IntNullableFilter<"DemandOrder_Master"> | number | null
     createBy?: StringNullableFilter<"DemandOrder_Master"> | string | null
@@ -72289,6 +72310,7 @@ export namespace Prisma {
     toBranchId?: SortOrderInput | SortOrder
     demandDate?: SortOrderInput | SortOrder
     requiredDate?: SortOrderInput | SortOrder
+    orderType?: SortOrderInput | SortOrder
     remarks?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
     createBy?: SortOrderInput | SortOrder
@@ -72308,6 +72330,7 @@ export namespace Prisma {
     toBranchId?: UuidNullableFilter<"DemandOrder_Master"> | string | null
     demandDate?: DateTimeNullableFilter<"DemandOrder_Master"> | Date | string | null
     requiredDate?: DateTimeNullableFilter<"DemandOrder_Master"> | Date | string | null
+    orderType?: StringNullableFilter<"DemandOrder_Master"> | string | null
     remarks?: StringNullableFilter<"DemandOrder_Master"> | string | null
     isActive?: IntNullableFilter<"DemandOrder_Master"> | number | null
     createBy?: StringNullableFilter<"DemandOrder_Master"> | string | null
@@ -72324,6 +72347,7 @@ export namespace Prisma {
     toBranchId?: SortOrderInput | SortOrder
     demandDate?: SortOrderInput | SortOrder
     requiredDate?: SortOrderInput | SortOrder
+    orderType?: SortOrderInput | SortOrder
     remarks?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
     createBy?: SortOrderInput | SortOrder
@@ -72347,6 +72371,7 @@ export namespace Prisma {
     toBranchId?: UuidNullableWithAggregatesFilter<"DemandOrder_Master"> | string | null
     demandDate?: DateTimeNullableWithAggregatesFilter<"DemandOrder_Master"> | Date | string | null
     requiredDate?: DateTimeNullableWithAggregatesFilter<"DemandOrder_Master"> | Date | string | null
+    orderType?: StringNullableWithAggregatesFilter<"DemandOrder_Master"> | string | null
     remarks?: StringNullableWithAggregatesFilter<"DemandOrder_Master"> | string | null
     isActive?: IntNullableWithAggregatesFilter<"DemandOrder_Master"> | number | null
     createBy?: StringNullableWithAggregatesFilter<"DemandOrder_Master"> | string | null
@@ -77466,6 +77491,7 @@ export namespace Prisma {
     toBranchId?: string | null
     demandDate?: Date | string | null
     requiredDate?: Date | string | null
+    orderType?: string | null
     remarks?: string | null
     isActive?: number | null
     createBy?: string | null
@@ -77482,6 +77508,7 @@ export namespace Prisma {
     toBranchId?: string | null
     demandDate?: Date | string | null
     requiredDate?: Date | string | null
+    orderType?: string | null
     remarks?: string | null
     isActive?: number | null
     createBy?: string | null
@@ -77498,6 +77525,7 @@ export namespace Prisma {
     toBranchId?: NullableStringFieldUpdateOperationsInput | string | null
     demandDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     requiredDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orderType?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77514,6 +77542,7 @@ export namespace Prisma {
     toBranchId?: NullableStringFieldUpdateOperationsInput | string | null
     demandDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     requiredDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orderType?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77530,6 +77559,7 @@ export namespace Prisma {
     toBranchId?: string | null
     demandDate?: Date | string | null
     requiredDate?: Date | string | null
+    orderType?: string | null
     remarks?: string | null
     isActive?: number | null
     createBy?: string | null
@@ -77545,6 +77575,7 @@ export namespace Prisma {
     toBranchId?: NullableStringFieldUpdateOperationsInput | string | null
     demandDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     requiredDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orderType?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77560,6 +77591,7 @@ export namespace Prisma {
     toBranchId?: NullableStringFieldUpdateOperationsInput | string | null
     demandDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     requiredDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orderType?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81321,6 +81353,7 @@ export namespace Prisma {
     toBranchId?: SortOrder
     demandDate?: SortOrder
     requiredDate?: SortOrder
+    orderType?: SortOrder
     remarks?: SortOrder
     isActive?: SortOrder
     createBy?: SortOrder
@@ -81340,6 +81373,7 @@ export namespace Prisma {
     toBranchId?: SortOrder
     demandDate?: SortOrder
     requiredDate?: SortOrder
+    orderType?: SortOrder
     remarks?: SortOrder
     isActive?: SortOrder
     createBy?: SortOrder
@@ -81355,6 +81389,7 @@ export namespace Prisma {
     toBranchId?: SortOrder
     demandDate?: SortOrder
     requiredDate?: SortOrder
+    orderType?: SortOrder
     remarks?: SortOrder
     isActive?: SortOrder
     createBy?: SortOrder
@@ -90752,6 +90787,7 @@ export namespace Prisma {
     toBranchId?: string | null
     demandDate?: Date | string | null
     requiredDate?: Date | string | null
+    orderType?: string | null
     remarks?: string | null
     isActive?: number | null
     createBy?: string | null
@@ -90767,6 +90803,7 @@ export namespace Prisma {
     toBranchId?: string | null
     demandDate?: Date | string | null
     requiredDate?: Date | string | null
+    orderType?: string | null
     remarks?: string | null
     isActive?: number | null
     createBy?: string | null
@@ -90859,6 +90896,7 @@ export namespace Prisma {
     toBranchId?: NullableStringFieldUpdateOperationsInput | string | null
     demandDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     requiredDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orderType?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
@@ -90874,6 +90912,7 @@ export namespace Prisma {
     toBranchId?: NullableStringFieldUpdateOperationsInput | string | null
     demandDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     requiredDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    orderType?: NullableStringFieldUpdateOperationsInput | string | null
     remarks?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableIntFieldUpdateOperationsInput | number | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null

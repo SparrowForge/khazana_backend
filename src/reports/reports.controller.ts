@@ -300,6 +300,7 @@ export class ReportsController {
   @ApiQuery({ name: 'toDate', required: false, description: 'Range end date, inclusive; defaults to fromDate' })
   @ApiQuery({ name: 'fromBranchId', required: false, description: 'Demanding branch — omit for all branches (one column each)' })
   @ApiQuery({ name: 'toBranchId', required: false, description: 'Branch the demand was raised on; defaults to the session branch' })
+  @ApiQuery({ name: 'orderType', required: false, description: "Demand round: 'First' | 'Second' | 'Special'; omit for every round" })
   @ApiResponse({ status: 200, description: 'Per-item rows with a qty column per branch, plus totals' })
   @ApiResponse({ status: 403, description: 'Session branch is not the Factory' })
   getDemandReport(
@@ -308,12 +309,14 @@ export class ReportsController {
     @CurrentUser('branchId') sessionBranchId: string,
     @Query('fromBranchId') fromBranchId?: string,
     @Query('toBranchId') toBranchId?: string,
+    @Query('orderType') orderType?: string,
   ) {
     return this.reportsService.getDemandReport({
       fromDate,
       toDate: toDate || fromDate,
       fromBranchId: fromBranchId || undefined,
       toBranchId: toBranchId || sessionBranchId,
+      orderType: orderType || undefined,
       sessionBranchId,
     });
   }

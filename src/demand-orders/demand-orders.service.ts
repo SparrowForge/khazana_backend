@@ -1,9 +1,14 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsString, IsArray, ValidateNested, IsUUID } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsArray, ValidateNested, IsUUID, IsIn } from 'class-validator';
 import { PrismaService } from '../database/prisma.service';
 import { BranchPaginationQueryDto } from '../common/dto';
 import { buildPaginationMeta, branchScope, canAccessBranch } from '../common/helpers';
+
+/** The rounds a branch can demand in. Stored as these exact strings — short
+ *  enough to read straight out of the table, and the report filters on them. */
+export const DEMAND_ORDER_TYPES = ['First', 'Second', 'Special'] as const;
+export type DemandOrderType = (typeof DEMAND_ORDER_TYPES)[number];
 
 export class DemandOrderItemDto {
   @IsUUID()
@@ -32,6 +37,12 @@ export class CreateDemandOrderDto {
   @IsString()
   @IsOptional()
   demandDate?: string;
+
+  /** Optional so an order raised before the field existed can still be edited
+   *  without the client having to invent a value for it. */
+  @IsIn(DEMAND_ORDER_TYPES as unknown as string[])
+  @IsOptional()
+  orderType?: DemandOrderType;
 
   @IsString()
   @IsOptional()
@@ -100,6 +111,7 @@ export class DemandOrdersService {
         toBranchId: dto.toBranchId,
         demandDate: dto.demandDate ? new Date(dto.demandDate) : new Date(),
         requiredDate: dto.requiredDate ? new Date(dto.requiredDate) : undefined,
+        orderType: dto.orderType,
         remarks: dto.remarks,
         isActive: 1,
         createBy: createdBy,

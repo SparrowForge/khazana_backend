@@ -2358,6 +2358,8 @@ export class ReportsService {
     fromBranchId?: string;
     /** The branch the demand was raised ON — defaults to the session branch. */
     toBranchId?: string;
+    /** Demand round: 'First' | 'Second' | 'Special'. Omitted = every round. */
+    orderType?: string;
     sessionBranchId?: string;
   }) {
     // Factory-only, like its siblings in the Factory Report menu. The session
@@ -2387,6 +2389,9 @@ export class ReportsService {
         demandDate: { gte: from, lt: toExclusive },
         ...(toBranchId ? { toBranchId } : {}),
         ...(query.fromBranchId ? { fromBranchId: query.fromBranchId } : {}),
+        // Orders raised before OrderType existed are NULL, so they drop out of a
+        // filtered run rather than being counted as a round they never had.
+        ...(query.orderType ? { orderType: query.orderType } : {}),
       },
       select: { fromBranchId: true, details: { select: { itemId: true, qty: true } } },
     });
