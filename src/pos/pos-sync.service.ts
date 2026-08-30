@@ -54,6 +54,10 @@ export class PosSyncService {
     dto: SyncOfflineDto,
     authUserId: string,
     authUserName: string,
+    /** The syncing user's full name. An offline queue belongs to one user and
+     *  only they can upload it (the ownership check below), so they are the
+     *  person who served every sale in it. */
+    authDisplayName?: string | null,
   ): Promise<SyncOfflineResult> {
     if (dto.userId !== authUserId || dto.userName !== authUserName) {
       throw new ForbiddenException(
@@ -84,7 +88,9 @@ export class PosSyncService {
           saleDate: new Date(order.clientSavedAt),
           items: order.items,
           paidAmount: order.paidAmount,
-          servedBy: order.servedBy,
+          // The signed-in user, exactly as the online terminal stamps it — not
+          // whatever the queued payload carries.
+          servedBy: (authDisplayName ?? '').trim() || authUserName,
           salesType: order.salesType,
           bankId: order.bankId ?? null,
           branchId: order.branchId ?? null,

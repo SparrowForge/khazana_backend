@@ -26,7 +26,8 @@ export class PosSyncController {
     @Body() dto: SyncOfflineDto,
     @CurrentUser('id') userId: string,
     @CurrentUser('userName') userName: string,
+    @CurrentUser('name') name: string,
   ) {
-    return this.service.syncOffline(dto, userId, userName);
+    return this.service.syncOffline(dto, userId, userName, name);
   }
 }

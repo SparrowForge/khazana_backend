@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsNumber, Min, Max } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PrismaService } from '../database/prisma.service';
 import { PaginationQueryDto } from '../common/dto';
@@ -38,6 +38,17 @@ export class CreateCustomerDto {
   @IsString()
   @IsOptional()
   joiningDate?: string;
+
+  @ApiPropertyOptional({
+    example: 5,
+    description:
+      "The customer's standing discount %, on the VAT-inclusive total. Seeds the invoice-level discount of a credit sale raised for them; the operator can still change it on the invoice.",
+  })
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  @IsOptional()
+  defaultDiscount?: number;
 }
 
 export class UpdateCustomerDto {
@@ -65,6 +76,17 @@ export class UpdateCustomerDto {
   @IsString()
   @IsOptional()
   joiningDate?: string;
+
+  @ApiPropertyOptional({
+    example: 5,
+    description:
+      "The customer's standing discount %, on the VAT-inclusive total. Seeds the invoice-level discount of a credit sale raised for them; the operator can still change it on the invoice.",
+  })
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  @IsOptional()
+  defaultDiscount?: number;
 }
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

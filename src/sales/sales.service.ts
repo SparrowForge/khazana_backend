@@ -93,7 +93,7 @@ export class SalesService {
     // exactly like a cash sale: check availability, write, deduct — all in one
     // transaction so a concurrent sale can't slip through on the same units.
     const stockLines = dto.items.map((i) => ({ itemId: i.itemId, qty: i.qty }));
-    const detailLines = this.distributeInvoiceDiscount(dto.items, dto.discountPercent ?? 0);
+    const detailLines = await this.distributeInvoiceDiscount(dto.items, dto.discountPercent ?? 0);
     const sale = await this.prisma.$transaction(async (tx) => {
       await assertStockAvailable(tx, stockLines);
       const created = await tx.cSMaster.create({
@@ -178,13 +178,38 @@ export class SalesService {
    * `disc` without being lost: `lineShares` reproduces it on demand, so the read
    * paths can subtract it back out again.
    */
+  /**
+   * Item ids that may NOT carry a discount, from `Item_Information`.
+   *
+   * Read as a set of exceptions rather than a flag per line: the flag lives on
+   * the item, so a saved invoice re-read later resolves it the same way it did
+   * when written, without storing a copy on the line that could go stale.
+   */
+  private async nonDiscountableItems(itemIds: (string | null | undefined)[]): Promise<Set<string>> {
+    const ids = [...new Set(itemIds.filter((id): id is string => !!id))];
+    if (!ids.length) return new Set();
+    const rows = await this.prisma.item_Information.findMany({
+      where: { id: { in: ids }, isDiscountApplicable: false },
+      select: { id: true },
+    });
+    return new Set(rows.map((r) => r.id));
+  }
+
   // `vat`/`total` are typed loosely so this takes both the numbers a DTO carries
   // and the Prisma Decimals a loaded row does — Number() normalizes either.
+  //
+  // A line flagged not discountable is given a base of ZERO, which both keeps it
+  // out of the total the percentage is charged on and denies it a share — the
+  // item is billed in full. The flag is read off the LINE (stamped at write
+  // time), never off the item as it stands now, so reopening an invoice
+  // reproduces the split it was actually saved with.
   private lineShares(
-    lines: { vat?: unknown; total?: unknown }[],
+    lines: { isDiscountApplicable?: boolean; vat?: unknown; total?: unknown }[],
     discountPercent: number,
   ): number[] {
-    const lineGross = lines.map((l) => r2(Number(l.total ?? 0) + Number(l.vat ?? 0)));
+    const lineGross = lines.map((l) =>
+      l.isDiscountApplicable === false ? 0 : r2(Number(l.total ?? 0) + Number(l.vat ?? 0)),
+    );
     const gross = r2(lineGross.reduce((s, g) => s + g, 0));
     const pct = Math.min(Math.max(Number(discountPercent) || 0, 0), 100);
     const invoiceDiscount = Math.min(r2((gross * pct) / 100), gross);
@@ -206,13 +231,20 @@ export class SalesService {
    * invoice would then re-apply the percent on top of itself. Left alone, the
    * split is recomputed on read by `lineShares` and subtracted back out.
    */
-  private distributeInvoiceDiscount(
+  private async distributeInvoiceDiscount(
     items: { itemId: string; rate: number; qty: number; disc?: number; vat?: number; total: number }[],
     discountPercent: number,
   ) {
-    const shares = this.lineShares(items, discountPercent);
+    // Resolved once, here at write time, and then stamped on every line — the
+    // read paths use the stamp, not another lookup.
+    const excluded = await this.nonDiscountableItems(items.map((i) => i.itemId));
+    const stamped = items.map((item) => ({
+      ...item,
+      isDiscountApplicable: !excluded.has(item.itemId),
+    }));
+    const shares = this.lineShares(stamped, discountPercent);
 
-    return items.map((item, i) => ({
+    return stamped.map((item, i) => ({
       itemOId: item.itemId,
       rate: item.rate,
       qty: item.qty,
@@ -220,6 +252,7 @@ export class SalesService {
       disc: r2(Number(item.disc ?? 0) + shares[i]),
       vat: item.vat ?? 0,
       total: r2(Number(item.total ?? 0)),
+      isDiscountApplicable: item.isDiscountApplicable,
     }));
   }
 
@@ -664,6 +697,24 @@ export class SalesService {
     for (const d of released) if (d.itemId) delta.set(d.itemId, (delta.get(d.itemId) ?? 0) + d.qty);
     for (const it of dto.items) if (it.itemId) delta.set(it.itemId, (delta.get(it.itemId) ?? 0) - it.qty);
 
+    // The replacement lines, with the invoice-level discount already pushed down
+    // and each line stamped with whether it took part. Built before the
+    // transaction opens: it reads Item_Information, and holding a transaction
+    // open across an unrelated read only widens the window for a conflict.
+    const detailLines = (
+      await this.distributeInvoiceDiscount(
+        dto.items.map((it) => ({
+          itemId: it.itemId ?? '',
+          rate: it.rate ?? 0,
+          qty: it.qty,
+          disc: it.discount ?? 0,
+          vat: it.vat ?? 0,
+          total: it.total ?? 0,
+        })),
+        dto.discountPercent ?? 0,
+      )
+    ).map((l) => ({ ...l, itemOId: l.itemOId || null }));
+
     // Purge-and-replace: master fields are updated in place; detail lines are
     // dropped and recreated. CSDetail.itemOId is a uuid FK — the UI sends each
     // line's Item_Information UUID in itemId, stored straight through.
@@ -689,17 +740,7 @@ export class SalesService {
           details: {
             // Same push-down as create — the replacement lines carry the
             // invoice-level discount, not the master alone.
-            create: this.distributeInvoiceDiscount(
-              dto.items.map((it) => ({
-                itemId: it.itemId ?? '',
-                rate: it.rate ?? 0,
-                qty: it.qty,
-                disc: it.discount ?? 0,
-                vat: it.vat ?? 0,
-                total: it.total ?? 0,
-              })),
-              dto.discountPercent ?? 0,
-            ).map((l) => ({ ...l, itemOId: l.itemOId || null })),
+            create: detailLines,
           },
         },
       });

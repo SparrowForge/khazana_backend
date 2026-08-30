@@ -27,7 +27,15 @@ export class CreatePosSaleDto {
   @Min(0)
   paidAmount: number;
 
-  @ApiPropertyOptional({ example: 'Ahmed', description: 'Staff name (defaults to logged-in user)' })
+  /** @deprecated Accepted but IGNORED — the sale is always stamped with the
+   *  signed-in user's name. Kept only so an offline sale queued before the
+   *  Served By field was removed still passes validation on sync instead of
+   *  being stranded in the client's queue by a 400. */
+  @ApiPropertyOptional({
+    example: 'Ahmed',
+    deprecated: true,
+    description: 'Ignored — the sale is served by, and stamped with, the signed-in user.',
+  })
   @IsString()
   @IsOptional()
   servedBy?: string;

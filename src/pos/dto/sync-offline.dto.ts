@@ -29,7 +29,14 @@ export class OfflineSaleDto {
   @IsDateString()
   clientSavedAt: string;
 
-  @ApiPropertyOptional({ example: 'Ahmed', description: 'Staff name — defaults to the syncing user' })
+  /** @deprecated Accepted but IGNORED — the sale is stamped with the syncing
+   *  user's name, who is the only person able to upload this queue. Kept so an
+   *  order queued before the Served By field was removed still validates. */
+  @ApiPropertyOptional({
+    example: 'Ahmed',
+    deprecated: true,
+    description: 'Ignored — the sale is served by, and stamped with, the syncing user.',
+  })
   @IsString()
   @IsOptional()
   servedBy?: string;

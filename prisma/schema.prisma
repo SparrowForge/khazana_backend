@@ -212,6 +212,10 @@ model Customer {
   address              String?                @map("Address")
   email                String?                @map("EMail")
   joiningDate          DateTime?              @map("JoiningDate")
+  /// Standing discount % agreed with this customer. Seeds the invoice-level
+  /// discount on a credit sale when the customer is picked; the operator can
+  /// still change it, and a picked PO overrides it with the order's own rate.
+  defaultDiscount      Decimal?               @map("DefaultDiscount") @db.Decimal(5, 2)
   sales                CSMaster[]
   salesVat             CSVMaster[]
   customerTransactions Customer_Transaction[]
@@ -268,6 +272,10 @@ model Item_Information {
   image                 MediaFile?     @relation(fields: [imageId], references: [id], onDelete: SetNull)
   orderLevelUOM         String?        @map("OrderLevelUOM")
   isActive              String?        @map("IsActive")
+  /// Whether a document-level discount may be taken off this item. False puts
+  /// the item outside the discount entirely: it is billed in full AND its value
+  /// is excluded from the base the discount is charged on.
+  isDiscountApplicable  Boolean        @default(true) @map("IsDiscountApplicable")
   // Relations using Item_Information.ID (uuid)
   runningSaleDetails    t_SODet[]
   runningSaleVatDetails t_SODeV[]
@@ -412,6 +420,11 @@ model CSDetail {
   // the allocation base in the row and lets the split be recomputed exactly
   // when the invoice is reopened for edit.
   total   Decimal?  @map("total") @db.Decimal(18, 2)
+  /// Whether this line took part in the invoice-level discount, stamped from
+  /// the item at write time. Stored rather than re-read from Item_Information so
+  /// the share can be recomputed exactly on reopen even if the item's own flag
+  /// is changed afterwards.
+  isDiscountApplicable Boolean @default(true) @map("IsDiscountApplicable")
   sale    CSMaster? @relation(fields: [invNo], references: [invNo])
   item    Item_Information? @relation(fields: [itemOId], references: [id])
 

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsUUID, IsBoolean } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateItemDto {
@@ -44,6 +44,16 @@ export class CreateItemDto {
   @IsString()
   @IsOptional()
   isActive?: string;
+
+  @ApiPropertyOptional({
+    example: true,
+    default: true,
+    description:
+      'Whether a document discount may be taken off this item. False bills it in full AND removes its value from the base the discount is charged on.',
+  })
+  @IsBoolean()
+  @IsOptional()
+  isDiscountApplicable?: boolean;
 }
 
 export class UpdateItemDto {
@@ -84,4 +94,14 @@ export class UpdateItemDto {
   @IsString()
   @IsOptional()
   isActive?: string;
+
+  @ApiPropertyOptional({
+    example: true,
+    default: true,
+    description:
+      'Whether a document discount may be taken off this item. False bills it in full AND removes its value from the base the discount is charged on.',
+  })
+  @IsBoolean()
+  @IsOptional()
+  isDiscountApplicable?: boolean;
 }

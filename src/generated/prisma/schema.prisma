@@ -212,6 +212,10 @@ model Customer {
   address              String?                @map("Address")
   email                String?                @map("EMail")
   joiningDate          DateTime?              @map("JoiningDate")
+  /// Standing discount % agreed with this customer. Seeds the invoice-level
+  /// discount on a credit sale when the customer is picked; the operator can
+  /// still change it, and a picked PO overrides it with the order's own rate.
+  defaultDiscount      Decimal?               @map("DefaultDiscount") @db.Decimal(5, 2)
   sales                CSMaster[]
   salesVat             CSVMaster[]
   customerTransactions Customer_Transaction[]
@@ -268,6 +272,10 @@ model Item_Information {
   image                 MediaFile?            @relation(fields: [imageId], references: [id], onDelete: SetNull)
   orderLevelUOM         String?               @map("OrderLevelUOM")
   isActive              String?               @map("IsActive")
+  /// Whether a document-level discount may be taken off this item. False puts
+  /// the item outside the discount entirely: it is billed in full AND its value
+  /// is excluded from the base the discount is charged on.
+  isDiscountApplicable  Boolean               @default(true) @map("IsDiscountApplicable")
   // Relations using Item_Information.ID (uuid)
   runningSaleDetails    t_SODet[]
   runningSaleVatDetails t_SODeV[]
@@ -397,23 +405,28 @@ model CSMaster {
 }
 
 model CSDetail {
-  id      String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  invNo   String?           @map("InvNo")
-  itemOId String?           @map("ItemOId") @db.Uuid
-  rate    Decimal?          @map("Rate") @db.Decimal(8, 2)
-  qty     Decimal?          @map("Qty") @db.Decimal(8, 2)
-  value   Decimal?          @map("Value") @db.Decimal(8, 2)
+  id                   String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  invNo                String?           @map("InvNo")
+  itemOId              String?           @map("ItemOId") @db.Uuid
+  rate                 Decimal?          @map("Rate") @db.Decimal(8, 2)
+  qty                  Decimal?          @map("Qty") @db.Decimal(8, 2)
+  value                Decimal?          @map("Value") @db.Decimal(8, 2)
   // The line's whole discount: what the user typed against it, plus its share of
   // CSMaster.discountPercent. `sum(disc)` therefore equals CSMaster.totalDiscount.
-  disc    Decimal?          @map("Disc") @db.Decimal(8, 2)
-  vat     Decimal?          @map("vat") @db.Decimal(8, 2)
+  disc                 Decimal?          @map("Disc") @db.Decimal(8, 2)
+  vat                  Decimal?          @map("vat") @db.Decimal(8, 2)
   // Net of VAT and deliberately NOT reduced by the invoice-level share — that
   // share was apportioned by (total + vat), so leaving this column alone keeps
   // the allocation base in the row and lets the split be recomputed exactly
   // when the invoice is reopened for edit.
-  total   Decimal?          @map("total") @db.Decimal(18, 2)
-  sale    CSMaster?         @relation(fields: [invNo], references: [invNo])
-  item    Item_Information? @relation(fields: [itemOId], references: [id])
+  total                Decimal?          @map("total") @db.Decimal(18, 2)
+  /// Whether this line took part in the invoice-level discount, stamped from
+  /// the item at write time. Stored rather than re-read from Item_Information so
+  /// the share can be recomputed exactly on reopen even if the item's own flag
+  /// is changed afterwards.
+  isDiscountApplicable Boolean           @default(true) @map("IsDiscountApplicable")
+  sale                 CSMaster?         @relation(fields: [invNo], references: [invNo])
+  item                 Item_Information? @relation(fields: [itemOId], references: [id])
 
   @@map("CSDetail")
 }

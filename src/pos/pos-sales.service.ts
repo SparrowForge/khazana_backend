@@ -84,7 +84,15 @@ export class PosSalesService {
     };
   }
 
-  async create(dto: CreatePosSaleDto, userName: string, userBranchId?: string) {
+  /** Who served a sale: the signed-in user's full name, falling back to their
+   *  login name when the account has none. Never taken from the request body —
+   *  the terminal has no Served By field, so the person logged in IS the
+   *  server, and a client cannot bill a sale under someone else's name. */
+  private servedByName(userName: string, displayName?: string | null): string {
+    return (displayName ?? '').trim() || userName;
+  }
+
+  async create(dto: CreatePosSaleDto, userName: string, userBranchId?: string, displayName?: string | null) {
     if (!dto.items.length) throw new BadRequestException('Cart is empty');
 
     // Branch comes from the request body when supplied, otherwise the
@@ -97,7 +105,7 @@ export class PosSalesService {
       saleDate: new Date(),
       items: dto.items,
       paidAmount: dto.paidAmount,
-      servedBy: dto.servedBy,
+      servedBy: this.servedByName(userName, displayName),
       salesType: dto.salesType,
       bankId: dto.bankId,
       branchId,
@@ -170,14 +178,22 @@ export class PosSalesService {
       throw new BadRequestException('Percentage discount cannot exceed 100%');
     }
 
+    // Items flagged not discountable are outside the discount entirely: their
+    // value is not part of what a percentage is charged on, and a fixed amount
+    // cannot be spent against them either. On an all-discountable basket this
+    // is the invoice gross, exactly as before.
+    const discountableGross = this.discountableGross(lines);
+
     const discountAmount =
       discType === 'percentage'
-        ? this.r2(grossAmount * discValue / 100)
+        ? this.r2(discountableGross * discValue / 100)
         : this.r2(discValue);
 
-    if (discountAmount > grossAmount) {
+    if (discountAmount > discountableGross) {
       throw new BadRequestException(
-        `Discount (৳${discountAmount}) cannot exceed the total (৳${grossAmount})`,
+        discountableGross < grossAmount
+          ? `Discount (৳${discountAmount}) cannot exceed the discountable total (৳${discountableGross}) — this sale includes items that are not discountable`
+          : `Discount (৳${discountAmount}) cannot exceed the total (৳${grossAmount})`,
       );
     }
 
@@ -250,18 +266,38 @@ export class PosSalesService {
     return this.toResponse(sale as SaleWithDetails);
   }
 
+  /**
+   * Each line's VAT-inclusive value AS A DISCOUNT BASE — its own value, or zero
+   * when the item is flagged not discountable.
+   *
+   * A zero base does both jobs at once: the line is left out of the total a
+   * percentage is charged on, and `allocateDiscount` gives a zero base no
+   * share, so the line is billed in full. One definition, so the amount charged
+   * and the amount shared out can never disagree.
+   */
+  private discountBases(lines: { sodetAmount: number; sodetVATAmount: number; isDiscountApplicable?: boolean }[]): number[] {
+    return lines.map((l) =>
+      l.isDiscountApplicable === false ? 0 : this.r2(l.sodetAmount + l.sodetVATAmount),
+    );
+  }
+
+  /** The part of a basket a discount may be taken off: the discountable lines'
+   *  VAT-inclusive value. This is the cap on a fixed discount and the base a
+   *  percentage is charged on — NOT the invoice gross, which may include items
+   *  that are never discounted. */
+  private discountableGross(lines: { sodetAmount: number; sodetVATAmount: number; isDiscountApplicable?: boolean }[]): number {
+    return this.r2(this.discountBases(lines).reduce((s, b) => s + b, 0));
+  }
+
   /** Stamp each line with its share of the invoice-level discount and restate
    *  its net accordingly, so `sum(sodetNetAmount)` equals the invoice's net and
    *  `sum(sodetDiscount)` equals `somstrDiscAmt`. `sodetNetAmount` stays
    *  VAT-inclusive, which is the convention `priceLines` established. */
-  private applyLineDiscounts<T extends { sodetAmount: number; sodetVATAmount: number }>(
+  private applyLineDiscounts<T extends { sodetAmount: number; sodetVATAmount: number; isDiscountApplicable?: boolean }>(
     lines: T[],
     discountAmount: number,
   ): T[] {
-    const shares = allocateDiscount(
-      lines.map((l) => this.r2(l.sodetAmount + l.sodetVATAmount)),
-      discountAmount,
-    );
+    const shares = allocateDiscount(this.discountBases(lines), discountAmount);
     return lines.map((l, i) => ({
       ...l,
       sodetDiscount: shares[i],
@@ -357,6 +393,9 @@ export class PosSalesService {
         sodetVATAmount: vatAmount,
         sodetDiscount: 0,
         sodetNetAmount: netAmount,
+        // Item-level rule, carried onto the line so the discount maths below
+        // never has to look the item up again.
+        isDiscountApplicable: item.isDiscountApplicable,
       };
     });
   }
@@ -382,8 +421,17 @@ export class PosSalesService {
     const discValue = dto.discountValue ?? 0;
     if (discValue < 0) throw new BadRequestException('Discount value cannot be negative');
     if (discType === 'percentage' && discValue > 100) throw new BadRequestException('Percentage discount cannot exceed 100%');
-    const discountAmount = discType === 'percentage' ? this.r2((grossAmount * discValue) / 100) : this.r2(discValue);
-    if (discountAmount > grossAmount) throw new BadRequestException(`Discount (৳${discountAmount}) cannot exceed the total (৳${grossAmount})`);
+    // Same rule as a new sale: non-discountable items are outside the discount,
+    // so an edit that adds one must not keep charging a percentage on it.
+    const discountableGross = this.discountableGross(lines);
+    const discountAmount = discType === 'percentage' ? this.r2((discountableGross * discValue) / 100) : this.r2(discValue);
+    if (discountAmount > discountableGross) {
+      throw new BadRequestException(
+        discountableGross < grossAmount
+          ? `Discount (৳${discountAmount}) cannot exceed the discountable total (৳${discountableGross}) — this sale includes items that are not discountable`
+          : `Discount (৳${discountAmount}) cannot exceed the total (৳${grossAmount})`,
+      );
+    }
     const netAmount = roundPayable(grossAmount - discountAmount);
     const changeAmount = this.r2(dto.paidAmount - netAmount);
     if (dto.paidAmount < netAmount) throw new BadRequestException(`Insufficient payment — payable: ৳${netAmount}, paid: ৳${dto.paidAmount}`);

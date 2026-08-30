@@ -270,7 +270,16 @@ export class OrdersService {
       return { itemId: item.itemId, qty, unitPrice, amount, vatPrice };
     });
 
-    const lineGross = priced.map((l) => r2(l.amount + l.vatPrice));
+    // Items flagged not discountable stand outside the order discount: their
+    // value is not part of what the percentage is charged on, and a zero base
+    // takes no share, so they are quoted at full price. An order stores the
+    // share as the line's whole discount and never recomputes it on read, so
+    // reading the item's flag here at write time is enough — unlike a credit
+    // sale, which has to stamp it on the line.
+    const excluded = await this.nonDiscountableItems(priced.map((l) => l.itemId));
+    const lineGross = priced.map((l) =>
+      excluded.has(l.itemId) ? 0 : r2(l.amount + l.vatPrice),
+    );
     const gross = r2(lineGross.reduce((s, g) => s + g, 0));
     const pct = Math.min(Math.max(Number(discountPercent) || 0, 0), 100);
     const orderDiscount = Math.min(r2((gross * pct) / 100), gross);
@@ -285,6 +294,17 @@ export class OrdersService {
       discount: shares[i],
       serialNo,
     }));
+  }
+
+  /** Item ids that may not carry a discount, from `Item_Information`. */
+  private async nonDiscountableItems(itemIds: (string | null | undefined)[]): Promise<Set<string>> {
+    const ids = [...new Set(itemIds.filter((id): id is string => !!id))];
+    if (!ids.length) return new Set();
+    const rows = await this.prisma.item_Information.findMany({
+      where: { id: { in: ids }, isDiscountApplicable: false },
+      select: { id: true },
+    });
+    return new Set(rows.map((r) => r.id));
   }
 
   /** VAT rate per item id, from the active price row. Items with no active

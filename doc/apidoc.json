@@ -8760,6 +8760,12 @@
             "type": "string",
             "example": "Y",
             "description": "Y = active, N = inactive"
+          },
+          "isDiscountApplicable": {
+            "type": "boolean",
+            "example": true,
+            "default": true,
+            "description": "Whether a document discount may be taken off this item. False bills it in full AND removes its value from the base the discount is charged on."
           }
         },
         "required": [
@@ -8798,6 +8804,12 @@
             "type": "string",
             "example": "Y",
             "description": "Y = active, N = inactive"
+          },
+          "isDiscountApplicable": {
+            "type": "boolean",
+            "example": true,
+            "default": true,
+            "description": "Whether a document discount may be taken off this item. False bills it in full AND removes its value from the base the discount is charged on."
           }
         }
       },
@@ -9309,6 +9321,11 @@
           "joiningDate": {
             "type": "string",
             "example": "2026-06-24"
+          },
+          "defaultDiscount": {
+            "type": "number",
+            "example": 5,
+            "description": "The customer's standing discount %, on the VAT-inclusive total. Seeds the invoice-level discount of a credit sale raised for them; the operator can still change it on the invoice."
           }
         },
         "required": [
@@ -9338,6 +9355,11 @@
           "joiningDate": {
             "type": "string",
             "example": "2026-06-24"
+          },
+          "defaultDiscount": {
+            "type": "number",
+            "example": 5,
+            "description": "The customer's standing discount %, on the VAT-inclusive total. Seeds the invoice-level discount of a credit sale raised for them; the operator can still change it on the invoice."
           }
         }
       },
@@ -9623,7 +9645,8 @@
           "servedBy": {
             "type": "string",
             "example": "Ahmed",
-            "description": "Staff name (defaults to logged-in user)"
+            "deprecated": true,
+            "description": "Ignored — the sale is served by, and stamped with, the signed-in user."
           },
           "salesType": {
             "type": "string",
@@ -9689,7 +9712,8 @@
           "servedBy": {
             "type": "string",
             "example": "Ahmed",
-            "description": "Staff name (defaults to logged-in user)"
+            "deprecated": true,
+            "description": "Ignored — the sale is served by, and stamped with, the signed-in user."
           },
           "salesType": {
             "type": "string",
@@ -9771,7 +9795,8 @@
           "servedBy": {
             "type": "string",
             "example": "Ahmed",
-            "description": "Staff name — defaults to the syncing user"
+            "deprecated": true,
+            "description": "Ignored — the sale is served by, and stamped with, the syncing user."
           },
           "salesType": {
             "type": "string",

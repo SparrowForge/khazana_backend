@@ -45,6 +45,10 @@ export class PosProductsService {
           vatPercentage: price.priceVatPercent ?? 0,
           stock,
           imageUrl: item.image?.fileUrl ?? null,
+          // Sent so the terminal's running total matches what the server will
+          // charge — and so an offline sale, priced entirely on the client,
+          // applies the same rule.
+          isDiscountApplicable: item.isDiscountApplicable,
         };
       })
       .filter((x): x is NonNullable<typeof x> => x !== null);

@@ -19646,8 +19646,18 @@ export namespace Prisma {
 
   export type AggregateCustomer = {
     _count: CustomerCountAggregateOutputType | null
+    _avg: CustomerAvgAggregateOutputType | null
+    _sum: CustomerSumAggregateOutputType | null
     _min: CustomerMinAggregateOutputType | null
     _max: CustomerMaxAggregateOutputType | null
+  }
+
+  export type CustomerAvgAggregateOutputType = {
+    defaultDiscount: Decimal | null
+  }
+
+  export type CustomerSumAggregateOutputType = {
+    defaultDiscount: Decimal | null
   }
 
   export type CustomerMinAggregateOutputType = {
@@ -19658,6 +19668,7 @@ export namespace Prisma {
     address: string | null
     email: string | null
     joiningDate: Date | null
+    defaultDiscount: Decimal | null
   }
 
   export type CustomerMaxAggregateOutputType = {
@@ -19668,6 +19679,7 @@ export namespace Prisma {
     address: string | null
     email: string | null
     joiningDate: Date | null
+    defaultDiscount: Decimal | null
   }
 
   export type CustomerCountAggregateOutputType = {
@@ -19678,9 +19690,18 @@ export namespace Prisma {
     address: number
     email: number
     joiningDate: number
+    defaultDiscount: number
     _all: number
   }
 
+
+  export type CustomerAvgAggregateInputType = {
+    defaultDiscount?: true
+  }
+
+  export type CustomerSumAggregateInputType = {
+    defaultDiscount?: true
+  }
 
   export type CustomerMinAggregateInputType = {
     id?: true
@@ -19690,6 +19711,7 @@ export namespace Prisma {
     address?: true
     email?: true
     joiningDate?: true
+    defaultDiscount?: true
   }
 
   export type CustomerMaxAggregateInputType = {
@@ -19700,6 +19722,7 @@ export namespace Prisma {
     address?: true
     email?: true
     joiningDate?: true
+    defaultDiscount?: true
   }
 
   export type CustomerCountAggregateInputType = {
@@ -19710,6 +19733,7 @@ export namespace Prisma {
     address?: true
     email?: true
     joiningDate?: true
+    defaultDiscount?: true
     _all?: true
   }
 
@@ -19751,6 +19775,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: CustomerAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CustomerSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: CustomerMinAggregateInputType
@@ -19781,6 +19817,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: CustomerCountAggregateInputType | true
+    _avg?: CustomerAvgAggregateInputType
+    _sum?: CustomerSumAggregateInputType
     _min?: CustomerMinAggregateInputType
     _max?: CustomerMaxAggregateInputType
   }
@@ -19793,7 +19831,10 @@ export namespace Prisma {
     address: string | null
     email: string | null
     joiningDate: Date | null
+    defaultDiscount: Decimal | null
     _count: CustomerCountAggregateOutputType | null
+    _avg: CustomerAvgAggregateOutputType | null
+    _sum: CustomerSumAggregateOutputType | null
     _min: CustomerMinAggregateOutputType | null
     _max: CustomerMaxAggregateOutputType | null
   }
@@ -19820,6 +19861,7 @@ export namespace Prisma {
     address?: boolean
     email?: boolean
     joiningDate?: boolean
+    defaultDiscount?: boolean
     sales?: boolean | Customer$salesArgs<ExtArgs>
     salesVat?: boolean | Customer$salesVatArgs<ExtArgs>
     customerTransactions?: boolean | Customer$customerTransactionsArgs<ExtArgs>
@@ -19835,6 +19877,7 @@ export namespace Prisma {
     address?: boolean
     email?: boolean
     joiningDate?: boolean
+    defaultDiscount?: boolean
   }, ExtArgs["result"]["customer"]>
 
   export type CustomerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -19845,6 +19888,7 @@ export namespace Prisma {
     address?: boolean
     email?: boolean
     joiningDate?: boolean
+    defaultDiscount?: boolean
   }, ExtArgs["result"]["customer"]>
 
   export type CustomerSelectScalar = {
@@ -19855,9 +19899,10 @@ export namespace Prisma {
     address?: boolean
     email?: boolean
     joiningDate?: boolean
+    defaultDiscount?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "name" | "mobile" | "address" | "email" | "joiningDate", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "name" | "mobile" | "address" | "email" | "joiningDate" | "defaultDiscount", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sales?: boolean | Customer$salesArgs<ExtArgs>
     salesVat?: boolean | Customer$salesVatArgs<ExtArgs>
@@ -19884,6 +19929,12 @@ export namespace Prisma {
       address: string | null
       email: string | null
       joiningDate: Date | null
+      /**
+       * Standing discount % agreed with this customer. Seeds the invoice-level
+       * discount on a credit sale when the customer is picked; the operator can
+       * still change it, and a picked PO overrides it with the order's own rate.
+       */
+      defaultDiscount: Prisma.Decimal | null
     }, ExtArgs["result"]["customer"]>
     composites: {}
   }
@@ -20318,6 +20369,7 @@ export namespace Prisma {
     readonly address: FieldRef<"Customer", 'String'>
     readonly email: FieldRef<"Customer", 'String'>
     readonly joiningDate: FieldRef<"Customer", 'DateTime'>
+    readonly defaultDiscount: FieldRef<"Customer", 'Decimal'>
   }
     
 
@@ -23088,6 +23140,7 @@ export namespace Prisma {
     itmOrderLevel: Decimal | null
     orderLevelUOM: string | null
     isActive: string | null
+    isDiscountApplicable: boolean | null
   }
 
   export type Item_InformationMaxAggregateOutputType = {
@@ -23102,6 +23155,7 @@ export namespace Prisma {
     itmOrderLevel: Decimal | null
     orderLevelUOM: string | null
     isActive: string | null
+    isDiscountApplicable: boolean | null
   }
 
   export type Item_InformationCountAggregateOutputType = {
@@ -23116,6 +23170,7 @@ export namespace Prisma {
     itmOrderLevel: number
     orderLevelUOM: number
     isActive: number
+    isDiscountApplicable: number
     _all: number
   }
 
@@ -23140,6 +23195,7 @@ export namespace Prisma {
     itmOrderLevel?: true
     orderLevelUOM?: true
     isActive?: true
+    isDiscountApplicable?: true
   }
 
   export type Item_InformationMaxAggregateInputType = {
@@ -23154,6 +23210,7 @@ export namespace Prisma {
     itmOrderLevel?: true
     orderLevelUOM?: true
     isActive?: true
+    isDiscountApplicable?: true
   }
 
   export type Item_InformationCountAggregateInputType = {
@@ -23168,6 +23225,7 @@ export namespace Prisma {
     itmOrderLevel?: true
     orderLevelUOM?: true
     isActive?: true
+    isDiscountApplicable?: true
     _all?: true
   }
 
@@ -23269,6 +23327,7 @@ export namespace Prisma {
     itmOrderLevel: Decimal | null
     orderLevelUOM: string | null
     isActive: string | null
+    isDiscountApplicable: boolean
     _count: Item_InformationCountAggregateOutputType | null
     _avg: Item_InformationAvgAggregateOutputType | null
     _sum: Item_InformationSumAggregateOutputType | null
@@ -23302,6 +23361,7 @@ export namespace Prisma {
     itmOrderLevel?: boolean
     orderLevelUOM?: boolean
     isActive?: boolean
+    isDiscountApplicable?: boolean
     image?: boolean | Item_Information$imageArgs<ExtArgs>
     runningSaleDetails?: boolean | Item_Information$runningSaleDetailsArgs<ExtArgs>
     runningSaleVatDetails?: boolean | Item_Information$runningSaleVatDetailsArgs<ExtArgs>
@@ -23333,6 +23393,7 @@ export namespace Prisma {
     itmOrderLevel?: boolean
     orderLevelUOM?: boolean
     isActive?: boolean
+    isDiscountApplicable?: boolean
     image?: boolean | Item_Information$imageArgs<ExtArgs>
   }, ExtArgs["result"]["item_Information"]>
 
@@ -23348,6 +23409,7 @@ export namespace Prisma {
     itmOrderLevel?: boolean
     orderLevelUOM?: boolean
     isActive?: boolean
+    isDiscountApplicable?: boolean
     image?: boolean | Item_Information$imageArgs<ExtArgs>
   }, ExtArgs["result"]["item_Information"]>
 
@@ -23363,9 +23425,10 @@ export namespace Prisma {
     itmOrderLevel?: boolean
     orderLevelUOM?: boolean
     isActive?: boolean
+    isDiscountApplicable?: boolean
   }
 
-  export type Item_InformationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itmCode" | "itmName" | "itmCategory" | "itmType" | "itmUOM" | "itmRemarks" | "imageId" | "itmOrderLevel" | "orderLevelUOM" | "isActive", ExtArgs["result"]["item_Information"]>
+  export type Item_InformationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itmCode" | "itmName" | "itmCategory" | "itmType" | "itmUOM" | "itmRemarks" | "imageId" | "itmOrderLevel" | "orderLevelUOM" | "isActive" | "isDiscountApplicable", ExtArgs["result"]["item_Information"]>
   export type Item_InformationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     image?: boolean | Item_Information$imageArgs<ExtArgs>
     runningSaleDetails?: boolean | Item_Information$runningSaleDetailsArgs<ExtArgs>
@@ -23424,6 +23487,12 @@ export namespace Prisma {
       itmOrderLevel: Prisma.Decimal | null
       orderLevelUOM: string | null
       isActive: string | null
+      /**
+       * Whether a document-level discount may be taken off this item. False puts
+       * the item outside the discount entirely: it is billed in full AND its value
+       * is excluded from the base the discount is charged on.
+       */
+      isDiscountApplicable: boolean
     }, ExtArgs["result"]["item_Information"]>
     composites: {}
   }
@@ -23874,6 +23943,7 @@ export namespace Prisma {
     readonly itmOrderLevel: FieldRef<"Item_Information", 'Decimal'>
     readonly orderLevelUOM: FieldRef<"Item_Information", 'String'>
     readonly isActive: FieldRef<"Item_Information", 'String'>
+    readonly isDiscountApplicable: FieldRef<"Item_Information", 'Boolean'>
   }
     
 
@@ -32488,6 +32558,7 @@ export namespace Prisma {
     disc: Decimal | null
     vat: Decimal | null
     total: Decimal | null
+    isDiscountApplicable: boolean | null
   }
 
   export type CSDetailMaxAggregateOutputType = {
@@ -32500,6 +32571,7 @@ export namespace Prisma {
     disc: Decimal | null
     vat: Decimal | null
     total: Decimal | null
+    isDiscountApplicable: boolean | null
   }
 
   export type CSDetailCountAggregateOutputType = {
@@ -32512,6 +32584,7 @@ export namespace Prisma {
     disc: number
     vat: number
     total: number
+    isDiscountApplicable: number
     _all: number
   }
 
@@ -32544,6 +32617,7 @@ export namespace Prisma {
     disc?: true
     vat?: true
     total?: true
+    isDiscountApplicable?: true
   }
 
   export type CSDetailMaxAggregateInputType = {
@@ -32556,6 +32630,7 @@ export namespace Prisma {
     disc?: true
     vat?: true
     total?: true
+    isDiscountApplicable?: true
   }
 
   export type CSDetailCountAggregateInputType = {
@@ -32568,6 +32643,7 @@ export namespace Prisma {
     disc?: true
     vat?: true
     total?: true
+    isDiscountApplicable?: true
     _all?: true
   }
 
@@ -32667,6 +32743,7 @@ export namespace Prisma {
     disc: Decimal | null
     vat: Decimal | null
     total: Decimal | null
+    isDiscountApplicable: boolean
     _count: CSDetailCountAggregateOutputType | null
     _avg: CSDetailAvgAggregateOutputType | null
     _sum: CSDetailSumAggregateOutputType | null
@@ -32698,6 +32775,7 @@ export namespace Prisma {
     disc?: boolean
     vat?: boolean
     total?: boolean
+    isDiscountApplicable?: boolean
     sale?: boolean | CSDetail$saleArgs<ExtArgs>
     item?: boolean | CSDetail$itemArgs<ExtArgs>
   }, ExtArgs["result"]["cSDetail"]>
@@ -32712,6 +32790,7 @@ export namespace Prisma {
     disc?: boolean
     vat?: boolean
     total?: boolean
+    isDiscountApplicable?: boolean
     sale?: boolean | CSDetail$saleArgs<ExtArgs>
     item?: boolean | CSDetail$itemArgs<ExtArgs>
   }, ExtArgs["result"]["cSDetail"]>
@@ -32726,6 +32805,7 @@ export namespace Prisma {
     disc?: boolean
     vat?: boolean
     total?: boolean
+    isDiscountApplicable?: boolean
     sale?: boolean | CSDetail$saleArgs<ExtArgs>
     item?: boolean | CSDetail$itemArgs<ExtArgs>
   }, ExtArgs["result"]["cSDetail"]>
@@ -32740,9 +32820,10 @@ export namespace Prisma {
     disc?: boolean
     vat?: boolean
     total?: boolean
+    isDiscountApplicable?: boolean
   }
 
-  export type CSDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invNo" | "itemOId" | "rate" | "qty" | "value" | "disc" | "vat" | "total", ExtArgs["result"]["cSDetail"]>
+  export type CSDetailOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "invNo" | "itemOId" | "rate" | "qty" | "value" | "disc" | "vat" | "total" | "isDiscountApplicable", ExtArgs["result"]["cSDetail"]>
   export type CSDetailInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sale?: boolean | CSDetail$saleArgs<ExtArgs>
     item?: boolean | CSDetail$itemArgs<ExtArgs>
@@ -32772,6 +32853,13 @@ export namespace Prisma {
       disc: Prisma.Decimal | null
       vat: Prisma.Decimal | null
       total: Prisma.Decimal | null
+      /**
+       * Whether this line took part in the invoice-level discount, stamped from
+       * the item at write time. Stored rather than re-read from Item_Information so
+       * the share can be recomputed exactly on reopen even if the item's own flag
+       * is changed afterwards.
+       */
+      isDiscountApplicable: boolean
     }, ExtArgs["result"]["cSDetail"]>
     composites: {}
   }
@@ -33206,6 +33294,7 @@ export namespace Prisma {
     readonly disc: FieldRef<"CSDetail", 'Decimal'>
     readonly vat: FieldRef<"CSDetail", 'Decimal'>
     readonly total: FieldRef<"CSDetail", 'Decimal'>
+    readonly isDiscountApplicable: FieldRef<"CSDetail", 'Boolean'>
   }
     
 
@@ -68619,7 +68708,8 @@ export namespace Prisma {
     mobile: 'mobile',
     address: 'address',
     email: 'email',
-    joiningDate: 'joiningDate'
+    joiningDate: 'joiningDate',
+    defaultDiscount: 'defaultDiscount'
   };
 
   export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
@@ -68668,7 +68758,8 @@ export namespace Prisma {
     imageId: 'imageId',
     itmOrderLevel: 'itmOrderLevel',
     orderLevelUOM: 'orderLevelUOM',
-    isActive: 'isActive'
+    isActive: 'isActive',
+    isDiscountApplicable: 'isDiscountApplicable'
   };
 
   export type Item_InformationScalarFieldEnum = (typeof Item_InformationScalarFieldEnum)[keyof typeof Item_InformationScalarFieldEnum]
@@ -68780,7 +68871,8 @@ export namespace Prisma {
     value: 'value',
     disc: 'disc',
     vat: 'vat',
-    total: 'total'
+    total: 'total',
+    isDiscountApplicable: 'isDiscountApplicable'
   };
 
   export type CSDetailScalarFieldEnum = (typeof CSDetailScalarFieldEnum)[keyof typeof CSDetailScalarFieldEnum]
@@ -70380,6 +70472,7 @@ export namespace Prisma {
     address?: StringNullableFilter<"Customer"> | string | null
     email?: StringNullableFilter<"Customer"> | string | null
     joiningDate?: DateTimeNullableFilter<"Customer"> | Date | string | null
+    defaultDiscount?: DecimalNullableFilter<"Customer"> | Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterListRelationFilter
     salesVat?: CSVMasterListRelationFilter
     customerTransactions?: Customer_TransactionListRelationFilter
@@ -70394,6 +70487,7 @@ export namespace Prisma {
     address?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     joiningDate?: SortOrderInput | SortOrder
+    defaultDiscount?: SortOrderInput | SortOrder
     sales?: CSMasterOrderByRelationAggregateInput
     salesVat?: CSVMasterOrderByRelationAggregateInput
     customerTransactions?: Customer_TransactionOrderByRelationAggregateInput
@@ -70411,6 +70505,7 @@ export namespace Prisma {
     address?: StringNullableFilter<"Customer"> | string | null
     email?: StringNullableFilter<"Customer"> | string | null
     joiningDate?: DateTimeNullableFilter<"Customer"> | Date | string | null
+    defaultDiscount?: DecimalNullableFilter<"Customer"> | Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterListRelationFilter
     salesVat?: CSVMasterListRelationFilter
     customerTransactions?: Customer_TransactionListRelationFilter
@@ -70425,9 +70520,12 @@ export namespace Prisma {
     address?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     joiningDate?: SortOrderInput | SortOrder
+    defaultDiscount?: SortOrderInput | SortOrder
     _count?: CustomerCountOrderByAggregateInput
+    _avg?: CustomerAvgOrderByAggregateInput
     _max?: CustomerMaxOrderByAggregateInput
     _min?: CustomerMinOrderByAggregateInput
+    _sum?: CustomerSumOrderByAggregateInput
   }
 
   export type CustomerScalarWhereWithAggregatesInput = {
@@ -70441,6 +70539,7 @@ export namespace Prisma {
     address?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     email?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     joiningDate?: DateTimeNullableWithAggregatesFilter<"Customer"> | Date | string | null
+    defaultDiscount?: DecimalNullableWithAggregatesFilter<"Customer"> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type Customer_TransactionWhereInput = {
@@ -70617,6 +70716,7 @@ export namespace Prisma {
     itmOrderLevel?: DecimalNullableFilter<"Item_Information"> | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: StringNullableFilter<"Item_Information"> | string | null
     isActive?: StringNullableFilter<"Item_Information"> | string | null
+    isDiscountApplicable?: BoolFilter<"Item_Information"> | boolean
     image?: XOR<MediaFileNullableScalarRelationFilter, MediaFileWhereInput> | null
     runningSaleDetails?: T_SODetListRelationFilter
     runningSaleVatDetails?: T_SODeVListRelationFilter
@@ -70647,6 +70747,7 @@ export namespace Prisma {
     itmOrderLevel?: SortOrderInput | SortOrder
     orderLevelUOM?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
+    isDiscountApplicable?: SortOrder
     image?: MediaFileOrderByWithRelationInput
     runningSaleDetails?: t_SODetOrderByRelationAggregateInput
     runningSaleVatDetails?: t_SODeVOrderByRelationAggregateInput
@@ -70680,6 +70781,7 @@ export namespace Prisma {
     itmOrderLevel?: DecimalNullableFilter<"Item_Information"> | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: StringNullableFilter<"Item_Information"> | string | null
     isActive?: StringNullableFilter<"Item_Information"> | string | null
+    isDiscountApplicable?: BoolFilter<"Item_Information"> | boolean
     image?: XOR<MediaFileNullableScalarRelationFilter, MediaFileWhereInput> | null
     runningSaleDetails?: T_SODetListRelationFilter
     runningSaleVatDetails?: T_SODeVListRelationFilter
@@ -70710,6 +70812,7 @@ export namespace Prisma {
     itmOrderLevel?: SortOrderInput | SortOrder
     orderLevelUOM?: SortOrderInput | SortOrder
     isActive?: SortOrderInput | SortOrder
+    isDiscountApplicable?: SortOrder
     _count?: Item_InformationCountOrderByAggregateInput
     _avg?: Item_InformationAvgOrderByAggregateInput
     _max?: Item_InformationMaxOrderByAggregateInput
@@ -70732,6 +70835,7 @@ export namespace Prisma {
     itmOrderLevel?: DecimalNullableWithAggregatesFilter<"Item_Information"> | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: StringNullableWithAggregatesFilter<"Item_Information"> | string | null
     isActive?: StringNullableWithAggregatesFilter<"Item_Information"> | string | null
+    isDiscountApplicable?: BoolWithAggregatesFilter<"Item_Information"> | boolean
   }
 
   export type Item_UOMWhereInput = {
@@ -71236,6 +71340,7 @@ export namespace Prisma {
     disc?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     vat?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     total?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: BoolFilter<"CSDetail"> | boolean
     sale?: XOR<CSMasterNullableScalarRelationFilter, CSMasterWhereInput> | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }
@@ -71250,6 +71355,7 @@ export namespace Prisma {
     disc?: SortOrderInput | SortOrder
     vat?: SortOrderInput | SortOrder
     total?: SortOrderInput | SortOrder
+    isDiscountApplicable?: SortOrder
     sale?: CSMasterOrderByWithRelationInput
     item?: Item_InformationOrderByWithRelationInput
   }
@@ -71267,6 +71373,7 @@ export namespace Prisma {
     disc?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     vat?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     total?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: BoolFilter<"CSDetail"> | boolean
     sale?: XOR<CSMasterNullableScalarRelationFilter, CSMasterWhereInput> | null
     item?: XOR<Item_InformationNullableScalarRelationFilter, Item_InformationWhereInput> | null
   }, "id">
@@ -71281,6 +71388,7 @@ export namespace Prisma {
     disc?: SortOrderInput | SortOrder
     vat?: SortOrderInput | SortOrder
     total?: SortOrderInput | SortOrder
+    isDiscountApplicable?: SortOrder
     _count?: CSDetailCountOrderByAggregateInput
     _avg?: CSDetailAvgOrderByAggregateInput
     _max?: CSDetailMaxOrderByAggregateInput
@@ -71301,6 +71409,7 @@ export namespace Prisma {
     disc?: DecimalNullableWithAggregatesFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     vat?: DecimalNullableWithAggregatesFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     total?: DecimalNullableWithAggregatesFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: BoolWithAggregatesFilter<"CSDetail"> | boolean
   }
 
   export type CSVMasterWhereInput = {
@@ -75174,6 +75283,7 @@ export namespace Prisma {
     address?: string | null
     email?: string | null
     joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
@@ -75188,6 +75298,7 @@ export namespace Prisma {
     address?: string | null
     email?: string | null
     joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
@@ -75202,6 +75313,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
@@ -75216,6 +75328,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
@@ -75230,6 +75343,7 @@ export namespace Prisma {
     address?: string | null
     email?: string | null
     joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
   }
 
   export type CustomerUpdateManyMutationInput = {
@@ -75240,6 +75354,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type CustomerUncheckedUpdateManyInput = {
@@ -75250,6 +75365,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
   }
 
   export type Customer_TransactionCreateInput = {
@@ -75444,6 +75560,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
@@ -75474,6 +75591,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
@@ -75502,6 +75620,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
@@ -75532,6 +75651,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
@@ -75561,6 +75681,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
   }
 
   export type Item_InformationUpdateManyMutationInput = {
@@ -75574,6 +75695,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type Item_InformationUncheckedUpdateManyInput = {
@@ -75588,6 +75710,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type Item_UOMCreateInput = {
@@ -76130,6 +76253,7 @@ export namespace Prisma {
     disc?: Decimal | DecimalJsLike | number | string | null
     vat?: Decimal | DecimalJsLike | number | string | null
     total?: Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: boolean
     sale?: CSMasterCreateNestedOneWithoutDetailsInput
     item?: Item_InformationCreateNestedOneWithoutCreditSaleDetailsInput
   }
@@ -76144,6 +76268,7 @@ export namespace Prisma {
     disc?: Decimal | DecimalJsLike | number | string | null
     vat?: Decimal | DecimalJsLike | number | string | null
     total?: Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: boolean
   }
 
   export type CSDetailUpdateInput = {
@@ -76154,6 +76279,7 @@ export namespace Prisma {
     disc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     sale?: CSMasterUpdateOneWithoutDetailsNestedInput
     item?: Item_InformationUpdateOneWithoutCreditSaleDetailsNestedInput
   }
@@ -76168,6 +76294,7 @@ export namespace Prisma {
     disc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CSDetailCreateManyInput = {
@@ -76180,6 +76307,7 @@ export namespace Prisma {
     disc?: Decimal | DecimalJsLike | number | string | null
     vat?: Decimal | DecimalJsLike | number | string | null
     total?: Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: boolean
   }
 
   export type CSDetailUpdateManyMutationInput = {
@@ -76190,6 +76318,7 @@ export namespace Prisma {
     disc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CSDetailUncheckedUpdateManyInput = {
@@ -76202,6 +76331,7 @@ export namespace Prisma {
     disc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CSVMasterCreateInput = {
@@ -80413,6 +80543,17 @@ export namespace Prisma {
     canDelete?: SortOrder
   }
 
+  export type DecimalNullableFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+  }
+
   export type CSMasterListRelationFilter = {
     every?: CSMasterWhereInput
     some?: CSMasterWhereInput
@@ -80461,6 +80602,11 @@ export namespace Prisma {
     address?: SortOrder
     email?: SortOrder
     joiningDate?: SortOrder
+    defaultDiscount?: SortOrder
+  }
+
+  export type CustomerAvgOrderByAggregateInput = {
+    defaultDiscount?: SortOrder
   }
 
   export type CustomerMaxOrderByAggregateInput = {
@@ -80471,6 +80617,7 @@ export namespace Prisma {
     address?: SortOrder
     email?: SortOrder
     joiningDate?: SortOrder
+    defaultDiscount?: SortOrder
   }
 
   export type CustomerMinOrderByAggregateInput = {
@@ -80481,9 +80628,14 @@ export namespace Prisma {
     address?: SortOrder
     email?: SortOrder
     joiningDate?: SortOrder
+    defaultDiscount?: SortOrder
   }
 
-  export type DecimalNullableFilter<$PrismaModel = never> = {
+  export type CustomerSumOrderByAggregateInput = {
+    defaultDiscount?: SortOrder
+  }
+
+  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
     notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
@@ -80491,7 +80643,12 @@ export namespace Prisma {
     lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type CustomerNullableScalarRelationFilter = {
@@ -80544,22 +80701,6 @@ export namespace Prisma {
 
   export type Customer_TransactionSumOrderByAggregateInput = {
     receiveAmount?: SortOrder
-  }
-
-  export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type EmployeeCountOrderByAggregateInput = {
@@ -80758,6 +80899,7 @@ export namespace Prisma {
     itmOrderLevel?: SortOrder
     orderLevelUOM?: SortOrder
     isActive?: SortOrder
+    isDiscountApplicable?: SortOrder
   }
 
   export type Item_InformationAvgOrderByAggregateInput = {
@@ -80776,6 +80918,7 @@ export namespace Prisma {
     itmOrderLevel?: SortOrder
     orderLevelUOM?: SortOrder
     isActive?: SortOrder
+    isDiscountApplicable?: SortOrder
   }
 
   export type Item_InformationMinOrderByAggregateInput = {
@@ -80790,6 +80933,7 @@ export namespace Prisma {
     itmOrderLevel?: SortOrder
     orderLevelUOM?: SortOrder
     isActive?: SortOrder
+    isDiscountApplicable?: SortOrder
   }
 
   export type Item_InformationSumOrderByAggregateInput = {
@@ -81169,6 +81313,7 @@ export namespace Prisma {
     disc?: SortOrder
     vat?: SortOrder
     total?: SortOrder
+    isDiscountApplicable?: SortOrder
   }
 
   export type CSDetailAvgOrderByAggregateInput = {
@@ -81190,6 +81335,7 @@ export namespace Prisma {
     disc?: SortOrder
     vat?: SortOrder
     total?: SortOrder
+    isDiscountApplicable?: SortOrder
   }
 
   export type CSDetailMinOrderByAggregateInput = {
@@ -81202,6 +81348,7 @@ export namespace Prisma {
     disc?: SortOrder
     vat?: SortOrder
     total?: SortOrder
+    isDiscountApplicable?: SortOrder
   }
 
   export type CSDetailSumOrderByAggregateInput = {
@@ -83747,6 +83894,14 @@ export namespace Prisma {
     connect?: OrderReceive_MasterWhereUniqueInput | OrderReceive_MasterWhereUniqueInput[]
   }
 
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string | null
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
   export type CSMasterUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<CSMasterCreateWithoutCustomerInput, CSMasterUncheckedCreateWithoutCustomerInput> | CSMasterCreateWithoutCustomerInput[] | CSMasterUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: CSMasterCreateOrConnectWithoutCustomerInput | CSMasterCreateOrConnectWithoutCustomerInput[]
@@ -83863,14 +84018,6 @@ export namespace Prisma {
     create?: XOR<CustomerCreateWithoutCustomerTransactionsInput, CustomerUncheckedCreateWithoutCustomerTransactionsInput>
     connectOrCreate?: CustomerCreateOrConnectWithoutCustomerTransactionsInput
     connect?: CustomerWhereUniqueInput
-  }
-
-  export type NullableDecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string | null
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
   }
 
   export type CustomerUpdateOneWithoutCustomerTransactionsNestedInput = {
@@ -85972,6 +86119,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
@@ -86000,6 +86148,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
@@ -86173,6 +86322,7 @@ export namespace Prisma {
     itmOrderLevel?: DecimalNullableFilter<"Item_Information"> | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: StringNullableFilter<"Item_Information"> | string | null
     isActive?: StringNullableFilter<"Item_Information"> | string | null
+    isDiscountApplicable?: BoolFilter<"Item_Information"> | boolean
   }
 
   export type UserBranchMappingCreateWithoutBranchInput = {
@@ -87428,6 +87578,7 @@ export namespace Prisma {
     address?: string | null
     email?: string | null
     joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
@@ -87441,6 +87592,7 @@ export namespace Prisma {
     address?: string | null
     email?: string | null
     joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
@@ -87470,6 +87622,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
@@ -87483,6 +87636,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
@@ -87621,6 +87775,7 @@ export namespace Prisma {
     disc?: Decimal | DecimalJsLike | number | string | null
     vat?: Decimal | DecimalJsLike | number | string | null
     total?: Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: boolean
     sale?: CSMasterCreateNestedOneWithoutDetailsInput
   }
 
@@ -87633,6 +87788,7 @@ export namespace Prisma {
     disc?: Decimal | DecimalJsLike | number | string | null
     vat?: Decimal | DecimalJsLike | number | string | null
     total?: Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: boolean
   }
 
   export type CSDetailCreateOrConnectWithoutItemInput = {
@@ -88264,6 +88420,7 @@ export namespace Prisma {
     disc?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     vat?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
     total?: DecimalNullableFilter<"CSDetail"> | Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: BoolFilter<"CSDetail"> | boolean
   }
 
   export type t_NCDetUpsertWithWhereUniqueWithoutItemInput = {
@@ -88691,6 +88848,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
@@ -88720,6 +88878,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
@@ -88763,6 +88922,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
@@ -88792,6 +88952,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
@@ -88819,6 +88980,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
@@ -88848,6 +89010,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
@@ -88891,6 +89054,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
@@ -88920,6 +89084,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
@@ -88947,6 +89112,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
@@ -88976,6 +89142,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
@@ -89019,6 +89186,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
@@ -89048,6 +89216,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
@@ -89072,6 +89241,7 @@ export namespace Prisma {
     address?: string | null
     email?: string | null
     joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
@@ -89085,6 +89255,7 @@ export namespace Prisma {
     address?: string | null
     email?: string | null
     joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
@@ -89103,6 +89274,7 @@ export namespace Prisma {
     disc?: Decimal | DecimalJsLike | number | string | null
     vat?: Decimal | DecimalJsLike | number | string | null
     total?: Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: boolean
     item?: Item_InformationCreateNestedOneWithoutCreditSaleDetailsInput
   }
 
@@ -89115,6 +89287,7 @@ export namespace Prisma {
     disc?: Decimal | DecimalJsLike | number | string | null
     vat?: Decimal | DecimalJsLike | number | string | null
     total?: Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: boolean
   }
 
   export type CSDetailCreateOrConnectWithoutSaleInput = {
@@ -89146,6 +89319,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
@@ -89159,6 +89333,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
@@ -89232,6 +89407,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
@@ -89261,6 +89437,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
@@ -89351,6 +89528,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
@@ -89380,6 +89558,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
@@ -89404,6 +89583,7 @@ export namespace Prisma {
     address?: string | null
     email?: string | null
     joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
@@ -89417,6 +89597,7 @@ export namespace Prisma {
     address?: string | null
     email?: string | null
     joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
@@ -89478,6 +89659,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
@@ -89491,6 +89673,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
@@ -89775,6 +89958,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
@@ -89804,6 +89988,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
@@ -89910,6 +90095,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
@@ -89939,6 +90125,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
@@ -90079,6 +90266,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailCreateNestedManyWithoutItemInput
@@ -90108,6 +90296,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
     ncDetails?: t_NCDetUncheckedCreateNestedManyWithoutItemInput
@@ -90210,6 +90399,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
@@ -90239,6 +90429,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
     ncDetails?: t_NCDetUncheckedUpdateManyWithoutItemNestedInput
@@ -90324,6 +90515,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
@@ -90353,6 +90545,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
@@ -90445,6 +90638,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
@@ -90474,6 +90668,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
@@ -90651,6 +90846,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
@@ -90680,6 +90876,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
@@ -90764,6 +90961,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
@@ -90793,6 +90991,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
@@ -90820,6 +91019,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
@@ -90849,6 +91049,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
@@ -90892,6 +91093,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
@@ -90921,6 +91123,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
@@ -90948,6 +91151,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
@@ -90977,6 +91181,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
@@ -91020,6 +91225,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
@@ -91049,6 +91255,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
@@ -91076,6 +91283,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
@@ -91105,6 +91313,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
@@ -91148,6 +91357,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
@@ -91177,6 +91387,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
@@ -91204,6 +91415,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
@@ -91233,6 +91445,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
@@ -91276,6 +91489,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
@@ -91305,6 +91519,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
@@ -91332,6 +91547,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
@@ -91361,6 +91577,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
@@ -91404,6 +91621,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
@@ -91433,6 +91651,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
@@ -91758,6 +91977,7 @@ export namespace Prisma {
     address?: string | null
     email?: string | null
     joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
@@ -91771,6 +91991,7 @@ export namespace Prisma {
     address?: string | null
     email?: string | null
     joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
@@ -91832,6 +92053,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
@@ -91845,6 +92067,7 @@ export namespace Prisma {
     address?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
@@ -91922,6 +92145,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
@@ -91951,6 +92175,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
@@ -92045,6 +92270,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
@@ -92074,6 +92300,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
@@ -92180,6 +92407,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     image?: MediaFileCreateNestedOneWithoutItemsInput
     runningSaleDetails?: t_SODetCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVCreateNestedManyWithoutItemInput
@@ -92209,6 +92437,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
     runningSaleDetails?: t_SODetUncheckedCreateNestedManyWithoutItemInput
     runningSaleVatDetails?: t_SODeVUncheckedCreateNestedManyWithoutItemInput
     creditSaleDetails?: CSDetailUncheckedCreateNestedManyWithoutItemInput
@@ -92295,6 +92524,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     image?: MediaFileUpdateOneWithoutItemsNestedInput
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
@@ -92324,6 +92554,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
@@ -92515,6 +92746,7 @@ export namespace Prisma {
     itmOrderLevel?: Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: string | null
     isActive?: string | null
+    isDiscountApplicable?: boolean
   }
 
   export type UserUpdateWithoutProfileImageInput = {
@@ -92612,6 +92844,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUpdateManyWithoutItemNestedInput
@@ -92640,6 +92873,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     runningSaleDetails?: t_SODetUncheckedUpdateManyWithoutItemNestedInput
     runningSaleVatDetails?: t_SODeVUncheckedUpdateManyWithoutItemNestedInput
     creditSaleDetails?: CSDetailUncheckedUpdateManyWithoutItemNestedInput
@@ -92668,6 +92902,7 @@ export namespace Prisma {
     itmOrderLevel?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orderLevelUOM?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: NullableStringFieldUpdateOperationsInput | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserBranchMappingCreateManyBranchInput = {
@@ -93289,6 +93524,7 @@ export namespace Prisma {
     disc?: Decimal | DecimalJsLike | number | string | null
     vat?: Decimal | DecimalJsLike | number | string | null
     total?: Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: boolean
   }
 
   export type t_NCDetCreateManyItemInput = {
@@ -93576,6 +93812,7 @@ export namespace Prisma {
     disc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     sale?: CSMasterUpdateOneWithoutDetailsNestedInput
   }
 
@@ -93588,6 +93825,7 @@ export namespace Prisma {
     disc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CSDetailUncheckedUpdateManyWithoutItemInput = {
@@ -93599,6 +93837,7 @@ export namespace Prisma {
     disc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type t_NCDetUpdateWithoutItemInput = {
@@ -94135,6 +94374,7 @@ export namespace Prisma {
     disc?: Decimal | DecimalJsLike | number | string | null
     vat?: Decimal | DecimalJsLike | number | string | null
     total?: Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: boolean
   }
 
   export type CSDetailUpdateWithoutSaleInput = {
@@ -94145,6 +94385,7 @@ export namespace Prisma {
     disc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
     item?: Item_InformationUpdateOneWithoutCreditSaleDetailsNestedInput
   }
 
@@ -94157,6 +94398,7 @@ export namespace Prisma {
     disc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CSDetailUncheckedUpdateManyWithoutSaleInput = {
@@ -94168,6 +94410,7 @@ export namespace Prisma {
     disc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     vat?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isDiscountApplicable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CSVDetailCreateManySaleInput = {

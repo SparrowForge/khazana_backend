@@ -22,8 +22,11 @@ export class PosSalesController {
     @Body() dto: CreatePosSaleDto,
     @CurrentUser('userName') userName: string,
     @CurrentUser('branchId') branchId: string,
+    @CurrentUser('name') name: string,
   ) {
-    return this.service.create(dto, userName, branchId);
+    // Who served the sale is the signed-in user, never a value from the body —
+    // the terminal has no field for it.
+    return this.service.create(dto, userName, branchId, name);
   }
 
   @Get()

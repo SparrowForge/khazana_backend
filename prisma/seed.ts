@@ -60,12 +60,15 @@ async function main() {
     { menuName: 'Stock View', controlName: 'StockView', order: 2, parentMenu: 'Inventory', module: 'Inventory' },
     { menuName: 'Stock Receive', controlName: 'StockReceive', order: 3, parentMenu: 'Inventory', module: 'Purchase' },
     { menuName: 'Stock Issue', controlName: 'StockIssue', order: 4, parentMenu: 'Inventory', module: 'Inventory' },
+    // The full-screen entry form for the same document — its own menu row so it
+    // can be granted to issue clerks without the list/edit/delete screen.
+    { menuName: 'Item Issue', controlName: 'ItemIssue', order: 10, parentMenu: 'Inventory', module: 'Inventory' },
     { menuName: 'Stock Transfer', controlName: 'StockTransfer', order: 5, parentMenu: 'Inventory', module: 'Inventory' },
     { menuName: 'Stock Adjustment', controlName: 'StockAdjustment', order: 6, parentMenu: 'Inventory', module: 'Inventory' },
     // Factory-only: the sidebar hides it unless the session branch is the
     // factory, and ProductionService rejects any other branch outright.
     { menuName: 'Production Entry', controlName: 'ProductionEntry', order: 8, parentMenu: 'Inventory', module: 'Inventory' },
-    { menuName: 'Challan Entry', controlName: 'VehicleChallan', order: 9, parentMenu: 'Inventory', module: 'Inventory' },
+
     // Factory Report — a top-level group whose every leaf is factory-only, so
     // the sidebar drops the whole group for any other branch.
     { menuName: 'Factory Report', controlName: 'FactoryReport', order: 13, parentMenu: null, module: 'Inventory' },
@@ -74,6 +77,9 @@ async function main() {
     { menuName: 'Discount Log Report', controlName: 'DiscountLogReport', order: 3, parentMenu: 'FactoryReport', module: 'Inventory' },
     { menuName: 'Demand Report', controlName: 'DemandReport', order: 4, parentMenu: 'FactoryReport', module: 'Inventory' },
     { menuName: 'Sales History Report', controlName: 'SalesHistoryReport', order: 5, parentMenu: 'FactoryReport', module: null },
+    // A despatch document, not a stock movement — it never touches Inventory,
+    // so it sits under Factory Report rather than the Inventory group.
+    { menuName: 'Challan Entry', controlName: 'VehicleChallan', order: 6, parentMenu: 'FactoryReport', module: 'Inventory' },
     { menuName: 'Finance', controlName: 'Finance', order: 10, parentMenu: null, module: null },
     { menuName: 'Reports', controlName: 'Reports', order: 11, parentMenu: null, module: null },
     { menuName: 'Administration', controlName: 'Admin', order: 12, parentMenu: null, module: null },

@@ -264,7 +264,8 @@ exports.Prisma.CustomerScalarFieldEnum = {
   mobile: 'mobile',
   address: 'address',
   email: 'email',
-  joiningDate: 'joiningDate'
+  joiningDate: 'joiningDate',
+  defaultDiscount: 'defaultDiscount'
 };
 
 exports.Prisma.Customer_TransactionScalarFieldEnum = {
@@ -304,7 +305,8 @@ exports.Prisma.Item_InformationScalarFieldEnum = {
   imageId: 'imageId',
   itmOrderLevel: 'itmOrderLevel',
   orderLevelUOM: 'orderLevelUOM',
-  isActive: 'isActive'
+  isActive: 'isActive',
+  isDiscountApplicable: 'isDiscountApplicable'
 };
 
 exports.Prisma.Item_UOMScalarFieldEnum = {
@@ -392,7 +394,8 @@ exports.Prisma.CSDetailScalarFieldEnum = {
   value: 'value',
   disc: 'disc',
   vat: 'vat',
-  total: 'total'
+  total: 'total',
+  isDiscountApplicable: 'isDiscountApplicable'
 };
 
 exports.Prisma.CSVMasterScalarFieldEnum = {
