@@ -127,6 +127,13 @@ export class InventoryController {
     return this.inventoryService.removeTransferBySerial(serialNo);
   }
 
+  @Get('stock-levels')
+  @ApiOperation({ summary: 'On-hand quantity of every item (compact, for live stock polling)' })
+  @ApiResponse({ status: 200, description: 'Array of { itemId, itemCode, quantity }' })
+  getStockLevels() {
+    return this.inventoryService.getStockLevels();
+  }
+
   @Get('stock/:itemCode')
   @ApiOperation({ summary: 'Get stock balance for an item' })
   @ApiParam({ name: 'itemCode', description: 'Item code' })

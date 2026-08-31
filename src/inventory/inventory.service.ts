@@ -68,6 +68,27 @@ export class InventoryService {
     return { items, meta: buildPaginationMeta(total, page, limit) };
   }
 
+  /** Every item's on-hand quantity, keyed by the item UUID the sales screens
+   *  address stock by.
+   *
+   *  Deliberately tiny: the POS terminal and the credit-sale forms re-read this
+   *  on a timer so a sale booked on another till (or a factory issue, receive,
+   *  adjustment...) shows up without reloading the page, and paying for the
+   *  whole priced catalogue on every poll would be wasteful. Items with no
+   *  Inventory row are absent — the caller treats a missing id as zero. */
+  async getStockLevels(): Promise<{ itemId: string; itemCode: string; quantity: number }[]> {
+    const rows = await this.prisma.inventory.findMany({
+      select: { itemCode: true, quantity: true, item: { select: { id: true } } },
+    });
+    return rows
+      .filter((r) => r.item?.id)
+      .map((r) => ({
+        itemId: r.item!.id,
+        itemCode: r.itemCode,
+        quantity: Number(r.quantity),
+      }));
+  }
+
   async findOne(itemCode: string) {
     const stock = await this.prisma.inventory.findUnique({
       where: { itemCode },
