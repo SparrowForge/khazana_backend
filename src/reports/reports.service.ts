@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import { isFactoryBranch, roundPayable } from '../common/helpers';
+import { branchScope, isFactoryBranch, roundPayable } from '../common/helpers';
 
 export interface DateRangeQuery {
   fromDate?: string;
@@ -470,7 +470,9 @@ export class ReportsService {
   //   excess ← ItemReject.{assort,reject,short,excess}.
   // `branchId` omitted ⇒ aggregate ALL branches together (the "All Branches"
   // checkbox); a value scopes every movement query to that branch.
-  async getStockAnalysis(fromDate: string, toDate: string, branchId?: string) {
+  /** `accessibleBranchIds` is the caller's branch set: leaving `branchId` off
+   *  means "all of MY branches", never every branch in the company. */
+  async getStockAnalysis(fromDate: string, toDate: string, branchId?: string, accessibleBranchIds?: string[]) {
     const from = new Date(fromDate);
     if (isNaN(from.getTime())) throw new BadRequestException('Valid `fromDate` is required');
     // `toDate` defaults to `fromDate` (single-day report) when omitted.
@@ -507,13 +509,15 @@ export class ReportsService {
     };
 
     // ── Movement aggregates (before-day for opening, during-day for columns) ──
-    // When a branch is selected, scope by it; otherwise aggregate all branches.
-    const recvWhere = (w: object) => ({ ...(branchId ? { receiveBranchID: branchId } : {}), isActive: 1, purDate: w });
-    const issueWhere = (w: object) => ({ ...(branchId ? { issueBranchId: branchId } : {}), isActive: 1, issueDate: w });
-    const saleWhere = (w: object) => ({ sale: { ...(branchId ? { branchId } : {}), somstrIsActive: true, somstrDate: w } });
-    const ncWhere = (w: object) => ({ sale: { ...(branchId ? { branchId } : {}), ncmstrIsActive: true, ncmstrDate: w } });
-    const rejWhere = (w: object) => ({ ...(branchId ? { branchId } : {}), isActive: 1, date: w });
-    const prodWhere = (w: object) => ({ ...(branchId ? { branchId } : {}), isActive: 1, productionDate: w });
+    // When a branch is selected, scope by it; otherwise aggregate every branch
+    // the caller may see. Each ledger names its own branch column.
+    const scope = (field: string) => branchScope(accessibleBranchIds, [field], branchId);
+    const recvWhere = (w: object) => ({ ...scope('receiveBranchID'), isActive: 1, purDate: w });
+    const issueWhere = (w: object) => ({ ...scope('issueBranchId'), isActive: 1, issueDate: w });
+    const saleWhere = (w: object) => ({ sale: { ...scope('branchId'), somstrIsActive: true, somstrDate: w } });
+    const ncWhere = (w: object) => ({ sale: { ...scope('branchId'), ncmstrIsActive: true, ncmstrDate: w } });
+    const rejWhere = (w: object) => ({ ...scope('branchId'), isActive: 1, date: w });
+    const prodWhere = (w: object) => ({ ...scope('branchId'), isActive: 1, productionDate: w });
 
     const [
       recvBefore, recvDuring, issueBefore, issueDuring,
@@ -624,7 +628,7 @@ export class ReportsService {
       branchId
         ? this.prisma.branch.findUnique({ where: { id: branchId }, select: { branchName: true, address: true, vatNo: true } })
         : Promise.resolve(null),
-      this.stockAnalysisFooter(from, toExclusive, branchId),
+      this.stockAnalysisFooter(from, toExclusive, branchId, accessibleBranchIds),
     ]);
 
     return {
@@ -931,9 +935,9 @@ export class ReportsService {
   /** Sales-summary footer for the Stock Analysis sheet: cash/card/credit totals
    *  plus the Regular/Assorted/Issue/Credit Qty (Kg/Pcs/Amount) block. "Card
    *  Sale" here means every non-cash counter payment (card + mobile wallets). */
-  private async stockAnalysisFooter(day: Date, nextDay: Date, branchId?: string) {
+  private async stockAnalysisFooter(day: Date, nextDay: Date, branchId?: string, accessibleBranchIds?: string[]) {
     const window = { gte: day, lt: nextDay };
-    const branchFilter = branchId ? { branchId } : {};
+    const branchFilter = branchScope(accessibleBranchIds, ['branchId'], branchId);
     const [cash, assorted, issues, credit, nc] = await Promise.all([
       this.prisma.t_SOMstr.findMany({
         where: { somstrDate: window, somstrIsActive: true, ...branchFilter },
@@ -944,7 +948,7 @@ export class ReportsService {
         include: { details: { select: { qty: true, item: { select: { itmUOM: true } } } } },
       }),
       this.prisma.item_Issue.findMany({
-        where: { issueDate: window, isActive: 1, ...(branchId ? { issueBranchId: branchId } : {}) },
+        where: { issueDate: window, isActive: 1, ...branchScope(accessibleBranchIds, ['issueBranchId'], branchId) },
         include: { item: { select: { itmUOM: true } } },
       }),
       this.prisma.cSMaster.findMany({
@@ -1319,9 +1323,11 @@ export class ReportsService {
     });
   }
 
-  async getSalesHistory(query: DateRangeQuery) {
+  /** `accessibleBranchIds` is the caller's branch set. Omitting the `branchId`
+   *  filter means "all of MY branches", never every branch in the company. */
+  async getSalesHistory(query: DateRangeQuery, accessibleBranchIds?: string[]) {
     const { from, to } = this.parseRange(query);
-    const branchFilter = query.branchId ? { branchId: query.branchId } : {};
+    const branchFilter = branchScope(accessibleBranchIds, ['branchId'], query.branchId);
     const itemSelect = { select: { itmCode: true, itmName: true, itmUOM: true } };
 
     // Every ledger is pulled with its detail lines: this sheet reports one row
@@ -1692,14 +1698,19 @@ export class ReportsService {
   // document (adjustStock in inventory.service.ts), not Item_Receive. Unlike
   // Item Receive there is only one branch dimension here (ItemReject has a
   // single `branchId`, no separate "from" branch).
-  async getItemRejectReport(query: { fromDate?: string; toDate?: string; branchId?: string }) {
+  /** "All branches" (no `branchId`) means every branch in `accessibleBranchIds`,
+   *  not every branch in the company. */
+  async getItemRejectReport(
+    query: { fromDate?: string; toDate?: string; branchId?: string },
+    accessibleBranchIds?: string[],
+  ) {
     const { from, to } = this.parseRange({ fromDate: query.fromDate, toDate: query.toDate });
 
     const rows = await this.prisma.itemReject.findMany({
       where: {
         isActive: 1,
         date: { gte: from, lte: to },
-        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...branchScope(accessibleBranchIds, ['branchId'], query.branchId),
       },
       select: { itmOId: true, reject: true, date: true },
     });
@@ -1806,6 +1817,7 @@ export class ReportsService {
   private async posAdjustmentReport(
     field: 'reject' | 'excess' | 'short',
     query: { fromDate?: string; toDate?: string; branchId?: string },
+    accessibleBranchIds?: string[],
   ) {
     const { from, to } = this.parseRange({ fromDate: query.fromDate, toDate: query.toDate });
 
@@ -1813,7 +1825,7 @@ export class ReportsService {
       where: {
         isActive: 1,
         date: { gte: from, lte: to },
-        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...branchScope(accessibleBranchIds, ['branchId'], query.branchId),
       },
       select: { itmOId: true, reject: true, excess: true, short: true, date: true },
     });
@@ -1916,16 +1928,16 @@ export class ReportsService {
     };
   }
 
-  getRejectReportPos(query: { fromDate?: string; toDate?: string; branchId?: string }) {
-    return this.posAdjustmentReport('reject', query);
+  getRejectReportPos(query: { fromDate?: string; toDate?: string; branchId?: string }, accessibleBranchIds?: string[]) {
+    return this.posAdjustmentReport('reject', query, accessibleBranchIds);
   }
 
-  getExcessReportPos(query: { fromDate?: string; toDate?: string; branchId?: string }) {
-    return this.posAdjustmentReport('excess', query);
+  getExcessReportPos(query: { fromDate?: string; toDate?: string; branchId?: string }, accessibleBranchIds?: string[]) {
+    return this.posAdjustmentReport('excess', query, accessibleBranchIds);
   }
 
-  getShortReportPos(query: { fromDate?: string; toDate?: string; branchId?: string }) {
-    return this.posAdjustmentReport('short', query);
+  getShortReportPos(query: { fromDate?: string; toDate?: string; branchId?: string }, accessibleBranchIds?: string[]) {
+    return this.posAdjustmentReport('short', query, accessibleBranchIds);
   }
 
   // ── NC Report (per-line list, one row per NC line item) ───────────────
@@ -1934,14 +1946,17 @@ export class ReportsService {
   // document's attribution (Name/Reference) and its branch (Outlet). Unlike
   // Item Receive/Reject this isn't a datewise pivot — dates repeat per line,
   // same as the source sheet and the same shape getSalesHistory already uses.
-  async getNCReport(query: { fromDate?: string; toDate?: string; branchId?: string }) {
+  async getNCReport(
+    query: { fromDate?: string; toDate?: string; branchId?: string },
+    accessibleBranchIds?: string[],
+  ) {
     const { from, to } = this.parseRange({ fromDate: query.fromDate, toDate: query.toDate });
 
     const ncs = await this.prisma.t_NCMstr.findMany({
       where: {
         ncmstrDate: { gte: from, lte: to },
         ncmstrIsActive: true,
-        ...(query.branchId ? { branchId: query.branchId } : {}),
+        ...branchScope(accessibleBranchIds, ['branchId'], query.branchId),
       },
       include: { details: { include: { item: { select: { itmName: true, itmUOM: true } } } } },
       orderBy: { ncmstrDate: 'asc' },
@@ -1999,9 +2014,12 @@ export class ReportsService {
   // t_SOMstV) plus credit and VAT credit (CSMaster / CSVMaster) — because a
   // discount is a discount whichever counter gave it. Invoices with no discount
   // are dropped: this is the giveaway list, not a sales list.
-  async getDiscountSummary(query: { fromDate?: string; toDate?: string; branchId?: string }) {
+  async getDiscountSummary(
+    query: { fromDate?: string; toDate?: string; branchId?: string },
+    accessibleBranchIds?: string[],
+  ) {
     const { from, to } = this.parseRange({ fromDate: query.fromDate, toDate: query.toDate });
-    const branchFilter = query.branchId ? { branchId: query.branchId } : {};
+    const branchFilter = branchScope(accessibleBranchIds, ['branchId'], query.branchId);
 
     const [cash, vatCash, credit, vatCredit] = await this.prisma.$transaction([
       this.prisma.t_SOMstr.findMany({

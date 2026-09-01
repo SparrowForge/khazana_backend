@@ -65,16 +65,17 @@ export class ReportsController {
   @ApiQuery({ name: 'fromDate', required: false, description: 'Range start date (ISO 8601). Falls back to legacy `date`.' })
   @ApiQuery({ name: 'toDate', required: false, description: 'Range end date, inclusive (ISO 8601); defaults to fromDate' })
   @ApiQuery({ name: 'date', required: false, description: 'Legacy single-day param (ISO 8601); used when fromDate/toDate are absent' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Branch ID — omit to aggregate all branches' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch ID — omit to aggregate every branch the caller may see' })
   @ApiResponse({ status: 200, description: 'Stock analysis rows + sales summary footer' })
   getStockAnalysis(
+    @CurrentUser('branchIds') branchIds: string[],
     @Query('fromDate') fromDate: string,
     @Query('toDate') toDate: string,
     @Query('date') date: string,
     @Query('branchId') branchId?: string,
   ) {
     // Backward compatible: accept the legacy single-day `date` param.
-    return this.reportsService.getStockAnalysis(fromDate || date, toDate || date, branchId || undefined);
+    return this.reportsService.getStockAnalysis(fromDate || date, toDate || date, branchId || undefined, branchIds);
   }
 
   @Get('production-delivery')
@@ -147,14 +148,18 @@ export class ReportsController {
   @ApiOperation({ summary: 'Get sales history summary with line-item details and payment method breakdown' })
   @ApiQuery({ name: 'fromDate', required: true, description: 'Start date (ISO 8601)' })
   @ApiQuery({ name: 'toDate', required: true, description: 'End date (ISO 8601)' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Branch ID — omit to aggregate all branches' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch ID — omit to aggregate every branch the caller may see' })
   @ApiResponse({ status: 200, description: 'Sales history rows with payment breakdown and daily subtotals' })
   getSalesHistory(
+    @CurrentUser('branchIds') branchIds: string[],
     @Query('fromDate') fromDate: string,
     @Query('toDate') toDate: string,
     @Query('branchId') branchId?: string,
   ) {
-    return this.reportsService.getSalesHistory({ fromDate, toDate, branchId: branchId || undefined });
+    return this.reportsService.getSalesHistory(
+      { fromDate, toDate, branchId: branchId || undefined },
+      branchIds,
+    );
   }
 
   @Get('item-receive')
@@ -182,14 +187,18 @@ export class ReportsController {
   @ApiOperation({ summary: 'Get the datewise Item Reject report (items × date, current VAT-inclusive price)' })
   @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
   @ApiQuery({ name: 'toDate', required: true, description: 'Range end date, inclusive (ISO 8601)' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Branch the rejects were recorded at — omit to aggregate all branches' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch the rejects were recorded at — omit to aggregate every branch the caller may see' })
   @ApiResponse({ status: 200, description: 'Datewise item reject rows with current VAT-inclusive price' })
   getItemRejectReport(
+    @CurrentUser('branchIds') branchIds: string[],
     @Query('fromDate') fromDate: string,
     @Query('toDate') toDate: string,
     @Query('branchId') branchId?: string,
   ) {
-    return this.reportsService.getItemRejectReport({ fromDate, toDate, branchId: branchId || undefined });
+    return this.reportsService.getItemRejectReport(
+      { fromDate, toDate, branchId: branchId || undefined },
+      branchIds,
+    );
   }
 
   // The 80mm counter print of the same ItemReject data `item-reject` pivots
@@ -198,14 +207,18 @@ export class ReportsController {
   @ApiOperation({ summary: 'Get the Reject Report (POS): rejects grouped by date with per-day sub totals, for the 80mm roll' })
   @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
   @ApiQuery({ name: 'toDate', required: true, description: 'Range end date, inclusive (ISO 8601)' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Branch the rejects were recorded at — omit to aggregate all branches' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch the rejects were recorded at — omit to aggregate every branch the caller may see' })
   @ApiResponse({ status: 200, description: 'Date-grouped reject lines with sub totals, grand total and the branch header block' })
   getRejectReportPos(
+    @CurrentUser('branchIds') branchIds: string[],
     @Query('fromDate') fromDate: string,
     @Query('toDate') toDate: string,
     @Query('branchId') branchId?: string,
   ) {
-    return this.reportsService.getRejectReportPos({ fromDate, toDate, branchId: branchId || undefined });
+    return this.reportsService.getRejectReportPos(
+      { fromDate, toDate, branchId: branchId || undefined },
+      branchIds,
+    );
   }
 
   // The Excess twin of `reject-pos` — the other column of the same ItemReject
@@ -214,14 +227,18 @@ export class ReportsController {
   @ApiOperation({ summary: 'Get the Excess Report (POS): excess grouped by date with per-day sub totals, for the 80mm roll' })
   @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
   @ApiQuery({ name: 'toDate', required: true, description: 'Range end date, inclusive (ISO 8601)' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Branch the excess was recorded at — omit to aggregate all branches' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch the excess was recorded at — omit to aggregate every branch the caller may see' })
   @ApiResponse({ status: 200, description: 'Date-grouped excess lines with sub totals, grand total and the branch header block' })
   getExcessReportPos(
+    @CurrentUser('branchIds') branchIds: string[],
     @Query('fromDate') fromDate: string,
     @Query('toDate') toDate: string,
     @Query('branchId') branchId?: string,
   ) {
-    return this.reportsService.getExcessReportPos({ fromDate, toDate, branchId: branchId || undefined });
+    return this.reportsService.getExcessReportPos(
+      { fromDate, toDate, branchId: branchId || undefined },
+      branchIds,
+    );
   }
 
   // The Short twin of `reject-pos` / `excess-pos` — the third column of the
@@ -230,42 +247,54 @@ export class ReportsController {
   @ApiOperation({ summary: 'Get the Short Report (POS): shortages grouped by date with per-day sub totals, for the 80mm roll' })
   @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
   @ApiQuery({ name: 'toDate', required: true, description: 'Range end date, inclusive (ISO 8601)' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Branch the shortage was recorded at — omit to aggregate all branches' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch the shortage was recorded at — omit to aggregate every branch the caller may see' })
   @ApiResponse({ status: 200, description: 'Date-grouped short lines with sub totals, grand total and the branch header block' })
   getShortReportPos(
+    @CurrentUser('branchIds') branchIds: string[],
     @Query('fromDate') fromDate: string,
     @Query('toDate') toDate: string,
     @Query('branchId') branchId?: string,
   ) {
-    return this.reportsService.getShortReportPos({ fromDate, toDate, branchId: branchId || undefined });
+    return this.reportsService.getShortReportPos(
+      { fromDate, toDate, branchId: branchId || undefined },
+      branchIds,
+    );
   }
 
   @Get('nc')
   @ApiOperation({ summary: 'Get the NC (non-charge) report: a flat list of NC lines with VAT-inclusive amounts' })
   @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
   @ApiQuery({ name: 'toDate', required: true, description: 'Range end date, inclusive (ISO 8601)' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Branch (Outlet) — omit to aggregate all branches' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch (Outlet) — omit to aggregate every branch the caller may see' })
   @ApiResponse({ status: 200, description: 'NC line rows with attribution (Name/Reference) and VAT-inclusive amount' })
   getNCReport(
+    @CurrentUser('branchIds') branchIds: string[],
     @Query('fromDate') fromDate: string,
     @Query('toDate') toDate: string,
     @Query('branchId') branchId?: string,
   ) {
-    return this.reportsService.getNCReport({ fromDate, toDate, branchId: branchId || undefined });
+    return this.reportsService.getNCReport(
+      { fromDate, toDate, branchId: branchId || undefined },
+      branchIds,
+    );
   }
 
   @Get('discount-summary')
   @ApiOperation({ summary: 'Get the Discount Summary report: one row per discounted sale invoice across all sale ledgers' })
   @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
   @ApiQuery({ name: 'toDate', required: true, description: 'Range end date, inclusive (ISO 8601)' })
-  @ApiQuery({ name: 'branchId', required: false, description: 'Branch (Outlet) — omit to aggregate all branches' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch (Outlet) — omit to aggregate every branch the caller may see' })
   @ApiResponse({ status: 200, description: 'Discounted invoices with pre-discount amount, rate, discount and authoriser' })
   getDiscountSummary(
+    @CurrentUser('branchIds') branchIds: string[],
     @Query('fromDate') fromDate: string,
     @Query('toDate') toDate: string,
     @Query('branchId') branchId?: string,
   ) {
-    return this.reportsService.getDiscountSummary({ fromDate, toDate, branchId: branchId || undefined });
+    return this.reportsService.getDiscountSummary(
+      { fromDate, toDate, branchId: branchId || undefined },
+      branchIds,
+    );
   }
 
   @Get('branchwise-delivery')

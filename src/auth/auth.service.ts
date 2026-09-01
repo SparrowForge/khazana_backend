@@ -257,6 +257,20 @@ export class AuthService {
     };
   }
 
+  /** The branch rows behind the caller's accessible branch set (jwt.strategy
+   *  resolves `branchIds` per request). Ordered the way every other branch
+   *  picker and report column is ordered — SortingNo first, unset last. */
+  async getBranchesByIds(branchIds: string[] | undefined) {
+    if (!branchIds?.length) return { branches: [] };
+
+    const branches = await this.prisma.branch.findMany({
+      where: { id: { in: branchIds } },
+      orderBy: [{ sortingNo: { sort: 'asc', nulls: 'last' } }, { branchName: 'asc' }],
+    });
+
+    return { branches };
+  }
+
   // ── Change Password ───────────────────────────────────────────
 
   async changePassword(userName: string, dto: ChangePasswordDto) {

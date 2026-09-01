@@ -10,6 +10,7 @@ import { VerifyResetCodeDto } from './dto/verify-reset-code.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { GoogleLoginDto, GoogleCredentialDto } from './dto/google-login.dto';
 import { JwtAuthGuard } from './guards/jwt.guard';
+import { CurrentUser } from '../common/decorators';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -60,6 +61,21 @@ export class AuthController {
   @ApiResponse({ status: 503, description: 'Google sign-in is not configured on this server' })
   googleLogin(@Body() dto: GoogleLoginDto) {
     return this.authService.googleLogin(dto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('my-branches')
+  @ApiBearerAuth('access-token')
+  @ApiOperation({
+    summary: 'Branches the signed-in user may see',
+    description:
+      'The branch set of the signed-in user, for the branch pickers on reports and entry screens. '
+      + 'Unlike GET /admin/branches this never lists a branch the user is not mapped to.',
+  })
+  @ApiResponse({ status: 200, description: 'Branches the caller is mapped to, in display order' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  getMyBranches(@CurrentUser('branchIds') branchIds: string[]) {
+    return this.authService.getBranchesByIds(branchIds);
   }
 
   @UseGuards(JwtAuthGuard)

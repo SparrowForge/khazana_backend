@@ -119,6 +119,30 @@
         ]
       }
     },
+    "/auth/my-branches": {
+      "get": {
+        "description": "The branch set of the signed-in user, for the branch pickers on reports and entry screens. Unlike GET /admin/branches this never lists a branch the user is not mapped to.",
+        "operationId": "AuthController_getMyBranches",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Branches the caller is mapped to, in display order"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Branches the signed-in user may see",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/auth/profile": {
       "get": {
         "operationId": "AuthController_getProfile",
@@ -2144,6 +2168,26 @@
           }
         ],
         "summary": "Delete a stock transfer (all lines) by serial number",
+        "tags": [
+          "Inventory"
+        ]
+      }
+    },
+    "/inventory/stock-levels": {
+      "get": {
+        "operationId": "InventoryController_getStockLevels",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Array of { itemId, itemCode, quantity }"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "On-hand quantity of every item (compact, for live stock polling)",
         "tags": [
           "Inventory"
         ]
@@ -5864,7 +5908,7 @@
             "name": "branchId",
             "required": false,
             "in": "query",
-            "description": "Branch ID — omit to aggregate all branches",
+            "description": "Branch ID — omit to aggregate every branch the caller may see",
             "schema": {
               "type": "string"
             }
@@ -6145,7 +6189,7 @@
             "name": "branchId",
             "required": false,
             "in": "query",
-            "description": "Branch ID — omit to aggregate all branches",
+            "description": "Branch ID — omit to aggregate every branch the caller may see",
             "schema": {
               "type": "string"
             }
@@ -6250,7 +6294,7 @@
             "name": "branchId",
             "required": false,
             "in": "query",
-            "description": "Branch the rejects were recorded at — omit to aggregate all branches",
+            "description": "Branch the rejects were recorded at — omit to aggregate every branch the caller may see",
             "schema": {
               "type": "string"
             }
@@ -6298,7 +6342,7 @@
             "name": "branchId",
             "required": false,
             "in": "query",
-            "description": "Branch the rejects were recorded at — omit to aggregate all branches",
+            "description": "Branch the rejects were recorded at — omit to aggregate every branch the caller may see",
             "schema": {
               "type": "string"
             }
@@ -6346,7 +6390,7 @@
             "name": "branchId",
             "required": false,
             "in": "query",
-            "description": "Branch the excess was recorded at — omit to aggregate all branches",
+            "description": "Branch the excess was recorded at — omit to aggregate every branch the caller may see",
             "schema": {
               "type": "string"
             }
@@ -6394,7 +6438,7 @@
             "name": "branchId",
             "required": false,
             "in": "query",
-            "description": "Branch the shortage was recorded at — omit to aggregate all branches",
+            "description": "Branch the shortage was recorded at — omit to aggregate every branch the caller may see",
             "schema": {
               "type": "string"
             }
@@ -6442,7 +6486,7 @@
             "name": "branchId",
             "required": false,
             "in": "query",
-            "description": "Branch (Outlet) — omit to aggregate all branches",
+            "description": "Branch (Outlet) — omit to aggregate every branch the caller may see",
             "schema": {
               "type": "string"
             }
@@ -6490,7 +6534,7 @@
             "name": "branchId",
             "required": false,
             "in": "query",
-            "description": "Branch (Outlet) — omit to aggregate all branches",
+            "description": "Branch (Outlet) — omit to aggregate every branch the caller may see",
             "schema": {
               "type": "string"
             }
