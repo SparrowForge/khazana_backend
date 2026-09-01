@@ -7554,6 +7554,7 @@ export namespace Prisma {
     vatNo: string | null
     mobileNo: string | null
     sortingNo: number | null
+    showInDemandReport: boolean | null
   }
 
   export type BranchMaxAggregateOutputType = {
@@ -7564,6 +7565,7 @@ export namespace Prisma {
     vatNo: string | null
     mobileNo: string | null
     sortingNo: number | null
+    showInDemandReport: boolean | null
   }
 
   export type BranchCountAggregateOutputType = {
@@ -7574,6 +7576,7 @@ export namespace Prisma {
     vatNo: number
     mobileNo: number
     sortingNo: number
+    showInDemandReport: number
     _all: number
   }
 
@@ -7594,6 +7597,7 @@ export namespace Prisma {
     vatNo?: true
     mobileNo?: true
     sortingNo?: true
+    showInDemandReport?: true
   }
 
   export type BranchMaxAggregateInputType = {
@@ -7604,6 +7608,7 @@ export namespace Prisma {
     vatNo?: true
     mobileNo?: true
     sortingNo?: true
+    showInDemandReport?: true
   }
 
   export type BranchCountAggregateInputType = {
@@ -7614,6 +7619,7 @@ export namespace Prisma {
     vatNo?: true
     mobileNo?: true
     sortingNo?: true
+    showInDemandReport?: true
     _all?: true
   }
 
@@ -7711,6 +7717,7 @@ export namespace Prisma {
     vatNo: string | null
     mobileNo: string | null
     sortingNo: number | null
+    showInDemandReport: boolean
     _count: BranchCountAggregateOutputType | null
     _avg: BranchAvgAggregateOutputType | null
     _sum: BranchSumAggregateOutputType | null
@@ -7740,6 +7747,7 @@ export namespace Prisma {
     vatNo?: boolean
     mobileNo?: boolean
     sortingNo?: boolean
+    showInDemandReport?: boolean
     userMappings?: boolean | Branch$userMappingsArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["branch"]>
@@ -7752,6 +7760,7 @@ export namespace Prisma {
     vatNo?: boolean
     mobileNo?: boolean
     sortingNo?: boolean
+    showInDemandReport?: boolean
   }, ExtArgs["result"]["branch"]>
 
   export type BranchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -7762,6 +7771,7 @@ export namespace Prisma {
     vatNo?: boolean
     mobileNo?: boolean
     sortingNo?: boolean
+    showInDemandReport?: boolean
   }, ExtArgs["result"]["branch"]>
 
   export type BranchSelectScalar = {
@@ -7772,9 +7782,10 @@ export namespace Prisma {
     vatNo?: boolean
     mobileNo?: boolean
     sortingNo?: boolean
+    showInDemandReport?: boolean
   }
 
-  export type BranchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "branchCode" | "branchName" | "address" | "vatNo" | "mobileNo" | "sortingNo", ExtArgs["result"]["branch"]>
+  export type BranchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "branchCode" | "branchName" | "address" | "vatNo" | "mobileNo" | "sortingNo" | "showInDemandReport", ExtArgs["result"]["branch"]>
   export type BranchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userMappings?: boolean | Branch$userMappingsArgs<ExtArgs>
     _count?: boolean | BranchCountOutputTypeDefaultArgs<ExtArgs>
@@ -7802,6 +7813,13 @@ export namespace Prisma {
        * `orderBy: { sortingNo: { sort: 'asc', nulls: 'last' } }`.
        */
       sortingNo: number | null
+      /**
+       * Whether this branch gets a column on the Demand Report. The report shows a
+       * column for every branch that CAN raise a demand, not only those that did,
+       * so which branches belong on the sheet is a decision, not data — made here.
+       * Defaults to true: every branch is on the report until someone says not.
+       */
+      showInDemandReport: boolean
     }, ExtArgs["result"]["branch"]>
     composites: {}
   }
@@ -8233,6 +8251,7 @@ export namespace Prisma {
     readonly vatNo: FieldRef<"Branch", 'String'>
     readonly mobileNo: FieldRef<"Branch", 'String'>
     readonly sortingNo: FieldRef<"Branch", 'Int'>
+    readonly showInDemandReport: FieldRef<"Branch", 'Boolean'>
   }
     
 
@@ -68554,7 +68573,8 @@ export namespace Prisma {
     address: 'address',
     vatNo: 'vatNo',
     mobileNo: 'mobileNo',
-    sortingNo: 'sortingNo'
+    sortingNo: 'sortingNo',
+    showInDemandReport: 'showInDemandReport'
   };
 
   export type BranchScalarFieldEnum = (typeof BranchScalarFieldEnum)[keyof typeof BranchScalarFieldEnum]
@@ -69689,6 +69709,7 @@ export namespace Prisma {
     vatNo?: StringNullableFilter<"Branch"> | string | null
     mobileNo?: StringNullableFilter<"Branch"> | string | null
     sortingNo?: IntNullableFilter<"Branch"> | number | null
+    showInDemandReport?: BoolFilter<"Branch"> | boolean
     userMappings?: UserBranchMappingListRelationFilter
   }
 
@@ -69700,6 +69721,7 @@ export namespace Prisma {
     vatNo?: SortOrderInput | SortOrder
     mobileNo?: SortOrderInput | SortOrder
     sortingNo?: SortOrderInput | SortOrder
+    showInDemandReport?: SortOrder
     userMappings?: UserBranchMappingOrderByRelationAggregateInput
   }
 
@@ -69714,6 +69736,7 @@ export namespace Prisma {
     vatNo?: StringNullableFilter<"Branch"> | string | null
     mobileNo?: StringNullableFilter<"Branch"> | string | null
     sortingNo?: IntNullableFilter<"Branch"> | number | null
+    showInDemandReport?: BoolFilter<"Branch"> | boolean
     userMappings?: UserBranchMappingListRelationFilter
   }, "id" | "branchCode">
 
@@ -69725,6 +69748,7 @@ export namespace Prisma {
     vatNo?: SortOrderInput | SortOrder
     mobileNo?: SortOrderInput | SortOrder
     sortingNo?: SortOrderInput | SortOrder
+    showInDemandReport?: SortOrder
     _count?: BranchCountOrderByAggregateInput
     _avg?: BranchAvgOrderByAggregateInput
     _max?: BranchMaxOrderByAggregateInput
@@ -69743,6 +69767,7 @@ export namespace Prisma {
     vatNo?: StringNullableWithAggregatesFilter<"Branch"> | string | null
     mobileNo?: StringNullableWithAggregatesFilter<"Branch"> | string | null
     sortingNo?: IntNullableWithAggregatesFilter<"Branch"> | number | null
+    showInDemandReport?: BoolWithAggregatesFilter<"Branch"> | boolean
   }
 
   export type BankWhereInput = {
@@ -74414,6 +74439,7 @@ export namespace Prisma {
     vatNo?: string | null
     mobileNo?: string | null
     sortingNo?: number | null
+    showInDemandReport?: boolean
     userMappings?: UserBranchMappingCreateNestedManyWithoutBranchInput
   }
 
@@ -74425,6 +74451,7 @@ export namespace Prisma {
     vatNo?: string | null
     mobileNo?: string | null
     sortingNo?: number | null
+    showInDemandReport?: boolean
     userMappings?: UserBranchMappingUncheckedCreateNestedManyWithoutBranchInput
   }
 
@@ -74436,6 +74463,7 @@ export namespace Prisma {
     vatNo?: NullableStringFieldUpdateOperationsInput | string | null
     mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
     sortingNo?: NullableIntFieldUpdateOperationsInput | number | null
+    showInDemandReport?: BoolFieldUpdateOperationsInput | boolean
     userMappings?: UserBranchMappingUpdateManyWithoutBranchNestedInput
   }
 
@@ -74447,6 +74475,7 @@ export namespace Prisma {
     vatNo?: NullableStringFieldUpdateOperationsInput | string | null
     mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
     sortingNo?: NullableIntFieldUpdateOperationsInput | number | null
+    showInDemandReport?: BoolFieldUpdateOperationsInput | boolean
     userMappings?: UserBranchMappingUncheckedUpdateManyWithoutBranchNestedInput
   }
 
@@ -74458,6 +74487,7 @@ export namespace Prisma {
     vatNo?: string | null
     mobileNo?: string | null
     sortingNo?: number | null
+    showInDemandReport?: boolean
   }
 
   export type BranchUpdateManyMutationInput = {
@@ -74468,6 +74498,7 @@ export namespace Prisma {
     vatNo?: NullableStringFieldUpdateOperationsInput | string | null
     mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
     sortingNo?: NullableIntFieldUpdateOperationsInput | number | null
+    showInDemandReport?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type BranchUncheckedUpdateManyInput = {
@@ -74478,6 +74509,7 @@ export namespace Prisma {
     vatNo?: NullableStringFieldUpdateOperationsInput | string | null
     mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
     sortingNo?: NullableIntFieldUpdateOperationsInput | number | null
+    showInDemandReport?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type BankCreateInput = {
@@ -79993,6 +80025,7 @@ export namespace Prisma {
     vatNo?: SortOrder
     mobileNo?: SortOrder
     sortingNo?: SortOrder
+    showInDemandReport?: SortOrder
   }
 
   export type BranchAvgOrderByAggregateInput = {
@@ -80007,6 +80040,7 @@ export namespace Prisma {
     vatNo?: SortOrder
     mobileNo?: SortOrder
     sortingNo?: SortOrder
+    showInDemandReport?: SortOrder
   }
 
   export type BranchMinOrderByAggregateInput = {
@@ -80017,6 +80051,7 @@ export namespace Prisma {
     vatNo?: SortOrder
     mobileNo?: SortOrder
     sortingNo?: SortOrder
+    showInDemandReport?: SortOrder
   }
 
   export type BranchSumOrderByAggregateInput = {
@@ -86804,6 +86839,7 @@ export namespace Prisma {
     vatNo?: string | null
     mobileNo?: string | null
     sortingNo?: number | null
+    showInDemandReport?: boolean
   }
 
   export type BranchUncheckedCreateWithoutUserMappingsInput = {
@@ -86814,6 +86850,7 @@ export namespace Prisma {
     vatNo?: string | null
     mobileNo?: string | null
     sortingNo?: number | null
+    showInDemandReport?: boolean
   }
 
   export type BranchCreateOrConnectWithoutUserMappingsInput = {
@@ -86909,6 +86946,7 @@ export namespace Prisma {
     vatNo?: NullableStringFieldUpdateOperationsInput | string | null
     mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
     sortingNo?: NullableIntFieldUpdateOperationsInput | number | null
+    showInDemandReport?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type BranchUncheckedUpdateWithoutUserMappingsInput = {
@@ -86919,6 +86957,7 @@ export namespace Prisma {
     vatNo?: NullableStringFieldUpdateOperationsInput | string | null
     mobileNo?: NullableStringFieldUpdateOperationsInput | string | null
     sortingNo?: NullableIntFieldUpdateOperationsInput | number | null
+    showInDemandReport?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserCreateWithoutUserRolesInput = {

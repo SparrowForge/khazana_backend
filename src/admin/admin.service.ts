@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { IsString, IsNotEmpty, IsOptional, IsInt, Min } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsInt, Min, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PrismaService } from '../database/prisma.service';
 import { PaginationQueryDto } from '../common/dto';
@@ -34,6 +34,12 @@ export class CreateBranchDto {
   @IsOptional()
   @Type(() => Number)
   sortingNo?: number;
+
+  /** Whether the branch gets a column on the Demand Report. Defaults to true at
+   *  the database, so omitting it creates a branch that appears on the sheet. */
+  @IsBoolean()
+  @IsOptional()
+  showInDemandReport?: boolean;
 }
 
 /** PATCH body for a branch. Every field is optional, but it must be a real
@@ -70,6 +76,11 @@ export class UpdateBranchDto {
   @IsOptional()
   @Type(() => Number)
   sortingNo?: number;
+
+  /** Whether the branch gets a column on the Demand Report. */
+  @IsBoolean()
+  @IsOptional()
+  showInDemandReport?: boolean;
 }
 
 export class UpdateSystemDto {

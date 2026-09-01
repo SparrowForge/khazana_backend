@@ -143,7 +143,8 @@ exports.Prisma.BranchScalarFieldEnum = {
   address: 'address',
   vatNo: 'vatNo',
   mobileNo: 'mobileNo',
-  sortingNo: 'sortingNo'
+  sortingNo: 'sortingNo',
+  showInDemandReport: 'showInDemandReport'
 };
 
 exports.Prisma.BankScalarFieldEnum = {

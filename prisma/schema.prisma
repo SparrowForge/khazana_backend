@@ -35,19 +35,24 @@ model MediaFile {
 // ==================== BRANCH & SYSTEM ====================
 
 model Branch {
-  id           String              @id @default(dbgenerated("gen_random_uuid()")) @map("Id") @db.Uuid
-  branchCode   String?             @unique @map("BranchCode")
-  branchName   String?             @map("BranchName")
-  address      String?             @map("Address")
-  vatNo        String?             @map("VatNo")
-  mobileNo     String?             @map("MobileNo")
+  id                 String              @id @default(dbgenerated("gen_random_uuid()")) @map("Id") @db.Uuid
+  branchCode         String?             @unique @map("BranchCode")
+  branchName         String?             @map("BranchName")
+  address            String?             @map("Address")
+  vatNo              String?             @map("VatNo")
+  mobileNo           String?             @map("MobileNo")
   /// Display position on the reports and pickers that show one column or row
   /// per branch — the reading order of the printed factory forms, which is not
   /// alphabetical. Lowest first; NULL sorts LAST, so a branch created without
   /// one lands at the end of a report rather than the head of it. Query it as
   /// `orderBy: { sortingNo: { sort: 'asc', nulls: 'last' } }`.
-  sortingNo    Int?                @map("SortingNo")
-  userMappings UserBranchMapping[]
+  sortingNo          Int?                @map("SortingNo")
+  /// Whether this branch gets a column on the Demand Report. The report shows a
+  /// column for every branch that CAN raise a demand, not only those that did,
+  /// so which branches belong on the sheet is a decision, not data — made here.
+  /// Defaults to true: every branch is on the report until someone says not.
+  showInDemandReport Boolean             @default(true) @map("ShowInDemandReport")
+  userMappings       UserBranchMapping[]
 
   @@map("Branch")
 }
@@ -260,22 +265,22 @@ model Employee {
 // ==================== ITEMS ====================
 
 model Item_Information {
-  id                    String         @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  itmCode               String         @unique @map("itmCode")
-  itmName               String?        @map("itmName")
-  itmCategory           String?        @map("itmCategory")
-  itmType               String?        @map("itmType")
-  itmUOM                String?        @map("itmUOM")
-  itmRemarks            String?        @map("itmRemarks")
-  imageId               String?        @map("image_id") @db.Uuid
-  itmOrderLevel         Decimal?       @map("itmOrderLevel") @db.Decimal(9, 2)
-  image                 MediaFile?     @relation(fields: [imageId], references: [id], onDelete: SetNull)
-  orderLevelUOM         String?        @map("OrderLevelUOM")
-  isActive              String?        @map("IsActive")
+  id                    String                @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  itmCode               String                @unique @map("itmCode")
+  itmName               String?               @map("itmName")
+  itmCategory           String?               @map("itmCategory")
+  itmType               String?               @map("itmType")
+  itmUOM                String?               @map("itmUOM")
+  itmRemarks            String?               @map("itmRemarks")
+  imageId               String?               @map("image_id") @db.Uuid
+  itmOrderLevel         Decimal?              @map("itmOrderLevel") @db.Decimal(9, 2)
+  image                 MediaFile?            @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  orderLevelUOM         String?               @map("OrderLevelUOM")
+  isActive              String?               @map("IsActive")
   /// Whether a document-level discount may be taken off this item. False puts
   /// the item outside the discount entirely: it is billed in full AND its value
   /// is excluded from the base the discount is charged on.
-  isDiscountApplicable  Boolean        @default(true) @map("IsDiscountApplicable")
+  isDiscountApplicable  Boolean               @default(true) @map("IsDiscountApplicable")
   // Relations using Item_Information.ID (uuid)
   runningSaleDetails    t_SODet[]
   runningSaleVatDetails t_SODeV[]
@@ -291,8 +296,8 @@ model Item_Information {
   vehicleChallans       Vehicle_Challan[]
   // Relations using Item_Information.itmCode (varchar)
   inventory             Inventory?
-  prices                t_Price[]      @relation("ItemPrices")
-  costPrices            t_CostPr[]     @relation("ItemCostPrices")
+  prices                t_Price[]             @relation("ItemPrices")
+  costPrices            t_CostPr[]            @relation("ItemCostPrices")
 
   @@map("Item_Information")
 }
@@ -405,28 +410,28 @@ model CSMaster {
 }
 
 model CSDetail {
-  id      String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  invNo   String?   @map("InvNo")
-  itemOId String?   @map("ItemOId") @db.Uuid
-  rate    Decimal?  @map("Rate") @db.Decimal(8, 2)
-  qty     Decimal?  @map("Qty") @db.Decimal(8, 2)
-  value   Decimal?  @map("Value") @db.Decimal(8, 2)
+  id                   String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  invNo                String?           @map("InvNo")
+  itemOId              String?           @map("ItemOId") @db.Uuid
+  rate                 Decimal?          @map("Rate") @db.Decimal(8, 2)
+  qty                  Decimal?          @map("Qty") @db.Decimal(8, 2)
+  value                Decimal?          @map("Value") @db.Decimal(8, 2)
   // The line's whole discount: what the user typed against it, plus its share of
   // CSMaster.discountPercent. `sum(disc)` therefore equals CSMaster.totalDiscount.
-  disc    Decimal?  @map("Disc") @db.Decimal(8, 2)
-  vat     Decimal?  @map("vat") @db.Decimal(8, 2)
+  disc                 Decimal?          @map("Disc") @db.Decimal(8, 2)
+  vat                  Decimal?          @map("vat") @db.Decimal(8, 2)
   // Net of VAT and deliberately NOT reduced by the invoice-level share — that
   // share was apportioned by (total + vat), so leaving this column alone keeps
   // the allocation base in the row and lets the split be recomputed exactly
   // when the invoice is reopened for edit.
-  total   Decimal?  @map("total") @db.Decimal(18, 2)
+  total                Decimal?          @map("total") @db.Decimal(18, 2)
   /// Whether this line took part in the invoice-level discount, stamped from
   /// the item at write time. Stored rather than re-read from Item_Information so
   /// the share can be recomputed exactly on reopen even if the item's own flag
   /// is changed afterwards.
-  isDiscountApplicable Boolean @default(true) @map("IsDiscountApplicable")
-  sale    CSMaster? @relation(fields: [invNo], references: [invNo])
-  item    Item_Information? @relation(fields: [itemOId], references: [id])
+  isDiscountApplicable Boolean           @default(true) @map("IsDiscountApplicable")
+  sale                 CSMaster?         @relation(fields: [invNo], references: [invNo])
+  item                 Item_Information? @relation(fields: [itemOId], references: [id])
 
   @@map("CSDetail")
 }
@@ -734,45 +739,45 @@ model Item_Issue {
 /// Shares Item_Issue's shape: one row per item line, every line of a document
 /// carrying the same SerialNo, which is what the API addresses.
 model Vehicle_Challan {
-  id           String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  serialNo     String?           @map("SerialNo")
-  voucharNo    String?           @map("VoucharNo")
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  serialNo        String?           @map("SerialNo")
+  voucharNo       String?           @map("VoucharNo")
   /// Catalogue item, when the line was picked from Item_Information. NULL for
   /// an ad-hoc line typed straight onto the challan.
-  itemId       String?           @map("ItemId") @db.Uuid
+  itemId          String?           @map("ItemId") @db.Uuid
   /// Printed description. Always written, catalogue or not: an ad-hoc line has
   /// nowhere else to keep its name, and snapshotting a catalogue one means the
   /// challan still reads as it was issued after the item is renamed.
-  itemName     String?           @map("ItemName")
-  uom          String?           @map("Uom")
-  qty          Decimal?          @map("Qty") @db.Decimal(18, 6)
-  challanDate  DateTime?         @map("ChallanDate")
+  itemName        String?           @map("ItemName")
+  uom             String?           @map("Uom")
+  qty             Decimal?          @map("Qty") @db.Decimal(18, 6)
+  challanDate     DateTime?         @map("ChallanDate")
   /// Who the challan is made out to. Typed by hand — a challan can be raised
   /// for a party that has no Customer record.
-  customerName    String?        @map("CustomerName")
-  customerAddress String?        @map("CustomerAddress")
-  deliveryAddress String?        @map("DeliveryAddress")
+  customerName    String?           @map("CustomerName")
+  customerAddress String?           @map("CustomerAddress")
+  deliveryAddress String?           @map("DeliveryAddress")
   /// Who to ask for on delivery, and the customer purchase order the goods go
   /// against. Printed on the A4 challan, which carried the labels blank before
   /// these columns existed.
-  contactPerson   String?        @map("ContactPerson")
-  contactNo       String?        @map("ContactNo")
-  poNo            String?        @map("PoNo")
-  poDate          DateTime?      @map("PoDate")
+  contactPerson   String?           @map("ContactPerson")
+  contactNo       String?           @map("ContactNo")
+  poNo            String?           @map("PoNo")
+  poDate          DateTime?         @map("PoDate")
   /// The despatching branch (the factory). There is no receiving branch.
-  branchId     String            @map("BranchId") @db.Uuid
+  branchId        String            @map("BranchId") @db.Uuid
   /// Where the van is headed — free text, printed as the "To:" heading.
-  route        String?           @map("Route")
-  vehicleNo    String?           @map("VehicleNo")
-  driverName   String?           @map("DriverName")
-  driverMobile String?           @map("DriverMobile")
-  remarks      String?           @map("Remarks")
-  isActive     Int?              @map("IsActive")
-  createBy     String?           @map("CreateBy")
-  createDate   DateTime?         @map("CreateDate")
-  updateBy     String?           @map("UpdateBy")
-  updateDate   DateTime?         @map("UpdateDate")
-  item         Item_Information? @relation(fields: [itemId], references: [id])
+  route           String?           @map("Route")
+  vehicleNo       String?           @map("VehicleNo")
+  driverName      String?           @map("DriverName")
+  driverMobile    String?           @map("DriverMobile")
+  remarks         String?           @map("Remarks")
+  isActive        Int?              @map("IsActive")
+  createBy        String?           @map("CreateBy")
+  createDate      DateTime?         @map("CreateDate")
+  updateBy        String?           @map("UpdateBy")
+  updateDate      DateTime?         @map("UpdateDate")
+  item            Item_Information? @relation(fields: [itemId], references: [id])
 
   @@index([branchId, challanDate])
   @@index([serialNo])
@@ -960,24 +965,24 @@ model Report_Share {
 }
 
 model DemandOrder_Master {
-  id           String                @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  serialNo     String?               @map("SerialNo")
-  fromBranchId String?               @map("FromBranchId") @db.Uuid
-  toBranchId   String?               @map("ToBranchId") @db.Uuid
-  demandDate   DateTime?             @map("DemandDate")
-  requiredDate DateTime?             @map("RequiredDate")
+  id           String               @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  serialNo     String?              @map("SerialNo")
+  fromBranchId String?              @map("FromBranchId") @db.Uuid
+  toBranchId   String?              @map("ToBranchId") @db.Uuid
+  demandDate   DateTime?            @map("DemandDate")
+  requiredDate DateTime?            @map("RequiredDate")
   /// Which round of demand this is: 'First', 'Second' or 'Special'. Free text in
   /// the column, constrained to those three by the DTO, so adding a fourth round
   /// later needs no migration. Orders raised before the column existed were
   /// back-filled as 'First' (see prisma/migrations/demand_order_type.sql), so a
   /// type-filtered Demand Report covers the whole history.
-  orderType    String?               @map("OrderType")
-  remarks      String?               @map("Remarks")
-  isActive     Int?                  @map("IsActive")
-  createBy     String?               @map("CreateBy")
-  createDate   DateTime?             @map("CreateDate")
-  updateBy     String?               @map("UpdateBy")
-  updateDate   DateTime?             @map("UpdateDate")
+  orderType    String?              @map("OrderType")
+  remarks      String?              @map("Remarks")
+  isActive     Int?                 @map("IsActive")
+  createBy     String?              @map("CreateBy")
+  createDate   DateTime?            @map("CreateDate")
+  updateBy     String?              @map("UpdateBy")
+  updateDate   DateTime?            @map("UpdateDate")
   details      DemandOrder_Detail[]
 
   @@map("DemandOrder_Master")

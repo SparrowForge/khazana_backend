@@ -35,19 +35,24 @@ model MediaFile {
 // ==================== BRANCH & SYSTEM ====================
 
 model Branch {
-  id           String              @id @default(dbgenerated("gen_random_uuid()")) @map("Id") @db.Uuid
-  branchCode   String?             @unique @map("BranchCode")
-  branchName   String?             @map("BranchName")
-  address      String?             @map("Address")
-  vatNo        String?             @map("VatNo")
-  mobileNo     String?             @map("MobileNo")
+  id                 String              @id @default(dbgenerated("gen_random_uuid()")) @map("Id") @db.Uuid
+  branchCode         String?             @unique @map("BranchCode")
+  branchName         String?             @map("BranchName")
+  address            String?             @map("Address")
+  vatNo              String?             @map("VatNo")
+  mobileNo           String?             @map("MobileNo")
   /// Display position on the reports and pickers that show one column or row
   /// per branch — the reading order of the printed factory forms, which is not
   /// alphabetical. Lowest first; NULL sorts LAST, so a branch created without
   /// one lands at the end of a report rather than the head of it. Query it as
   /// `orderBy: { sortingNo: { sort: 'asc', nulls: 'last' } }`.
-  sortingNo    Int?                @map("SortingNo")
-  userMappings UserBranchMapping[]
+  sortingNo          Int?                @map("SortingNo")
+  /// Whether this branch gets a column on the Demand Report. The report shows a
+  /// column for every branch that CAN raise a demand, not only those that did,
+  /// so which branches belong on the sheet is a decision, not data — made here.
+  /// Defaults to true: every branch is on the report until someone says not.
+  showInDemandReport Boolean             @default(true) @map("ShowInDemandReport")
+  userMappings       UserBranchMapping[]
 
   @@map("Branch")
 }

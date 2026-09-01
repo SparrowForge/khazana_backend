@@ -2420,11 +2420,17 @@ export class ReportsService {
     // with its fixed outlet columns. Narrowed to one column when a specific
     // "Demand From" branch was chosen.
     //
+    // Which branches belong on the sheet is Branch.ShowInDemandReport, ticked on
+    // the Branches page (default on). An explicitly chosen "Demand From" branch
+    // is shown regardless — the flag is the default column set, not a ban, and
+    // honouring it over an explicit choice would return an empty sheet with no
+    // explanation.
+    //
     // Ordered by Branch.SortingNo — the reading order of the printed form, which
     // is not alphabetical. A branch with no SortingNo sorts last rather than
     // first, so a newly created branch lands at the end of the sheet.
     const allBranches = await this.prisma.branch.findMany({
-      where: query.fromBranchId ? { id: query.fromBranchId } : {},
+      where: query.fromBranchId ? { id: query.fromBranchId } : { showInDemandReport: true },
       select: { id: true, branchCode: true, branchName: true, sortingNo: true },
       orderBy: [{ sortingNo: { sort: 'asc', nulls: 'last' } }, { branchCode: 'asc' }],
     });
