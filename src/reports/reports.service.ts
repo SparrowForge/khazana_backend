@@ -2451,8 +2451,7 @@ export class ReportsService {
 
     // Only the items actually demanded in the window. The sheet used to list the
     // whole catalogue, blank cells and all, the way the paper form does — but on
-    // screen that buries a handful of real lines in hundreds of empty ones, and
-    // every blank Amount reads as a broken column rather than an absent demand.
+    // screen that buries a handful of real lines in hundreds of empty ones.
     const items = await this.prisma.item_Information.findMany({
       where: { id: { in: [...demandByItem.keys()] } },
       orderBy: { itmName: 'asc' },
@@ -2492,7 +2491,6 @@ export class ReportsService {
         rate,
         qtyByBranch,
         totalQty: r2signed(totalQty),
-        amount: r2signed(totalQty * rate),
       };
     });
 
@@ -2503,7 +2501,6 @@ export class ReportsService {
         return acc;
       }, {}),
       totalQty: r2signed(rows.reduce((t, r) => t + r.totalQty, 0)),
-      amount: r2signed(rows.reduce((t, r) => t + r.amount, 0)),
     };
 
     const [toBranch, company] = await Promise.all([
@@ -2521,6 +2518,10 @@ export class ReportsService {
         address: company?.companyAddress ?? '',
       },
       toBranch: { id: toBranchId ?? '', code: toBranch?.branchCode ?? '', name: toBranch?.branchName ?? '' },
+      /** The round this run was filtered to, '' for every round. Echoed back so
+       *  the sheet can name it — including behind a public share link, which
+       *  re-runs the report from the stored params with no page state to read. */
+      orderType: query.orderType ?? '',
       fromBranch: query.fromBranchId
         ? { id: query.fromBranchId, name: columns[0]?.name ?? '' }
         : { id: '', name: 'All Branches' },
