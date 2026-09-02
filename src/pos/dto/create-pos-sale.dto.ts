@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import {
-  IsString, IsNumber, IsArray, ValidateNested, IsPositive, Min, IsOptional, IsIn, IsUUID, IsNotEmpty, MaxLength,
+  IsString, IsNumber, IsArray, ValidateNested, IsPositive, Min, IsOptional, IsIn, IsUUID, IsNotEmpty, MaxLength, Matches,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -73,26 +73,53 @@ export class CreatePosSaleDto {
   discountValue?: number;
 
   @ApiPropertyOptional({
-    example: 'Mr. Rahman',
     description:
-      "Walk-in customer's name → t_SOMstr.SoMstr_GuestName. Optional on every sale, and unrelated to the discount authoriser below — a running sale has no Customer row, so this is the only identity it carries. Shown in Sales History Summary; not printed on the receipt.",
+      'Customer this sale is billed to (Customer UUID) → t_SOMstr.CustomerID. Omit for a walk-in, which is the default at the till. MANDATORY once a discount is applied: a discount has to be given to somebody, and the sale stamps their name and mobile onto the discount audit columns.',
+    format: 'uuid',
+  })
+  @IsOptional()
+  @IsUUID()
+  customerId?: string;
+
+  @ApiPropertyOptional({
+    example: '4321',
+    description:
+      "Last 4 digits of the card → t_SOMstr.SoMstr_CardNo. Only ever the last 4 — a full card number must not be sent, and is rejected. Ignored (stored NULL) unless salesType is 'Card'.",
+  })
+  @IsOptional()
+  @Matches(/^[0-9]{4}$/, { message: 'cardNo must be exactly the 4 last digits of the card' })
+  cardNo?: string;
+
+  /** @deprecated Accepted but IGNORED — the column it was written to
+   *  (SoMstr_GuestName) is gone, replaced by `customerId`. Kept in the DTO only
+   *  so an offline sale queued before the picker existed still passes validation
+   *  on sync instead of being stranded in the client's queue by a 400. */
+  @ApiPropertyOptional({
+    example: 'Mr. Rahman',
+    deprecated: true,
+    description:
+      'Ignored — superseded by customerId. Accepted so an offline sale queued before the customer picker existed still syncs.',
   })
   @IsString()
   @IsOptional()
   @MaxLength(100)
   guestName?: string;
 
+  /** @deprecated Superseded by `customerId` — see `guestName`. */
   @ApiPropertyOptional({
     example: 'Manager Karim',
-    description: 'Discount authoriser name → t_SOMstr.SoMstr_DiscountRemarks. Mandatory (UI) when a discount is applied.',
+    deprecated: true,
+    description: 'Typed discount authoriser name → t_SOMstr.SoMstr_DiscountRemarks. Superseded by customerId; only used when no customerId is given.',
   })
   @IsString()
   @IsOptional()
   discountRemarks?: string;
 
+  /** @deprecated Superseded by `customerId` — see `guestName`. */
   @ApiPropertyOptional({
     example: '01700000000',
-    description: 'Discount authoriser contact no → t_SOMstr.SoMstr_DiscountContact.',
+    deprecated: true,
+    description: 'Typed discount authoriser contact no → t_SOMstr.SoMstr_DiscountContact. Superseded by customerId; only used when no customerId is given.',
   })
   @IsString()
   @IsOptional()

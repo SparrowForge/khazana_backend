@@ -9,7 +9,20 @@ import type { Prisma, t_SOMstr, t_SODet, Item_Information } from '../generated/p
 type SaleWithDetails = t_SOMstr & {
   details: (t_SODet & { item: Item_Information | null })[];
   bank?: { name: string | null } | null;
+  customer?: { id: string; code: string; name: string; mobile: string | null } | null;
 };
+
+/** The joined customer every read of a sale carries — a counter sale now names
+ *  who it was billed to, and the invoice prints their code, name and mobile. */
+const CUSTOMER_SELECT = { id: true, code: true, name: true, mobile: true } as const;
+
+/** What every read of a sale joins in. One definition, so the list, the single
+ *  read and the row a write returns can't disagree about what a sale carries. */
+const SALE_INCLUDE = {
+  details: { include: { item: true } },
+  bank: { select: { name: true } },
+  customer: { select: CUSTOMER_SELECT },
+} as const;
 
 @Injectable()
 export class PosSalesService {
@@ -55,7 +68,13 @@ export class PosSalesService {
       salesType: sale.mtype ?? 'Cash',
       bankId: sale.soMstrMBank ?? null,
       bankName: sale.bank?.name ?? null,
-      guestName: sale.soMstrGuestName ?? null,
+      // Who the sale was billed to. Null across all three is the walk-in case.
+      customerId: sale.customerId ?? null,
+      customerCode: sale.customer?.code ?? null,
+      customerName: sale.customer?.name ?? null,
+      customerMobile: sale.customer?.mobile ?? null,
+      // Last 4 digits of the card, on a Card sale only.
+      cardNo: sale.soMstrCardNo ?? null,
       discountRemarks: sale.soMstrDiscountRemarks ?? null,
       discountContact: sale.soMstrDiscountContact ?? null,
       modifyRemarks: sale.soMstrModifyRemarks ?? null,
@@ -82,6 +101,29 @@ export class PosSalesService {
         total: Number(d.sodetAmount ?? 0),
       })),
     };
+  }
+
+  /** The customer a sale is billed to, or null for a walk-in.
+   *
+   *  Resolved from the database rather than trusted from the body: the sale
+   *  denormalises the customer's name and mobile onto the legacy audit columns
+   *  the reports read, and those have to be what is actually on file. */
+  private async loadCustomer(customerId?: string | null) {
+    if (!customerId) return null;
+    const customer = await this.prisma.customer.findUnique({
+      where: { id: customerId },
+      select: CUSTOMER_SELECT,
+    });
+    if (!customer) throw new BadRequestException(`Customer not found: ${customerId}`);
+    return customer;
+  }
+
+  /** Last 4 digits of the card, kept only on a Card sale. Anything else is
+   *  discarded rather than stored against a cash bill, so switching the pay mode
+   *  away from Card can't leave a stale card number behind. */
+  private cardNoFor(salesType: string | undefined, cardNo?: string | null): string | null {
+    if ((salesType ?? 'Cash') !== 'Card') return null;
+    return (cardNo ?? '').trim() || null;
   }
 
   /** Who served a sale: the signed-in user's full name, falling back to their
@@ -113,7 +155,8 @@ export class PosSalesService {
       discountValue: dto.discountValue,
       discountRemarks: dto.discountRemarks,
       discountContact: dto.discountContact,
-      guestName: dto.guestName,
+      customerId: dto.customerId,
+      cardNo: dto.cardNo,
       createdBy: userName,
     });
   }
@@ -142,14 +185,28 @@ export class PosSalesService {
     branchId?: string | null;
     discountType?: 'fixed' | 'percentage';
     discountValue?: number;
+    /** @deprecated Typed authoriser name/contact. Only read when no `customerId`
+     *  is supplied — i.e. an offline sale queued before the picker existed. */
     discountRemarks?: string;
     discountContact?: string;
-    /** Walk-in customer's name. Unrelated to the discount authoriser above:
-     *  this one is optional on every sale, that one only exists when a discount
-     *  was applied. */
-    guestName?: string;
+    /** The customer this sale is billed to. Null/absent is a walk-in, which is
+     *  the default at the till and fine — until a discount is applied. */
+    customerId?: string | null;
+    /** Last 4 digits of the card; kept only when `salesType` is 'Card'. */
+    cardNo?: string | null;
     createdBy: string;
     enforceStock?: boolean;
+    /**
+     * Whether a discounted sale is required to name a customer. On for the live
+     * terminal — a discount has to be given to somebody, and the discount audit
+     * is worthless if that somebody is 'POS'.
+     *
+     * Deliberately off for `PosSyncService`, for the same reason `enforceStock`
+     * is: a synced order was rung up hours ago on a terminal that may predate
+     * the picker, and refusing it now would strand a completed sale in the
+     * client's queue forever rather than prevent anything.
+     */
+    requireCustomerForDiscount?: boolean;
   }) {
     if (!p.items.length) throw new BadRequestException('Cart is empty');
 
@@ -197,6 +254,16 @@ export class PosSalesService {
       );
     }
 
+    // Who the sale is billed to. A walk-in (no customer) is the norm at the
+    // counter — but not for a discounted bill: the Daily Final Report and the
+    // Discount Log both exist to say who each discount went to.
+    const customer = await this.loadCustomer(p.customerId);
+    if (discountAmount > 0 && !customer && p.requireCustomerForDiscount !== false) {
+      throw new BadRequestException(
+        'A discounted sale must be billed to a customer — select one instead of walk-in',
+      );
+    }
+
     const netAmount = roundPayable(grossAmount - discountAmount);
     const changeAmount = this.r2(p.paidAmount - netAmount);
 
@@ -230,12 +297,16 @@ export class PosSalesService {
           somstrChange: changeAmount,
           mtype: p.salesType ?? 'Cash',
           soMstrMBank: p.bankId ?? null,
-          // Discount authoriser audit (only meaningful when a discount applied).
-          soMstrDiscountRemarks: discountAmount > 0 ? (p.discountRemarks ?? null) : null,
-          soMstrDiscountContact: discountAmount > 0 ? (p.discountContact ?? null) : null,
-          // Walk-in's name — stored whether or not a discount was applied, and
-          // blank stored as NULL so the report's fallback to 'POS' still fires.
-          soMstrGuestName: p.guestName?.trim() || null,
+          customerId: customer?.id ?? null,
+          soMstrCardNo: this.cardNoFor(p.salesType, p.cardNo),
+          // Discount audit (only meaningful when a discount applied). Filled
+          // from the picked customer — who the discount was given to — so the
+          // Daily Final Report breakdown and the Discount Log, both of which
+          // read these two columns, keep working untouched. The typed values
+          // are the fallback for a sale that carries no customer, which now
+          // only happens on an offline order queued before the picker existed.
+          soMstrDiscountRemarks: discountAmount > 0 ? (customer?.name ?? p.discountRemarks ?? null) : null,
+          soMstrDiscountContact: discountAmount > 0 ? (customer?.mobile ?? p.discountContact ?? null) : null,
           somstrCreator: p.servedBy || p.createdBy,
           somstrCreationDate: new Date(),
           somstrIsActive: true,
@@ -256,7 +327,7 @@ export class PosSalesService {
             })),
           },
         },
-        include: { details: { include: { item: true } }, bank: { select: { name: true } } },
+        include: SALE_INCLUDE,
       });
 
       await this.deductStock(tx, stockLines);
@@ -310,7 +381,7 @@ export class PosSalesService {
     const sales = await this.prisma.t_SOMstr.findMany({
       where: { somstrCode: { startsWith: 'DS-' }, ...(somstrDate && { somstrDate }) },
       orderBy: { somstrDate: 'desc' },
-      include: { details: { include: { item: true } }, bank: { select: { name: true } } },
+      include: SALE_INCLUDE,
     });
     return sales.map((s) => this.toResponse(s as SaleWithDetails));
   }
@@ -318,7 +389,7 @@ export class PosSalesService {
   async findOne(id: string) {
     const sale = await this.prisma.t_SOMstr.findUnique({
       where: { id },
-      include: { details: { include: { item: true } }, bank: { select: { name: true } } },
+      include: SALE_INCLUDE,
     });
     if (!sale) throw new NotFoundException(`Invoice ${id} not found`);
     // Branch header for the printed invoice (VAT Reg No + Tel). t_SOMstr.branchId
@@ -432,6 +503,15 @@ export class PosSalesService {
           : `Discount (৳${discountAmount}) cannot exceed the total (৳${grossAmount})`,
       );
     }
+    // Same rule as a new sale: a discount has to be given to somebody, so an
+    // edit that applies one has to name the customer it was given to.
+    const customer = await this.loadCustomer(dto.customerId);
+    if (discountAmount > 0 && !customer) {
+      throw new BadRequestException(
+        'A discounted sale must be billed to a customer — select one instead of walk-in',
+      );
+    }
+
     const netAmount = roundPayable(grossAmount - discountAmount);
     const changeAmount = this.r2(dto.paidAmount - netAmount);
     if (dto.paidAmount < netAmount) throw new BadRequestException(`Insufficient payment — payable: ৳${netAmount}, paid: ৳${dto.paidAmount}`);
@@ -469,12 +549,16 @@ export class PosSalesService {
             (dto.salesType ?? existing.mtype) === 'Card'
               ? (dto.bankId ?? existing.soMstrMBank)
               : null,
+          // Card number follows the resolved pay mode for the same reason the
+          // bank does — a Card→Cash edit must not leave one behind.
+          soMstrCardNo: this.cardNoFor(dto.salesType ?? existing.mtype ?? undefined, dto.cardNo),
+          customerId: customer?.id ?? null,
           // Mandatory audit trail for the Daily Final Report Sales Correction section.
           soMstrModifyRemarks: dto.modifyRemarks,
-          // Discount authoriser audit — kept in step with the (re-applied) discount.
-          soMstrDiscountRemarks: discountAmount > 0 ? (dto.discountRemarks ?? null) : null,
-          soMstrDiscountContact: discountAmount > 0 ? (dto.discountContact ?? null) : null,
-          soMstrGuestName: dto.guestName?.trim() || null,
+          // Discount audit — the picked customer, kept in step with the
+          // (re-applied) discount. Same fallback order as a new sale.
+          soMstrDiscountRemarks: discountAmount > 0 ? (customer?.name ?? dto.discountRemarks ?? null) : null,
+          soMstrDiscountContact: discountAmount > 0 ? (customer?.mobile ?? dto.discountContact ?? null) : null,
           somstrUpdateBy: userName,
           somstrUpdateDate: new Date(),
           details: {

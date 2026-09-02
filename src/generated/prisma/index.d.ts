@@ -5746,6 +5746,7 @@ export namespace Prisma {
     salesVat: number
     customerTransactions: number
     orders: number
+    posSales: number
   }
 
   export type CustomerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5753,6 +5754,7 @@ export namespace Prisma {
     salesVat?: boolean | CustomerCountOutputTypeCountSalesVatArgs
     customerTransactions?: boolean | CustomerCountOutputTypeCountCustomerTransactionsArgs
     orders?: boolean | CustomerCountOutputTypeCountOrdersArgs
+    posSales?: boolean | CustomerCountOutputTypeCountPosSalesArgs
   }
 
   // Custom InputTypes
@@ -5792,6 +5794,13 @@ export namespace Prisma {
    */
   export type CustomerCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderReceive_MasterWhereInput
+  }
+
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountPosSalesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: t_SOMstrWhereInput
   }
 
 
@@ -19885,6 +19894,7 @@ export namespace Prisma {
     salesVat?: boolean | Customer$salesVatArgs<ExtArgs>
     customerTransactions?: boolean | Customer$customerTransactionsArgs<ExtArgs>
     orders?: boolean | Customer$ordersArgs<ExtArgs>
+    posSales?: boolean | Customer$posSalesArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["customer"]>
 
@@ -19927,6 +19937,7 @@ export namespace Prisma {
     salesVat?: boolean | Customer$salesVatArgs<ExtArgs>
     customerTransactions?: boolean | Customer$customerTransactionsArgs<ExtArgs>
     orders?: boolean | Customer$ordersArgs<ExtArgs>
+    posSales?: boolean | Customer$posSalesArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CustomerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -19939,6 +19950,7 @@ export namespace Prisma {
       salesVat: Prisma.$CSVMasterPayload<ExtArgs>[]
       customerTransactions: Prisma.$Customer_TransactionPayload<ExtArgs>[]
       orders: Prisma.$OrderReceive_MasterPayload<ExtArgs>[]
+      posSales: Prisma.$t_SOMstrPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -20352,6 +20364,7 @@ export namespace Prisma {
     salesVat<T extends Customer$salesVatArgs<ExtArgs> = {}>(args?: Subset<T, Customer$salesVatArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CSVMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     customerTransactions<T extends Customer$customerTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$customerTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orders<T extends Customer$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Customer$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderReceive_MasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    posSales<T extends Customer$posSalesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$posSalesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_SOMstrPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20870,6 +20883,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderReceive_MasterScalarFieldEnum | OrderReceive_MasterScalarFieldEnum[]
+  }
+
+  /**
+   * Customer.posSales
+   */
+  export type Customer$posSalesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the t_SOMstr
+     */
+    select?: t_SOMstrSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the t_SOMstr
+     */
+    omit?: t_SOMstrOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: t_SOMstrInclude<ExtArgs> | null
+    where?: t_SOMstrWhereInput
+    orderBy?: t_SOMstrOrderByWithRelationInput | t_SOMstrOrderByWithRelationInput[]
+    cursor?: t_SOMstrWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: T_SOMstrScalarFieldEnum | T_SOMstrScalarFieldEnum[]
   }
 
   /**
@@ -36238,7 +36275,8 @@ export namespace Prisma {
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
-    soMstrGuestName: string | null
+    customerId: string | null
+    soMstrCardNo: string | null
     mtype: string | null
     soMstrMBank: string | null
   }
@@ -36264,7 +36302,8 @@ export namespace Prisma {
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
-    soMstrGuestName: string | null
+    customerId: string | null
+    soMstrCardNo: string | null
     mtype: string | null
     soMstrMBank: string | null
   }
@@ -36290,7 +36329,8 @@ export namespace Prisma {
     soMstrDiscountRemarks: number
     soMstrModifyRemarks: number
     soMstrDiscountContact: number
-    soMstrGuestName: number
+    customerId: number
+    soMstrCardNo: number
     mtype: number
     soMstrMBank: number
     _all: number
@@ -36334,7 +36374,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: true
     soMstrModifyRemarks?: true
     soMstrDiscountContact?: true
-    soMstrGuestName?: true
+    customerId?: true
+    soMstrCardNo?: true
     mtype?: true
     soMstrMBank?: true
   }
@@ -36360,7 +36401,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: true
     soMstrModifyRemarks?: true
     soMstrDiscountContact?: true
-    soMstrGuestName?: true
+    customerId?: true
+    soMstrCardNo?: true
     mtype?: true
     soMstrMBank?: true
   }
@@ -36386,7 +36428,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: true
     soMstrModifyRemarks?: true
     soMstrDiscountContact?: true
-    soMstrGuestName?: true
+    customerId?: true
+    soMstrCardNo?: true
     mtype?: true
     soMstrMBank?: true
     _all?: true
@@ -36499,7 +36542,8 @@ export namespace Prisma {
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
-    soMstrGuestName: string | null
+    customerId: string | null
+    soMstrCardNo: string | null
     mtype: string | null
     soMstrMBank: string | null
     _count: T_SOMstrCountAggregateOutputType | null
@@ -36544,10 +36588,12 @@ export namespace Prisma {
     soMstrDiscountRemarks?: boolean
     soMstrModifyRemarks?: boolean
     soMstrDiscountContact?: boolean
-    soMstrGuestName?: boolean
+    customerId?: boolean
+    soMstrCardNo?: boolean
     mtype?: boolean
     soMstrMBank?: boolean
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
+    customer?: boolean | t_SOMstr$customerArgs<ExtArgs>
     details?: boolean | t_SOMstr$detailsArgs<ExtArgs>
     _count?: boolean | T_SOMstrCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["t_SOMstr"]>
@@ -36573,10 +36619,12 @@ export namespace Prisma {
     soMstrDiscountRemarks?: boolean
     soMstrModifyRemarks?: boolean
     soMstrDiscountContact?: boolean
-    soMstrGuestName?: boolean
+    customerId?: boolean
+    soMstrCardNo?: boolean
     mtype?: boolean
     soMstrMBank?: boolean
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
+    customer?: boolean | t_SOMstr$customerArgs<ExtArgs>
   }, ExtArgs["result"]["t_SOMstr"]>
 
   export type t_SOMstrSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -36600,10 +36648,12 @@ export namespace Prisma {
     soMstrDiscountRemarks?: boolean
     soMstrModifyRemarks?: boolean
     soMstrDiscountContact?: boolean
-    soMstrGuestName?: boolean
+    customerId?: boolean
+    soMstrCardNo?: boolean
     mtype?: boolean
     soMstrMBank?: boolean
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
+    customer?: boolean | t_SOMstr$customerArgs<ExtArgs>
   }, ExtArgs["result"]["t_SOMstr"]>
 
   export type t_SOMstrSelectScalar = {
@@ -36627,28 +36677,33 @@ export namespace Prisma {
     soMstrDiscountRemarks?: boolean
     soMstrModifyRemarks?: boolean
     soMstrDiscountContact?: boolean
-    soMstrGuestName?: boolean
+    customerId?: boolean
+    soMstrCardNo?: boolean
     mtype?: boolean
     soMstrMBank?: boolean
   }
 
-  export type t_SOMstrOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "somstrCode" | "somstrDate" | "somstrTotalAmt" | "somstrDiscAmt" | "somstrNetAmt" | "somstrVatClnNo" | "somstrVatDate" | "somstrPricingDate" | "somstrCreator" | "somstrCreationDate" | "somstrUpdateBy" | "somstrUpdateDate" | "somstrIsActive" | "somstrCustomerpay" | "somstrChange" | "branchId" | "soMstrDiscountRemarks" | "soMstrModifyRemarks" | "soMstrDiscountContact" | "soMstrGuestName" | "mtype" | "soMstrMBank", ExtArgs["result"]["t_SOMstr"]>
+  export type t_SOMstrOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "somstrCode" | "somstrDate" | "somstrTotalAmt" | "somstrDiscAmt" | "somstrNetAmt" | "somstrVatClnNo" | "somstrVatDate" | "somstrPricingDate" | "somstrCreator" | "somstrCreationDate" | "somstrUpdateBy" | "somstrUpdateDate" | "somstrIsActive" | "somstrCustomerpay" | "somstrChange" | "branchId" | "soMstrDiscountRemarks" | "soMstrModifyRemarks" | "soMstrDiscountContact" | "customerId" | "soMstrCardNo" | "mtype" | "soMstrMBank", ExtArgs["result"]["t_SOMstr"]>
   export type t_SOMstrInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
+    customer?: boolean | t_SOMstr$customerArgs<ExtArgs>
     details?: boolean | t_SOMstr$detailsArgs<ExtArgs>
     _count?: boolean | T_SOMstrCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type t_SOMstrIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
+    customer?: boolean | t_SOMstr$customerArgs<ExtArgs>
   }
   export type t_SOMstrIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
+    customer?: boolean | t_SOMstr$customerArgs<ExtArgs>
   }
 
   export type $t_SOMstrPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "t_SOMstr"
     objects: {
       bank: Prisma.$BankPayload<ExtArgs> | null
+      customer: Prisma.$CustomerPayload<ExtArgs> | null
       details: Prisma.$t_SODetPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -36673,13 +36728,18 @@ export namespace Prisma {
       soMstrModifyRemarks: string | null
       soMstrDiscountContact: string | null
       /**
-       * Walk-in customer's name, typed on the POS checkout panel. A running sale
-       * has no Customer row, so this is the only identity it carries. Optional and
-       * independent of the discount authoriser above (SoMstr_DiscountRemarks),
-       * which is only ever written when a discount is applied. Reports only — it
-       * is not printed on the receipt.
+       * The customer this counter sale was billed to. NULL is the walk-in case —
+       * the default at the till, and the only case with no name behind the sale.
+       * A discounted sale must have one: who a discount was given to is the whole
+       * point of the discount audit, and "POS" answers nothing.
        */
-      soMstrGuestName: string | null
+      customerId: string | null
+      /**
+       * Last 4 digits of the card a Card sale was settled on — all that may be
+       * retained of a card number, and enough to tie the bill to the terminal's
+       * settlement slip. NULL on every non-Card sale.
+       */
+      soMstrCardNo: string | null
       mtype: string | null
       soMstrMBank: string | null
     }, ExtArgs["result"]["t_SOMstr"]>
@@ -37077,6 +37137,7 @@ export namespace Prisma {
   export interface Prisma__t_SOMstrClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     bank<T extends t_SOMstr$bankArgs<ExtArgs> = {}>(args?: Subset<T, t_SOMstr$bankArgs<ExtArgs>>): Prisma__BankClient<$Result.GetResult<Prisma.$BankPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    customer<T extends t_SOMstr$customerArgs<ExtArgs> = {}>(args?: Subset<T, t_SOMstr$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     details<T extends t_SOMstr$detailsArgs<ExtArgs> = {}>(args?: Subset<T, t_SOMstr$detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_SODetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -37127,7 +37188,8 @@ export namespace Prisma {
     readonly soMstrDiscountRemarks: FieldRef<"t_SOMstr", 'String'>
     readonly soMstrModifyRemarks: FieldRef<"t_SOMstr", 'String'>
     readonly soMstrDiscountContact: FieldRef<"t_SOMstr", 'String'>
-    readonly soMstrGuestName: FieldRef<"t_SOMstr", 'String'>
+    readonly customerId: FieldRef<"t_SOMstr", 'String'>
+    readonly soMstrCardNo: FieldRef<"t_SOMstr", 'String'>
     readonly mtype: FieldRef<"t_SOMstr", 'String'>
     readonly soMstrMBank: FieldRef<"t_SOMstr", 'String'>
   }
@@ -37542,6 +37604,25 @@ export namespace Prisma {
      */
     include?: BankInclude<ExtArgs> | null
     where?: BankWhereInput
+  }
+
+  /**
+   * t_SOMstr.customer
+   */
+  export type t_SOMstr$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Customer
+     */
+    omit?: CustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
   }
 
   /**
@@ -68952,7 +69033,8 @@ export namespace Prisma {
     soMstrDiscountRemarks: 'soMstrDiscountRemarks',
     soMstrModifyRemarks: 'soMstrModifyRemarks',
     soMstrDiscountContact: 'soMstrDiscountContact',
-    soMstrGuestName: 'soMstrGuestName',
+    customerId: 'customerId',
+    soMstrCardNo: 'soMstrCardNo',
     mtype: 'mtype',
     soMstrMBank: 'soMstrMBank'
   };
@@ -70502,6 +70584,7 @@ export namespace Prisma {
     salesVat?: CSVMasterListRelationFilter
     customerTransactions?: Customer_TransactionListRelationFilter
     orders?: OrderReceive_MasterListRelationFilter
+    posSales?: T_SOMstrListRelationFilter
   }
 
   export type CustomerOrderByWithRelationInput = {
@@ -70517,6 +70600,7 @@ export namespace Prisma {
     salesVat?: CSVMasterOrderByRelationAggregateInput
     customerTransactions?: Customer_TransactionOrderByRelationAggregateInput
     orders?: OrderReceive_MasterOrderByRelationAggregateInput
+    posSales?: t_SOMstrOrderByRelationAggregateInput
   }
 
   export type CustomerWhereUniqueInput = Prisma.AtLeast<{
@@ -70535,6 +70619,7 @@ export namespace Prisma {
     salesVat?: CSVMasterListRelationFilter
     customerTransactions?: Customer_TransactionListRelationFilter
     orders?: OrderReceive_MasterListRelationFilter
+    posSales?: T_SOMstrListRelationFilter
   }, "id" | "code">
 
   export type CustomerOrderByWithAggregationInput = {
@@ -71633,10 +71718,12 @@ export namespace Prisma {
     soMstrDiscountRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableFilter<"t_SOMstr"> | string | null
-    soMstrGuestName?: StringNullableFilter<"t_SOMstr"> | string | null
+    customerId?: UuidNullableFilter<"t_SOMstr"> | string | null
+    soMstrCardNo?: StringNullableFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrMBank?: UuidNullableFilter<"t_SOMstr"> | string | null
     bank?: XOR<BankNullableScalarRelationFilter, BankWhereInput> | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     details?: T_SODetListRelationFilter
   }
 
@@ -71661,10 +71748,12 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrderInput | SortOrder
     soMstrModifyRemarks?: SortOrderInput | SortOrder
     soMstrDiscountContact?: SortOrderInput | SortOrder
-    soMstrGuestName?: SortOrderInput | SortOrder
+    customerId?: SortOrderInput | SortOrder
+    soMstrCardNo?: SortOrderInput | SortOrder
     mtype?: SortOrderInput | SortOrder
     soMstrMBank?: SortOrderInput | SortOrder
     bank?: BankOrderByWithRelationInput
+    customer?: CustomerOrderByWithRelationInput
     details?: t_SODetOrderByRelationAggregateInput
   }
 
@@ -71692,10 +71781,12 @@ export namespace Prisma {
     soMstrDiscountRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableFilter<"t_SOMstr"> | string | null
-    soMstrGuestName?: StringNullableFilter<"t_SOMstr"> | string | null
+    customerId?: UuidNullableFilter<"t_SOMstr"> | string | null
+    soMstrCardNo?: StringNullableFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrMBank?: UuidNullableFilter<"t_SOMstr"> | string | null
     bank?: XOR<BankNullableScalarRelationFilter, BankWhereInput> | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     details?: T_SODetListRelationFilter
   }, "id">
 
@@ -71720,7 +71811,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrderInput | SortOrder
     soMstrModifyRemarks?: SortOrderInput | SortOrder
     soMstrDiscountContact?: SortOrderInput | SortOrder
-    soMstrGuestName?: SortOrderInput | SortOrder
+    customerId?: SortOrderInput | SortOrder
+    soMstrCardNo?: SortOrderInput | SortOrder
     mtype?: SortOrderInput | SortOrder
     soMstrMBank?: SortOrderInput | SortOrder
     _count?: t_SOMstrCountOrderByAggregateInput
@@ -71754,7 +71846,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
-    soMstrGuestName?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
+    customerId?: UuidNullableWithAggregatesFilter<"t_SOMstr"> | string | null
+    soMstrCardNo?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     soMstrMBank?: UuidNullableWithAggregatesFilter<"t_SOMstr"> | string | null
   }
@@ -75320,6 +75413,7 @@ export namespace Prisma {
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
+    posSales?: t_SOMstrCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateInput = {
@@ -75335,6 +75429,7 @@ export namespace Prisma {
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
+    posSales?: t_SOMstrUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUpdateInput = {
@@ -75350,6 +75445,7 @@ export namespace Prisma {
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
+    posSales?: t_SOMstrUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateInput = {
@@ -75365,6 +75461,7 @@ export namespace Prisma {
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
+    posSales?: t_SOMstrUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerCreateManyInput = {
@@ -76578,9 +76675,10 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
-    soMstrGuestName?: string | null
+    soMstrCardNo?: string | null
     mtype?: string | null
     bank?: BankCreateNestedOneWithoutSalesInput
+    customer?: CustomerCreateNestedOneWithoutPosSalesInput
     details?: t_SODetCreateNestedManyWithoutSaleInput
   }
 
@@ -76605,7 +76703,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
-    soMstrGuestName?: string | null
+    customerId?: string | null
+    soMstrCardNo?: string | null
     mtype?: string | null
     soMstrMBank?: string | null
     details?: t_SODetUncheckedCreateNestedManyWithoutSaleInput
@@ -76632,9 +76731,10 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
-    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: BankUpdateOneWithoutSalesNestedInput
+    customer?: CustomerUpdateOneWithoutPosSalesNestedInput
     details?: t_SODetUpdateManyWithoutSaleNestedInput
   }
 
@@ -76659,7 +76759,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
-    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
     details?: t_SODetUncheckedUpdateManyWithoutSaleNestedInput
@@ -76686,7 +76787,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
-    soMstrGuestName?: string | null
+    customerId?: string | null
+    soMstrCardNo?: string | null
     mtype?: string | null
     soMstrMBank?: string | null
   }
@@ -76712,7 +76814,7 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
-    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -76737,7 +76839,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
-    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -81547,7 +81650,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrder
     soMstrModifyRemarks?: SortOrder
     soMstrDiscountContact?: SortOrder
-    soMstrGuestName?: SortOrder
+    customerId?: SortOrder
+    soMstrCardNo?: SortOrder
     mtype?: SortOrder
     soMstrMBank?: SortOrder
   }
@@ -81581,7 +81685,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrder
     soMstrModifyRemarks?: SortOrder
     soMstrDiscountContact?: SortOrder
-    soMstrGuestName?: SortOrder
+    customerId?: SortOrder
+    soMstrCardNo?: SortOrder
     mtype?: SortOrder
     soMstrMBank?: SortOrder
   }
@@ -81607,7 +81712,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrder
     soMstrModifyRemarks?: SortOrder
     soMstrDiscountContact?: SortOrder
-    soMstrGuestName?: SortOrder
+    customerId?: SortOrder
+    soMstrCardNo?: SortOrder
     mtype?: SortOrder
     soMstrMBank?: SortOrder
   }
@@ -83901,6 +84007,13 @@ export namespace Prisma {
     connect?: OrderReceive_MasterWhereUniqueInput | OrderReceive_MasterWhereUniqueInput[]
   }
 
+  export type t_SOMstrCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<t_SOMstrCreateWithoutCustomerInput, t_SOMstrUncheckedCreateWithoutCustomerInput> | t_SOMstrCreateWithoutCustomerInput[] | t_SOMstrUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: t_SOMstrCreateOrConnectWithoutCustomerInput | t_SOMstrCreateOrConnectWithoutCustomerInput[]
+    createMany?: t_SOMstrCreateManyCustomerInputEnvelope
+    connect?: t_SOMstrWhereUniqueInput | t_SOMstrWhereUniqueInput[]
+  }
+
   export type CSMasterUncheckedCreateNestedManyWithoutCustomerInput = {
     create?: XOR<CSMasterCreateWithoutCustomerInput, CSMasterUncheckedCreateWithoutCustomerInput> | CSMasterCreateWithoutCustomerInput[] | CSMasterUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: CSMasterCreateOrConnectWithoutCustomerInput | CSMasterCreateOrConnectWithoutCustomerInput[]
@@ -83927,6 +84040,13 @@ export namespace Prisma {
     connectOrCreate?: OrderReceive_MasterCreateOrConnectWithoutCustomerInput | OrderReceive_MasterCreateOrConnectWithoutCustomerInput[]
     createMany?: OrderReceive_MasterCreateManyCustomerInputEnvelope
     connect?: OrderReceive_MasterWhereUniqueInput | OrderReceive_MasterWhereUniqueInput[]
+  }
+
+  export type t_SOMstrUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<t_SOMstrCreateWithoutCustomerInput, t_SOMstrUncheckedCreateWithoutCustomerInput> | t_SOMstrCreateWithoutCustomerInput[] | t_SOMstrUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: t_SOMstrCreateOrConnectWithoutCustomerInput | t_SOMstrCreateOrConnectWithoutCustomerInput[]
+    createMany?: t_SOMstrCreateManyCustomerInputEnvelope
+    connect?: t_SOMstrWhereUniqueInput | t_SOMstrWhereUniqueInput[]
   }
 
   export type NullableDecimalFieldUpdateOperationsInput = {
@@ -83993,6 +84113,20 @@ export namespace Prisma {
     deleteMany?: OrderReceive_MasterScalarWhereInput | OrderReceive_MasterScalarWhereInput[]
   }
 
+  export type t_SOMstrUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<t_SOMstrCreateWithoutCustomerInput, t_SOMstrUncheckedCreateWithoutCustomerInput> | t_SOMstrCreateWithoutCustomerInput[] | t_SOMstrUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: t_SOMstrCreateOrConnectWithoutCustomerInput | t_SOMstrCreateOrConnectWithoutCustomerInput[]
+    upsert?: t_SOMstrUpsertWithWhereUniqueWithoutCustomerInput | t_SOMstrUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: t_SOMstrCreateManyCustomerInputEnvelope
+    set?: t_SOMstrWhereUniqueInput | t_SOMstrWhereUniqueInput[]
+    disconnect?: t_SOMstrWhereUniqueInput | t_SOMstrWhereUniqueInput[]
+    delete?: t_SOMstrWhereUniqueInput | t_SOMstrWhereUniqueInput[]
+    connect?: t_SOMstrWhereUniqueInput | t_SOMstrWhereUniqueInput[]
+    update?: t_SOMstrUpdateWithWhereUniqueWithoutCustomerInput | t_SOMstrUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: t_SOMstrUpdateManyWithWhereWithoutCustomerInput | t_SOMstrUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: t_SOMstrScalarWhereInput | t_SOMstrScalarWhereInput[]
+  }
+
   export type CSMasterUncheckedUpdateManyWithoutCustomerNestedInput = {
     create?: XOR<CSMasterCreateWithoutCustomerInput, CSMasterUncheckedCreateWithoutCustomerInput> | CSMasterCreateWithoutCustomerInput[] | CSMasterUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: CSMasterCreateOrConnectWithoutCustomerInput | CSMasterCreateOrConnectWithoutCustomerInput[]
@@ -84047,6 +84181,20 @@ export namespace Prisma {
     update?: OrderReceive_MasterUpdateWithWhereUniqueWithoutCustomerInput | OrderReceive_MasterUpdateWithWhereUniqueWithoutCustomerInput[]
     updateMany?: OrderReceive_MasterUpdateManyWithWhereWithoutCustomerInput | OrderReceive_MasterUpdateManyWithWhereWithoutCustomerInput[]
     deleteMany?: OrderReceive_MasterScalarWhereInput | OrderReceive_MasterScalarWhereInput[]
+  }
+
+  export type t_SOMstrUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<t_SOMstrCreateWithoutCustomerInput, t_SOMstrUncheckedCreateWithoutCustomerInput> | t_SOMstrCreateWithoutCustomerInput[] | t_SOMstrUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: t_SOMstrCreateOrConnectWithoutCustomerInput | t_SOMstrCreateOrConnectWithoutCustomerInput[]
+    upsert?: t_SOMstrUpsertWithWhereUniqueWithoutCustomerInput | t_SOMstrUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: t_SOMstrCreateManyCustomerInputEnvelope
+    set?: t_SOMstrWhereUniqueInput | t_SOMstrWhereUniqueInput[]
+    disconnect?: t_SOMstrWhereUniqueInput | t_SOMstrWhereUniqueInput[]
+    delete?: t_SOMstrWhereUniqueInput | t_SOMstrWhereUniqueInput[]
+    connect?: t_SOMstrWhereUniqueInput | t_SOMstrWhereUniqueInput[]
+    update?: t_SOMstrUpdateWithWhereUniqueWithoutCustomerInput | t_SOMstrUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: t_SOMstrUpdateManyWithWhereWithoutCustomerInput | t_SOMstrUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: t_SOMstrScalarWhereInput | t_SOMstrScalarWhereInput[]
   }
 
   export type CustomerCreateNestedOneWithoutCustomerTransactionsInput = {
@@ -84933,6 +85081,12 @@ export namespace Prisma {
     connect?: BankWhereUniqueInput
   }
 
+  export type CustomerCreateNestedOneWithoutPosSalesInput = {
+    create?: XOR<CustomerCreateWithoutPosSalesInput, CustomerUncheckedCreateWithoutPosSalesInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutPosSalesInput
+    connect?: CustomerWhereUniqueInput
+  }
+
   export type t_SODetCreateNestedManyWithoutSaleInput = {
     create?: XOR<t_SODetCreateWithoutSaleInput, t_SODetUncheckedCreateWithoutSaleInput> | t_SODetCreateWithoutSaleInput[] | t_SODetUncheckedCreateWithoutSaleInput[]
     connectOrCreate?: t_SODetCreateOrConnectWithoutSaleInput | t_SODetCreateOrConnectWithoutSaleInput[]
@@ -84955,6 +85109,16 @@ export namespace Prisma {
     delete?: BankWhereInput | boolean
     connect?: BankWhereUniqueInput
     update?: XOR<XOR<BankUpdateToOneWithWhereWithoutSalesInput, BankUpdateWithoutSalesInput>, BankUncheckedUpdateWithoutSalesInput>
+  }
+
+  export type CustomerUpdateOneWithoutPosSalesNestedInput = {
+    create?: XOR<CustomerCreateWithoutPosSalesInput, CustomerUncheckedCreateWithoutPosSalesInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutPosSalesInput
+    upsert?: CustomerUpsertWithoutPosSalesInput
+    disconnect?: CustomerWhereInput | boolean
+    delete?: CustomerWhereInput | boolean
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutPosSalesInput, CustomerUpdateWithoutPosSalesInput>, CustomerUncheckedUpdateWithoutPosSalesInput>
   }
 
   export type t_SODetUpdateManyWithoutSaleNestedInput = {
@@ -86432,8 +86596,9 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
-    soMstrGuestName?: string | null
+    soMstrCardNo?: string | null
     mtype?: string | null
+    customer?: CustomerCreateNestedOneWithoutPosSalesInput
     details?: t_SODetCreateNestedManyWithoutSaleInput
   }
 
@@ -86458,7 +86623,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
-    soMstrGuestName?: string | null
+    customerId?: string | null
+    soMstrCardNo?: string | null
     mtype?: string | null
     details?: t_SODetUncheckedCreateNestedManyWithoutSaleInput
   }
@@ -86513,7 +86679,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableFilter<"t_SOMstr"> | string | null
-    soMstrGuestName?: StringNullableFilter<"t_SOMstr"> | string | null
+    customerId?: UuidNullableFilter<"t_SOMstr"> | string | null
+    soMstrCardNo?: StringNullableFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrMBank?: UuidNullableFilter<"t_SOMstr"> | string | null
   }
@@ -87467,6 +87634,70 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type t_SOMstrCreateWithoutCustomerInput = {
+    id?: string
+    somstrCode?: string | null
+    somstrDate?: Date | string | null
+    somstrTotalAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrDiscAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrNetAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrVatClnNo?: string | null
+    somstrVatDate?: Date | string | null
+    somstrPricingDate?: Date | string | null
+    somstrCreator?: string | null
+    somstrCreationDate?: Date | string | null
+    somstrUpdateBy?: string | null
+    somstrUpdateDate?: Date | string | null
+    somstrIsActive?: boolean | null
+    somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
+    somstrChange?: Decimal | DecimalJsLike | number | string | null
+    branchId?: string | null
+    soMstrDiscountRemarks?: string | null
+    soMstrModifyRemarks?: string | null
+    soMstrDiscountContact?: string | null
+    soMstrCardNo?: string | null
+    mtype?: string | null
+    bank?: BankCreateNestedOneWithoutSalesInput
+    details?: t_SODetCreateNestedManyWithoutSaleInput
+  }
+
+  export type t_SOMstrUncheckedCreateWithoutCustomerInput = {
+    id?: string
+    somstrCode?: string | null
+    somstrDate?: Date | string | null
+    somstrTotalAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrDiscAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrNetAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrVatClnNo?: string | null
+    somstrVatDate?: Date | string | null
+    somstrPricingDate?: Date | string | null
+    somstrCreator?: string | null
+    somstrCreationDate?: Date | string | null
+    somstrUpdateBy?: string | null
+    somstrUpdateDate?: Date | string | null
+    somstrIsActive?: boolean | null
+    somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
+    somstrChange?: Decimal | DecimalJsLike | number | string | null
+    branchId?: string | null
+    soMstrDiscountRemarks?: string | null
+    soMstrModifyRemarks?: string | null
+    soMstrDiscountContact?: string | null
+    soMstrCardNo?: string | null
+    mtype?: string | null
+    soMstrMBank?: string | null
+    details?: t_SODetUncheckedCreateNestedManyWithoutSaleInput
+  }
+
+  export type t_SOMstrCreateOrConnectWithoutCustomerInput = {
+    where: t_SOMstrWhereUniqueInput
+    create: XOR<t_SOMstrCreateWithoutCustomerInput, t_SOMstrUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type t_SOMstrCreateManyCustomerInputEnvelope = {
+    data: t_SOMstrCreateManyCustomerInput | t_SOMstrCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CSMasterUpsertWithWhereUniqueWithoutCustomerInput = {
     where: CSMasterWhereUniqueInput
     update: XOR<CSMasterUpdateWithoutCustomerInput, CSMasterUncheckedUpdateWithoutCustomerInput>
@@ -87609,6 +87840,22 @@ export namespace Prisma {
     updateDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
   }
 
+  export type t_SOMstrUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: t_SOMstrWhereUniqueInput
+    update: XOR<t_SOMstrUpdateWithoutCustomerInput, t_SOMstrUncheckedUpdateWithoutCustomerInput>
+    create: XOR<t_SOMstrCreateWithoutCustomerInput, t_SOMstrUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type t_SOMstrUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: t_SOMstrWhereUniqueInput
+    data: XOR<t_SOMstrUpdateWithoutCustomerInput, t_SOMstrUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type t_SOMstrUpdateManyWithWhereWithoutCustomerInput = {
+    where: t_SOMstrScalarWhereInput
+    data: XOR<t_SOMstrUpdateManyMutationInput, t_SOMstrUncheckedUpdateManyWithoutCustomerInput>
+  }
+
   export type CustomerCreateWithoutCustomerTransactionsInput = {
     id?: string
     code: string
@@ -87621,6 +87868,7 @@ export namespace Prisma {
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
+    posSales?: t_SOMstrCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutCustomerTransactionsInput = {
@@ -87635,6 +87883,7 @@ export namespace Prisma {
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
+    posSales?: t_SOMstrUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutCustomerTransactionsInput = {
@@ -87665,6 +87914,7 @@ export namespace Prisma {
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
+    posSales?: t_SOMstrUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutCustomerTransactionsInput = {
@@ -87679,6 +87929,7 @@ export namespace Prisma {
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
+    posSales?: t_SOMstrUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type MediaFileCreateWithoutItemsInput = {
@@ -89284,6 +89535,7 @@ export namespace Prisma {
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
+    posSales?: t_SOMstrCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutSalesInput = {
@@ -89298,6 +89550,7 @@ export namespace Prisma {
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
+    posSales?: t_SOMstrUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutSalesInput = {
@@ -89362,6 +89615,7 @@ export namespace Prisma {
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
+    posSales?: t_SOMstrUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutSalesInput = {
@@ -89376,6 +89630,7 @@ export namespace Prisma {
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
+    posSales?: t_SOMstrUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CSDetailUpsertWithWhereUniqueWithoutSaleInput = {
@@ -89626,6 +89881,7 @@ export namespace Prisma {
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
+    posSales?: t_SOMstrCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutSalesVatInput = {
@@ -89640,6 +89896,7 @@ export namespace Prisma {
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
+    posSales?: t_SOMstrUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutSalesVatInput = {
@@ -89702,6 +89959,7 @@ export namespace Prisma {
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
+    posSales?: t_SOMstrUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutSalesVatInput = {
@@ -89716,6 +89974,7 @@ export namespace Prisma {
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
+    posSales?: t_SOMstrUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type CSVDetailUpsertWithWhereUniqueWithoutSaleInput = {
@@ -89844,6 +90103,41 @@ export namespace Prisma {
     create: XOR<BankCreateWithoutSalesInput, BankUncheckedCreateWithoutSalesInput>
   }
 
+  export type CustomerCreateWithoutPosSalesInput = {
+    id?: string
+    code: string
+    name: string
+    mobile?: string | null
+    address?: string | null
+    email?: string | null
+    joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    sales?: CSMasterCreateNestedManyWithoutCustomerInput
+    salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
+    customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
+    orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutPosSalesInput = {
+    id?: string
+    code: string
+    name: string
+    mobile?: string | null
+    address?: string | null
+    email?: string | null
+    joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
+    salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
+    customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+    orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutPosSalesInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutPosSalesInput, CustomerUncheckedCreateWithoutPosSalesInput>
+  }
+
   export type t_SODetCreateWithoutSaleInput = {
     id?: string
     sodetItemSLNum?: string | null
@@ -89913,6 +90207,47 @@ export namespace Prisma {
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type CustomerUpsertWithoutPosSalesInput = {
+    update: XOR<CustomerUpdateWithoutPosSalesInput, CustomerUncheckedUpdateWithoutPosSalesInput>
+    create: XOR<CustomerCreateWithoutPosSalesInput, CustomerUncheckedCreateWithoutPosSalesInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutPosSalesInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutPosSalesInput, CustomerUncheckedUpdateWithoutPosSalesInput>
+  }
+
+  export type CustomerUpdateWithoutPosSalesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mobile?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    sales?: CSMasterUpdateManyWithoutCustomerNestedInput
+    salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
+    customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
+    orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutPosSalesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mobile?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
+    salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
+    customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
+    orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
   export type t_SODetUpsertWithWhereUniqueWithoutSaleInput = {
     where: t_SODetWhereUniqueInput
     update: XOR<t_SODetUpdateWithoutSaleInput, t_SODetUncheckedUpdateWithoutSaleInput>
@@ -89950,9 +90285,10 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
-    soMstrGuestName?: string | null
+    soMstrCardNo?: string | null
     mtype?: string | null
     bank?: BankCreateNestedOneWithoutSalesInput
+    customer?: CustomerCreateNestedOneWithoutPosSalesInput
   }
 
   export type t_SOMstrUncheckedCreateWithoutDetailsInput = {
@@ -89976,7 +90312,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
-    soMstrGuestName?: string | null
+    customerId?: string | null
+    soMstrCardNo?: string | null
     mtype?: string | null
     soMstrMBank?: string | null
   }
@@ -90081,9 +90418,10 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
-    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: BankUpdateOneWithoutSalesNestedInput
+    customer?: CustomerUpdateOneWithoutPosSalesNestedInput
   }
 
   export type t_SOMstrUncheckedUpdateWithoutDetailsInput = {
@@ -90107,7 +90445,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
-    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -92020,6 +92359,7 @@ export namespace Prisma {
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
+    posSales?: t_SOMstrCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerUncheckedCreateWithoutOrdersInput = {
@@ -92034,6 +92374,7 @@ export namespace Prisma {
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+    posSales?: t_SOMstrUncheckedCreateNestedManyWithoutCustomerInput
   }
 
   export type CustomerCreateOrConnectWithoutOrdersInput = {
@@ -92096,6 +92437,7 @@ export namespace Prisma {
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
+    posSales?: t_SOMstrUpdateManyWithoutCustomerNestedInput
   }
 
   export type CustomerUncheckedUpdateWithoutOrdersInput = {
@@ -92110,6 +92452,7 @@ export namespace Prisma {
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
+    posSales?: t_SOMstrUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
   export type OrderReceive_DetailUpsertWithWhereUniqueWithoutMasterInput = {
@@ -92993,7 +93336,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
-    soMstrGuestName?: string | null
+    customerId?: string | null
+    soMstrCardNo?: string | null
     mtype?: string | null
   }
 
@@ -93018,8 +93362,9 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
-    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutPosSalesNestedInput
     details?: t_SODetUpdateManyWithoutSaleNestedInput
   }
 
@@ -93044,7 +93389,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
-    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     details?: t_SODetUncheckedUpdateManyWithoutSaleNestedInput
   }
@@ -93070,7 +93416,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
-    soMstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -93328,6 +93675,32 @@ export namespace Prisma {
     updateDate?: Date | string | null
   }
 
+  export type t_SOMstrCreateManyCustomerInput = {
+    id?: string
+    somstrCode?: string | null
+    somstrDate?: Date | string | null
+    somstrTotalAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrDiscAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrNetAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrVatClnNo?: string | null
+    somstrVatDate?: Date | string | null
+    somstrPricingDate?: Date | string | null
+    somstrCreator?: string | null
+    somstrCreationDate?: Date | string | null
+    somstrUpdateBy?: string | null
+    somstrUpdateDate?: Date | string | null
+    somstrIsActive?: boolean | null
+    somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
+    somstrChange?: Decimal | DecimalJsLike | number | string | null
+    branchId?: string | null
+    soMstrDiscountRemarks?: string | null
+    soMstrModifyRemarks?: string | null
+    soMstrDiscountContact?: string | null
+    soMstrCardNo?: string | null
+    mtype?: string | null
+    soMstrMBank?: string | null
+  }
+
   export type CSMasterUpdateWithoutCustomerInput = {
     id?: StringFieldUpdateOperationsInput | string
     invNo?: StringFieldUpdateOperationsInput | string
@@ -93518,6 +93891,86 @@ export namespace Prisma {
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updateBy?: NullableStringFieldUpdateOperationsInput | string | null
     updateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type t_SOMstrUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    somstrCode?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrTotalAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrDiscAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrNetAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrVatClnNo?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrVatDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrPricingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrCreator?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrCreationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    mtype?: NullableStringFieldUpdateOperationsInput | string | null
+    bank?: BankUpdateOneWithoutSalesNestedInput
+    details?: t_SODetUpdateManyWithoutSaleNestedInput
+  }
+
+  export type t_SOMstrUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    somstrCode?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrTotalAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrDiscAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrNetAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrVatClnNo?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrVatDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrPricingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrCreator?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrCreationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    mtype?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: t_SODetUncheckedUpdateManyWithoutSaleNestedInput
+  }
+
+  export type t_SOMstrUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    somstrCode?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrTotalAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrDiscAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrNetAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrVatClnNo?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrVatDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrPricingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrCreator?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrCreationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    mtype?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SODetCreateManyItemInput = {

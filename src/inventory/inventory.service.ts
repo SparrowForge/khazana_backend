@@ -727,6 +727,30 @@ export class InventoryService {
     return items.filter((l) => !(l.isProduction && Number(l.qty) > 0));
   }
 
+  /** Every issued line carries its rate — the figure the delivery is valued at
+   *  on the Branchwise Delivery and Stock Analysis sheets. An item with no
+   *  active price row has none to inherit, so the entry screen makes the Rate
+   *  field editable and the operator types one; a line that still arrives
+   *  without a rate would be delivered at zero value and is refused here rather
+   *  than quietly under-reporting every report that reads it.
+   *
+   *  As stored, `unitPrice` is VAT-EXCLUSIVE — the reports gross it up by the
+   *  item's VAT percent. An item with no price row has no VAT percent either,
+   *  so a hand-typed rate grosses up to itself. */
+  private async assertLinesHaveRate(items: IssueStockDto['items']) {
+    const unpriced = items.filter((l) => Number(l.qty) > 0 && !(Number(l.unitPrice) > 0));
+    if (!unpriced.length) return;
+
+    const names = await this.prisma.item_Information.findMany({
+      where: { id: { in: [...new Set(unpriced.map((l) => l.itemId))] } },
+      select: { itmCode: true, itmName: true },
+    });
+    const label = names.map((i) => i.itmName || i.itmCode).join(', ');
+    throw new BadRequestException(
+      `Enter a rate for ${label || 'every item'} — an item cannot be issued without one`,
+    );
+  }
+
   /** Flagging a line as production writes a Production row, so the session has
    *  to clear the very same factory-only gate the Production Entry screen does.
    *  Returns the branch (for its code) when there is production to write. */
@@ -737,6 +761,7 @@ export class InventoryService {
 
   async issueStock(dto: IssueStockDto, createdBy: string) {
     if (!dto.items?.length) throw new BadRequestException('No items to issue');
+    await this.assertLinesHaveRate(dto.items);
     const codeByItemId = await this.itemCodesByIds(dto.items.map((i) => i.itemId));
 
     const issueDate = new Date(dto.issueDate);
@@ -1028,6 +1053,7 @@ export class InventoryService {
   }
 
   async updateIssue(serialNo: string, dto: UpdateIssueStockDto, updatedBy: string) {
+    await this.assertLinesHaveRate(dto.items);
     const existing = await this.findIssueRows(serialNo);
     const key = existing[0].serialNo || existing[0].id;
     this.assertNotTransfer(key, 'edited');

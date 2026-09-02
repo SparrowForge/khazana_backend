@@ -8932,7 +8932,7 @@
           "unitPrice": {
             "type": "number",
             "example": 120,
-            "description": "Unit cost price"
+            "description": "VAT-EXCLUSIVE unit rate stored on the issue line. Must be > 0 — an item with no active price row is issued at the rate the operator types on the entry screen."
           },
           "isProduction": {
             "type": "boolean",
@@ -9717,20 +9717,33 @@
             "example": 50,
             "description": "Discount value — flat amount or percentage (0–100)"
           },
+          "customerId": {
+            "type": "string",
+            "description": "Customer this sale is billed to (Customer UUID) → t_SOMstr.CustomerID. Omit for a walk-in, which is the default at the till. MANDATORY once a discount is applied: a discount has to be given to somebody, and the sale stamps their name and mobile onto the discount audit columns.",
+            "format": "uuid"
+          },
+          "cardNo": {
+            "type": "string",
+            "example": "4321",
+            "description": "Last 4 digits of the card → t_SOMstr.SoMstr_CardNo. Only ever the last 4 — a full card number must not be sent, and is rejected. Ignored (stored NULL) unless salesType is 'Card'."
+          },
           "guestName": {
             "type": "string",
             "example": "Mr. Rahman",
-            "description": "Walk-in customer's name → t_SOMstr.SoMstr_GuestName. Optional on every sale, and unrelated to the discount authoriser below — a running sale has no Customer row, so this is the only identity it carries. Shown in Sales History Summary; not printed on the receipt."
+            "deprecated": true,
+            "description": "Ignored — superseded by customerId. Accepted so an offline sale queued before the customer picker existed still syncs."
           },
           "discountRemarks": {
             "type": "string",
             "example": "Manager Karim",
-            "description": "Discount authoriser name → t_SOMstr.SoMstr_DiscountRemarks. Mandatory (UI) when a discount is applied."
+            "deprecated": true,
+            "description": "Typed discount authoriser name → t_SOMstr.SoMstr_DiscountRemarks. Superseded by customerId; only used when no customerId is given."
           },
           "discountContact": {
             "type": "string",
             "example": "01700000000",
-            "description": "Discount authoriser contact no → t_SOMstr.SoMstr_DiscountContact."
+            "deprecated": true,
+            "description": "Typed discount authoriser contact no → t_SOMstr.SoMstr_DiscountContact. Superseded by customerId; only used when no customerId is given."
           }
         },
         "required": [
@@ -9784,20 +9797,33 @@
             "example": 50,
             "description": "Discount value — flat amount or percentage (0–100)"
           },
+          "customerId": {
+            "type": "string",
+            "description": "Customer this sale is billed to (Customer UUID) → t_SOMstr.CustomerID. Omit for a walk-in, which is the default at the till. MANDATORY once a discount is applied: a discount has to be given to somebody, and the sale stamps their name and mobile onto the discount audit columns.",
+            "format": "uuid"
+          },
+          "cardNo": {
+            "type": "string",
+            "example": "4321",
+            "description": "Last 4 digits of the card → t_SOMstr.SoMstr_CardNo. Only ever the last 4 — a full card number must not be sent, and is rejected. Ignored (stored NULL) unless salesType is 'Card'."
+          },
           "guestName": {
             "type": "string",
             "example": "Mr. Rahman",
-            "description": "Walk-in customer's name → t_SOMstr.SoMstr_GuestName. Optional on every sale, and unrelated to the discount authoriser below — a running sale has no Customer row, so this is the only identity it carries. Shown in Sales History Summary; not printed on the receipt."
+            "deprecated": true,
+            "description": "Ignored — superseded by customerId. Accepted so an offline sale queued before the customer picker existed still syncs."
           },
           "discountRemarks": {
             "type": "string",
             "example": "Manager Karim",
-            "description": "Discount authoriser name → t_SOMstr.SoMstr_DiscountRemarks. Mandatory (UI) when a discount is applied."
+            "deprecated": true,
+            "description": "Typed discount authoriser name → t_SOMstr.SoMstr_DiscountRemarks. Superseded by customerId; only used when no customerId is given."
           },
           "discountContact": {
             "type": "string",
             "example": "01700000000",
-            "description": "Discount authoriser contact no → t_SOMstr.SoMstr_DiscountContact."
+            "deprecated": true,
+            "description": "Typed discount authoriser contact no → t_SOMstr.SoMstr_DiscountContact. Superseded by customerId; only used when no customerId is given."
           },
           "modifyRemarks": {
             "type": "string",
@@ -9870,20 +9896,33 @@
             "example": 50,
             "description": "Discount value — flat ৳ amount or percentage (0–100)"
           },
+          "customerId": {
+            "type": "string",
+            "description": "Customer this sale was billed to, captured at sale time → t_SOMstr.CustomerID. Absent for a walk-in.",
+            "format": "uuid"
+          },
+          "cardNo": {
+            "type": "string",
+            "example": "4321",
+            "description": "Last 4 digits of the card → SoMstr_CardNo. Stored only when salesType is 'Card'."
+          },
           "guestName": {
             "type": "string",
             "example": "Mr. Rahman",
-            "description": "Walk-in customer's name → SoMstr_GuestName. Optional, and unrelated to the discount authoriser below."
+            "deprecated": true,
+            "description": "Ignored — superseded by customerId. Accepted so a pre-picker offline sale still syncs."
           },
           "discountRemarks": {
             "type": "string",
             "example": "Manager Karim",
-            "description": "Discount authoriser name → SoMstr_DiscountRemarks."
+            "deprecated": true,
+            "description": "Typed discount authoriser name → SoMstr_DiscountRemarks. Superseded by customerId."
           },
           "discountContact": {
             "type": "string",
             "example": "01700000000",
-            "description": "Discount authoriser contact no → SoMstr_DiscountContact."
+            "deprecated": true,
+            "description": "Typed discount authoriser contact no → SoMstr_DiscountContact. Superseded by customerId."
           }
         },
         "required": [

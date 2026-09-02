@@ -17,22 +17,35 @@ const r2signed = (n: number): number => Math.round(n * 100) / 100;
 
 /** Client name for a POS terminal sale.
  *
- *  A running sale has no customer record — it is a walk-in — so the name comes
- *  from whichever of two fields holds one, in this order:
+ *  The terminal picks a customer, so `t_SOMstr.CustomerID` is the answer
+ *  whenever there is one:
  *
- *   1. `SoMstr_GuestName`, typed on the POS checkout panel. Optional, available
- *      on every sale.
- *   2. `SoMstr_DiscountRemarks`, the discount authoriser. Only ever written when
- *      a discount was applied, which is why (1) exists — but it is still the
- *      best name available on every sale rung up before (1) was added.
+ *   1. The joined `Customer.Name` — who the sale was billed to.
+ *   2. `SoMstr_DiscountRemarks`, the old typed discount authoriser. Only ever
+ *      written when a discount was applied — but still the best name available
+ *      on a sale discounted before the picker existed.
  *
- *  Failing both, 'POS'. Not a blank: an empty cell looks like missing data on a
- *  sheet whose whole point is that every row is identified.
+ *  Failing both, 'POS'. Not a blank: a walk-in is a real answer, and an empty
+ *  cell looks like missing data on a sheet whose whole point is that every row
+ *  is identified.
  *
  *  Blank and whitespace-only count as no name — the discount column does hold ''
  *  on some rows, which would otherwise print an empty cell. */
-const posClientName = (guestName?: string | null, discountAuthoriser?: string | null): string =>
-  (guestName ?? '').trim() || (discountAuthoriser ?? '').trim() || 'POS';
+const posClientName = (
+  customerName?: string | null,
+  discountAuthoriser?: string | null,
+): string =>
+  (customerName ?? '').trim() || (discountAuthoriser ?? '').trim() || 'POS';
+
+/** Contact number for a POS terminal sale: the picked customer's mobile, else
+ *  the number typed against the discount before the picker existed. */
+const posClientContact = (
+  customerMobile?: string | null,
+  discountContact?: string | null,
+): string => (customerMobile ?? '').trim() || (discountContact ?? '').trim() || '';
+
+/** What every report that names a POS sale's customer joins in. */
+const POS_CUSTOMER_INCLUDE = { customer: { select: { name: true, mobile: true } } } as const;
 
 @Injectable()
 export class ReportsService {
@@ -59,6 +72,7 @@ export class ReportsService {
     const [cash, credit, vatCash, vatCredit] = await this.prisma.$transaction([
       this.prisma.t_SOMstr.findMany({
         where: { somstrDate: { gte: from, lte: to }, somstrIsActive: true, ...branchFilter },
+        include: POS_CUSTOMER_INCLUDE,
         orderBy: { somstrDate: 'asc' },
       }),
       this.prisma.cSMaster.findMany({
@@ -91,25 +105,43 @@ export class ReportsService {
       // POS/counter sales carry the teller's actual pay-mode selection
       // (Cash/Card/Bkash/Rocket/...) in `mtype` — show that instead of a
       // generic "Cash" bucket label.
+      //
+      // The terminal names its customer now, so the row says who bought rather
+      // than the flat 'Cash Customer' this column used to print for every
+      // counter sale alike. A walk-in resolves to 'POS', which is what it is.
       ...cash.map((s) => ({
-        id: s.id, invNo: s.somstrCode, date: s.somstrDate, customerName: 'Cash Customer',
+        id: s.id, invNo: s.somstrCode, date: s.somstrDate,
+        customerName: posClientName(s.customer?.name, s.soMstrDiscountRemarks),
+        contactNo: posClientContact(s.customer?.mobile, s.soMstrDiscountContact),
         totalAmount: cashGross(s), discount: num(s.somstrDiscAmt), netAmount: num(s.somstrNetAmt),
         saleType: s.mtype || 'Cash',
+        // Last 4 digits of the card, on a Card sale — what ties a row on this
+        // sheet to a line on the terminal's end-of-day settlement slip.
+        cardNo: s.soMstrCardNo ?? '',
       })),
       ...credit.map((s) => ({
         id: s.id, invNo: s.invNo, date: s.invDate, customerName: s.customer?.name ?? '',
+        contactNo: s.customer?.mobile ?? '',
         totalAmount: creditGross(s), discount: num(s.totalDiscount), netAmount: creditGross(s) - num(s.totalDiscount),
         saleType: 'Credit',
+        cardNo: '',
       })),
+      // t_SOMstV is written by the VAT cash form, not the POS terminal — it has
+      // no customer picker and no card field, so these two stay as they were.
       ...vatCash.map((s) => ({
-        id: s.id, invNo: s.somstrCode, date: s.somstrDate, customerName: 'Cash Customer',
+        id: s.id, invNo: s.somstrCode, date: s.somstrDate,
+        customerName: posClientName(null, s.soMstrDiscountRemarks),
+        contactNo: posClientContact(null, s.soMstrDiscountContact),
         totalAmount: cashGross(s), discount: num(s.somstrDiscAmt), netAmount: num(s.somstrNetAmt),
         saleType: s.mtype ? `${s.mtype} (VAT)` : 'Cash (VAT)',
+        cardNo: '',
       })),
       ...vatCredit.map((s) => ({
         id: s.id, invNo: s.invNo, date: s.invDate, customerName: s.customer?.name ?? s.clientCode ?? '',
+        contactNo: s.customer?.mobile ?? '',
         totalAmount: creditGross(s), discount: num(s.totalDiscount), netAmount: creditGross(s) - num(s.totalDiscount),
         saleType: 'Credit (VAT)',
+        cardNo: '',
       })),
     ];
 
@@ -280,6 +312,7 @@ export class ReportsService {
         where: { somstrDate: window, somstrIsActive: true, branchId },
         include: {
           bank: { select: { name: true } },
+          ...POS_CUSTOMER_INCLUDE,
           details: { select: { sodetQTY: true, item: { select: { itmUOM: true } } } },
         },
         orderBy: { somstrDate: 'asc' },
@@ -394,9 +427,20 @@ export class ReportsService {
     }));
 
     const discountBreakdown = [
+      // Who each counter discount was given to. That is the picked customer
+      // now — the terminal will not take a discount for a walk-in — with the
+      // typed authoriser columns behind it for anything discounted before the
+      // picker existed.
       ...cash
         .filter((s) => num(s.somstrDiscAmt) > 0)
-        .map((s) => discRow(s.soMstrDiscountRemarks ?? '', s.soMstrDiscountContact ?? '', num(s.somstrDiscAmt), num(s.somstrTotalAmt))),
+        .map((s) =>
+          discRow(
+            posClientName(s.customer?.name, s.soMstrDiscountRemarks),
+            posClientContact(s.customer?.mobile, s.soMstrDiscountContact),
+            num(s.somstrDiscAmt),
+            num(s.somstrTotalAmt),
+          ),
+        ),
       ...credit
         .filter((s) => num(s.totalDiscount) > 0)
         .map((s) => discRow(s.customer?.name ?? s.discountRemarks ?? '', s.customer?.mobile ?? '', num(s.totalDiscount), num(s.totalAmount) + num(s.totalVat))),
@@ -1336,7 +1380,11 @@ export class ReportsService {
       await this.prisma.$transaction([
         this.prisma.t_SOMstr.findMany({
           where: { somstrDate: { gte: from, lte: to }, somstrIsActive: true, ...branchFilter },
-          include: { bank: { select: { name: true } }, details: { include: { item: itemSelect } } },
+          include: {
+            bank: { select: { name: true } },
+            ...POS_CUSTOMER_INCLUDE,
+            details: { include: { item: itemSelect } },
+          },
           orderBy: { somstrDate: 'asc' },
         }),
         this.prisma.cSMaster.findMany({
@@ -1435,7 +1483,12 @@ export class ReportsService {
     // ── Cash (running) sales ─────────────────────────────────────────────
     for (const s of cashSales) {
       pushInvoice(
-        { date: s.somstrDate, invoiceNo: s.somstrCode ?? '', clientName: posClientName(s.soMstrGuestName, s.soMstrDiscountRemarks), branchId: s.branchId },
+        {
+          date: s.somstrDate,
+          invoiceNo: s.somstrCode ?? '',
+          clientName: posClientName(s.customer?.name, s.soMstrDiscountRemarks),
+          branchId: s.branchId,
+        },
         s.details.map((d) => ({
           itemName: d.item?.itmName || d.item?.itmCode || '',
           uom: d.item?.itmUOM ?? d.sodetUOM ?? '',
@@ -1453,8 +1506,9 @@ export class ReportsService {
     // ── VAT cash (running) sales ─────────────────────────────────────────
     for (const s of vatCashSales) {
       pushInvoice(
-        // t_SOMstV carries no guest name: it is written by the VAT cash form,
-        // not the POS terminal, so only the discount authoriser is available.
+        // t_SOMstV carries neither a customer nor a guest name: it is written by
+        // the VAT cash form, not the POS terminal, so only the discount
+        // authoriser is available.
         { date: s.somstrDate, invoiceNo: s.somstrCode ?? '', clientName: posClientName(null, s.soMstrDiscountRemarks), branchId: s.branchId },
         s.details.map((d) => ({
           itemName: d.item?.itmName || d.item?.itmCode || '',
@@ -2024,6 +2078,7 @@ export class ReportsService {
     const [cash, vatCash, credit, vatCredit] = await this.prisma.$transaction([
       this.prisma.t_SOMstr.findMany({
         where: { somstrDate: { gte: from, lte: to }, somstrIsActive: true, ...branchFilter },
+        include: POS_CUSTOMER_INCLUDE,
         orderBy: { somstrDate: 'asc' },
       }),
       this.prisma.t_SOMstV.findMany({
@@ -2083,23 +2138,31 @@ export class ReportsService {
     const outletOf = (branchId: string | null) => (branchId ? branchNameById.get(branchId) ?? '' : '');
 
     const rows: Row[] = [
-      // Counter sales carry the discount authoriser's name and phone number in
-      // the SoMstr_Discount* audit columns — that is exactly what the legacy
-      // report's Contact No./Remarks columns hold.
-      ...[...cash, ...vatCash]
-        .filter((s) => num(s.somstrDiscAmt) > 0)
-        .map((s) => {
-          const amount = cashGross(s);
-          const discount = r2signed(num(s.somstrDiscAmt));
+      // Who each counter discount went to. The terminal picks the customer now
+      // and refuses to discount a walk-in, so the report's Contact No./Remarks
+      // columns are their mobile and name — falling back to the SoMstr_Discount*
+      // audit columns, which is what a sale discounted before the picker
+      // existed (and every t_SOMstV row, which has no picker) still carries.
+      ...[
+        // Only t_SOMstr has a customer — t_SOMstV is written by the VAT cash
+        // form, which has no picker — so the two ledgers are zipped with the
+        // customer each of them can supply and share one row builder.
+        ...cash.map((s) => ({ sale: s, customer: s.customer })),
+        ...vatCash.map((s) => ({ sale: s, customer: null })),
+      ]
+        .filter(({ sale }) => num(sale.somstrDiscAmt) > 0)
+        .map(({ sale, customer }) => {
+          const amount = cashGross(sale);
+          const discount = r2signed(num(sale.somstrDiscAmt));
           return {
-            date: s.somstrDate,
-            invoiceNo: s.somstrCode ?? '',
+            date: sale.somstrDate,
+            invoiceNo: sale.somstrCode ?? '',
             amount,
             discountPercent: pctOf(discount, amount),
             discount,
-            contactNo: s.soMstrDiscountContact ?? '',
-            remarks: s.soMstrDiscountRemarks ?? '',
-            outlet: outletOf(s.branchId),
+            contactNo: posClientContact(customer?.mobile, sale.soMstrDiscountContact),
+            remarks: (customer?.name ?? '').trim() || sale.soMstrDiscountRemarks || '',
+            outlet: outletOf(sale.branchId),
           };
         }),
       // A credit invoice has no authoriser audit — the customer it was billed to

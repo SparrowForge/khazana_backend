@@ -447,7 +447,8 @@ exports.Prisma.T_SOMstrScalarFieldEnum = {
   soMstrDiscountRemarks: 'soMstrDiscountRemarks',
   soMstrModifyRemarks: 'soMstrModifyRemarks',
   soMstrDiscountContact: 'soMstrDiscountContact',
-  soMstrGuestName: 'soMstrGuestName',
+  customerId: 'customerId',
+  soMstrCardNo: 'soMstrCardNo',
   mtype: 'mtype',
   soMstrMBank: 'soMstrMBank'
 };

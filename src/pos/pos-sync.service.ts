@@ -98,9 +98,14 @@ export class PosSyncService {
           discountValue: order.discountValue,
           discountRemarks: order.discountRemarks,
           discountContact: order.discountContact,
-          guestName: order.guestName,
+          customerId: order.customerId ?? null,
+          cardNo: order.cardNo ?? null,
           createdBy: dto.userName,
           enforceStock: false,
+          // Off for the same reason `enforceStock` is: an order queued by a
+          // terminal that predates the customer picker can carry a discount and
+          // no customer. Refusing it would strand a sale that already happened.
+          requireCustomerForDiscount: false,
         });
 
         await this.warnOnNegativeStock(order.invoiceNo, order.items);

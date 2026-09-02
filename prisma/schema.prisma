@@ -225,6 +225,7 @@ model Customer {
   salesVat             CSVMaster[]
   customerTransactions Customer_Transaction[]
   orders               OrderReceive_Master[]
+  posSales             t_SOMstr[]
 
   @@map("Customer")
 }
@@ -495,15 +496,19 @@ model t_SOMstr {
   soMstrDiscountRemarks String?   @map("SoMstr_DiscountRemarks")
   soMstrModifyRemarks   String?   @map("SoMstr_ModifyRemarks")
   soMstrDiscountContact String?   @map("SoMstr_DiscountContact")
-  /// Walk-in customer's name, typed on the POS checkout panel. A running sale
-  /// has no Customer row, so this is the only identity it carries. Optional and
-  /// independent of the discount authoriser above (SoMstr_DiscountRemarks),
-  /// which is only ever written when a discount is applied. Reports only — it
-  /// is not printed on the receipt.
-  soMstrGuestName       String?   @map("SoMstr_GuestName")
+  /// The customer this counter sale was billed to. NULL is the walk-in case —
+  /// the default at the till, and the only case with no name behind the sale.
+  /// A discounted sale must have one: who a discount was given to is the whole
+  /// point of the discount audit, and "POS" answers nothing.
+  customerId            String?   @map("CustomerID") @db.Uuid
+  /// Last 4 digits of the card a Card sale was settled on — all that may be
+  /// retained of a card number, and enough to tie the bill to the terminal's
+  /// settlement slip. NULL on every non-Card sale.
+  soMstrCardNo          String?   @map("SoMstr_CardNo")
   mtype                 String?   @map("Mtype")
   soMstrMBank           String?   @map("SoMstr_MBank") @db.Uuid
   bank                  Bank?     @relation(fields: [soMstrMBank], references: [id])
+  customer              Customer? @relation(fields: [customerId], references: [id])
   details               t_SODet[]
 
   @@map("t_SOMstr")

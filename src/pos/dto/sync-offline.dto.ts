@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsString, IsNotEmpty, IsNumber, IsArray, ValidateNested,
-  IsOptional, IsIn, Min, IsDateString, ArrayMinSize, IsUUID, MaxLength,
+  IsOptional, IsIn, Min, IsDateString, ArrayMinSize, IsUUID, MaxLength, Matches,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PosCartItemDto } from './create-pos-sale.dto';
@@ -70,18 +70,36 @@ export class OfflineSaleDto {
   @IsOptional()
   discountValue?: number;
 
-  @ApiPropertyOptional({ example: 'Mr. Rahman', description: "Walk-in customer's name → SoMstr_GuestName. Optional, and unrelated to the discount authoriser below." })
+  @ApiPropertyOptional({
+    description: 'Customer this sale was billed to, captured at sale time → t_SOMstr.CustomerID. Absent for a walk-in.',
+    format: 'uuid',
+  })
+  @IsOptional()
+  @IsUUID()
+  customerId?: string;
+
+  @ApiPropertyOptional({ example: '4321', description: "Last 4 digits of the card → SoMstr_CardNo. Stored only when salesType is 'Card'." })
+  @IsOptional()
+  @Matches(/^[0-9]{4}$/, { message: 'cardNo must be exactly the 4 last digits of the card' })
+  cardNo?: string;
+
+  /** @deprecated Accepted but IGNORED — the column it was written to is gone,
+   *  replaced by `customerId`. Kept so a sale queued before the picker existed
+   *  syncs rather than 400-ing. */
+  @ApiPropertyOptional({ example: 'Mr. Rahman', deprecated: true, description: 'Ignored — superseded by customerId. Accepted so a pre-picker offline sale still syncs.' })
   @IsString()
   @IsOptional()
   @MaxLength(100)
   guestName?: string;
 
-  @ApiPropertyOptional({ example: 'Manager Karim', description: 'Discount authoriser name → SoMstr_DiscountRemarks.' })
+  /** @deprecated Superseded by `customerId` — see `guestName`. */
+  @ApiPropertyOptional({ example: 'Manager Karim', deprecated: true, description: 'Typed discount authoriser name → SoMstr_DiscountRemarks. Superseded by customerId.' })
   @IsString()
   @IsOptional()
   discountRemarks?: string;
 
-  @ApiPropertyOptional({ example: '01700000000', description: 'Discount authoriser contact no → SoMstr_DiscountContact.' })
+  /** @deprecated Superseded by `customerId` — see `guestName`. */
+  @ApiPropertyOptional({ example: '01700000000', deprecated: true, description: 'Typed discount authoriser contact no → SoMstr_DiscountContact. Superseded by customerId.' })
   @IsString()
   @IsOptional()
   discountContact?: string;

@@ -12,7 +12,16 @@ export class IssueStockLineDto {
   @IsPositive()
   qty: number;
 
-  @ApiPropertyOptional({ example: 120.0, description: 'Unit cost price' })
+  /** Required in practice: a line with no rate (or a zero one) is refused by
+   *  InventoryService#assertLinesHaveRate. Left optional on the DTO so the
+   *  failure reads as "enter a rate for <item>" rather than a field-level
+   *  validation error that does not say which line is at fault. */
+  @ApiPropertyOptional({
+    example: 120.0,
+    description:
+      'VAT-EXCLUSIVE unit rate stored on the issue line. Must be > 0 — an item with no active '
+      + 'price row is issued at the rate the operator types on the entry screen.',
+  })
   @IsNumber()
   @IsOptional()
   unitPrice?: number;
