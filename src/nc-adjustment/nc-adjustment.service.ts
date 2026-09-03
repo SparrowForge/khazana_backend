@@ -382,7 +382,7 @@ export class NcAdjustmentService {
     return ['NC', code, this.yyyymm(), String(count + 1).padStart(5, '0')].filter(Boolean).join('-');
   }
 
-  /** Apply stock deltas keyed by item id (inventory is keyed by itemCode).
+  /** Apply stock deltas keyed by item id (the Inventory primary key).
    *  Positive adds, negative removes. Takes a client so the deltas land in the
    *  same transaction as the availability check that authorised them. */
   private async adjustStock(
@@ -391,14 +391,9 @@ export class NcAdjustmentService {
   ) {
     for (const d of deltas) {
       if (!d.qty) continue;
-      const item = await db.item_Information.findUnique({
-        where: { id: d.itemId },
-        select: { itmCode: true },
-      });
-      if (!item?.itmCode) continue;
       await db.inventory.upsert({
-        where: { itemCode: item.itmCode },
-        create: { itemCode: item.itmCode, quantity: d.qty },
+        where: { itemId: d.itemId },
+        create: { itemId: d.itemId, quantity: d.qty },
         update: { quantity: { increment: d.qty } },
       });
     }

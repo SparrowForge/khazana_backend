@@ -230,13 +230,10 @@ export class AssortmentService {
 
     // Deduct stock for assorted items
     for (const item of dto.items) {
-      const itemInfo = await this.prisma.item_Information.findUnique({ where: { id: item.itemOID } });
-      if (itemInfo?.itmCode) {
-        await this.prisma.inventory.updateMany({
-          where: { itemCode: itemInfo.itmCode },
-          data: { quantity: { decrement: item.qty } },
-        });
-      }
+      await this.prisma.inventory.updateMany({
+        where: { itemId: item.itemOID },
+        data: { quantity: { decrement: item.qty } },
+      });
     }
 
     return assort;
@@ -262,11 +259,10 @@ export class AssortmentService {
     await this.prisma.$transaction(async (tx) => {
       // Restore stock held by the previous detail lines.
       for (const d of existing.details) {
-        const itemInfo = await tx.item_Information.findUnique({ where: { id: d.itemOID } });
         const q = Number(d.qty ?? 0);
-        if (itemInfo?.itmCode && q) {
+        if (q) {
           await tx.inventory.updateMany({
-            where: { itemCode: itemInfo.itmCode },
+            where: { itemId: d.itemOID },
             data: { quantity: { increment: q } },
           });
         }
@@ -308,13 +304,10 @@ export class AssortmentService {
 
       // Deduct stock for the new detail lines.
       for (const item of dto.items) {
-        const itemInfo = await tx.item_Information.findUnique({ where: { id: item.itemOID } });
-        if (itemInfo?.itmCode) {
-          await tx.inventory.updateMany({
-            where: { itemCode: itemInfo.itmCode },
-            data: { quantity: { decrement: item.qty } },
-          });
-        }
+        await tx.inventory.updateMany({
+          where: { itemId: item.itemOID },
+          data: { quantity: { decrement: item.qty } },
+        });
       }
     });
 
@@ -331,11 +324,10 @@ export class AssortmentService {
     // Restore the stock this assortment deducted, then delete master + details.
     await this.prisma.$transaction(async (tx) => {
       for (const d of existing.details) {
-        const itemInfo = await tx.item_Information.findUnique({ where: { id: d.itemOID } });
         const q = Number(d.qty ?? 0);
-        if (itemInfo?.itmCode && q) {
+        if (q) {
           await tx.inventory.updateMany({
-            where: { itemCode: itemInfo.itmCode },
+            where: { itemId: d.itemOID },
             data: { quantity: { increment: q } },
           });
         }

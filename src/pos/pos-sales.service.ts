@@ -416,7 +416,7 @@ export class PosSalesService {
   private async deductStock(db: Prisma.TransactionClient, items: { itemId: string; qty: number }[]) {
     for (const i of items) {
       await db.inventory.updateMany({
-        where: { item: { id: i.itemId } },
+        where: { itemId: i.itemId },
         data: { quantity: { decrement: i.qty } },
       });
     }
@@ -580,7 +580,7 @@ export class PosSalesService {
       });
       for (const [itemId, qty] of delta) {
         if (!qty) continue;
-        await tx.inventory.updateMany({ where: { item: { id: itemId } }, data: { quantity: { increment: qty } } });
+        await tx.inventory.updateMany({ where: { itemId }, data: { quantity: { increment: qty } } });
       }
     });
 
@@ -596,7 +596,7 @@ export class PosSalesService {
     await this.prisma.$transaction(async (tx) => {
       for (const d of existing.details) {
         const q = Number(d.sodetQTY ?? 0);
-        if (q) await tx.inventory.updateMany({ where: { item: { id: d.sodetItemOID } }, data: { quantity: { increment: q } } });
+        if (q) await tx.inventory.updateMany({ where: { itemId: d.sodetItemOID }, data: { quantity: { increment: q } } });
       }
       await tx.t_SODet.deleteMany({ where: { t_SOMstr_id: id } });
       await tx.t_SOMstr.delete({ where: { id } });

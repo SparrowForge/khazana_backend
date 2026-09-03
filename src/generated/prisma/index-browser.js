@@ -332,7 +332,7 @@ exports.Prisma.RW_StockScalarFieldEnum = {
 };
 
 exports.Prisma.InventoryScalarFieldEnum = {
-  itemCode: 'itemCode',
+  itemId: 'itemId',
   quantity: 'quantity'
 };
 

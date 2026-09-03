@@ -1077,14 +1077,14 @@ export class ReportsService {
     const outMap = new Map(issues.map((i) => [i.itemId, num(i._sum.qty)]));
 
     return inventory.map((row) => {
-      const inwardQty = inMap.get(row.item?.id ?? '') ?? 0;
-      const outwardQty = outMap.get(row.item?.id ?? '') ?? 0;
+      const inwardQty = inMap.get(row.itemId) ?? 0;
+      const outwardQty = outMap.get(row.itemId) ?? 0;
       const closingQty = num(row.quantity);
       // Opening is derived: closing - in + out (what it was before all movements)
       const openingQty = closingQty - inwardQty + outwardQty;
       return {
-        id: row.itemCode,
-        itemCode: row.itemCode,
+        id: row.itemId,
+        itemCode: row.item.itmCode,
         itemName: row.item?.itmName ?? '',
         uom: row.item?.itmUOM ?? '',
         openingQty: Math.max(0, openingQty),

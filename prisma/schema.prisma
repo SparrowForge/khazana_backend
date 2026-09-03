@@ -295,10 +295,9 @@ model Item_Information {
   orderDetails          OrderReceive_Detail[]
   demandOrderDetails    DemandOrder_Detail[]
   vehicleChallans       Vehicle_Challan[]
-  // Relations using Item_Information.itmCode (varchar)
-  inventory             Inventory?
   prices                t_Price[]             @relation("ItemPrices")
   costPrices            t_CostPr[]            @relation("ItemCostPrices")
+  inventory             Inventory?
 
   @@map("Item_Information")
 }
@@ -335,10 +334,13 @@ model RW_Stock {
   @@map("RW_Stock")
 }
 
+/// Whole-company on-hand balance per item — no branch dimension, so a branch
+/// transfer is net-zero against it. Keyed by Item_Information.ID since the
+/// inventory_itemcode_to_uuid migration; every caller already held the uuid.
 model Inventory {
-  itemCode String           @id @map("ItemCode")
+  itemId   String           @id @map("ItemId") @db.Uuid
   quantity Decimal          @default(0) @map("Quantity") @db.Decimal(18, 4)
-  item     Item_Information @relation(fields: [itemCode], references: [itmCode])
+  item     Item_Information @relation(fields: [itemId], references: [id])
 
   @@map("Inventory")
 }
@@ -347,7 +349,9 @@ model Inventory {
 
 model t_Price {
   id                String            @id @default(dbgenerated("gen_random_uuid()")) @map("Price_OId") @db.Uuid
-  priceItemOId      String            @map("Price_ItemOId")
+  /// Item_Information.ID (uuid). Was the loose item CODE until the
+  /// price_itemoid_to_uuid migration, so a code rename no longer strands a price.
+  priceItemOId      String?           @map("Price_ItemOId") @db.Uuid
   priceFromDate     DateTime?         @map("Price_FromDate")
   priceToDate       DateTime?         @map("Price_ToDate")
   priceListPrice    Float?            @map("Price_ListPrice")
@@ -359,14 +363,16 @@ model t_Price {
   priceUpdateBy     String?           @map("Price_UpdateBy")
   priceUpdateDate   DateTime?         @map("Price_UpdateDate")
   priceIsActive     Int?              @map("Price_IsActive")
-  item              Item_Information? @relation("ItemPrices", fields: [priceItemOId], references: [itmCode])
+  item              Item_Information? @relation("ItemPrices", fields: [priceItemOId], references: [id])
 
   @@map("t_Price")
 }
 
 model t_CostPr {
   id                String            @id @default(dbgenerated("gen_random_uuid()")) @map("Price_OId") @db.Uuid
-  priceItemOId      String            @map("Price_ItemOId")
+  /// Item_Information.ID (uuid). Was the loose item CODE until the
+  /// price_itemoid_to_uuid migration, so a code rename no longer strands a price.
+  priceItemOId      String?           @map("Price_ItemOId") @db.Uuid
   priceFromDate     DateTime?         @map("Price_FromDate")
   priceToDate       DateTime?         @map("Price_ToDate")
   priceListPrice    Float?            @map("Price_ListPrice")
@@ -378,7 +384,7 @@ model t_CostPr {
   priceUpdateBy     String?           @map("Price_UpdateBy")
   priceUpdateDate   DateTime?         @map("Price_UpdateDate")
   priceIsActive     Int?              @map("Price_IsActive")
-  item              Item_Information? @relation("ItemCostPrices", fields: [priceItemOId], references: [itmCode])
+  item              Item_Information? @relation("ItemCostPrices", fields: [priceItemOId], references: [id])
 
   @@map("t_CostPr")
 }

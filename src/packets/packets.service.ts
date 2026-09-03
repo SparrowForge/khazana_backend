@@ -95,7 +95,7 @@ interface SerialGroupRow {
  *    ProductionService — one serial number per document, every packet line
  *    sharing it, purge-and-replace on edit.
  *  - **Packet Stock**: the register those two tables imply. Packets are NOT in
- *    the `Inventory` table (that is itemCode-keyed for Item_Information), so a
+ *    the `Inventory` table (that holds Item_Information stock only), so a
  *    packet balance is always *derived*: receives minus issues, per branch.
  *
  * Because the balance is derived rather than stored there is nothing to keep in

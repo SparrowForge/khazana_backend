@@ -134,12 +134,12 @@ export class InventoryController {
     return this.inventoryService.getStockLevels();
   }
 
-  @Get('stock/:itemCode')
+  @Get('stock/:item')
   @ApiOperation({ summary: 'Get stock balance for an item' })
-  @ApiParam({ name: 'itemCode', description: 'Item code' })
+  @ApiParam({ name: 'item', description: 'Item id (Item_Information.ID uuid), or its item code' })
   @ApiResponse({ status: 200, description: 'Stock balance' })
-  findOne(@Param('itemCode') itemCode: string) {
-    return this.inventoryService.findOne(itemCode);
+  findOne(@Param('item') item: string) {
+    return this.inventoryService.findOne(item);
   }
 
   @Post('receive')

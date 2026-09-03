@@ -413,7 +413,7 @@ export class SalesService {
           },
         },
       });
-      for (const [itemId, q] of delta) if (q) await tx.inventory.updateMany({ where: { item: { id: itemId } }, data: { quantity: { increment: q } } });
+      for (const [itemId, q] of delta) if (q) await tx.inventory.updateMany({ where: { itemId }, data: { quantity: { increment: q } } });
     });
     return this.prisma.t_SOMstr.findUnique({ where: { id }, include: { details: true } });
   }
@@ -424,7 +424,7 @@ export class SalesService {
     await this.prisma.$transaction(async (tx) => {
       for (const d of existing.details) {
         const q = Number(d.sodetQTY ?? 0);
-        if (q && d.sodetItemOID) await tx.inventory.updateMany({ where: { item: { id: d.sodetItemOID } }, data: { quantity: { increment: q } } });
+        if (q && d.sodetItemOID) await tx.inventory.updateMany({ where: { itemId: d.sodetItemOID }, data: { quantity: { increment: q } } });
       }
       await tx.t_SODet.deleteMany({ where: { t_SOMstr_id: id } });
       await tx.t_SOMstr.delete({ where: { id } });
@@ -745,7 +745,7 @@ export class SalesService {
         },
       });
       for (const [itemId, q] of delta) {
-        if (q) await tx.inventory.updateMany({ where: { item: { id: itemId } }, data: { quantity: { increment: q } } });
+        if (q) await tx.inventory.updateMany({ where: { itemId }, data: { quantity: { increment: q } } });
       }
     });
     return this.prisma.cSMaster.findUnique({ where: { id }, include: { details: true } });
@@ -757,7 +757,7 @@ export class SalesService {
     await this.prisma.$transaction(async (tx) => {
       for (const d of existing.details) {
         const q = Number(d.qty ?? 0);
-        if (q && d.itemOId) await tx.inventory.updateMany({ where: { item: { id: d.itemOId } }, data: { quantity: { increment: q } } });
+        if (q && d.itemOId) await tx.inventory.updateMany({ where: { itemId: d.itemOId }, data: { quantity: { increment: q } } });
       }
       await tx.cSDetail.deleteMany({ where: { invNo: existing.invNo } });
       await tx.cSMaster.delete({ where: { id } });
@@ -772,7 +772,7 @@ export class SalesService {
   private async deductStock(db: Prisma.TransactionClient, items: { itemId: string; qty: number }[]) {
     for (const i of items) {
       await db.inventory.updateMany({
-        where: { item: { id: i.itemId } },
+        where: { itemId: i.itemId },
         data: { quantity: { decrement: i.qty } },
       });
     }

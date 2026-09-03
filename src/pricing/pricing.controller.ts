@@ -24,11 +24,16 @@ export class PricingController {
 
   @Get('prices/current')
   @ApiOperation({ summary: 'Get current active price for an item on a given date' })
-  @ApiQuery({ name: 'itemCode', required: true, description: 'Item code' })
+  @ApiQuery({ name: 'itemId', required: false, description: 'Item id (Item_Information.ID uuid)' })
+  @ApiQuery({ name: 'itemCode', required: false, description: 'Item code (legacy — resolved to the item id)' })
   @ApiQuery({ name: 'date', required: false, description: 'Date to check price (ISO 8601, defaults to today)' })
   @ApiResponse({ status: 200, description: 'Current price record' })
-  getCurrentPrice(@Query('itemCode') itemCode: string, @Query('date') date?: string) {
-    return this.pricingService.getCurrentPrice(itemCode, date ? new Date(date) : undefined);
+  getCurrentPrice(
+    @Query('itemId') itemId?: string,
+    @Query('itemCode') itemCode?: string,
+    @Query('date') date?: string,
+  ) {
+    return this.pricingService.getCurrentPrice(itemId ?? itemCode ?? '', date ? new Date(date) : undefined);
   }
 
   @Post('prices')

@@ -5,7 +5,7 @@ import { ReceiveStockDto, UpdateReceiveStockDto } from './dto/receive-stock.dto'
 import { IssueStockDto, UpdateIssueStockDto } from './dto/issue-stock.dto';
 import { BranchPaginationQueryDto, DateRangeQueryDto, dateRangeFilter } from '../common/dto';
 import { ItemQueryDto } from './dto/item-query.dto';
-import { assertStockAvailable, buildPaginationMeta, toBranchUuid, branchScope } from '../common/helpers';
+import { assertStockAvailable, buildPaginationMeta, toBranchUuid, branchScope, UUID_RE } from '../common/helpers';
 import { ProductionService } from '../production/production.service';
 import type { Prisma } from '../generated/prisma';
 
@@ -63,7 +63,9 @@ export class InventoryService {
     const items = rows.map((row) => {
       const price = Number(row.item?.prices?.[0]?.priceListPrice ?? 0);
       const qty = Number(row.quantity);
-      return { ...row, unitCost: price, totalValue: price * qty };
+      // `id` mirrors the primary key so list consumers have a stable row key —
+      // the same shape getStockReport returns.
+      return { ...row, id: row.itemId, unitCost: price, totalValue: price * qty };
     });
     return { items, meta: buildPaginationMeta(total, page, limit) };
   }
@@ -78,20 +80,20 @@ export class InventoryService {
    *  Inventory row are absent — the caller treats a missing id as zero. */
   async getStockLevels(): Promise<{ itemId: string; itemCode: string; quantity: number }[]> {
     const rows = await this.prisma.inventory.findMany({
-      select: { itemCode: true, quantity: true, item: { select: { id: true } } },
+      select: { itemId: true, quantity: true, item: { select: { itmCode: true } } },
     });
-    return rows
-      .filter((r) => r.item?.id)
-      .map((r) => ({
-        itemId: r.item!.id,
-        itemCode: r.itemCode,
-        quantity: Number(r.quantity),
-      }));
+    return rows.map((r) => ({
+      itemId: r.itemId,
+      itemCode: r.item.itmCode,
+      quantity: Number(r.quantity),
+    }));
   }
 
-  async findOne(itemCode: string) {
-    const stock = await this.prisma.inventory.findUnique({
-      where: { itemCode },
+  /** Takes the item uuid, or its code for callers that still hold one. */
+  async findOne(item: string) {
+    const raw = (item ?? '').trim();
+    const stock = await this.prisma.inventory.findFirst({
+      where: UUID_RE.test(raw) ? { itemId: raw } : { item: { itmCode: raw } },
       include: { item: true },
     });
     if (!stock) throw new NotFoundException('Item not found in inventory');
@@ -301,7 +303,7 @@ export class InventoryService {
     });
   }
 
-  /** A transfer is net-zero against `Inventory` — the table is keyed by itemCode
+  /** A transfer is net-zero against `Inventory` — the table is keyed by item
    *  alone, with no branch dimension, so moving units between branches leaves the
    *  balance untouched and there is nothing to deduct. What it must still not do
    *  is ship units that don't exist anywhere, so the lines are measured against
@@ -460,16 +462,17 @@ export class InventoryService {
 
   // ── Receive ───────────────────────────────────────────────────
 
-  /** Inventory is still itemCode-keyed; resolve itemId -> itmCode in one batch
-   *  before writing (same bridge pattern as assortment.service.ts /
-   *  nc-adjustment.service.ts#adjustStock). */
-  private async itemCodesByIds(ids: string[]): Promise<Map<string, string>> {
+  /** `Inventory` is keyed by the item uuid, so no lookup is needed to write it.
+   *  This still runs on the paths that never reach `assertStockAvailable`
+   *  (receive, confirm), so an unknown id is refused with a readable message
+   *  rather than a raw foreign-key violation out of the upsert. */
+  private async assertItemsExist(ids: string[]): Promise<void> {
     const uniqueIds = [...new Set(ids)];
-    const rows = await this.prisma.item_Information.findMany({ where: { id: { in: uniqueIds } }, select: { id: true, itmCode: true } });
-    const map = new Map(rows.map((r) => [r.id, r.itmCode]));
-    const missing = uniqueIds.filter((id) => !map.has(id));
+    if (!uniqueIds.length) return;
+    const found = await this.prisma.item_Information.findMany({ where: { id: { in: uniqueIds } }, select: { id: true } });
+    const known = new Set(found.map((r) => r.id));
+    const missing = uniqueIds.filter((id) => !known.has(id));
     if (missing.length) throw new BadRequestException(`Unknown item id(s): ${missing.join(', ')}`);
-    return map;
   }
 
   /** Item_Issue doesn't store the item name denormalized (unlike Item_Receive),
@@ -522,7 +525,7 @@ export class InventoryService {
     // Every line in this request shares one serial number so the whole
     // document can be looked up / edited / deleted together later.
     const serialNo = dto.serialNo || this.buildSerialNo('GRN', branchCode, baseCount + 1);
-    const codeByItemId = await this.itemCodesByIds(dto.items.map((i) => i.itemId));
+    await this.assertItemsExist(dto.items.map((i) => i.itemId));
 
     const results = await this.prisma.$transaction(async (tx) => {
       const receives = [];
@@ -543,10 +546,9 @@ export class InventoryService {
           },
         });
 
-        const itemCode = codeByItemId.get(line.itemId)!;
         await tx.inventory.upsert({
-          where: { itemCode },
-          create: { itemCode, quantity: line.qty },
+          where: { itemId: line.itemId },
+          create: { itemId: line.itemId, quantity: line.qty },
           update: { quantity: { increment: line.qty } },
         });
 
@@ -632,17 +634,13 @@ export class InventoryService {
     const purDate = new Date(dto.purDate);
     const receiveBranchId = toBranchUuid(dto.branchId ?? existing[0].receiveBranchID ?? userBranchId);
     const fromBranchId = toBranchUuid(dto.fromBranchId, existing[0].branchId ?? receiveBranchId);
-    const codeByItemId = await this.itemCodesByIds([
-      ...existing.map((r) => r.itemId).filter((id): id is string => !!id),
-      ...dto.items.map((i) => i.itemId),
-    ]);
+    await this.assertItemsExist(dto.items.map((i) => i.itemId));
 
     return this.prisma.$transaction(async (tx) => {
       // Revert the stock this document previously added, then wipe its lines.
       for (const row of existing) {
         if (row.itemId) {
-          const itemCode = codeByItemId.get(row.itemId)!;
-          await tx.inventory.updateMany({ where: { itemCode }, data: { quantity: { decrement: Number(row.qty ?? 0) } } });
+          await tx.inventory.updateMany({ where: { itemId: row.itemId }, data: { quantity: { decrement: Number(row.qty ?? 0) } } });
         }
       }
       await tx.item_Receive.deleteMany({ where: { serialNo: key } });
@@ -666,10 +664,9 @@ export class InventoryService {
             updateDate: new Date(),
           },
         });
-        const itemCode = codeByItemId.get(line.itemId)!;
         await tx.inventory.upsert({
-          where: { itemCode },
-          create: { itemCode, quantity: line.qty },
+          where: { itemId: line.itemId },
+          create: { itemId: line.itemId, quantity: line.qty },
           update: { quantity: { increment: line.qty } },
         });
         receives.push(receive);
@@ -682,12 +679,10 @@ export class InventoryService {
     const existing = await this.findReceiveRows(serialNo);
     const key = existing[0].serialNo || existing[0].id;
     this.assertNotTransfer(key, 'deleted');
-    const codeByItemId = await this.itemCodesByIds(existing.map((r) => r.itemId).filter((id): id is string => !!id));
     await this.prisma.$transaction(async (tx) => {
       for (const row of existing) {
         if (row.itemId) {
-          const itemCode = codeByItemId.get(row.itemId)!;
-          await tx.inventory.updateMany({ where: { itemCode }, data: { quantity: { decrement: Number(row.qty ?? 0) } } });
+          await tx.inventory.updateMany({ where: { itemId: row.itemId }, data: { quantity: { decrement: Number(row.qty ?? 0) } } });
         }
       }
       await tx.item_Receive.deleteMany({ where: { serialNo: key } });
@@ -762,7 +757,7 @@ export class InventoryService {
   async issueStock(dto: IssueStockDto, createdBy: string) {
     if (!dto.items?.length) throw new BadRequestException('No items to issue');
     await this.assertLinesHaveRate(dto.items);
-    const codeByItemId = await this.itemCodesByIds(dto.items.map((i) => i.itemId));
+    await this.assertItemsExist(dto.items.map((i) => i.itemId));
 
     const issueDate = new Date(dto.issueDate);
     const branchCode = await this.resolveBranchCode(dto.issueBranchId);
@@ -811,8 +806,7 @@ export class InventoryService {
           },
         });
 
-        const itemCode = codeByItemId.get(line.itemId)!;
-        await tx.inventory.update({ where: { itemCode }, data: { quantity: { decrement: line.qty } } });
+        await tx.inventory.update({ where: { itemId: line.itemId }, data: { quantity: { decrement: line.qty } } });
         issues.push(issue);
       }
       return issues;
@@ -936,7 +930,7 @@ export class InventoryService {
     if (alreadyReceived) {
       throw new ConflictException(`${key} has already been received`);
     }
-    const codeByItemId = await this.itemCodesByIds(rows.map((r) => r.itemId).filter((id): id is string => !!id));
+    await this.assertItemsExist(rows.map((r) => r.itemId).filter((id): id is string => !!id));
     const nameByItemId = await this.itemNamesByIds(rows.map((r) => r.itemId).filter((id): id is string => !!id));
     const receiveSerial = this.buildSerialNo(
       'GRN',
@@ -978,10 +972,9 @@ export class InventoryService {
           },
         });
         // upsert, not update: the receiving side may never have held this item.
-        const itemCode = codeByItemId.get(row.itemId)!;
         await tx.inventory.upsert({
-          where: { itemCode },
-          create: { itemCode, quantity: Number(row.qty ?? 0) },
+          where: { itemId: row.itemId },
+          create: { itemId: row.itemId, quantity: Number(row.qty ?? 0) },
           update: { quantity: { increment: Number(row.qty ?? 0) } },
         });
         created.push(receive);
@@ -1057,10 +1050,7 @@ export class InventoryService {
     const existing = await this.findIssueRows(serialNo);
     const key = existing[0].serialNo || existing[0].id;
     this.assertNotTransfer(key, 'edited');
-    const codeByItemId = await this.itemCodesByIds([
-      ...existing.map((r) => r.itemId).filter((id): id is string => !!id),
-      ...dto.items.map((i) => i.itemId),
-    ]);
+    await this.assertItemsExist(dto.items.map((i) => i.itemId));
     const issueDate = new Date(dto.issueDate);
 
     const issueBranchId = dto.issueBranchId ?? existing[0].issueBranchId;
@@ -1084,8 +1074,7 @@ export class InventoryService {
       // Step 1: issuing decrements stock, so give back what the old lines took.
       for (const row of existing) {
         if (row.itemId) {
-          const itemCode = codeByItemId.get(row.itemId)!;
-          await tx.inventory.updateMany({ where: { itemCode }, data: { quantity: { increment: Number(row.qty ?? 0) } } });
+          await tx.inventory.updateMany({ where: { itemId: row.itemId }, data: { quantity: { increment: Number(row.qty ?? 0) } } });
         }
       }
       await tx.item_Issue.deleteMany({ where: { serialNo: key } });
@@ -1129,8 +1118,7 @@ export class InventoryService {
             updateDate: new Date(),
           },
         });
-        const itemCode = codeByItemId.get(line.itemId)!;
-        await tx.inventory.update({ where: { itemCode }, data: { quantity: { decrement: line.qty } } });
+        await tx.inventory.update({ where: { itemId: line.itemId }, data: { quantity: { decrement: line.qty } } });
         issues.push(issue);
       }
       return issues;
@@ -1141,12 +1129,10 @@ export class InventoryService {
     const existing = await this.findIssueRows(serialNo);
     const key = existing[0].serialNo || existing[0].id;
     this.assertNotTransfer(key, 'deleted');
-    const codeByItemId = await this.itemCodesByIds(existing.map((r) => r.itemId).filter((id): id is string => !!id));
     await this.issueTransaction(async (tx) => {
       for (const row of existing) {
         if (row.itemId) {
-          const itemCode = codeByItemId.get(row.itemId)!;
-          await tx.inventory.updateMany({ where: { itemCode }, data: { quantity: { increment: Number(row.qty ?? 0) } } });
+          await tx.inventory.updateMany({ where: { itemId: row.itemId }, data: { quantity: { increment: Number(row.qty ?? 0) } } });
         }
       }
       await tx.item_Issue.deleteMany({ where: { serialNo: key } });
@@ -1214,13 +1200,10 @@ export class InventoryService {
       // Net adjustment: excess adds to stock, reject/short/assort deducts
       const netChange = (line.excess ?? 0) - ((line.reject ?? 0) + (line.short ?? 0) + (line.assort ?? 0));
       if (netChange !== 0) {
-        const item = await this.prisma.item_Information.findUnique({ where: { id: line.itmOId } });
-        if (item?.itmCode) {
-          await this.prisma.inventory.update({
-            where: { itemCode: item.itmCode },
-            data: { quantity: { increment: netChange } },
-          });
-        }
+        await this.prisma.inventory.update({
+          where: { itemId: line.itmOId },
+          data: { quantity: { increment: netChange } },
+        });
       }
       results.push(reject);
     }
@@ -1323,8 +1306,7 @@ export class InventoryService {
         if (row.itmOId) {
           const netChange = Number(row.excess ?? 0) - (Number(row.reject ?? 0) + Number(row.short ?? 0) + Number(row.assort ?? 0));
           if (netChange !== 0) {
-            const item = await tx.item_Information.findUnique({ where: { id: row.itmOId } });
-            if (item?.itmCode) await tx.inventory.updateMany({ where: { itemCode: item.itmCode }, data: { quantity: { decrement: netChange } } });
+            await tx.inventory.updateMany({ where: { itemId: row.itmOId }, data: { quantity: { decrement: netChange } } });
           }
         }
       }
@@ -1347,8 +1329,7 @@ export class InventoryService {
         });
         const netChange = (line.excess ?? 0) - ((line.reject ?? 0) + (line.short ?? 0) + (line.assort ?? 0));
         if (netChange !== 0) {
-          const item = await tx.item_Information.findUnique({ where: { id: line.itmOId } });
-          if (item?.itmCode) await tx.inventory.update({ where: { itemCode: item.itmCode }, data: { quantity: { increment: netChange } } });
+          await tx.inventory.update({ where: { itemId: line.itmOId }, data: { quantity: { increment: netChange } } });
         }
         rows.push(row);
       }
@@ -1364,8 +1345,7 @@ export class InventoryService {
         if (row.itmOId) {
           const netChange = Number(row.excess ?? 0) - (Number(row.reject ?? 0) + Number(row.short ?? 0) + Number(row.assort ?? 0));
           if (netChange !== 0) {
-            const item = await tx.item_Information.findUnique({ where: { id: row.itmOId } });
-            if (item?.itmCode) await tx.inventory.updateMany({ where: { itemCode: item.itmCode }, data: { quantity: { decrement: netChange } } });
+            await tx.inventory.updateMany({ where: { itemId: row.itmOId }, data: { quantity: { decrement: netChange } } });
           }
         }
       }

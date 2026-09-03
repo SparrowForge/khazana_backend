@@ -2193,15 +2193,15 @@
         ]
       }
     },
-    "/inventory/stock/{itemCode}": {
+    "/inventory/stock/{item}": {
       "get": {
         "operationId": "InventoryController_findOne",
         "parameters": [
           {
-            "name": "itemCode",
+            "name": "item",
             "required": true,
             "in": "path",
-            "description": "Item code",
+            "description": "Item id (Item_Information.ID uuid), or its item code",
             "schema": {
               "type": "string"
             }
@@ -4266,10 +4266,19 @@
             }
           },
           {
+            "name": "itemId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by item id (Item_Information.ID uuid)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "itemCode",
             "required": false,
             "in": "query",
-            "description": "Filter by item code",
+            "description": "Filter by item code (legacy — resolved to the item id)",
             "schema": {
               "type": "string"
             }
@@ -4314,10 +4323,19 @@
         "operationId": "PricingController_getCurrentPrice",
         "parameters": [
           {
-            "name": "itemCode",
-            "required": true,
+            "name": "itemId",
+            "required": false,
             "in": "query",
-            "description": "Item code",
+            "description": "Item id (Item_Information.ID uuid)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemCode",
+            "required": false,
+            "in": "query",
+            "description": "Item code (legacy — resolved to the item id)",
             "schema": {
               "type": "string"
             }
@@ -4406,10 +4424,19 @@
             }
           },
           {
+            "name": "itemId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by item id (Item_Information.ID uuid)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "itemCode",
             "required": false,
             "in": "query",
-            "description": "Filter by item code",
+            "description": "Filter by item code (legacy — resolved to the item id)",
             "schema": {
               "type": "string"
             }

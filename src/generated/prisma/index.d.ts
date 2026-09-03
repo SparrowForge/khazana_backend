@@ -114,7 +114,9 @@ export type Item_Category = $Result.DefaultSelection<Prisma.$Item_CategoryPayloa
 export type RW_Stock = $Result.DefaultSelection<Prisma.$RW_StockPayload>
 /**
  * Model Inventory
- * 
+ * Whole-company on-hand balance per item — no branch dimension, so a branch
+ * transfer is net-zero against it. Keyed by Item_Information.ID since the
+ * inventory_itemcode_to_uuid migration; every caller already held the uuid.
  */
 export type Inventory = $Result.DefaultSelection<Prisma.$InventoryPayload>
 /**
@@ -23431,9 +23433,9 @@ export namespace Prisma {
     orderDetails?: boolean | Item_Information$orderDetailsArgs<ExtArgs>
     demandOrderDetails?: boolean | Item_Information$demandOrderDetailsArgs<ExtArgs>
     vehicleChallans?: boolean | Item_Information$vehicleChallansArgs<ExtArgs>
-    inventory?: boolean | Item_Information$inventoryArgs<ExtArgs>
     prices?: boolean | Item_Information$pricesArgs<ExtArgs>
     costPrices?: boolean | Item_Information$costPricesArgs<ExtArgs>
+    inventory?: boolean | Item_Information$inventoryArgs<ExtArgs>
     _count?: boolean | Item_InformationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["item_Information"]>
 
@@ -23499,9 +23501,9 @@ export namespace Prisma {
     orderDetails?: boolean | Item_Information$orderDetailsArgs<ExtArgs>
     demandOrderDetails?: boolean | Item_Information$demandOrderDetailsArgs<ExtArgs>
     vehicleChallans?: boolean | Item_Information$vehicleChallansArgs<ExtArgs>
-    inventory?: boolean | Item_Information$inventoryArgs<ExtArgs>
     prices?: boolean | Item_Information$pricesArgs<ExtArgs>
     costPrices?: boolean | Item_Information$costPricesArgs<ExtArgs>
+    inventory?: boolean | Item_Information$inventoryArgs<ExtArgs>
     _count?: boolean | Item_InformationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type Item_InformationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -23527,9 +23529,9 @@ export namespace Prisma {
       orderDetails: Prisma.$OrderReceive_DetailPayload<ExtArgs>[]
       demandOrderDetails: Prisma.$DemandOrder_DetailPayload<ExtArgs>[]
       vehicleChallans: Prisma.$Vehicle_ChallanPayload<ExtArgs>[]
-      inventory: Prisma.$InventoryPayload<ExtArgs> | null
       prices: Prisma.$t_PricePayload<ExtArgs>[]
       costPrices: Prisma.$t_CostPrPayload<ExtArgs>[]
+      inventory: Prisma.$InventoryPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -23956,9 +23958,9 @@ export namespace Prisma {
     orderDetails<T extends Item_Information$orderDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$orderDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderReceive_DetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     demandOrderDetails<T extends Item_Information$demandOrderDetailsArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$demandOrderDetailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemandOrder_DetailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     vehicleChallans<T extends Item_Information$vehicleChallansArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$vehicleChallansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Vehicle_ChallanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    inventory<T extends Item_Information$inventoryArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$inventoryArgs<ExtArgs>>): Prisma__InventoryClient<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     prices<T extends Item_Information$pricesArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$pricesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_PricePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     costPrices<T extends Item_Information$costPricesArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$costPricesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_CostPrPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    inventory<T extends Item_Information$inventoryArgs<ExtArgs> = {}>(args?: Subset<T, Item_Information$inventoryArgs<ExtArgs>>): Prisma__InventoryClient<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24703,25 +24705,6 @@ export namespace Prisma {
   }
 
   /**
-   * Item_Information.inventory
-   */
-  export type Item_Information$inventoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Inventory
-     */
-    select?: InventorySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Inventory
-     */
-    omit?: InventoryOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: InventoryInclude<ExtArgs> | null
-    where?: InventoryWhereInput
-  }
-
-  /**
    * Item_Information.prices
    */
   export type Item_Information$pricesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -24767,6 +24750,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: T_CostPrScalarFieldEnum | T_CostPrScalarFieldEnum[]
+  }
+
+  /**
+   * Item_Information.inventory
+   */
+  export type Item_Information$inventoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inventory
+     */
+    select?: InventorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inventory
+     */
+    omit?: InventoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryInclude<ExtArgs> | null
+    where?: InventoryWhereInput
   }
 
   /**
@@ -27793,17 +27795,17 @@ export namespace Prisma {
   }
 
   export type InventoryMinAggregateOutputType = {
-    itemCode: string | null
+    itemId: string | null
     quantity: Decimal | null
   }
 
   export type InventoryMaxAggregateOutputType = {
-    itemCode: string | null
+    itemId: string | null
     quantity: Decimal | null
   }
 
   export type InventoryCountAggregateOutputType = {
-    itemCode: number
+    itemId: number
     quantity: number
     _all: number
   }
@@ -27818,17 +27820,17 @@ export namespace Prisma {
   }
 
   export type InventoryMinAggregateInputType = {
-    itemCode?: true
+    itemId?: true
     quantity?: true
   }
 
   export type InventoryMaxAggregateInputType = {
-    itemCode?: true
+    itemId?: true
     quantity?: true
   }
 
   export type InventoryCountAggregateInputType = {
-    itemCode?: true
+    itemId?: true
     quantity?: true
     _all?: true
   }
@@ -27920,7 +27922,7 @@ export namespace Prisma {
   }
 
   export type InventoryGroupByOutputType = {
-    itemCode: string
+    itemId: string
     quantity: Decimal
     _count: InventoryCountAggregateOutputType | null
     _avg: InventoryAvgAggregateOutputType | null
@@ -27944,29 +27946,29 @@ export namespace Prisma {
 
 
   export type InventorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    itemCode?: boolean
+    itemId?: boolean
     quantity?: boolean
     item?: boolean | Item_InformationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventory"]>
 
   export type InventorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    itemCode?: boolean
+    itemId?: boolean
     quantity?: boolean
     item?: boolean | Item_InformationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventory"]>
 
   export type InventorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    itemCode?: boolean
+    itemId?: boolean
     quantity?: boolean
     item?: boolean | Item_InformationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["inventory"]>
 
   export type InventorySelectScalar = {
-    itemCode?: boolean
+    itemId?: boolean
     quantity?: boolean
   }
 
-  export type InventoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"itemCode" | "quantity", ExtArgs["result"]["inventory"]>
+  export type InventoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"itemId" | "quantity", ExtArgs["result"]["inventory"]>
   export type InventoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     item?: boolean | Item_InformationDefaultArgs<ExtArgs>
   }
@@ -27983,7 +27985,7 @@ export namespace Prisma {
       item: Prisma.$Item_InformationPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
-      itemCode: string
+      itemId: string
       quantity: Prisma.Decimal
     }, ExtArgs["result"]["inventory"]>
     composites: {}
@@ -28068,8 +28070,8 @@ export namespace Prisma {
      * // Get first 10 Inventories
      * const inventories = await prisma.inventory.findMany({ take: 10 })
      * 
-     * // Only select the `itemCode`
-     * const inventoryWithItemCodeOnly = await prisma.inventory.findMany({ select: { itemCode: true } })
+     * // Only select the `itemId`
+     * const inventoryWithItemIdOnly = await prisma.inventory.findMany({ select: { itemId: true } })
      * 
      */
     findMany<T extends InventoryFindManyArgs>(args?: SelectSubset<T, InventoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -28113,9 +28115,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Create many Inventories and only return the `itemCode`
-     * const inventoryWithItemCodeOnly = await prisma.inventory.createManyAndReturn({
-     *   select: { itemCode: true },
+     * // Create many Inventories and only return the `itemId`
+     * const inventoryWithItemIdOnly = await prisma.inventory.createManyAndReturn({
+     *   select: { itemId: true },
      *   data: [
      *     // ... provide data here
      *   ]
@@ -28204,9 +28206,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Inventories and only return the `itemCode`
-     * const inventoryWithItemCodeOnly = await prisma.inventory.updateManyAndReturn({
-     *   select: { itemCode: true },
+     * // Update zero or more Inventories and only return the `itemId`
+     * const inventoryWithItemIdOnly = await prisma.inventory.updateManyAndReturn({
+     *   select: { itemId: true },
      *   where: {
      *     // ... provide filter here
      *   },
@@ -28409,7 +28411,7 @@ export namespace Prisma {
    * Fields of the Inventory model
    */
   interface InventoryFieldRefs {
-    readonly itemCode: FieldRef<"Inventory", 'String'>
+    readonly itemId: FieldRef<"Inventory", 'String'>
     readonly quantity: FieldRef<"Inventory", 'Decimal'>
   }
     
@@ -29056,7 +29058,7 @@ export namespace Prisma {
 
   export type T_PriceGroupByOutputType = {
     id: string
-    priceItemOId: string
+    priceItemOId: string | null
     priceFromDate: Date | null
     priceToDate: Date | null
     priceListPrice: number | null
@@ -29174,7 +29176,11 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      priceItemOId: string
+      /**
+       * Item_Information.ID (uuid). Was the loose item CODE until the
+       * price_itemoid_to_uuid migration, so a code rename no longer strands a price.
+       */
+      priceItemOId: string | null
       priceFromDate: Date | null
       priceToDate: Date | null
       priceListPrice: number | null
@@ -29841,7 +29847,7 @@ export namespace Prisma {
     /**
      * The data needed to create a t_Price.
      */
-    data: XOR<t_PriceCreateInput, t_PriceUncheckedCreateInput>
+    data?: XOR<t_PriceCreateInput, t_PriceUncheckedCreateInput>
   }
 
   /**
@@ -30287,7 +30293,7 @@ export namespace Prisma {
 
   export type T_CostPrGroupByOutputType = {
     id: string
-    priceItemOId: string
+    priceItemOId: string | null
     priceFromDate: Date | null
     priceToDate: Date | null
     priceListPrice: number | null
@@ -30405,7 +30411,11 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      priceItemOId: string
+      /**
+       * Item_Information.ID (uuid). Was the loose item CODE until the
+       * price_itemoid_to_uuid migration, so a code rename no longer strands a price.
+       */
+      priceItemOId: string | null
       priceFromDate: Date | null
       priceToDate: Date | null
       priceListPrice: number | null
@@ -31072,7 +31082,7 @@ export namespace Prisma {
     /**
      * The data needed to create a t_CostPr.
      */
-    data: XOR<t_CostPrCreateInput, t_CostPrUncheckedCreateInput>
+    data?: XOR<t_CostPrCreateInput, t_CostPrUncheckedCreateInput>
   }
 
   /**
@@ -68897,7 +68907,7 @@ export namespace Prisma {
 
 
   export const InventoryScalarFieldEnum: {
-    itemCode: 'itemCode',
+    itemId: 'itemId',
     quantity: 'quantity'
   };
 
@@ -70840,9 +70850,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailListRelationFilter
     demandOrderDetails?: DemandOrder_DetailListRelationFilter
     vehicleChallans?: Vehicle_ChallanListRelationFilter
-    inventory?: XOR<InventoryNullableScalarRelationFilter, InventoryWhereInput> | null
     prices?: T_PriceListRelationFilter
     costPrices?: T_CostPrListRelationFilter
+    inventory?: XOR<InventoryNullableScalarRelationFilter, InventoryWhereInput> | null
   }
 
   export type Item_InformationOrderByWithRelationInput = {
@@ -70871,9 +70881,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailOrderByRelationAggregateInput
     demandOrderDetails?: DemandOrder_DetailOrderByRelationAggregateInput
     vehicleChallans?: Vehicle_ChallanOrderByRelationAggregateInput
-    inventory?: InventoryOrderByWithRelationInput
     prices?: t_PriceOrderByRelationAggregateInput
     costPrices?: t_CostPrOrderByRelationAggregateInput
+    inventory?: InventoryOrderByWithRelationInput
   }
 
   export type Item_InformationWhereUniqueInput = Prisma.AtLeast<{
@@ -70905,9 +70915,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailListRelationFilter
     demandOrderDetails?: DemandOrder_DetailListRelationFilter
     vehicleChallans?: Vehicle_ChallanListRelationFilter
-    inventory?: XOR<InventoryNullableScalarRelationFilter, InventoryWhereInput> | null
     prices?: T_PriceListRelationFilter
     costPrices?: T_CostPrListRelationFilter
+    inventory?: XOR<InventoryNullableScalarRelationFilter, InventoryWhereInput> | null
   }, "id" | "itmCode">
 
   export type Item_InformationOrderByWithAggregationInput = {
@@ -71095,28 +71105,28 @@ export namespace Prisma {
     AND?: InventoryWhereInput | InventoryWhereInput[]
     OR?: InventoryWhereInput[]
     NOT?: InventoryWhereInput | InventoryWhereInput[]
-    itemCode?: StringFilter<"Inventory"> | string
+    itemId?: UuidFilter<"Inventory"> | string
     quantity?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
     item?: XOR<Item_InformationScalarRelationFilter, Item_InformationWhereInput>
   }
 
   export type InventoryOrderByWithRelationInput = {
-    itemCode?: SortOrder
+    itemId?: SortOrder
     quantity?: SortOrder
     item?: Item_InformationOrderByWithRelationInput
   }
 
   export type InventoryWhereUniqueInput = Prisma.AtLeast<{
-    itemCode?: string
+    itemId?: string
     AND?: InventoryWhereInput | InventoryWhereInput[]
     OR?: InventoryWhereInput[]
     NOT?: InventoryWhereInput | InventoryWhereInput[]
     quantity?: DecimalFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
     item?: XOR<Item_InformationScalarRelationFilter, Item_InformationWhereInput>
-  }, "itemCode">
+  }, "itemId">
 
   export type InventoryOrderByWithAggregationInput = {
-    itemCode?: SortOrder
+    itemId?: SortOrder
     quantity?: SortOrder
     _count?: InventoryCountOrderByAggregateInput
     _avg?: InventoryAvgOrderByAggregateInput
@@ -71129,7 +71139,7 @@ export namespace Prisma {
     AND?: InventoryScalarWhereWithAggregatesInput | InventoryScalarWhereWithAggregatesInput[]
     OR?: InventoryScalarWhereWithAggregatesInput[]
     NOT?: InventoryScalarWhereWithAggregatesInput | InventoryScalarWhereWithAggregatesInput[]
-    itemCode?: StringWithAggregatesFilter<"Inventory"> | string
+    itemId?: UuidWithAggregatesFilter<"Inventory"> | string
     quantity?: DecimalWithAggregatesFilter<"Inventory"> | Decimal | DecimalJsLike | number | string
   }
 
@@ -71138,7 +71148,7 @@ export namespace Prisma {
     OR?: t_PriceWhereInput[]
     NOT?: t_PriceWhereInput | t_PriceWhereInput[]
     id?: UuidFilter<"t_Price"> | string
-    priceItemOId?: StringFilter<"t_Price"> | string
+    priceItemOId?: UuidNullableFilter<"t_Price"> | string | null
     priceFromDate?: DateTimeNullableFilter<"t_Price"> | Date | string | null
     priceToDate?: DateTimeNullableFilter<"t_Price"> | Date | string | null
     priceListPrice?: FloatNullableFilter<"t_Price"> | number | null
@@ -71155,7 +71165,7 @@ export namespace Prisma {
 
   export type t_PriceOrderByWithRelationInput = {
     id?: SortOrder
-    priceItemOId?: SortOrder
+    priceItemOId?: SortOrderInput | SortOrder
     priceFromDate?: SortOrderInput | SortOrder
     priceToDate?: SortOrderInput | SortOrder
     priceListPrice?: SortOrderInput | SortOrder
@@ -71175,7 +71185,7 @@ export namespace Prisma {
     AND?: t_PriceWhereInput | t_PriceWhereInput[]
     OR?: t_PriceWhereInput[]
     NOT?: t_PriceWhereInput | t_PriceWhereInput[]
-    priceItemOId?: StringFilter<"t_Price"> | string
+    priceItemOId?: UuidNullableFilter<"t_Price"> | string | null
     priceFromDate?: DateTimeNullableFilter<"t_Price"> | Date | string | null
     priceToDate?: DateTimeNullableFilter<"t_Price"> | Date | string | null
     priceListPrice?: FloatNullableFilter<"t_Price"> | number | null
@@ -71192,7 +71202,7 @@ export namespace Prisma {
 
   export type t_PriceOrderByWithAggregationInput = {
     id?: SortOrder
-    priceItemOId?: SortOrder
+    priceItemOId?: SortOrderInput | SortOrder
     priceFromDate?: SortOrderInput | SortOrder
     priceToDate?: SortOrderInput | SortOrder
     priceListPrice?: SortOrderInput | SortOrder
@@ -71216,7 +71226,7 @@ export namespace Prisma {
     OR?: t_PriceScalarWhereWithAggregatesInput[]
     NOT?: t_PriceScalarWhereWithAggregatesInput | t_PriceScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"t_Price"> | string
-    priceItemOId?: StringWithAggregatesFilter<"t_Price"> | string
+    priceItemOId?: UuidNullableWithAggregatesFilter<"t_Price"> | string | null
     priceFromDate?: DateTimeNullableWithAggregatesFilter<"t_Price"> | Date | string | null
     priceToDate?: DateTimeNullableWithAggregatesFilter<"t_Price"> | Date | string | null
     priceListPrice?: FloatNullableWithAggregatesFilter<"t_Price"> | number | null
@@ -71235,7 +71245,7 @@ export namespace Prisma {
     OR?: t_CostPrWhereInput[]
     NOT?: t_CostPrWhereInput | t_CostPrWhereInput[]
     id?: UuidFilter<"t_CostPr"> | string
-    priceItemOId?: StringFilter<"t_CostPr"> | string
+    priceItemOId?: UuidNullableFilter<"t_CostPr"> | string | null
     priceFromDate?: DateTimeNullableFilter<"t_CostPr"> | Date | string | null
     priceToDate?: DateTimeNullableFilter<"t_CostPr"> | Date | string | null
     priceListPrice?: FloatNullableFilter<"t_CostPr"> | number | null
@@ -71252,7 +71262,7 @@ export namespace Prisma {
 
   export type t_CostPrOrderByWithRelationInput = {
     id?: SortOrder
-    priceItemOId?: SortOrder
+    priceItemOId?: SortOrderInput | SortOrder
     priceFromDate?: SortOrderInput | SortOrder
     priceToDate?: SortOrderInput | SortOrder
     priceListPrice?: SortOrderInput | SortOrder
@@ -71272,7 +71282,7 @@ export namespace Prisma {
     AND?: t_CostPrWhereInput | t_CostPrWhereInput[]
     OR?: t_CostPrWhereInput[]
     NOT?: t_CostPrWhereInput | t_CostPrWhereInput[]
-    priceItemOId?: StringFilter<"t_CostPr"> | string
+    priceItemOId?: UuidNullableFilter<"t_CostPr"> | string | null
     priceFromDate?: DateTimeNullableFilter<"t_CostPr"> | Date | string | null
     priceToDate?: DateTimeNullableFilter<"t_CostPr"> | Date | string | null
     priceListPrice?: FloatNullableFilter<"t_CostPr"> | number | null
@@ -71289,7 +71299,7 @@ export namespace Prisma {
 
   export type t_CostPrOrderByWithAggregationInput = {
     id?: SortOrder
-    priceItemOId?: SortOrder
+    priceItemOId?: SortOrderInput | SortOrder
     priceFromDate?: SortOrderInput | SortOrder
     priceToDate?: SortOrderInput | SortOrder
     priceListPrice?: SortOrderInput | SortOrder
@@ -71313,7 +71323,7 @@ export namespace Prisma {
     OR?: t_CostPrScalarWhereWithAggregatesInput[]
     NOT?: t_CostPrScalarWhereWithAggregatesInput | t_CostPrScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"t_CostPr"> | string
-    priceItemOId?: StringWithAggregatesFilter<"t_CostPr"> | string
+    priceItemOId?: UuidNullableWithAggregatesFilter<"t_CostPr"> | string | null
     priceFromDate?: DateTimeNullableWithAggregatesFilter<"t_CostPr"> | Date | string | null
     priceToDate?: DateTimeNullableWithAggregatesFilter<"t_CostPr"> | Date | string | null
     priceListPrice?: FloatNullableWithAggregatesFilter<"t_CostPr"> | number | null
@@ -75703,9 +75713,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateInput = {
@@ -75733,9 +75743,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUpdateInput = {
@@ -75763,9 +75773,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateInput = {
@@ -75793,9 +75803,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationCreateManyInput = {
@@ -75995,7 +76005,7 @@ export namespace Prisma {
   }
 
   export type InventoryUncheckedCreateInput = {
-    itemCode: string
+    itemId: string
     quantity?: Decimal | DecimalJsLike | number | string
   }
 
@@ -76005,12 +76015,12 @@ export namespace Prisma {
   }
 
   export type InventoryUncheckedUpdateInput = {
-    itemCode?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type InventoryCreateManyInput = {
-    itemCode: string
+    itemId: string
     quantity?: Decimal | DecimalJsLike | number | string
   }
 
@@ -76019,7 +76029,7 @@ export namespace Prisma {
   }
 
   export type InventoryUncheckedUpdateManyInput = {
-    itemCode?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
@@ -76041,7 +76051,7 @@ export namespace Prisma {
 
   export type t_PriceUncheckedCreateInput = {
     id?: string
-    priceItemOId: string
+    priceItemOId?: string | null
     priceFromDate?: Date | string | null
     priceToDate?: Date | string | null
     priceListPrice?: number | null
@@ -76073,7 +76083,7 @@ export namespace Prisma {
 
   export type t_PriceUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    priceItemOId?: StringFieldUpdateOperationsInput | string
+    priceItemOId?: NullableStringFieldUpdateOperationsInput | string | null
     priceFromDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceToDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceListPrice?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -76089,7 +76099,7 @@ export namespace Prisma {
 
   export type t_PriceCreateManyInput = {
     id?: string
-    priceItemOId: string
+    priceItemOId?: string | null
     priceFromDate?: Date | string | null
     priceToDate?: Date | string | null
     priceListPrice?: number | null
@@ -76120,7 +76130,7 @@ export namespace Prisma {
 
   export type t_PriceUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    priceItemOId?: StringFieldUpdateOperationsInput | string
+    priceItemOId?: NullableStringFieldUpdateOperationsInput | string | null
     priceFromDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceToDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceListPrice?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -76152,7 +76162,7 @@ export namespace Prisma {
 
   export type t_CostPrUncheckedCreateInput = {
     id?: string
-    priceItemOId: string
+    priceItemOId?: string | null
     priceFromDate?: Date | string | null
     priceToDate?: Date | string | null
     priceListPrice?: number | null
@@ -76184,7 +76194,7 @@ export namespace Prisma {
 
   export type t_CostPrUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    priceItemOId?: StringFieldUpdateOperationsInput | string
+    priceItemOId?: NullableStringFieldUpdateOperationsInput | string | null
     priceFromDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceToDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceListPrice?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -76200,7 +76210,7 @@ export namespace Prisma {
 
   export type t_CostPrCreateManyInput = {
     id?: string
-    priceItemOId: string
+    priceItemOId?: string | null
     priceFromDate?: Date | string | null
     priceToDate?: Date | string | null
     priceListPrice?: number | null
@@ -76231,7 +76241,7 @@ export namespace Prisma {
 
   export type t_CostPrUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    priceItemOId?: StringFieldUpdateOperationsInput | string
+    priceItemOId?: NullableStringFieldUpdateOperationsInput | string | null
     priceFromDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceToDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priceListPrice?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -80952,11 +80962,6 @@ export namespace Prisma {
     none?: Vehicle_ChallanWhereInput
   }
 
-  export type InventoryNullableScalarRelationFilter = {
-    is?: InventoryWhereInput | null
-    isNot?: InventoryWhereInput | null
-  }
-
   export type T_PriceListRelationFilter = {
     every?: t_PriceWhereInput
     some?: t_PriceWhereInput
@@ -80967,6 +80972,11 @@ export namespace Prisma {
     every?: t_CostPrWhereInput
     some?: t_CostPrWhereInput
     none?: t_CostPrWhereInput
+  }
+
+  export type InventoryNullableScalarRelationFilter = {
+    is?: InventoryWhereInput | null
+    isNot?: InventoryWhereInput | null
   }
 
   export type t_SODetOrderByRelationAggregateInput = {
@@ -81184,7 +81194,7 @@ export namespace Prisma {
   }
 
   export type InventoryCountOrderByAggregateInput = {
-    itemCode?: SortOrder
+    itemId?: SortOrder
     quantity?: SortOrder
   }
 
@@ -81193,12 +81203,12 @@ export namespace Prisma {
   }
 
   export type InventoryMaxOrderByAggregateInput = {
-    itemCode?: SortOrder
+    itemId?: SortOrder
     quantity?: SortOrder
   }
 
   export type InventoryMinOrderByAggregateInput = {
-    itemCode?: SortOrder
+    itemId?: SortOrder
     quantity?: SortOrder
   }
 
@@ -84303,12 +84313,6 @@ export namespace Prisma {
     connect?: Vehicle_ChallanWhereUniqueInput | Vehicle_ChallanWhereUniqueInput[]
   }
 
-  export type InventoryCreateNestedOneWithoutItemInput = {
-    create?: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
-    connectOrCreate?: InventoryCreateOrConnectWithoutItemInput
-    connect?: InventoryWhereUniqueInput
-  }
-
   export type t_PriceCreateNestedManyWithoutItemInput = {
     create?: XOR<t_PriceCreateWithoutItemInput, t_PriceUncheckedCreateWithoutItemInput> | t_PriceCreateWithoutItemInput[] | t_PriceUncheckedCreateWithoutItemInput[]
     connectOrCreate?: t_PriceCreateOrConnectWithoutItemInput | t_PriceCreateOrConnectWithoutItemInput[]
@@ -84321,6 +84325,12 @@ export namespace Prisma {
     connectOrCreate?: t_CostPrCreateOrConnectWithoutItemInput | t_CostPrCreateOrConnectWithoutItemInput[]
     createMany?: t_CostPrCreateManyItemInputEnvelope
     connect?: t_CostPrWhereUniqueInput | t_CostPrWhereUniqueInput[]
+  }
+
+  export type InventoryCreateNestedOneWithoutItemInput = {
+    create?: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
+    connectOrCreate?: InventoryCreateOrConnectWithoutItemInput
+    connect?: InventoryWhereUniqueInput
   }
 
   export type t_SODetUncheckedCreateNestedManyWithoutItemInput = {
@@ -84407,12 +84417,6 @@ export namespace Prisma {
     connect?: Vehicle_ChallanWhereUniqueInput | Vehicle_ChallanWhereUniqueInput[]
   }
 
-  export type InventoryUncheckedCreateNestedOneWithoutItemInput = {
-    create?: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
-    connectOrCreate?: InventoryCreateOrConnectWithoutItemInput
-    connect?: InventoryWhereUniqueInput
-  }
-
   export type t_PriceUncheckedCreateNestedManyWithoutItemInput = {
     create?: XOR<t_PriceCreateWithoutItemInput, t_PriceUncheckedCreateWithoutItemInput> | t_PriceCreateWithoutItemInput[] | t_PriceUncheckedCreateWithoutItemInput[]
     connectOrCreate?: t_PriceCreateOrConnectWithoutItemInput | t_PriceCreateOrConnectWithoutItemInput[]
@@ -84425,6 +84429,12 @@ export namespace Prisma {
     connectOrCreate?: t_CostPrCreateOrConnectWithoutItemInput | t_CostPrCreateOrConnectWithoutItemInput[]
     createMany?: t_CostPrCreateManyItemInputEnvelope
     connect?: t_CostPrWhereUniqueInput | t_CostPrWhereUniqueInput[]
+  }
+
+  export type InventoryUncheckedCreateNestedOneWithoutItemInput = {
+    create?: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
+    connectOrCreate?: InventoryCreateOrConnectWithoutItemInput
+    connect?: InventoryWhereUniqueInput
   }
 
   export type MediaFileUpdateOneWithoutItemsNestedInput = {
@@ -84605,16 +84615,6 @@ export namespace Prisma {
     deleteMany?: Vehicle_ChallanScalarWhereInput | Vehicle_ChallanScalarWhereInput[]
   }
 
-  export type InventoryUpdateOneWithoutItemNestedInput = {
-    create?: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
-    connectOrCreate?: InventoryCreateOrConnectWithoutItemInput
-    upsert?: InventoryUpsertWithoutItemInput
-    disconnect?: InventoryWhereInput | boolean
-    delete?: InventoryWhereInput | boolean
-    connect?: InventoryWhereUniqueInput
-    update?: XOR<XOR<InventoryUpdateToOneWithWhereWithoutItemInput, InventoryUpdateWithoutItemInput>, InventoryUncheckedUpdateWithoutItemInput>
-  }
-
   export type t_PriceUpdateManyWithoutItemNestedInput = {
     create?: XOR<t_PriceCreateWithoutItemInput, t_PriceUncheckedCreateWithoutItemInput> | t_PriceCreateWithoutItemInput[] | t_PriceUncheckedCreateWithoutItemInput[]
     connectOrCreate?: t_PriceCreateOrConnectWithoutItemInput | t_PriceCreateOrConnectWithoutItemInput[]
@@ -84641,6 +84641,16 @@ export namespace Prisma {
     update?: t_CostPrUpdateWithWhereUniqueWithoutItemInput | t_CostPrUpdateWithWhereUniqueWithoutItemInput[]
     updateMany?: t_CostPrUpdateManyWithWhereWithoutItemInput | t_CostPrUpdateManyWithWhereWithoutItemInput[]
     deleteMany?: t_CostPrScalarWhereInput | t_CostPrScalarWhereInput[]
+  }
+
+  export type InventoryUpdateOneWithoutItemNestedInput = {
+    create?: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
+    connectOrCreate?: InventoryCreateOrConnectWithoutItemInput
+    upsert?: InventoryUpsertWithoutItemInput
+    disconnect?: InventoryWhereInput | boolean
+    delete?: InventoryWhereInput | boolean
+    connect?: InventoryWhereUniqueInput
+    update?: XOR<XOR<InventoryUpdateToOneWithWhereWithoutItemInput, InventoryUpdateWithoutItemInput>, InventoryUncheckedUpdateWithoutItemInput>
   }
 
   export type t_SODetUncheckedUpdateManyWithoutItemNestedInput = {
@@ -84811,16 +84821,6 @@ export namespace Prisma {
     deleteMany?: Vehicle_ChallanScalarWhereInput | Vehicle_ChallanScalarWhereInput[]
   }
 
-  export type InventoryUncheckedUpdateOneWithoutItemNestedInput = {
-    create?: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
-    connectOrCreate?: InventoryCreateOrConnectWithoutItemInput
-    upsert?: InventoryUpsertWithoutItemInput
-    disconnect?: InventoryWhereInput | boolean
-    delete?: InventoryWhereInput | boolean
-    connect?: InventoryWhereUniqueInput
-    update?: XOR<XOR<InventoryUpdateToOneWithWhereWithoutItemInput, InventoryUpdateWithoutItemInput>, InventoryUncheckedUpdateWithoutItemInput>
-  }
-
   export type t_PriceUncheckedUpdateManyWithoutItemNestedInput = {
     create?: XOR<t_PriceCreateWithoutItemInput, t_PriceUncheckedCreateWithoutItemInput> | t_PriceCreateWithoutItemInput[] | t_PriceUncheckedCreateWithoutItemInput[]
     connectOrCreate?: t_PriceCreateOrConnectWithoutItemInput | t_PriceCreateOrConnectWithoutItemInput[]
@@ -84847,6 +84847,16 @@ export namespace Prisma {
     update?: t_CostPrUpdateWithWhereUniqueWithoutItemInput | t_CostPrUpdateWithWhereUniqueWithoutItemInput[]
     updateMany?: t_CostPrUpdateManyWithWhereWithoutItemInput | t_CostPrUpdateManyWithWhereWithoutItemInput[]
     deleteMany?: t_CostPrScalarWhereInput | t_CostPrScalarWhereInput[]
+  }
+
+  export type InventoryUncheckedUpdateOneWithoutItemNestedInput = {
+    create?: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
+    connectOrCreate?: InventoryCreateOrConnectWithoutItemInput
+    upsert?: InventoryUpsertWithoutItemInput
+    disconnect?: InventoryWhereInput | boolean
+    delete?: InventoryWhereInput | boolean
+    connect?: InventoryWhereUniqueInput
+    update?: XOR<XOR<InventoryUpdateToOneWithWhereWithoutItemInput, InventoryUpdateWithoutItemInput>, InventoryUncheckedUpdateWithoutItemInput>
   }
 
   export type DecimalFieldUpdateOperationsInput = {
@@ -86331,9 +86341,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutImageInput = {
@@ -86360,9 +86370,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutImageInput = {
@@ -88471,19 +88481,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type InventoryCreateWithoutItemInput = {
-    quantity?: Decimal | DecimalJsLike | number | string
-  }
-
-  export type InventoryUncheckedCreateWithoutItemInput = {
-    quantity?: Decimal | DecimalJsLike | number | string
-  }
-
-  export type InventoryCreateOrConnectWithoutItemInput = {
-    where: InventoryWhereUniqueInput
-    create: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
-  }
-
   export type t_PriceCreateWithoutItemInput = {
     id?: string
     priceFromDate?: Date | string | null
@@ -88562,6 +88559,19 @@ export namespace Prisma {
   export type t_CostPrCreateManyItemInputEnvelope = {
     data: t_CostPrCreateManyItemInput | t_CostPrCreateManyItemInput[]
     skipDuplicates?: boolean
+  }
+
+  export type InventoryCreateWithoutItemInput = {
+    quantity?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type InventoryUncheckedCreateWithoutItemInput = {
+    quantity?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type InventoryCreateOrConnectWithoutItemInput = {
+    where: InventoryWhereUniqueInput
+    create: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
   }
 
   export type MediaFileUpsertWithoutItemsInput = {
@@ -89038,25 +89048,6 @@ export namespace Prisma {
     updateDate?: DateTimeNullableFilter<"Vehicle_Challan"> | Date | string | null
   }
 
-  export type InventoryUpsertWithoutItemInput = {
-    update: XOR<InventoryUpdateWithoutItemInput, InventoryUncheckedUpdateWithoutItemInput>
-    create: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
-    where?: InventoryWhereInput
-  }
-
-  export type InventoryUpdateToOneWithWhereWithoutItemInput = {
-    where?: InventoryWhereInput
-    data: XOR<InventoryUpdateWithoutItemInput, InventoryUncheckedUpdateWithoutItemInput>
-  }
-
-  export type InventoryUpdateWithoutItemInput = {
-    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-  }
-
-  export type InventoryUncheckedUpdateWithoutItemInput = {
-    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-  }
-
   export type t_PriceUpsertWithWhereUniqueWithoutItemInput = {
     where: t_PriceWhereUniqueInput
     update: XOR<t_PriceUpdateWithoutItemInput, t_PriceUncheckedUpdateWithoutItemInput>
@@ -89078,7 +89069,7 @@ export namespace Prisma {
     OR?: t_PriceScalarWhereInput[]
     NOT?: t_PriceScalarWhereInput | t_PriceScalarWhereInput[]
     id?: UuidFilter<"t_Price"> | string
-    priceItemOId?: StringFilter<"t_Price"> | string
+    priceItemOId?: UuidNullableFilter<"t_Price"> | string | null
     priceFromDate?: DateTimeNullableFilter<"t_Price"> | Date | string | null
     priceToDate?: DateTimeNullableFilter<"t_Price"> | Date | string | null
     priceListPrice?: FloatNullableFilter<"t_Price"> | number | null
@@ -89113,7 +89104,7 @@ export namespace Prisma {
     OR?: t_CostPrScalarWhereInput[]
     NOT?: t_CostPrScalarWhereInput | t_CostPrScalarWhereInput[]
     id?: UuidFilter<"t_CostPr"> | string
-    priceItemOId?: StringFilter<"t_CostPr"> | string
+    priceItemOId?: UuidNullableFilter<"t_CostPr"> | string | null
     priceFromDate?: DateTimeNullableFilter<"t_CostPr"> | Date | string | null
     priceToDate?: DateTimeNullableFilter<"t_CostPr"> | Date | string | null
     priceListPrice?: FloatNullableFilter<"t_CostPr"> | number | null
@@ -89125,6 +89116,25 @@ export namespace Prisma {
     priceUpdateBy?: StringNullableFilter<"t_CostPr"> | string | null
     priceUpdateDate?: DateTimeNullableFilter<"t_CostPr"> | Date | string | null
     priceIsActive?: IntNullableFilter<"t_CostPr"> | number | null
+  }
+
+  export type InventoryUpsertWithoutItemInput = {
+    update: XOR<InventoryUpdateWithoutItemInput, InventoryUncheckedUpdateWithoutItemInput>
+    create: XOR<InventoryCreateWithoutItemInput, InventoryUncheckedCreateWithoutItemInput>
+    where?: InventoryWhereInput
+  }
+
+  export type InventoryUpdateToOneWithWhereWithoutItemInput = {
+    where?: InventoryWhereInput
+    data: XOR<InventoryUpdateWithoutItemInput, InventoryUncheckedUpdateWithoutItemInput>
+  }
+
+  export type InventoryUpdateWithoutItemInput = {
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type InventoryUncheckedUpdateWithoutItemInput = {
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type Item_InformationCreateWithoutInventoryInput = {
@@ -89284,8 +89294,8 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutPricesInput = {
@@ -89313,8 +89323,8 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutPricesInput = {
@@ -89358,8 +89368,8 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutPricesInput = {
@@ -89387,8 +89397,8 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationCreateWithoutCostPricesInput = {
@@ -89416,8 +89426,8 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutCostPricesInput = {
@@ -89445,8 +89455,8 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutCostPricesInput = {
@@ -89490,8 +89500,8 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutCostPricesInput = {
@@ -89519,8 +89529,8 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type CustomerCreateWithoutSalesInput = {
@@ -89714,9 +89724,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutCreditSaleDetailsInput = {
@@ -89743,9 +89753,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutCreditSaleDetailsInput = {
@@ -89835,9 +89845,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutCreditSaleDetailsInput = {
@@ -89864,9 +89874,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type CustomerCreateWithoutSalesVatInput = {
@@ -90347,9 +90357,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutRunningSaleDetailsInput = {
@@ -90376,9 +90386,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutRunningSaleDetailsInput = {
@@ -90486,9 +90496,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutRunningSaleDetailsInput = {
@@ -90515,9 +90525,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type t_SODeVCreateWithoutSaleInput = {
@@ -90657,9 +90667,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutRunningSaleVatDetailsInput = {
@@ -90686,9 +90696,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutRunningSaleVatDetailsInput = {
@@ -90790,9 +90800,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutRunningSaleVatDetailsInput = {
@@ -90819,9 +90829,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type AsstDetCreateWithoutSaleInput = {
@@ -90906,9 +90916,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutAsstDetailsInput = {
@@ -90935,9 +90945,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutAsstDetailsInput = {
@@ -91029,9 +91039,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutAsstDetailsInput = {
@@ -91058,9 +91068,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type AsstMsrtUpsertWithoutDetailsInput = {
@@ -91237,9 +91247,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutNcDetailsInput = {
@@ -91266,9 +91276,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutNcDetailsInput = {
@@ -91352,9 +91362,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutNcDetailsInput = {
@@ -91381,9 +91391,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationCreateWithoutItemReceivesInput = {
@@ -91410,9 +91420,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutItemReceivesInput = {
@@ -91439,9 +91449,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutItemReceivesInput = {
@@ -91484,9 +91494,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutItemReceivesInput = {
@@ -91513,9 +91523,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationCreateWithoutItemIssuesInput = {
@@ -91542,9 +91552,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutItemIssuesInput = {
@@ -91571,9 +91581,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutItemIssuesInput = {
@@ -91616,9 +91626,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutItemIssuesInput = {
@@ -91645,9 +91655,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationCreateWithoutVehicleChallansInput = {
@@ -91674,9 +91684,9 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutVehicleChallansInput = {
@@ -91703,9 +91713,9 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutVehicleChallansInput = {
@@ -91748,9 +91758,9 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutVehicleChallansInput = {
@@ -91777,9 +91787,9 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationCreateWithoutProductionsInput = {
@@ -91806,9 +91816,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutProductionsInput = {
@@ -91835,9 +91845,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutProductionsInput = {
@@ -91880,9 +91890,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutProductionsInput = {
@@ -91909,9 +91919,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationCreateWithoutItemRejectsInput = {
@@ -91938,9 +91948,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutItemRejectsInput = {
@@ -91967,9 +91977,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutItemRejectsInput = {
@@ -92012,9 +92022,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutItemRejectsInput = {
@@ -92041,9 +92051,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type Packet_ReceiveCreateWithoutPacketInput = {
@@ -92540,9 +92550,9 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutOrderDetailsInput = {
@@ -92569,9 +92579,9 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     demandOrderDetails?: DemandOrder_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutOrderDetailsInput = {
@@ -92665,9 +92675,9 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutOrderDetailsInput = {
@@ -92694,9 +92704,9 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type DemandOrder_DetailCreateWithoutMasterInput = {
@@ -92802,9 +92812,9 @@ export namespace Prisma {
     productions?: ProductionCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanCreateNestedManyWithoutItemInput
-    inventory?: InventoryCreateNestedOneWithoutItemInput
     prices?: t_PriceCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrCreateNestedManyWithoutItemInput
+    inventory?: InventoryCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationUncheckedCreateWithoutDemandOrderDetailsInput = {
@@ -92831,9 +92841,9 @@ export namespace Prisma {
     productions?: ProductionUncheckedCreateNestedManyWithoutItemInput
     orderDetails?: OrderReceive_DetailUncheckedCreateNestedManyWithoutItemInput
     vehicleChallans?: Vehicle_ChallanUncheckedCreateNestedManyWithoutItemInput
-    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
     prices?: t_PriceUncheckedCreateNestedManyWithoutItemInput
     costPrices?: t_CostPrUncheckedCreateNestedManyWithoutItemInput
+    inventory?: InventoryUncheckedCreateNestedOneWithoutItemInput
   }
 
   export type Item_InformationCreateOrConnectWithoutDemandOrderDetailsInput = {
@@ -92919,9 +92929,9 @@ export namespace Prisma {
     productions?: ProductionUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutDemandOrderDetailsInput = {
@@ -92948,9 +92958,9 @@ export namespace Prisma {
     productions?: ProductionUncheckedUpdateManyWithoutItemNestedInput
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type VOrderReceive_DetailCreateWithoutMasterInput = {
@@ -93239,9 +93249,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUpdateOneWithoutItemNestedInput
     prices?: t_PriceUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateWithoutImageInput = {
@@ -93268,9 +93278,9 @@ export namespace Prisma {
     orderDetails?: OrderReceive_DetailUncheckedUpdateManyWithoutItemNestedInput
     demandOrderDetails?: DemandOrder_DetailUncheckedUpdateManyWithoutItemNestedInput
     vehicleChallans?: Vehicle_ChallanUncheckedUpdateManyWithoutItemNestedInput
-    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
     prices?: t_PriceUncheckedUpdateManyWithoutItemNestedInput
     costPrices?: t_CostPrUncheckedUpdateManyWithoutItemNestedInput
+    inventory?: InventoryUncheckedUpdateOneWithoutItemNestedInput
   }
 
   export type Item_InformationUncheckedUpdateManyWithoutImageInput = {

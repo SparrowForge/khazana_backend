@@ -34,11 +34,12 @@ function sumByItem(lines: StockLine[]): Map<string, number> {
  *   (on hand + what its previous version took out); without this, re-saving an
  *   unchanged document would fail the check against its own deduction.
  *
- * Balances live on `Inventory`, which is still itemCode-keyed, so items are
- * bridged id → itmCode first (same pattern as InventoryService#itemCodesByIds).
- * Takes a client rather than reaching for `this.prisma` so callers can run the
- * check inside the very transaction that performs the deduction — checking
- * outside it leaves a window for two concurrent sales to both pass.
+ * `Item_Information` is still read even though `Inventory` is keyed by the same
+ * id: it validates the ids and supplies the name/code the shortage message
+ * names the item by. Takes a client rather than reaching for `this.prisma` so
+ * callers can run the check inside the very transaction that performs the
+ * deduction — checking outside it leaves a window for two concurrent sales to
+ * both pass.
  */
 export async function assertStockAvailable(
   db: Prisma.TransactionClient,
@@ -61,10 +62,10 @@ export async function assertStockAvailable(
   }
 
   const rows = await db.inventory.findMany({
-    where: { itemCode: { in: items.map((i) => i.itmCode) } },
-    select: { itemCode: true, quantity: true },
+    where: { itemId: { in: itemIds } },
+    select: { itemId: true, quantity: true },
   });
-  const onHand = new Map(rows.map((r) => [r.itemCode, Number(r.quantity)]));
+  const onHand = new Map(rows.map((r) => [r.itemId, Number(r.quantity)]));
 
   const shortages: string[] = [];
   for (const [itemId, qty] of required) {
@@ -74,8 +75,8 @@ export async function assertStockAvailable(
     // with an opaque Prisma "record not found"). `restored` can't rescue it:
     // giving a quantity back to a row that doesn't exist is a no-op, so the
     // balance really is zero either way.
-    const available = onHand.has(item.itmCode)
-      ? r4(onHand.get(item.itmCode)! + (restored.get(itemId) ?? 0))
+    const available = onHand.has(itemId)
+      ? r4(onHand.get(itemId)! + (restored.get(itemId) ?? 0))
       : 0;
     if (r4(qty) > available) {
       shortages.push(

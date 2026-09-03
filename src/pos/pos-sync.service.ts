@@ -132,11 +132,11 @@ export class PosSyncService {
   private async warnOnNegativeStock(invoiceNo: string, items: { itemId: string }[]) {
     try {
       const negative = await this.prisma.inventory.findMany({
-        where: { quantity: { lt: 0 }, item: { id: { in: items.map((i) => i.itemId) } } },
-        select: { itemCode: true, quantity: true },
+        where: { quantity: { lt: 0 }, itemId: { in: items.map((i) => i.itemId) } },
+        select: { quantity: true, item: { select: { itmCode: true } } },
       });
       if (!negative.length) return;
-      const detail = negative.map((r) => `${r.itemCode}: ${r.quantity}`).join(', ');
+      const detail = negative.map((r) => `${r.item.itmCode}: ${r.quantity}`).join(', ');
       this.logger.warn(
         `Offline order ${invoiceNo} drove stock negative (${detail}) — reconcile at the branch`,
       );

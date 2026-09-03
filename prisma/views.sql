@@ -7,7 +7,7 @@ SELECT DISTINCT
   ii."ID"
 FROM "Item_Information" ii
 LEFT OUTER JOIN "t_Price" p
-  ON ii."itmCode" = TRIM(p."Price_ItemOId")
+  ON ii."ID" = p."Price_ItemOId"
 WHERE COALESCE(p."Price_IsActive", 1) = 1;
 
 CREATE OR REPLACE VIEW "vNCDaily" AS
@@ -366,5 +366,5 @@ SELECT
   ii."itmUOM", ii."ID"
 FROM "Item_Information" ii
 LEFT OUTER JOIN "t_CostPr" cp
-  ON ii."itmCode" = TRIM(cp."Price_ItemOId")
+  ON ii."ID" = cp."Price_ItemOId"
 WHERE NOW() >= cp."Price_FromDate" AND NOW() <= cp."Price_ToDate";

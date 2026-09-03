@@ -64,18 +64,20 @@ export class ProductionService {
     return branch!;
   }
 
-  /** Inventory is still itemCode-keyed; resolve itemId -> itmCode in one batch
-   *  before writing (same bridge pattern as InventoryService#itemCodesByIds). */
-  private async itemCodesByIds(ids: string[]): Promise<Map<string, string>> {
+  /** `Inventory` is keyed by the item uuid, so writing it needs no lookup — but
+   *  an unknown id must still be refused with a readable message rather than a
+   *  raw foreign-key violation out of the upsert (same guard as
+   *  InventoryService#assertItemsExist). */
+  private async assertItemsExist(ids: string[]): Promise<void> {
     const uniqueIds = [...new Set(ids)];
-    const rows = await this.prisma.item_Information.findMany({
+    if (!uniqueIds.length) return;
+    const found = await this.prisma.item_Information.findMany({
       where: { id: { in: uniqueIds } },
-      select: { id: true, itmCode: true },
+      select: { id: true },
     });
-    const map = new Map(rows.map((r) => [r.id, r.itmCode]));
-    const missing = uniqueIds.filter((id) => !map.has(id));
+    const known = new Set(found.map((r) => r.id));
+    const missing = uniqueIds.filter((id) => !known.has(id));
     if (missing.length) throw new BadRequestException(`Unknown item id(s): ${missing.join(', ')}`);
-    return map;
   }
 
   private async itemNamesByIds(ids: string[]): Promise<Map<string, string>> {
@@ -139,7 +141,7 @@ export class ProductionService {
   async create(dto: CreateProductionDto, createdBy: string, sessionBranchId: string) {
     if (!dto.items?.length) throw new BadRequestException('No items to produce');
     const branch = await this.assertFactoryBranch(sessionBranchId);
-    const codeByItemId = await this.itemCodesByIds(dto.items.map((i) => i.itemId));
+    await this.assertItemsExist(dto.items.map((i) => i.itemId));
 
     const productionDate = new Date(dto.productionDate);
     const baseCount = await this.prisma.production.count();
@@ -164,12 +166,11 @@ export class ProductionService {
             createDate: new Date(),
           },
         });
-        const itemCode = codeByItemId.get(line.itemId)!;
         // upsert, not update: an item can be produced before it has ever been
         // received, so its Inventory row may not exist yet.
         await tx.inventory.upsert({
-          where: { itemCode },
-          create: { itemCode, quantity: line.qty },
+          where: { itemId: line.itemId },
+          create: { itemId: line.itemId, quantity: line.qty },
           update: { quantity: { increment: line.qty } },
         });
         created.push(row);
@@ -233,10 +234,7 @@ export class ProductionService {
     const branch = await this.assertFactoryBranch(sessionBranchId);
     const existing = await this.findRows(serialNo);
     const key = existing[0].serialNo || existing[0].id;
-    const codeByItemId = await this.itemCodesByIds([
-      ...existing.map((r) => r.itemId).filter((id): id is string => !!id),
-      ...dto.items.map((i) => i.itemId),
-    ]);
+    await this.assertItemsExist(dto.items.map((i) => i.itemId));
     const productionDate = new Date(dto.productionDate);
 
     return this.prisma.$transaction(async (tx) => {
@@ -253,8 +251,7 @@ export class ProductionService {
 
       for (const row of existing) {
         if (row.itemId) {
-          const itemCode = codeByItemId.get(row.itemId)!;
-          await tx.inventory.updateMany({ where: { itemCode }, data: { quantity: { decrement: Number(row.qty ?? 0) } } });
+          await tx.inventory.updateMany({ where: { itemId: row.itemId }, data: { quantity: { decrement: Number(row.qty ?? 0) } } });
         }
       }
       await tx.production.deleteMany({ where: { serialNo: key } });
@@ -277,10 +274,9 @@ export class ProductionService {
             updateDate: new Date(),
           },
         });
-        const itemCode = codeByItemId.get(line.itemId)!;
         await tx.inventory.upsert({
-          where: { itemCode },
-          create: { itemCode, quantity: line.qty },
+          where: { itemId: line.itemId },
+          create: { itemId: line.itemId, quantity: line.qty },
           update: { quantity: { increment: line.qty } },
         });
         rewritten.push(row);
@@ -295,7 +291,6 @@ export class ProductionService {
     await this.assertFactoryBranch(sessionBranchId);
     const existing = await this.findRows(serialNo);
     const key = existing[0].serialNo || existing[0].id;
-    const codeByItemId = await this.itemCodesByIds(existing.map((r) => r.itemId).filter((id): id is string => !!id));
 
     await this.prisma.$transaction(async (tx) => {
       // Deleting withdraws what this entry added; refuse if those units are gone
@@ -306,8 +301,7 @@ export class ProductionService {
       );
       for (const row of existing) {
         if (row.itemId) {
-          const itemCode = codeByItemId.get(row.itemId)!;
-          await tx.inventory.updateMany({ where: { itemCode }, data: { quantity: { decrement: Number(row.qty ?? 0) } } });
+          await tx.inventory.updateMany({ where: { itemId: row.itemId }, data: { quantity: { decrement: Number(row.qty ?? 0) } } });
         }
       }
       await tx.production.deleteMany({ where: { serialNo: key } });
@@ -359,11 +353,10 @@ export class ProductionService {
         previous.map((r) => ({ itemId: r.itemId, qty: Number(r.qty ?? 0) })),
         lines.map((l) => ({ itemId: l.itemId, qty: l.qty })),
       );
-      const codes = await this.itemCodesByIds(previous.map((r) => r.itemId).filter((id): id is string => !!id));
       for (const row of previous) {
         if (!row.itemId) continue;
         await tx.inventory.updateMany({
-          where: { itemCode: codes.get(row.itemId)! },
+          where: { itemId: row.itemId },
           data: { quantity: { decrement: Number(row.qty ?? 0) } },
         });
       }
@@ -378,7 +371,7 @@ export class ProductionService {
       previous[0]?.serialNo ||
       this.buildSerialNo(opts.branchCode ?? '', (await tx.production.count()) + 1);
     const rateByItemId = await this.vatInclusiveRates(tx, lines);
-    const codeByItemId = await this.itemCodesByIds(lines.map((l) => l.itemId));
+    await this.assertItemsExist(lines.map((l) => l.itemId));
 
     const created = [];
     for (const line of lines) {
@@ -401,8 +394,8 @@ export class ProductionService {
       // upsert, not update: an item can be produced before it has ever been
       // received, so its Inventory row may not exist yet.
       await tx.inventory.upsert({
-        where: { itemCode: codeByItemId.get(line.itemId)! },
-        create: { itemCode: codeByItemId.get(line.itemId)!, quantity: line.qty },
+        where: { itemId: line.itemId },
+        create: { itemId: line.itemId, quantity: line.qty },
         update: { quantity: { increment: line.qty } },
       });
       created.push(row);
