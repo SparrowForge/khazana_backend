@@ -451,7 +451,21 @@ exports.Prisma.T_SOMstrScalarFieldEnum = {
   customerId: 'customerId',
   soMstrCardNo: 'soMstrCardNo',
   mtype: 'mtype',
-  soMstrMBank: 'soMstrMBank'
+  soMstrMBank: 'soMstrMBank',
+  soMstrPaidAmt: 'soMstrPaidAmt',
+  soMstrDueAmt: 'soMstrDueAmt',
+  soMstrPaymentStatus: 'soMstrPaymentStatus'
+};
+
+exports.Prisma.Sale_PaymentScalarFieldEnum = {
+  id: 'id',
+  saleId: 'saleId',
+  method: 'method',
+  amount: 'amount',
+  bankId: 'bankId',
+  cardNo: 'cardNo',
+  transactionRef: 'transactionRef',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.T_SODetScalarFieldEnum = {
@@ -934,6 +948,7 @@ exports.Prisma.ModelName = {
   CSVMaster: 'CSVMaster',
   CSVDetail: 'CSVDetail',
   t_SOMstr: 't_SOMstr',
+  Sale_Payment: 'Sale_Payment',
   t_SODet: 't_SODet',
   t_SOMstV: 't_SOMstV',
   t_SODeV: 't_SODeV',

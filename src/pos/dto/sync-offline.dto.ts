@@ -4,7 +4,7 @@ import {
   IsOptional, IsIn, Min, IsDateString, ArrayMinSize, IsUUID, MaxLength, Matches,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { PosCartItemDto } from './create-pos-sale.dto';
+import { PosCartItemDto, SalePaymentDto } from './create-pos-sale.dto';
 
 /** One sale that was completed while the terminal was offline. */
 export class OfflineSaleDto {
@@ -82,6 +82,17 @@ export class OfflineSaleDto {
   @IsOptional()
   @Matches(/^[0-9]{4}$/, { message: 'cardNo must be exactly the 4 last digits of the card' })
   cardNo?: string;
+
+  @ApiPropertyOptional({
+    type: [SalePaymentDto],
+    description:
+      'Split payment recorded at the till while offline, one entry per tender. Omit for a single-payment sale. Carried through sync so a bill split offline arrives split, rather than collapsing to one mode.',
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SalePaymentDto)
+  @IsOptional()
+  payments?: SalePaymentDto[];
 
   /** @deprecated Accepted but IGNORED — the column it was written to is gone,
    *  replaced by `customerId`. Kept so a sale queued before the picker existed

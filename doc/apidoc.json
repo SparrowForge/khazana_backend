@@ -6121,6 +6121,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "payMethod",
+            "required": false,
+            "in": "query",
+            "description": "Filter by how the bill was paid: one of the report's payment columns (cash, bkash, nagad, brac, ucb, city, ebl, fpanda, pathao, foodi, credit), or omit / 'all' for every method. A split bill matches every method it was settled with, showing that method's portion.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -9468,6 +9477,40 @@
           "qty"
         ]
       },
+      "SalePaymentDto": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "type": "string",
+            "example": "Cash",
+            "description": "Payment method — 'Cash', 'Card', 'Bkash', 'Nagad', ..."
+          },
+          "amount": {
+            "type": "number",
+            "example": 1500,
+            "description": "Amount settled by this tender. Must be greater than zero."
+          },
+          "bankId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Bank UUID — only kept when `method` is 'Card'."
+          },
+          "cardNo": {
+            "type": "string",
+            "example": "4321",
+            "description": "Last 4 digits of the card. Only ever the last 4. Kept only when `method` is 'Card'."
+          },
+          "transactionRef": {
+            "type": "string",
+            "example": "TRX8H2KD91",
+            "description": "MFS/card reference — bKash trxID, terminal approval code, etc."
+          }
+        },
+        "required": [
+          "method",
+          "amount"
+        ]
+      },
       "CreatePosSaleDto": {
         "type": "object",
         "properties": {
@@ -9541,6 +9584,18 @@
             "example": "01700000000",
             "deprecated": true,
             "description": "Typed discount authoriser contact no → t_SOMstr.SoMstr_DiscountContact. Superseded by customerId; only used when no customerId is given."
+          },
+          "payments": {
+            "description": "Split payment: how the bill was settled, one entry per tender. OMIT for an ordinary single-payment sale — salesType/bankId/cardNo then describe the one tender, exactly as before. When supplied the entries must sum to the payable and salesType is ignored (the mode is derived: one entry names itself, several store \"Multiple\").",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SalePaymentDto"
+            }
+          },
+          "allowPartial": {
+            "type": "boolean",
+            "example": false,
+            "description": "Accept a `payments` total below the payable and record the remainder as due. Defaults to false — a short split is a keying mistake far more often than an intended part-payment."
           }
         },
         "required": [
@@ -9622,6 +9677,18 @@
             "deprecated": true,
             "description": "Typed discount authoriser contact no → t_SOMstr.SoMstr_DiscountContact. Superseded by customerId; only used when no customerId is given."
           },
+          "payments": {
+            "description": "Split payment: how the bill was settled, one entry per tender. OMIT for an ordinary single-payment sale — salesType/bankId/cardNo then describe the one tender, exactly as before. When supplied the entries must sum to the payable and salesType is ignored (the mode is derived: one entry names itself, several store \"Multiple\").",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SalePaymentDto"
+            }
+          },
+          "allowPartial": {
+            "type": "boolean",
+            "example": false,
+            "description": "Accept a `payments` total below the payable and record the remainder as due. Defaults to false — a short split is a keying mistake far more often than an intended part-payment."
+          },
           "modifyRemarks": {
             "type": "string",
             "example": "Customer returned 1 item",
@@ -9702,6 +9769,13 @@
             "type": "string",
             "example": "4321",
             "description": "Last 4 digits of the card → SoMstr_CardNo. Stored only when salesType is 'Card'."
+          },
+          "payments": {
+            "description": "Split payment recorded at the till while offline, one entry per tender. Omit for a single-payment sale. Carried through sync so a bill split offline arrives split, rather than collapsing to one mode.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SalePaymentDto"
+            }
           },
           "guestName": {
             "type": "string",

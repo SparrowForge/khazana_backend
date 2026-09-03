@@ -4,13 +4,28 @@ import { CreatePosSaleDto, UpdatePosSaleDto } from './dto/create-pos-sale.dto';
 import { allocateDiscount, assertStockAvailable, roundPayable, toBranchUuid } from '../common/helpers';
 import { dateRangeFilter } from '../common/dto';
 import { PosSalesQueryDto } from './dto/pos-sales-query.dto';
-import type { Prisma, t_SOMstr, t_SODet, Item_Information } from '../generated/prisma';
+import type { Prisma, t_SOMstr, t_SODet, Item_Information, Sale_Payment } from '../generated/prisma';
 
 type SaleWithDetails = t_SOMstr & {
   details: (t_SODet & { item: Item_Information | null })[];
   bank?: { name: string | null } | null;
   customer?: { id: string; code: string; name: string; mobile: string | null } | null;
+  payments?: (Sale_Payment & { bank?: { name: string | null } | null })[];
 };
+
+/** One tender against a bill. Several of these are a "split payment". */
+export interface SalePaymentInput {
+  method: string;
+  amount: number;
+  bankId?: string | null;
+  cardNo?: string | null;
+  transactionRef?: string | null;
+}
+
+/** The mode stamped on `t_SOMstr.mtype` when a bill was settled more than one
+ *  way. The real breakdown is in Sale_Payment; this keeps the legacy column
+ *  populated so readers that predate split payments still see something. */
+export const MULTI_PAY_MODE = 'Multiple';
 
 /** The joined customer every read of a sale carries — a counter sale now names
  *  who it was billed to, and the invoice prints their code, name and mobile. */
@@ -22,6 +37,7 @@ const SALE_INCLUDE = {
   details: { include: { item: true } },
   bank: { select: { name: true } },
   customer: { select: CUSTOMER_SELECT },
+  payments: { include: { bank: { select: { name: true } } }, orderBy: { createdAt: 'asc' } },
 } as const;
 
 @Injectable()
@@ -84,6 +100,23 @@ export class PosSalesService {
       payableAmount: Number(sale.somstrNetAmt ?? 0),
       paidAmount: Number(sale.somstrCustomerpay ?? 0),
       changeAmount: Number(sale.somstrChange ?? 0),
+      // What the tenders actually settled, and what (if anything) is still owed.
+      // Null on invoices raised before split payments — those were always paid
+      // in full, so they read back as the bill total with nothing due.
+      settledAmount: Number(sale.soMstrPaidAmt ?? sale.somstrNetAmt ?? 0),
+      dueAmount: Number(sale.soMstrDueAmt ?? 0),
+      paymentStatus: sale.soMstrPaymentStatus ?? 'PAID',
+      /** The tender breakdown. EMPTY for a sale raised before split payments —
+       *  callers that need a mode for those fall back to `salesType`. */
+      payments: (sale.payments ?? []).map((t) => ({
+        id: t.id,
+        method: t.method,
+        amount: Number(t.amount ?? 0),
+        bankId: t.bankId ?? null,
+        bankName: t.bank?.name ?? null,
+        cardNo: t.cardNo ?? null,
+        transactionRef: t.transactionRef ?? null,
+      })),
       servedBy: sale.somstrCreator ?? '',
       items: sale.details.map((d) => ({
         id: d.id,
@@ -131,6 +164,83 @@ export class PosSalesService {
     return this.prisma.customer.findFirst({ where: { isWalkIn: true }, select: CUSTOMER_SELECT });
   }
 
+  /**
+   * Turn whatever the till sent into the tender rows to write.
+   *
+   * Three cases, in order:
+   *  - an explicit `payments` list (the split case) — validated against the bill
+   *    and returned as-is;
+   *  - no list, which is every existing caller — synthesised as ONE row for the
+   *    single mode that was picked, so reports can read tenders uniformly
+   *    instead of special-casing single vs split;
+   *  - a bill of zero, which gets no rows at all.
+   *
+   * `netAmount` is the payable. The rows must sum to it: a split that does not
+   * add up is a keying mistake, and letting it through would put the shortfall
+   * nowhere. `allowPartial` is the deliberate exception — the caller says a
+   * partial settlement is intended, and the remainder becomes the due.
+   */
+  private buildPayments(
+    netAmount: number,
+    p: {
+      payments?: SalePaymentInput[];
+      salesType?: string;
+      bankId?: string | null;
+      cardNo?: string | null;
+      allowPartial?: boolean;
+    },
+  ): { rows: SalePaymentInput[]; mode: string; settled: number; due: number } {
+    const list = p.payments ?? [];
+
+    if (!list.length) {
+      const mode = p.salesType ?? 'Cash';
+      const rows: SalePaymentInput[] =
+        netAmount > 0
+          ? [{
+              method: mode,
+              amount: netAmount,
+              bankId: mode === 'Card' ? (p.bankId ?? null) : null,
+              cardNo: this.cardNoFor(mode, p.cardNo),
+              transactionRef: null,
+            }]
+          : [];
+      return { rows, mode, settled: netAmount, due: 0 };
+    }
+
+    const rows = list.map((t, i) => {
+      const method = (t.method ?? '').trim();
+      if (!method) throw new BadRequestException(`Payment ${i + 1}: pick a payment method`);
+      const amount = this.r2(Number(t.amount));
+      if (!Number.isFinite(amount) || amount <= 0) {
+        throw new BadRequestException(`Payment ${i + 1} (${method}): amount must be greater than zero`);
+      }
+      return {
+        method,
+        amount,
+        bankId: method === 'Card' ? (t.bankId ?? null) : null,
+        cardNo: this.cardNoFor(method, t.cardNo),
+        transactionRef: (t.transactionRef ?? '').trim() || null,
+      };
+    });
+
+    const settled = this.r2(rows.reduce((sum, t) => sum + t.amount, 0));
+    if (settled > netAmount) {
+      throw new BadRequestException(
+        `Payments total ৳${settled} but the bill is ৳${netAmount} — overpayment is not accepted, reduce a split by ৳${this.r2(settled - netAmount)}`,
+      );
+    }
+    if (settled < netAmount && !p.allowPartial) {
+      throw new BadRequestException(
+        `Payments total ৳${settled} but the bill is ৳${netAmount} — ৳${this.r2(netAmount - settled)} is unaccounted for`,
+      );
+    }
+
+    // One tender is not a split: name the mode outright so the legacy column and
+    // every report that reads it stay exactly as accurate as before.
+    const mode = rows.length === 1 ? rows[0].method : MULTI_PAY_MODE;
+    return { rows, mode, settled, due: this.r2(netAmount - settled) };
+  }
+
   /** Last 4 digits of the card, kept only on a Card sale. Anything else is
    *  discarded rather than stored against a cash bill, so switching the pay mode
    *  away from Card can't leave a stale card number behind. */
@@ -170,6 +280,8 @@ export class PosSalesService {
       discountContact: dto.discountContact,
       customerId: dto.customerId,
       cardNo: dto.cardNo,
+      payments: dto.payments,
+      allowPartial: dto.allowPartial,
       createdBy: userName,
     });
   }
@@ -207,6 +319,19 @@ export class PosSalesService {
     customerId?: string | null;
     /** Last 4 digits of the card; kept only when `salesType` is 'Card'. */
     cardNo?: string | null;
+    /**
+     * Split payment: how the bill was settled, one entry per tender. Omit it and
+     * the sale behaves exactly as it always has — `salesType`/`bankId`/`cardNo`
+     * describe the single tender, and one payment row is synthesised from them.
+     *
+     * Supplied, the entries must sum to the payable (see `allowPartial`), and
+     * `salesType` is ignored: the mode is derived from the rows.
+     */
+    payments?: SalePaymentInput[];
+    /** Accept a `payments` total below the bill and record the remainder as due.
+     *  Off by default — a short split is a keying mistake far more often than an
+     *  intended part-payment. */
+    allowPartial?: boolean;
     createdBy: string;
     enforceStock?: boolean;
     /**
@@ -280,7 +405,18 @@ export class PosSalesService {
     }
 
     const netAmount = roundPayable(grossAmount - discountAmount);
-    const changeAmount = this.r2(p.paidAmount - netAmount);
+
+    // How the bill was settled. Validates the split against the payable and, for
+    // a single-tender sale, synthesises the one row from salesType/bankId/cardNo.
+    const tender = this.buildPayments(netAmount, p);
+    const isSplit = (p.payments?.length ?? 0) > 0;
+
+    // A split settles the bill exactly — each row is the amount PUT AGAINST the
+    // bill, so there is nothing to give back. Cash overtender and its change
+    // remain the single-payment story they have always been: the cashier keys
+    // what the customer handed over and the till works out the change.
+    const changeAmount = isSplit ? 0 : this.r2(p.paidAmount - netAmount);
+    const customerPay = isSplit ? tender.settled : this.r2(p.paidAmount);
 
     // Push the invoice-level discount down onto the lines, pro-rata by each
     // line's VAT-inclusive value — the base the percentage was charged on. Held
@@ -288,7 +424,9 @@ export class PosSalesService {
     // would then show the basket as worth more than it was sold for.
     const pricedLines = this.applyLineDiscounts(lines, discountAmount);
 
-    if (p.paidAmount < netAmount) {
+    // Only meaningful for a single tender; a split has already been measured
+    // against the bill by buildPayments.
+    if (!isSplit && p.paidAmount < netAmount) {
       throw new BadRequestException(
         `Insufficient payment — payable: ৳${netAmount}, paid: ৳${p.paidAmount}`,
       );
@@ -308,12 +446,29 @@ export class PosSalesService {
           somstrTotalAmt: totalAmount,
           somstrDiscAmt: discountAmount,
           somstrNetAmt: netAmount,
-          somstrCustomerpay: this.r2(p.paidAmount),
+          somstrCustomerpay: customerPay,
           somstrChange: changeAmount,
-          mtype: p.salesType ?? 'Cash',
-          soMstrMBank: p.bankId ?? null,
+          // 'Multiple' when the bill was split — the breakdown is in `payments`.
+          mtype: tender.mode,
+          // The master's bank/card columns describe a SINGLE tender. On a split
+          // they are left null: each row carries its own, and picking one of
+          // them to promote here would misreport the others.
+          soMstrMBank: tender.rows.length === 1 ? (tender.rows[0].bankId ?? null) : null,
+          soMstrCardNo: tender.rows.length === 1 ? (tender.rows[0].cardNo ?? null) : null,
+          soMstrPaidAmt: tender.settled,
+          soMstrDueAmt: tender.due,
+          soMstrPaymentStatus: tender.due > 0 ? 'PARTIAL' : 'PAID',
+          payments: {
+            create: tender.rows.map((t) => ({
+              method: t.method,
+              amount: t.amount,
+              bankId: t.bankId ?? null,
+              cardNo: t.cardNo ?? null,
+              transactionRef: t.transactionRef ?? null,
+              createdAt: new Date(),
+            })),
+          },
           customerId: customer?.id ?? null,
-          soMstrCardNo: this.cardNoFor(p.salesType, p.cardNo),
           // Discount audit (only meaningful when a discount applied). Filled
           // from the picked customer — who the discount was given to — so the
           // Daily Final Report breakdown and the Discount Log, both of which
@@ -529,8 +684,13 @@ export class PosSalesService {
     }
 
     const netAmount = roundPayable(grossAmount - discountAmount);
-    const changeAmount = this.r2(dto.paidAmount - netAmount);
-    if (dto.paidAmount < netAmount) throw new BadRequestException(`Insufficient payment — payable: ৳${netAmount}, paid: ৳${dto.paidAmount}`);
+    // Same settlement rules as a new sale — an edit may change how the bill was
+    // paid as freely as it changes what was on it.
+    const tender = this.buildPayments(netAmount, dto);
+    const isSplit = (dto.payments?.length ?? 0) > 0;
+    const changeAmount = isSplit ? 0 : this.r2(dto.paidAmount - netAmount);
+    const customerPay = isSplit ? tender.settled : this.r2(dto.paidAmount);
+    if (!isSplit && dto.paidAmount < netAmount) throw new BadRequestException(`Insufficient payment — payable: ৳${netAmount}, paid: ৳${dto.paidAmount}`);
 
     // Re-spread the (re-applied) discount over the replacement lines.
     const pricedLines = this.applyLineDiscounts(lines, discountAmount);
@@ -556,18 +716,31 @@ export class PosSalesService {
           somstrTotalAmt: totalAmount,
           somstrDiscAmt: discountAmount,
           somstrNetAmt: netAmount,
-          somstrCustomerpay: this.r2(dto.paidAmount),
+          somstrCustomerpay: customerPay,
           somstrChange: changeAmount,
-          mtype: dto.salesType ?? existing.mtype,
-          // Bank only applies to Card sales; clear it when the (resolved) pay
-          // mode is not Card so switching Card→Cash doesn't leave a stale bank.
-          soMstrMBank:
-            (dto.salesType ?? existing.mtype) === 'Card'
-              ? (dto.bankId ?? existing.soMstrMBank)
-              : null,
-          // Card number follows the resolved pay mode for the same reason the
-          // bank does — a Card→Cash edit must not leave one behind.
-          soMstrCardNo: this.cardNoFor(dto.salesType ?? existing.mtype ?? undefined, dto.cardNo),
+          // 'Multiple' when the edit leaves the bill split.
+          mtype: tender.mode,
+          // Bank and card describe a SINGLE tender, so both are cleared unless
+          // exactly one row remains — that also handles Card→Cash and
+          // split→single edits without leaving a stale value behind.
+          soMstrMBank: tender.rows.length === 1 ? (tender.rows[0].bankId ?? null) : null,
+          soMstrCardNo: tender.rows.length === 1 ? (tender.rows[0].cardNo ?? null) : null,
+          soMstrPaidAmt: tender.settled,
+          soMstrDueAmt: tender.due,
+          soMstrPaymentStatus: tender.due > 0 ? 'PARTIAL' : 'PAID',
+          // Purge-and-replace, the same shape the lines use: an edit restates
+          // how the bill was settled rather than merging into what was there.
+          payments: {
+            deleteMany: {},
+            create: tender.rows.map((t) => ({
+              method: t.method,
+              amount: t.amount,
+              bankId: t.bankId ?? null,
+              cardNo: t.cardNo ?? null,
+              transactionRef: t.transactionRef ?? null,
+              createdAt: new Date(),
+            })),
+          },
           customerId: customer?.id ?? null,
           // Mandatory audit trail for the Daily Final Report Sales Correction section.
           soMstrModifyRemarks: dto.modifyRemarks,

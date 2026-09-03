@@ -8,6 +8,14 @@ export interface DateRangeQuery {
   branchId?: string;
 }
 
+/** Sales History also filters by how the bill was paid. `payMethod` is one of
+ *  ReportsService.PAY_COLUMNS ('cash', 'bkash', 'brac', 'credit', ...) — the
+ *  report's own column vocabulary, not the raw till mode, so a split bill is
+ *  matched on any column it actually contributed to. */
+export interface SalesHistoryQuery extends DateRangeQuery {
+  payMethod?: string;
+}
+
 const num = (d: unknown): number => (d == null ? 0 : Number(d));
 
 // Round to 2dp WITHOUT collapsing sign — a balance of -1 must stay -1.00, not
@@ -46,6 +54,12 @@ const posClientContact = (
 
 /** What every report that names a POS sale's customer joins in. */
 const POS_CUSTOMER_INCLUDE = { customer: { select: { name: true, mobile: true } } } as const;
+
+/** The tender rows every payment-aware report joins in. A sale raised before
+ *  split payments has none — see ReportsService.tendersOf for the fallback. */
+const SALE_TENDERS = {
+  payments: { select: { method: true, amount: true, bank: { select: { name: true } } } },
+} as const;
 
 @Injectable()
 export class ReportsService {
@@ -313,6 +327,7 @@ export class ReportsService {
         include: {
           bank: { select: { name: true } },
           ...POS_CUSTOMER_INCLUDE,
+          ...SALE_TENDERS,
           details: { select: { sodetQTY: true, item: { select: { itmUOM: true } } } },
         },
         orderBy: { somstrDate: 'asc' },
@@ -376,7 +391,11 @@ export class ReportsService {
     const creditQty = qtyByUom(credit.flatMap((s) => s.details.map((d) => ({ qty: num(d.qty), uom: uomById.get(d.itemOId ?? '') }))));
     const creditAmt = credit.reduce((t, s) => t + creditNet(s), 0);
 
-    // ── Payment-mode split (cash running sales by mtype) ─────────────────
+    // ── Payment-mode split (cash running sales, per TENDER) ──────────────
+    // A split bill contributes to several buckets: 1500 cash + 500 card puts
+    // 1500 in Cash and 500 in Card, not the whole 2000 in whichever mode the
+    // master happened to name. `tendersOf` yields one entry per tender, and a
+    // pre-split invoice yields a single entry for its whole value.
     const bucket = (mtype?: string | null, hasBank?: boolean) => {
       const m = (mtype ?? '').toLowerCase();
       if (/bkash|nagad|rocket|mfs/.test(m)) return 'bkash';
@@ -386,10 +405,11 @@ export class ReportsService {
     const payments = { bkash: 0, card: 0, cash: 0, credit: creditAmt };
     const cardBank = new Map<string, number>();
     for (const s of cash) {
-      const amt = num(s.somstrNetAmt);
-      const b = bucket(s.mtype, !!s.soMstrMBank);
-      payments[b] += amt;
-      if (b === 'card') cardBank.set(s.bank?.name ?? 'Unknown', (cardBank.get(s.bank?.name ?? 'Unknown') ?? 0) + amt);
+      for (const t of ReportsService.tendersOf(s, num(s.somstrNetAmt))) {
+        const b = bucket(t.method, !!t.bankName);
+        payments[b] += t.amount;
+        if (b === 'card') cardBank.set(t.bankName ?? 'Unknown', (cardBank.get(t.bankName ?? 'Unknown') ?? 0) + t.amount);
+      }
     }
 
     // ── Totals ───────────────────────────────────────────────────────────
@@ -985,7 +1005,11 @@ export class ReportsService {
     const [cash, assorted, issues, credit, nc] = await Promise.all([
       this.prisma.t_SOMstr.findMany({
         where: { somstrDate: window, somstrIsActive: true, ...branchFilter },
-        include: { details: { select: { sodetQTY: true, item: { select: { itmUOM: true } } } } },
+        include: {
+          bank: { select: { name: true } },
+          ...SALE_TENDERS,
+          details: { select: { sodetQTY: true, item: { select: { itmUOM: true } } } },
+        },
       }),
       this.prisma.asstMsrt.findMany({
         where: { date: window, isActive: true, ...branchFilter },
@@ -1015,12 +1039,15 @@ export class ReportsService {
     const qtyByUom = (lines: { qty: number; uom?: string | null }[]) =>
       lines.reduce((acc, l) => { if (isKg(l.uom)) acc.kg += l.qty; else acc.pcs += l.qty; return acc; }, { kg: 0, pcs: 0 });
 
-    // Sales buckets: cash vs card (= every non-cash tender) vs credit.
+    // Sales buckets: cash vs card (= every non-cash tender) vs credit. Split
+    // per TENDER, so a part-cash/part-card bill lands in both columns — see
+    // tendersOf.
     const isCashMode = (m?: string | null) => !m || /^cash$/i.test(m.trim());
     let cashSale = 0, cardSale = 0;
     for (const s of cash) {
-      const amt = num(s.somstrNetAmt);
-      if (isCashMode(s.mtype)) cashSale += amt; else cardSale += amt;
+      for (const t of ReportsService.tendersOf(s, num(s.somstrNetAmt))) {
+        if (isCashMode(t.method)) cashSale += t.amount; else cardSale += t.amount;
+      }
     }
     // `totalAmount` is stored net of VAT, so add `totalVat` back for the actual
     // billed value — see the identical note in getDailyFinalReport.
@@ -1314,6 +1341,37 @@ export class ReportsService {
     return Object.fromEntries(ReportsService.PAY_COLUMNS.map((c) => [c, 0]));
   }
 
+  /**
+   * How one counter sale's money was tendered, as {method, bankName, amount}.
+   *
+   * The ONE place every report resolves split payments, so the Daily Final
+   * Report, the Daily Summary and the Sales History cannot disagree about what
+   * a bill was paid with.
+   *
+   * A sale written since split payments landed carries `Sale_Payment` rows —
+   * one for a single tender, several for a split — and those are the truth.
+   * A sale raised BEFORE that has none, and falls back to the legacy `mtype` +
+   * bank for its whole value, which is exactly how these reports read it then.
+   * That fallback is what keeps historic invoices reporting unchanged.
+   */
+  private static tendersOf(sale: {
+    mtype?: string | null;
+    bank?: { name: string | null } | null;
+    payments?: { method: string; amount: unknown; bank?: { name: string | null } | null }[] | null;
+  }, saleAmount: number): { method: string | null; bankName: string | null; amount: number }[] {
+    const rows = sale.payments ?? [];
+    if (!rows.length) {
+      return [{ method: sale.mtype ?? null, bankName: sale.bank?.name ?? null, amount: saleAmount }];
+    }
+    return rows.map((t) => ({
+      method: t.method,
+      // A split row names its own bank; fall back to the master's for a
+      // single-tender sale, where the bank still lives there.
+      bankName: t.bank?.name ?? sale.bank?.name ?? null,
+      amount: num(t.amount),
+    }));
+  }
+
   /** Which column a counter sale's money belongs in. `mtype` carries the mode
    *  picked at the till; a card payment is split further by the bank it was
    *  swiped on. Anything unrecognised stays in Cash — the column this report has
@@ -1369,7 +1427,7 @@ export class ReportsService {
 
   /** `accessibleBranchIds` is the caller's branch set. Omitting the `branchId`
    *  filter means "all of MY branches", never every branch in the company. */
-  async getSalesHistory(query: DateRangeQuery, accessibleBranchIds?: string[]) {
+  async getSalesHistory(query: SalesHistoryQuery, accessibleBranchIds?: string[]) {
     const { from, to } = this.parseRange(query);
     const branchFilter = branchScope(accessibleBranchIds, ['branchId'], query.branchId);
     const itemSelect = { select: { itmCode: true, itmName: true, itmUOM: true } };
@@ -1383,6 +1441,7 @@ export class ReportsService {
           include: {
             bank: { select: { name: true } },
             ...POS_CUSTOMER_INCLUDE,
+            ...SALE_TENDERS,
             details: { include: { item: itemSelect } },
           },
           orderBy: { somstrDate: 'asc' },
@@ -1448,19 +1507,47 @@ export class ReportsService {
 
     const allItems: HistoryLine[] = [];
 
-    /** Turn one invoice into its item rows. `pay` names the column(s) each
-     *  line's total is booked into; the caller decides them from the ledger. */
+    /** Turn one invoice into its item rows.
+     *
+     *  `payColumns` names the column(s) each line's total is booked into,
+     *  optionally with the share of the INVOICE each one settled. A single
+     *  tender is `[{ column, share: undefined }]` and takes the whole line, as
+     *  it always did. A split bill passes one entry per tender with its amount,
+     *  and every line is apportioned across them pro-rata — 1500 cash + 500 card
+     *  on a 2000 bill books 75% of each line to Cash and 25% to Card, so the
+     *  columns still add up to the line total and to the invoice.
+     *
+     *  Rounding lands on the largest share rather than being dropped, so the
+     *  columns sum to the line exactly. */
     const pushInvoice = (
       header: { date: Date | null; invoiceNo: string; clientName?: string; branchId: string | null },
       rawLines: { itemName: string; uom: string; qty: number; price: number; amount: number; discount: number; vat: number }[],
       invoiceDiscount: number,
-      payColumns: string[],
+      payColumns: { column: string; share?: number }[],
     ) => {
       ReportsService.spreadInvoiceDiscount(rawLines, invoiceDiscount);
+      const shareTotal = payColumns.reduce((t, c) => t + (c.share ?? 0), 0);
+      // Biggest share absorbs the rounding remainder — picked once, not per line,
+      // so the same column absorbs it consistently down the sheet.
+      const soakIndex =
+        shareTotal > 0
+          ? payColumns.reduce((best, c, i) => ((c.share ?? 0) > (payColumns[best].share ?? 0) ? i : best), 0)
+          : 0;
       for (const line of rawLines) {
         const totalAmount = r2signed(line.amount - line.discount + line.vat);
         const payments = ReportsService.zeroPayments();
-        for (const col of payColumns) payments[col] = totalAmount;
+        if (shareTotal > 0 && payColumns.length > 1) {
+          let allocated = 0;
+          payColumns.forEach((c, i) => {
+            if (i === soakIndex) return;
+            const part = r2signed((totalAmount * (c.share ?? 0)) / shareTotal);
+            payments[c.column] += part;
+            allocated += part;
+          });
+          payments[payColumns[soakIndex].column] += r2signed(totalAmount - allocated);
+        } else {
+          for (const c of payColumns) payments[c.column] = totalAmount;
+        }
         allItems.push({
           date: header.date,
           invoiceNo: header.invoiceNo,
@@ -1499,7 +1586,11 @@ export class ReportsService {
           vat: num(d.sodetVATAmount),
         })),
         num(s.somstrDiscAmt),
-        [ReportsService.cashPayColumn(s.mtype, s.bank?.name)],
+        // One entry per tender: a split bill spreads across several columns.
+        ReportsService.tendersOf(s, num(s.somstrNetAmt)).map((t) => ({
+          column: ReportsService.cashPayColumn(t.method, t.bankName),
+          share: t.amount,
+        })),
       );
     }
 
@@ -1520,7 +1611,8 @@ export class ReportsService {
           vat: num(d.sodetVATAmount),
         })),
         num(s.somstrDiscAmt),
-        [ReportsService.cashPayColumn(s.mtype)],
+        // The VAT cash form has no split-payment panel — one column, whole value.
+        [{ column: ReportsService.cashPayColumn(s.mtype) }],
       );
     }
 
@@ -1543,7 +1635,10 @@ export class ReportsService {
           vat: num(d.vat),
         })),
         num(s.totalDiscount),
-        channel ? ['credit', channel] : ['credit'],
+        // No share on either: a channel sale deliberately books its full value
+        // into BOTH Credit and the channel column, as it always has. Credit
+        // invoices are not split-payable — they are settled later, on the ledger.
+        channel ? [{ column: 'credit' }, { column: channel }] : [{ column: 'credit' }],
       );
     }
 
@@ -1565,13 +1660,28 @@ export class ReportsService {
           };
         }),
         num(s.totalDiscount),
-        channel ? ['credit', channel] : ['credit'],
+        // No share on either: a channel sale deliberately books its full value
+        // into BOTH Credit and the channel column, as it always has. Credit
+        // invoices are not split-payable — they are settled later, on the ledger.
+        channel ? [{ column: 'credit' }, { column: channel }] : [{ column: 'credit' }],
       );
     }
 
+    // ── Filter by payment method ─────────────────────────────────────────
+    // Keeps the rows that put money in the requested column. A split bill
+    // therefore appears under EVERY method it was settled with — filtering to
+    // Card shows the 500 card portion of a 1500/500 bill, which is the honest
+    // answer to "what came in on card". An unknown method name filters to
+    // nothing rather than silently returning everything.
+    const payMethod = (query.payMethod ?? '').trim().toLowerCase();
+    const filtered =
+      payMethod && payMethod !== 'all'
+        ? allItems.filter((r) => Number(r[payMethod] ?? 0) !== 0)
+        : allItems;
+
     // Sort by date then invoice, so an invoice's lines stay contiguous and the
     // sheet can print its date/invoice no once per group.
-    allItems.sort((a, b) => {
+    filtered.sort((a, b) => {
       const dateCompare = (a.date?.getTime() ?? 0) - (b.date?.getTime() ?? 0);
       if (dateCompare !== 0) return dateCompare;
       return a.invoiceNo.localeCompare(b.invoiceNo);
@@ -1579,7 +1689,7 @@ export class ReportsService {
 
     // ── Daily subtotals ──────────────────────────────────────────────────
     const dailyMap = new Map<string, Record<string, unknown>>();
-    for (const item of allItems) {
+    for (const item of filtered) {
       if (!item.date) continue;
       const dateStr = item.date.toISOString().split('T')[0];
       if (!dailyMap.has(dateStr)) {
@@ -1604,7 +1714,7 @@ export class ReportsService {
       branchAddress: '',
       fromDate: from.toISOString().split('T')[0],
       toDate: to.toISOString().split('T')[0],
-      items: allItems,
+      items: filtered,
       dailySubTotals: Array.from(dailyMap.values()),
     };
   }

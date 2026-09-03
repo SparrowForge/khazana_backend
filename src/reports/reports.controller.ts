@@ -149,15 +149,22 @@ export class ReportsController {
   @ApiQuery({ name: 'fromDate', required: true, description: 'Start date (ISO 8601)' })
   @ApiQuery({ name: 'toDate', required: true, description: 'End date (ISO 8601)' })
   @ApiQuery({ name: 'branchId', required: false, description: 'Branch ID — omit to aggregate every branch the caller may see' })
+  @ApiQuery({
+    name: 'payMethod',
+    required: false,
+    description:
+      "Filter by how the bill was paid: one of the report's payment columns (cash, bkash, nagad, brac, ucb, city, ebl, fpanda, pathao, foodi, credit), or omit / 'all' for every method. A split bill matches every method it was settled with, showing that method's portion.",
+  })
   @ApiResponse({ status: 200, description: 'Sales history rows with payment breakdown and daily subtotals' })
   getSalesHistory(
     @CurrentUser('branchIds') branchIds: string[],
     @Query('fromDate') fromDate: string,
     @Query('toDate') toDate: string,
     @Query('branchId') branchId?: string,
+    @Query('payMethod') payMethod?: string,
   ) {
     return this.reportsService.getSalesHistory(
-      { fromDate, toDate, branchId: branchId || undefined },
+      { fromDate, toDate, branchId: branchId || undefined, payMethod: payMethod || undefined },
       branchIds,
     );
   }

@@ -58,11 +58,12 @@ model Branch {
 }
 
 model Bank {
-  id         String     @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
-  name       String?    @map("Name")
-  createBy   String?    @map("CreateBy")
-  createDate DateTime?  @map("CreateDate")
-  sales      t_SOMstr[]
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  name         String?        @map("Name")
+  createBy     String?        @map("CreateBy")
+  createDate   DateTime?      @map("CreateDate")
+  sales        t_SOMstr[]
+  salePayments Sale_Payment[]
 
   @@map("Bank")
 }
@@ -517,13 +518,65 @@ model t_SOMstr {
   /// retained of a card number, and enough to tie the bill to the terminal's
   /// settlement slip. NULL on every non-Card sale.
   soMstrCardNo          String?   @map("SoMstr_CardNo")
+  /// How the bill was settled. A single tender names it directly (Cash, Card,
+  /// Bkash, ...); a split bill carries 'Multiple' and the real breakdown lives
+  /// in `payments`. Kept populated on every sale so readers that predate split
+  /// payments still see a mode.
   mtype                 String?   @map("Mtype")
   soMstrMBank           String?   @map("SoMstr_MBank") @db.Uuid
+  /// What the tender lines actually settled. Equals `somstrNetAmt` on a fully
+  /// paid bill, which is every bill unless partial payment was explicitly
+  /// allowed. NOT the same as `somstrCustomerpay`, which is cash handed over and
+  /// may exceed the bill (the difference comes back as `somstrChange`).
+  soMstrPaidAmt         Decimal?  @map("SoMstr_PaidAmt") @db.Decimal(18, 4)
+  /// `somstrNetAmt` - `soMstrPaidAmt`. 0 on a fully settled bill.
+  soMstrDueAmt          Decimal?  @map("SoMstr_DueAmt") @db.Decimal(18, 4)
+  /// 'PAID' or 'PARTIAL'. NULL on invoices raised before split payments —
+  /// treat NULL as PAID, which is what every one of them was.
+  soMstrPaymentStatus   String?   @map("SoMstr_PaymentStatus")
   bank                  Bank?     @relation(fields: [soMstrMBank], references: [id])
   customer              Customer? @relation(fields: [customerId], references: [id])
   details               t_SODet[]
+  /// One row per tender. A single-payment sale written since the split feature
+  /// landed has exactly ONE row here; sales raised before it have NONE, which is
+  /// why every reader falls back to `mtype` when the list is empty.
+  payments              Sale_Payment[]
 
   @@map("t_SOMstr")
+}
+
+/// One tender against a counter sale — the "payment split" rows.
+///
+/// A bill of 2000 settled as 1500 cash + 500 card is two rows. A bill settled a
+/// single way is one row, so reports can read tenders uniformly rather than
+/// special-casing. Invoices raised BEFORE this table existed have no rows at
+/// all: readers fall back to `t_SOMstr.mtype` for those, which is what keeps
+/// history intact.
+///
+/// `amount` is what this tender put against the BILL, not what the customer
+/// handed over: cash overtender and its change stay on `somstrCustomerpay` /
+/// `somstrChange` as they always have. The rows therefore sum to the amount
+/// settled, never more.
+model Sale_Payment {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
+  saleId         String    @map("SaleID") @db.Uuid
+  /// Cash / Card / Bkash / Nagad / ... — the same vocabulary `mtype` uses, so a
+  /// single-tender sale and one split row say the same thing.
+  method         String    @map("Method")
+  amount         Decimal   @map("Amount") @db.Decimal(18, 4)
+  /// Per-tender, not per-sale: a bill split across two cards can name a
+  /// different bank on each row, which a single `t_SOMstr.SoMstr_MBank` cannot.
+  bankId         String?   @map("BankId") @db.Uuid
+  /// Last 4 digits only, on a card tender — same rule as SoMstr_CardNo.
+  cardNo         String?   @map("CardNo")
+  /// MFS/card reference (bKash trxID, terminal approval code). Free text.
+  transactionRef String?   @map("TransactionRef")
+  createdAt      DateTime? @map("CreatedAt")
+  sale           t_SOMstr  @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  bank           Bank?     @relation(fields: [bankId], references: [id])
+
+  @@index([saleId])
+  @@map("Sale_Payment")
 }
 
 model t_SODet {

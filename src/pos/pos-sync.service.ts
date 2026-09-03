@@ -100,6 +100,9 @@ export class PosSyncService {
           discountContact: order.discountContact,
           customerId: order.customerId ?? null,
           cardNo: order.cardNo ?? null,
+          // A bill split at the till while offline arrives split, rather than
+          // collapsing to whichever single mode happened to be selected.
+          payments: order.payments,
           createdBy: dto.userName,
           enforceStock: false,
           // Off for the same reason `enforceStock` is: an order queued by a

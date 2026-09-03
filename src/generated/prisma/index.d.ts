@@ -155,6 +155,22 @@ export type CSVDetail = $Result.DefaultSelection<Prisma.$CSVDetailPayload>
  */
 export type t_SOMstr = $Result.DefaultSelection<Prisma.$t_SOMstrPayload>
 /**
+ * Model Sale_Payment
+ * One tender against a counter sale — the "payment split" rows.
+ * 
+ * A bill of 2000 settled as 1500 cash + 500 card is two rows. A bill settled a
+ * single way is one row, so reports can read tenders uniformly rather than
+ * special-casing. Invoices raised BEFORE this table existed have no rows at
+ * all: readers fall back to `t_SOMstr.mtype` for those, which is what keeps
+ * history intact.
+ * 
+ * `amount` is what this tender put against the BILL, not what the customer
+ * handed over: cash overtender and its change stay on `somstrCustomerpay` /
+ * `somstrChange` as they always have. The rows therefore sum to the amount
+ * settled, never more.
+ */
+export type Sale_Payment = $Result.DefaultSelection<Prisma.$Sale_PaymentPayload>
+/**
  * Model t_SODet
  * 
  */
@@ -690,6 +706,16 @@ export class PrismaClient<
     * ```
     */
   get t_SOMstr(): Prisma.t_SOMstrDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.sale_Payment`: Exposes CRUD operations for the **Sale_Payment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Sale_Payments
+    * const sale_Payments = await prisma.sale_Payment.findMany()
+    * ```
+    */
+  get sale_Payment(): Prisma.Sale_PaymentDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.t_SODet`: Exposes CRUD operations for the **t_SODet** model.
@@ -1408,6 +1434,7 @@ export namespace Prisma {
     CSVMaster: 'CSVMaster',
     CSVDetail: 'CSVDetail',
     t_SOMstr: 't_SOMstr',
+    Sale_Payment: 'Sale_Payment',
     t_SODet: 't_SODet',
     t_SOMstV: 't_SOMstV',
     t_SODeV: 't_SODeV',
@@ -1451,7 +1478,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "customer_Transaction" | "employee" | "item_Information" | "item_UOM" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "vehicle_Challan" | "production" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "report_Share" | "demandOrder_Master" | "demandOrder_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
+      modelProps: "mediaFile" | "branch" | "bank" | "setup_System" | "user" | "userBranchMapping" | "t_UserRole" | "auditLog" | "auditLogs" | "menu" | "role" | "permission" | "customer" | "customer_Transaction" | "employee" | "item_Information" | "item_UOM" | "item_Category" | "rW_Stock" | "inventory" | "t_Price" | "t_CostPr" | "cSMaster" | "cSDetail" | "cSVMaster" | "cSVDetail" | "t_SOMstr" | "sale_Payment" | "t_SODet" | "t_SOMstV" | "t_SODeV" | "asstMsrt" | "asstDet" | "t_NCMstr" | "t_NCDet" | "item_Receive" | "item_Issue" | "vehicle_Challan" | "production" | "itemReject" | "packetInfo" | "packet_Receive" | "packet_Issue" | "orderReceive_Master" | "orderReceive_Detail" | "report_Share" | "demandOrder_Master" | "demandOrder_Detail" | "vOrderReceive_Master" | "vOrderReceive_Detail" | "t_SaleAmountPost" | "cashPurchase" | "temp_table"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3453,6 +3480,80 @@ export namespace Prisma {
           }
         }
       }
+      Sale_Payment: {
+        payload: Prisma.$Sale_PaymentPayload<ExtArgs>
+        fields: Prisma.Sale_PaymentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.Sale_PaymentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Sale_PaymentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.Sale_PaymentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Sale_PaymentPayload>
+          }
+          findFirst: {
+            args: Prisma.Sale_PaymentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Sale_PaymentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.Sale_PaymentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Sale_PaymentPayload>
+          }
+          findMany: {
+            args: Prisma.Sale_PaymentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Sale_PaymentPayload>[]
+          }
+          create: {
+            args: Prisma.Sale_PaymentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Sale_PaymentPayload>
+          }
+          createMany: {
+            args: Prisma.Sale_PaymentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.Sale_PaymentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Sale_PaymentPayload>[]
+          }
+          delete: {
+            args: Prisma.Sale_PaymentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Sale_PaymentPayload>
+          }
+          update: {
+            args: Prisma.Sale_PaymentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Sale_PaymentPayload>
+          }
+          deleteMany: {
+            args: Prisma.Sale_PaymentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.Sale_PaymentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.Sale_PaymentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Sale_PaymentPayload>[]
+          }
+          upsert: {
+            args: Prisma.Sale_PaymentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$Sale_PaymentPayload>
+          }
+          aggregate: {
+            args: Prisma.Sale_PaymentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSale_Payment>
+          }
+          groupBy: {
+            args: Prisma.Sale_PaymentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Sale_PaymentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.Sale_PaymentCountArgs<ExtArgs>
+            result: $Utils.Optional<Sale_PaymentCountAggregateOutputType> | number
+          }
+        }
+      }
       t_SODet: {
         payload: Prisma.$t_SODetPayload<ExtArgs>
         fields: Prisma.t_SODetFieldRefs
@@ -5426,6 +5527,7 @@ export namespace Prisma {
     cSVMaster?: CSVMasterOmit
     cSVDetail?: CSVDetailOmit
     t_SOMstr?: t_SOMstrOmit
+    sale_Payment?: Sale_PaymentOmit
     t_SODet?: t_SODetOmit
     t_SOMstV?: t_SOMstVOmit
     t_SODeV?: t_SODeVOmit
@@ -5603,10 +5705,12 @@ export namespace Prisma {
 
   export type BankCountOutputType = {
     sales: number
+    salePayments: number
   }
 
   export type BankCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sales?: boolean | BankCountOutputTypeCountSalesArgs
+    salePayments?: boolean | BankCountOutputTypeCountSalePaymentsArgs
   }
 
   // Custom InputTypes
@@ -5625,6 +5729,13 @@ export namespace Prisma {
    */
   export type BankCountOutputTypeCountSalesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: t_SOMstrWhereInput
+  }
+
+  /**
+   * BankCountOutputType without action
+   */
+  export type BankCountOutputTypeCountSalePaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: Sale_PaymentWhereInput
   }
 
 
@@ -6022,10 +6133,12 @@ export namespace Prisma {
 
   export type T_SOMstrCountOutputType = {
     details: number
+    payments: number
   }
 
   export type T_SOMstrCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     details?: boolean | T_SOMstrCountOutputTypeCountDetailsArgs
+    payments?: boolean | T_SOMstrCountOutputTypeCountPaymentsArgs
   }
 
   // Custom InputTypes
@@ -6044,6 +6157,13 @@ export namespace Prisma {
    */
   export type T_SOMstrCountOutputTypeCountDetailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: t_SODetWhereInput
+  }
+
+  /**
+   * T_SOMstrCountOutputType without action
+   */
+  export type T_SOMstrCountOutputTypeCountPaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: Sale_PaymentWhereInput
   }
 
 
@@ -8850,6 +8970,7 @@ export namespace Prisma {
     createBy?: boolean
     createDate?: boolean
     sales?: boolean | Bank$salesArgs<ExtArgs>
+    salePayments?: boolean | Bank$salePaymentsArgs<ExtArgs>
     _count?: boolean | BankCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["bank"]>
 
@@ -8877,6 +8998,7 @@ export namespace Prisma {
   export type BankOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createBy" | "createDate", ExtArgs["result"]["bank"]>
   export type BankInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sales?: boolean | Bank$salesArgs<ExtArgs>
+    salePayments?: boolean | Bank$salePaymentsArgs<ExtArgs>
     _count?: boolean | BankCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type BankIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -8886,6 +9008,7 @@ export namespace Prisma {
     name: "Bank"
     objects: {
       sales: Prisma.$t_SOMstrPayload<ExtArgs>[]
+      salePayments: Prisma.$Sale_PaymentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9287,6 +9410,7 @@ export namespace Prisma {
   export interface Prisma__BankClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     sales<T extends Bank$salesArgs<ExtArgs> = {}>(args?: Subset<T, Bank$salesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_SOMstrPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    salePayments<T extends Bank$salePaymentsArgs<ExtArgs> = {}>(args?: Subset<T, Bank$salePaymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Sale_PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9729,6 +9853,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: T_SOMstrScalarFieldEnum | T_SOMstrScalarFieldEnum[]
+  }
+
+  /**
+   * Bank.salePayments
+   */
+  export type Bank$salePaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale_Payment
+     */
+    select?: Sale_PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale_Payment
+     */
+    omit?: Sale_PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Sale_PaymentInclude<ExtArgs> | null
+    where?: Sale_PaymentWhereInput
+    orderBy?: Sale_PaymentOrderByWithRelationInput | Sale_PaymentOrderByWithRelationInput[]
+    cursor?: Sale_PaymentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Sale_PaymentScalarFieldEnum | Sale_PaymentScalarFieldEnum[]
   }
 
   /**
@@ -36274,6 +36422,8 @@ export namespace Prisma {
     somstrNetAmt: Decimal | null
     somstrCustomerpay: Decimal | null
     somstrChange: Decimal | null
+    soMstrPaidAmt: Decimal | null
+    soMstrDueAmt: Decimal | null
   }
 
   export type T_SOMstrSumAggregateOutputType = {
@@ -36282,6 +36432,8 @@ export namespace Prisma {
     somstrNetAmt: Decimal | null
     somstrCustomerpay: Decimal | null
     somstrChange: Decimal | null
+    soMstrPaidAmt: Decimal | null
+    soMstrDueAmt: Decimal | null
   }
 
   export type T_SOMstrMinAggregateOutputType = {
@@ -36309,6 +36461,9 @@ export namespace Prisma {
     soMstrCardNo: string | null
     mtype: string | null
     soMstrMBank: string | null
+    soMstrPaidAmt: Decimal | null
+    soMstrDueAmt: Decimal | null
+    soMstrPaymentStatus: string | null
   }
 
   export type T_SOMstrMaxAggregateOutputType = {
@@ -36336,6 +36491,9 @@ export namespace Prisma {
     soMstrCardNo: string | null
     mtype: string | null
     soMstrMBank: string | null
+    soMstrPaidAmt: Decimal | null
+    soMstrDueAmt: Decimal | null
+    soMstrPaymentStatus: string | null
   }
 
   export type T_SOMstrCountAggregateOutputType = {
@@ -36363,6 +36521,9 @@ export namespace Prisma {
     soMstrCardNo: number
     mtype: number
     soMstrMBank: number
+    soMstrPaidAmt: number
+    soMstrDueAmt: number
+    soMstrPaymentStatus: number
     _all: number
   }
 
@@ -36373,6 +36534,8 @@ export namespace Prisma {
     somstrNetAmt?: true
     somstrCustomerpay?: true
     somstrChange?: true
+    soMstrPaidAmt?: true
+    soMstrDueAmt?: true
   }
 
   export type T_SOMstrSumAggregateInputType = {
@@ -36381,6 +36544,8 @@ export namespace Prisma {
     somstrNetAmt?: true
     somstrCustomerpay?: true
     somstrChange?: true
+    soMstrPaidAmt?: true
+    soMstrDueAmt?: true
   }
 
   export type T_SOMstrMinAggregateInputType = {
@@ -36408,6 +36573,9 @@ export namespace Prisma {
     soMstrCardNo?: true
     mtype?: true
     soMstrMBank?: true
+    soMstrPaidAmt?: true
+    soMstrDueAmt?: true
+    soMstrPaymentStatus?: true
   }
 
   export type T_SOMstrMaxAggregateInputType = {
@@ -36435,6 +36603,9 @@ export namespace Prisma {
     soMstrCardNo?: true
     mtype?: true
     soMstrMBank?: true
+    soMstrPaidAmt?: true
+    soMstrDueAmt?: true
+    soMstrPaymentStatus?: true
   }
 
   export type T_SOMstrCountAggregateInputType = {
@@ -36462,6 +36633,9 @@ export namespace Prisma {
     soMstrCardNo?: true
     mtype?: true
     soMstrMBank?: true
+    soMstrPaidAmt?: true
+    soMstrDueAmt?: true
+    soMstrPaymentStatus?: true
     _all?: true
   }
 
@@ -36576,6 +36750,9 @@ export namespace Prisma {
     soMstrCardNo: string | null
     mtype: string | null
     soMstrMBank: string | null
+    soMstrPaidAmt: Decimal | null
+    soMstrDueAmt: Decimal | null
+    soMstrPaymentStatus: string | null
     _count: T_SOMstrCountAggregateOutputType | null
     _avg: T_SOMstrAvgAggregateOutputType | null
     _sum: T_SOMstrSumAggregateOutputType | null
@@ -36622,9 +36799,13 @@ export namespace Prisma {
     soMstrCardNo?: boolean
     mtype?: boolean
     soMstrMBank?: boolean
+    soMstrPaidAmt?: boolean
+    soMstrDueAmt?: boolean
+    soMstrPaymentStatus?: boolean
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
     customer?: boolean | t_SOMstr$customerArgs<ExtArgs>
     details?: boolean | t_SOMstr$detailsArgs<ExtArgs>
+    payments?: boolean | t_SOMstr$paymentsArgs<ExtArgs>
     _count?: boolean | T_SOMstrCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["t_SOMstr"]>
 
@@ -36653,6 +36834,9 @@ export namespace Prisma {
     soMstrCardNo?: boolean
     mtype?: boolean
     soMstrMBank?: boolean
+    soMstrPaidAmt?: boolean
+    soMstrDueAmt?: boolean
+    soMstrPaymentStatus?: boolean
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
     customer?: boolean | t_SOMstr$customerArgs<ExtArgs>
   }, ExtArgs["result"]["t_SOMstr"]>
@@ -36682,6 +36866,9 @@ export namespace Prisma {
     soMstrCardNo?: boolean
     mtype?: boolean
     soMstrMBank?: boolean
+    soMstrPaidAmt?: boolean
+    soMstrDueAmt?: boolean
+    soMstrPaymentStatus?: boolean
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
     customer?: boolean | t_SOMstr$customerArgs<ExtArgs>
   }, ExtArgs["result"]["t_SOMstr"]>
@@ -36711,13 +36898,17 @@ export namespace Prisma {
     soMstrCardNo?: boolean
     mtype?: boolean
     soMstrMBank?: boolean
+    soMstrPaidAmt?: boolean
+    soMstrDueAmt?: boolean
+    soMstrPaymentStatus?: boolean
   }
 
-  export type t_SOMstrOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "somstrCode" | "somstrDate" | "somstrTotalAmt" | "somstrDiscAmt" | "somstrNetAmt" | "somstrVatClnNo" | "somstrVatDate" | "somstrPricingDate" | "somstrCreator" | "somstrCreationDate" | "somstrUpdateBy" | "somstrUpdateDate" | "somstrIsActive" | "somstrCustomerpay" | "somstrChange" | "branchId" | "soMstrDiscountRemarks" | "soMstrModifyRemarks" | "soMstrDiscountContact" | "customerId" | "soMstrCardNo" | "mtype" | "soMstrMBank", ExtArgs["result"]["t_SOMstr"]>
+  export type t_SOMstrOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "somstrCode" | "somstrDate" | "somstrTotalAmt" | "somstrDiscAmt" | "somstrNetAmt" | "somstrVatClnNo" | "somstrVatDate" | "somstrPricingDate" | "somstrCreator" | "somstrCreationDate" | "somstrUpdateBy" | "somstrUpdateDate" | "somstrIsActive" | "somstrCustomerpay" | "somstrChange" | "branchId" | "soMstrDiscountRemarks" | "soMstrModifyRemarks" | "soMstrDiscountContact" | "customerId" | "soMstrCardNo" | "mtype" | "soMstrMBank" | "soMstrPaidAmt" | "soMstrDueAmt" | "soMstrPaymentStatus", ExtArgs["result"]["t_SOMstr"]>
   export type t_SOMstrInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
     customer?: boolean | t_SOMstr$customerArgs<ExtArgs>
     details?: boolean | t_SOMstr$detailsArgs<ExtArgs>
+    payments?: boolean | t_SOMstr$paymentsArgs<ExtArgs>
     _count?: boolean | T_SOMstrCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type t_SOMstrIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -36735,6 +36926,12 @@ export namespace Prisma {
       bank: Prisma.$BankPayload<ExtArgs> | null
       customer: Prisma.$CustomerPayload<ExtArgs> | null
       details: Prisma.$t_SODetPayload<ExtArgs>[]
+      /**
+       * One row per tender. A single-payment sale written since the split feature
+       * landed has exactly ONE row here; sales raised before it have NONE, which is
+       * why every reader falls back to `mtype` when the list is empty.
+       */
+      payments: Prisma.$Sale_PaymentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -36770,8 +36967,30 @@ export namespace Prisma {
        * settlement slip. NULL on every non-Card sale.
        */
       soMstrCardNo: string | null
+      /**
+       * How the bill was settled. A single tender names it directly (Cash, Card,
+       * Bkash, ...); a split bill carries 'Multiple' and the real breakdown lives
+       * in `payments`. Kept populated on every sale so readers that predate split
+       * payments still see a mode.
+       */
       mtype: string | null
       soMstrMBank: string | null
+      /**
+       * What the tender lines actually settled. Equals `somstrNetAmt` on a fully
+       * paid bill, which is every bill unless partial payment was explicitly
+       * allowed. NOT the same as `somstrCustomerpay`, which is cash handed over and
+       * may exceed the bill (the difference comes back as `somstrChange`).
+       */
+      soMstrPaidAmt: Prisma.Decimal | null
+      /**
+       * `somstrNetAmt` - `soMstrPaidAmt`. 0 on a fully settled bill.
+       */
+      soMstrDueAmt: Prisma.Decimal | null
+      /**
+       * 'PAID' or 'PARTIAL'. NULL on invoices raised before split payments —
+       * treat NULL as PAID, which is what every one of them was.
+       */
+      soMstrPaymentStatus: string | null
     }, ExtArgs["result"]["t_SOMstr"]>
     composites: {}
   }
@@ -37169,6 +37388,7 @@ export namespace Prisma {
     bank<T extends t_SOMstr$bankArgs<ExtArgs> = {}>(args?: Subset<T, t_SOMstr$bankArgs<ExtArgs>>): Prisma__BankClient<$Result.GetResult<Prisma.$BankPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     customer<T extends t_SOMstr$customerArgs<ExtArgs> = {}>(args?: Subset<T, t_SOMstr$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     details<T extends t_SOMstr$detailsArgs<ExtArgs> = {}>(args?: Subset<T, t_SOMstr$detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_SODetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    payments<T extends t_SOMstr$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, t_SOMstr$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Sale_PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -37222,6 +37442,9 @@ export namespace Prisma {
     readonly soMstrCardNo: FieldRef<"t_SOMstr", 'String'>
     readonly mtype: FieldRef<"t_SOMstr", 'String'>
     readonly soMstrMBank: FieldRef<"t_SOMstr", 'String'>
+    readonly soMstrPaidAmt: FieldRef<"t_SOMstr", 'Decimal'>
+    readonly soMstrDueAmt: FieldRef<"t_SOMstr", 'Decimal'>
+    readonly soMstrPaymentStatus: FieldRef<"t_SOMstr", 'String'>
   }
     
 
@@ -37680,6 +37903,30 @@ export namespace Prisma {
   }
 
   /**
+   * t_SOMstr.payments
+   */
+  export type t_SOMstr$paymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale_Payment
+     */
+    select?: Sale_PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale_Payment
+     */
+    omit?: Sale_PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Sale_PaymentInclude<ExtArgs> | null
+    where?: Sale_PaymentWhereInput
+    orderBy?: Sale_PaymentOrderByWithRelationInput | Sale_PaymentOrderByWithRelationInput[]
+    cursor?: Sale_PaymentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Sale_PaymentScalarFieldEnum | Sale_PaymentScalarFieldEnum[]
+  }
+
+  /**
    * t_SOMstr without action
    */
   export type t_SOMstrDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -37695,6 +37942,1178 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: t_SOMstrInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Sale_Payment
+   */
+
+  export type AggregateSale_Payment = {
+    _count: Sale_PaymentCountAggregateOutputType | null
+    _avg: Sale_PaymentAvgAggregateOutputType | null
+    _sum: Sale_PaymentSumAggregateOutputType | null
+    _min: Sale_PaymentMinAggregateOutputType | null
+    _max: Sale_PaymentMaxAggregateOutputType | null
+  }
+
+  export type Sale_PaymentAvgAggregateOutputType = {
+    amount: Decimal | null
+  }
+
+  export type Sale_PaymentSumAggregateOutputType = {
+    amount: Decimal | null
+  }
+
+  export type Sale_PaymentMinAggregateOutputType = {
+    id: string | null
+    saleId: string | null
+    method: string | null
+    amount: Decimal | null
+    bankId: string | null
+    cardNo: string | null
+    transactionRef: string | null
+    createdAt: Date | null
+  }
+
+  export type Sale_PaymentMaxAggregateOutputType = {
+    id: string | null
+    saleId: string | null
+    method: string | null
+    amount: Decimal | null
+    bankId: string | null
+    cardNo: string | null
+    transactionRef: string | null
+    createdAt: Date | null
+  }
+
+  export type Sale_PaymentCountAggregateOutputType = {
+    id: number
+    saleId: number
+    method: number
+    amount: number
+    bankId: number
+    cardNo: number
+    transactionRef: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type Sale_PaymentAvgAggregateInputType = {
+    amount?: true
+  }
+
+  export type Sale_PaymentSumAggregateInputType = {
+    amount?: true
+  }
+
+  export type Sale_PaymentMinAggregateInputType = {
+    id?: true
+    saleId?: true
+    method?: true
+    amount?: true
+    bankId?: true
+    cardNo?: true
+    transactionRef?: true
+    createdAt?: true
+  }
+
+  export type Sale_PaymentMaxAggregateInputType = {
+    id?: true
+    saleId?: true
+    method?: true
+    amount?: true
+    bankId?: true
+    cardNo?: true
+    transactionRef?: true
+    createdAt?: true
+  }
+
+  export type Sale_PaymentCountAggregateInputType = {
+    id?: true
+    saleId?: true
+    method?: true
+    amount?: true
+    bankId?: true
+    cardNo?: true
+    transactionRef?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type Sale_PaymentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Sale_Payment to aggregate.
+     */
+    where?: Sale_PaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Sale_Payments to fetch.
+     */
+    orderBy?: Sale_PaymentOrderByWithRelationInput | Sale_PaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: Sale_PaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Sale_Payments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Sale_Payments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Sale_Payments
+    **/
+    _count?: true | Sale_PaymentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Sale_PaymentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Sale_PaymentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Sale_PaymentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Sale_PaymentMaxAggregateInputType
+  }
+
+  export type GetSale_PaymentAggregateType<T extends Sale_PaymentAggregateArgs> = {
+        [P in keyof T & keyof AggregateSale_Payment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSale_Payment[P]>
+      : GetScalarType<T[P], AggregateSale_Payment[P]>
+  }
+
+
+
+
+  export type Sale_PaymentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: Sale_PaymentWhereInput
+    orderBy?: Sale_PaymentOrderByWithAggregationInput | Sale_PaymentOrderByWithAggregationInput[]
+    by: Sale_PaymentScalarFieldEnum[] | Sale_PaymentScalarFieldEnum
+    having?: Sale_PaymentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Sale_PaymentCountAggregateInputType | true
+    _avg?: Sale_PaymentAvgAggregateInputType
+    _sum?: Sale_PaymentSumAggregateInputType
+    _min?: Sale_PaymentMinAggregateInputType
+    _max?: Sale_PaymentMaxAggregateInputType
+  }
+
+  export type Sale_PaymentGroupByOutputType = {
+    id: string
+    saleId: string
+    method: string
+    amount: Decimal
+    bankId: string | null
+    cardNo: string | null
+    transactionRef: string | null
+    createdAt: Date | null
+    _count: Sale_PaymentCountAggregateOutputType | null
+    _avg: Sale_PaymentAvgAggregateOutputType | null
+    _sum: Sale_PaymentSumAggregateOutputType | null
+    _min: Sale_PaymentMinAggregateOutputType | null
+    _max: Sale_PaymentMaxAggregateOutputType | null
+  }
+
+  type GetSale_PaymentGroupByPayload<T extends Sale_PaymentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Sale_PaymentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Sale_PaymentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Sale_PaymentGroupByOutputType[P]>
+            : GetScalarType<T[P], Sale_PaymentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type Sale_PaymentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    saleId?: boolean
+    method?: boolean
+    amount?: boolean
+    bankId?: boolean
+    cardNo?: boolean
+    transactionRef?: boolean
+    createdAt?: boolean
+    sale?: boolean | t_SOMstrDefaultArgs<ExtArgs>
+    bank?: boolean | Sale_Payment$bankArgs<ExtArgs>
+  }, ExtArgs["result"]["sale_Payment"]>
+
+  export type Sale_PaymentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    saleId?: boolean
+    method?: boolean
+    amount?: boolean
+    bankId?: boolean
+    cardNo?: boolean
+    transactionRef?: boolean
+    createdAt?: boolean
+    sale?: boolean | t_SOMstrDefaultArgs<ExtArgs>
+    bank?: boolean | Sale_Payment$bankArgs<ExtArgs>
+  }, ExtArgs["result"]["sale_Payment"]>
+
+  export type Sale_PaymentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    saleId?: boolean
+    method?: boolean
+    amount?: boolean
+    bankId?: boolean
+    cardNo?: boolean
+    transactionRef?: boolean
+    createdAt?: boolean
+    sale?: boolean | t_SOMstrDefaultArgs<ExtArgs>
+    bank?: boolean | Sale_Payment$bankArgs<ExtArgs>
+  }, ExtArgs["result"]["sale_Payment"]>
+
+  export type Sale_PaymentSelectScalar = {
+    id?: boolean
+    saleId?: boolean
+    method?: boolean
+    amount?: boolean
+    bankId?: boolean
+    cardNo?: boolean
+    transactionRef?: boolean
+    createdAt?: boolean
+  }
+
+  export type Sale_PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "saleId" | "method" | "amount" | "bankId" | "cardNo" | "transactionRef" | "createdAt", ExtArgs["result"]["sale_Payment"]>
+  export type Sale_PaymentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sale?: boolean | t_SOMstrDefaultArgs<ExtArgs>
+    bank?: boolean | Sale_Payment$bankArgs<ExtArgs>
+  }
+  export type Sale_PaymentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sale?: boolean | t_SOMstrDefaultArgs<ExtArgs>
+    bank?: boolean | Sale_Payment$bankArgs<ExtArgs>
+  }
+  export type Sale_PaymentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sale?: boolean | t_SOMstrDefaultArgs<ExtArgs>
+    bank?: boolean | Sale_Payment$bankArgs<ExtArgs>
+  }
+
+  export type $Sale_PaymentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Sale_Payment"
+    objects: {
+      sale: Prisma.$t_SOMstrPayload<ExtArgs>
+      bank: Prisma.$BankPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      saleId: string
+      /**
+       * Cash / Card / Bkash / Nagad / ... — the same vocabulary `mtype` uses, so a
+       * single-tender sale and one split row say the same thing.
+       */
+      method: string
+      amount: Prisma.Decimal
+      /**
+       * Per-tender, not per-sale: a bill split across two cards can name a
+       * different bank on each row, which a single `t_SOMstr.SoMstr_MBank` cannot.
+       */
+      bankId: string | null
+      /**
+       * Last 4 digits only, on a card tender — same rule as SoMstr_CardNo.
+       */
+      cardNo: string | null
+      /**
+       * MFS/card reference (bKash trxID, terminal approval code). Free text.
+       */
+      transactionRef: string | null
+      createdAt: Date | null
+    }, ExtArgs["result"]["sale_Payment"]>
+    composites: {}
+  }
+
+  type Sale_PaymentGetPayload<S extends boolean | null | undefined | Sale_PaymentDefaultArgs> = $Result.GetResult<Prisma.$Sale_PaymentPayload, S>
+
+  type Sale_PaymentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<Sale_PaymentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Sale_PaymentCountAggregateInputType | true
+    }
+
+  export interface Sale_PaymentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Sale_Payment'], meta: { name: 'Sale_Payment' } }
+    /**
+     * Find zero or one Sale_Payment that matches the filter.
+     * @param {Sale_PaymentFindUniqueArgs} args - Arguments to find a Sale_Payment
+     * @example
+     * // Get one Sale_Payment
+     * const sale_Payment = await prisma.sale_Payment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends Sale_PaymentFindUniqueArgs>(args: SelectSubset<T, Sale_PaymentFindUniqueArgs<ExtArgs>>): Prisma__Sale_PaymentClient<$Result.GetResult<Prisma.$Sale_PaymentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Sale_Payment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {Sale_PaymentFindUniqueOrThrowArgs} args - Arguments to find a Sale_Payment
+     * @example
+     * // Get one Sale_Payment
+     * const sale_Payment = await prisma.sale_Payment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends Sale_PaymentFindUniqueOrThrowArgs>(args: SelectSubset<T, Sale_PaymentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__Sale_PaymentClient<$Result.GetResult<Prisma.$Sale_PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Sale_Payment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Sale_PaymentFindFirstArgs} args - Arguments to find a Sale_Payment
+     * @example
+     * // Get one Sale_Payment
+     * const sale_Payment = await prisma.sale_Payment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends Sale_PaymentFindFirstArgs>(args?: SelectSubset<T, Sale_PaymentFindFirstArgs<ExtArgs>>): Prisma__Sale_PaymentClient<$Result.GetResult<Prisma.$Sale_PaymentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Sale_Payment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Sale_PaymentFindFirstOrThrowArgs} args - Arguments to find a Sale_Payment
+     * @example
+     * // Get one Sale_Payment
+     * const sale_Payment = await prisma.sale_Payment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends Sale_PaymentFindFirstOrThrowArgs>(args?: SelectSubset<T, Sale_PaymentFindFirstOrThrowArgs<ExtArgs>>): Prisma__Sale_PaymentClient<$Result.GetResult<Prisma.$Sale_PaymentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Sale_Payments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Sale_PaymentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Sale_Payments
+     * const sale_Payments = await prisma.sale_Payment.findMany()
+     * 
+     * // Get first 10 Sale_Payments
+     * const sale_Payments = await prisma.sale_Payment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const sale_PaymentWithIdOnly = await prisma.sale_Payment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends Sale_PaymentFindManyArgs>(args?: SelectSubset<T, Sale_PaymentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Sale_PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Sale_Payment.
+     * @param {Sale_PaymentCreateArgs} args - Arguments to create a Sale_Payment.
+     * @example
+     * // Create one Sale_Payment
+     * const Sale_Payment = await prisma.sale_Payment.create({
+     *   data: {
+     *     // ... data to create a Sale_Payment
+     *   }
+     * })
+     * 
+     */
+    create<T extends Sale_PaymentCreateArgs>(args: SelectSubset<T, Sale_PaymentCreateArgs<ExtArgs>>): Prisma__Sale_PaymentClient<$Result.GetResult<Prisma.$Sale_PaymentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Sale_Payments.
+     * @param {Sale_PaymentCreateManyArgs} args - Arguments to create many Sale_Payments.
+     * @example
+     * // Create many Sale_Payments
+     * const sale_Payment = await prisma.sale_Payment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends Sale_PaymentCreateManyArgs>(args?: SelectSubset<T, Sale_PaymentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Sale_Payments and returns the data saved in the database.
+     * @param {Sale_PaymentCreateManyAndReturnArgs} args - Arguments to create many Sale_Payments.
+     * @example
+     * // Create many Sale_Payments
+     * const sale_Payment = await prisma.sale_Payment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Sale_Payments and only return the `id`
+     * const sale_PaymentWithIdOnly = await prisma.sale_Payment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends Sale_PaymentCreateManyAndReturnArgs>(args?: SelectSubset<T, Sale_PaymentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Sale_PaymentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Sale_Payment.
+     * @param {Sale_PaymentDeleteArgs} args - Arguments to delete one Sale_Payment.
+     * @example
+     * // Delete one Sale_Payment
+     * const Sale_Payment = await prisma.sale_Payment.delete({
+     *   where: {
+     *     // ... filter to delete one Sale_Payment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends Sale_PaymentDeleteArgs>(args: SelectSubset<T, Sale_PaymentDeleteArgs<ExtArgs>>): Prisma__Sale_PaymentClient<$Result.GetResult<Prisma.$Sale_PaymentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Sale_Payment.
+     * @param {Sale_PaymentUpdateArgs} args - Arguments to update one Sale_Payment.
+     * @example
+     * // Update one Sale_Payment
+     * const sale_Payment = await prisma.sale_Payment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends Sale_PaymentUpdateArgs>(args: SelectSubset<T, Sale_PaymentUpdateArgs<ExtArgs>>): Prisma__Sale_PaymentClient<$Result.GetResult<Prisma.$Sale_PaymentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Sale_Payments.
+     * @param {Sale_PaymentDeleteManyArgs} args - Arguments to filter Sale_Payments to delete.
+     * @example
+     * // Delete a few Sale_Payments
+     * const { count } = await prisma.sale_Payment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends Sale_PaymentDeleteManyArgs>(args?: SelectSubset<T, Sale_PaymentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Sale_Payments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Sale_PaymentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Sale_Payments
+     * const sale_Payment = await prisma.sale_Payment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends Sale_PaymentUpdateManyArgs>(args: SelectSubset<T, Sale_PaymentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Sale_Payments and returns the data updated in the database.
+     * @param {Sale_PaymentUpdateManyAndReturnArgs} args - Arguments to update many Sale_Payments.
+     * @example
+     * // Update many Sale_Payments
+     * const sale_Payment = await prisma.sale_Payment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Sale_Payments and only return the `id`
+     * const sale_PaymentWithIdOnly = await prisma.sale_Payment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends Sale_PaymentUpdateManyAndReturnArgs>(args: SelectSubset<T, Sale_PaymentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Sale_PaymentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Sale_Payment.
+     * @param {Sale_PaymentUpsertArgs} args - Arguments to update or create a Sale_Payment.
+     * @example
+     * // Update or create a Sale_Payment
+     * const sale_Payment = await prisma.sale_Payment.upsert({
+     *   create: {
+     *     // ... data to create a Sale_Payment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Sale_Payment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends Sale_PaymentUpsertArgs>(args: SelectSubset<T, Sale_PaymentUpsertArgs<ExtArgs>>): Prisma__Sale_PaymentClient<$Result.GetResult<Prisma.$Sale_PaymentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Sale_Payments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Sale_PaymentCountArgs} args - Arguments to filter Sale_Payments to count.
+     * @example
+     * // Count the number of Sale_Payments
+     * const count = await prisma.sale_Payment.count({
+     *   where: {
+     *     // ... the filter for the Sale_Payments we want to count
+     *   }
+     * })
+    **/
+    count<T extends Sale_PaymentCountArgs>(
+      args?: Subset<T, Sale_PaymentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Sale_PaymentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Sale_Payment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Sale_PaymentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Sale_PaymentAggregateArgs>(args: Subset<T, Sale_PaymentAggregateArgs>): Prisma.PrismaPromise<GetSale_PaymentAggregateType<T>>
+
+    /**
+     * Group by Sale_Payment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Sale_PaymentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends Sale_PaymentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: Sale_PaymentGroupByArgs['orderBy'] }
+        : { orderBy?: Sale_PaymentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, Sale_PaymentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSale_PaymentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Sale_Payment model
+   */
+  readonly fields: Sale_PaymentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Sale_Payment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__Sale_PaymentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    sale<T extends t_SOMstrDefaultArgs<ExtArgs> = {}>(args?: Subset<T, t_SOMstrDefaultArgs<ExtArgs>>): Prisma__t_SOMstrClient<$Result.GetResult<Prisma.$t_SOMstrPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    bank<T extends Sale_Payment$bankArgs<ExtArgs> = {}>(args?: Subset<T, Sale_Payment$bankArgs<ExtArgs>>): Prisma__BankClient<$Result.GetResult<Prisma.$BankPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Sale_Payment model
+   */
+  interface Sale_PaymentFieldRefs {
+    readonly id: FieldRef<"Sale_Payment", 'String'>
+    readonly saleId: FieldRef<"Sale_Payment", 'String'>
+    readonly method: FieldRef<"Sale_Payment", 'String'>
+    readonly amount: FieldRef<"Sale_Payment", 'Decimal'>
+    readonly bankId: FieldRef<"Sale_Payment", 'String'>
+    readonly cardNo: FieldRef<"Sale_Payment", 'String'>
+    readonly transactionRef: FieldRef<"Sale_Payment", 'String'>
+    readonly createdAt: FieldRef<"Sale_Payment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Sale_Payment findUnique
+   */
+  export type Sale_PaymentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale_Payment
+     */
+    select?: Sale_PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale_Payment
+     */
+    omit?: Sale_PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Sale_PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Sale_Payment to fetch.
+     */
+    where: Sale_PaymentWhereUniqueInput
+  }
+
+  /**
+   * Sale_Payment findUniqueOrThrow
+   */
+  export type Sale_PaymentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale_Payment
+     */
+    select?: Sale_PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale_Payment
+     */
+    omit?: Sale_PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Sale_PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Sale_Payment to fetch.
+     */
+    where: Sale_PaymentWhereUniqueInput
+  }
+
+  /**
+   * Sale_Payment findFirst
+   */
+  export type Sale_PaymentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale_Payment
+     */
+    select?: Sale_PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale_Payment
+     */
+    omit?: Sale_PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Sale_PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Sale_Payment to fetch.
+     */
+    where?: Sale_PaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Sale_Payments to fetch.
+     */
+    orderBy?: Sale_PaymentOrderByWithRelationInput | Sale_PaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Sale_Payments.
+     */
+    cursor?: Sale_PaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Sale_Payments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Sale_Payments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Sale_Payments.
+     */
+    distinct?: Sale_PaymentScalarFieldEnum | Sale_PaymentScalarFieldEnum[]
+  }
+
+  /**
+   * Sale_Payment findFirstOrThrow
+   */
+  export type Sale_PaymentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale_Payment
+     */
+    select?: Sale_PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale_Payment
+     */
+    omit?: Sale_PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Sale_PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Sale_Payment to fetch.
+     */
+    where?: Sale_PaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Sale_Payments to fetch.
+     */
+    orderBy?: Sale_PaymentOrderByWithRelationInput | Sale_PaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Sale_Payments.
+     */
+    cursor?: Sale_PaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Sale_Payments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Sale_Payments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Sale_Payments.
+     */
+    distinct?: Sale_PaymentScalarFieldEnum | Sale_PaymentScalarFieldEnum[]
+  }
+
+  /**
+   * Sale_Payment findMany
+   */
+  export type Sale_PaymentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale_Payment
+     */
+    select?: Sale_PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale_Payment
+     */
+    omit?: Sale_PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Sale_PaymentInclude<ExtArgs> | null
+    /**
+     * Filter, which Sale_Payments to fetch.
+     */
+    where?: Sale_PaymentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Sale_Payments to fetch.
+     */
+    orderBy?: Sale_PaymentOrderByWithRelationInput | Sale_PaymentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Sale_Payments.
+     */
+    cursor?: Sale_PaymentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Sale_Payments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Sale_Payments.
+     */
+    skip?: number
+    distinct?: Sale_PaymentScalarFieldEnum | Sale_PaymentScalarFieldEnum[]
+  }
+
+  /**
+   * Sale_Payment create
+   */
+  export type Sale_PaymentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale_Payment
+     */
+    select?: Sale_PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale_Payment
+     */
+    omit?: Sale_PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Sale_PaymentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Sale_Payment.
+     */
+    data: XOR<Sale_PaymentCreateInput, Sale_PaymentUncheckedCreateInput>
+  }
+
+  /**
+   * Sale_Payment createMany
+   */
+  export type Sale_PaymentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Sale_Payments.
+     */
+    data: Sale_PaymentCreateManyInput | Sale_PaymentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Sale_Payment createManyAndReturn
+   */
+  export type Sale_PaymentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale_Payment
+     */
+    select?: Sale_PaymentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale_Payment
+     */
+    omit?: Sale_PaymentOmit<ExtArgs> | null
+    /**
+     * The data used to create many Sale_Payments.
+     */
+    data: Sale_PaymentCreateManyInput | Sale_PaymentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Sale_PaymentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Sale_Payment update
+   */
+  export type Sale_PaymentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale_Payment
+     */
+    select?: Sale_PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale_Payment
+     */
+    omit?: Sale_PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Sale_PaymentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Sale_Payment.
+     */
+    data: XOR<Sale_PaymentUpdateInput, Sale_PaymentUncheckedUpdateInput>
+    /**
+     * Choose, which Sale_Payment to update.
+     */
+    where: Sale_PaymentWhereUniqueInput
+  }
+
+  /**
+   * Sale_Payment updateMany
+   */
+  export type Sale_PaymentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Sale_Payments.
+     */
+    data: XOR<Sale_PaymentUpdateManyMutationInput, Sale_PaymentUncheckedUpdateManyInput>
+    /**
+     * Filter which Sale_Payments to update
+     */
+    where?: Sale_PaymentWhereInput
+    /**
+     * Limit how many Sale_Payments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Sale_Payment updateManyAndReturn
+   */
+  export type Sale_PaymentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale_Payment
+     */
+    select?: Sale_PaymentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale_Payment
+     */
+    omit?: Sale_PaymentOmit<ExtArgs> | null
+    /**
+     * The data used to update Sale_Payments.
+     */
+    data: XOR<Sale_PaymentUpdateManyMutationInput, Sale_PaymentUncheckedUpdateManyInput>
+    /**
+     * Filter which Sale_Payments to update
+     */
+    where?: Sale_PaymentWhereInput
+    /**
+     * Limit how many Sale_Payments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Sale_PaymentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Sale_Payment upsert
+   */
+  export type Sale_PaymentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale_Payment
+     */
+    select?: Sale_PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale_Payment
+     */
+    omit?: Sale_PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Sale_PaymentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Sale_Payment to update in case it exists.
+     */
+    where: Sale_PaymentWhereUniqueInput
+    /**
+     * In case the Sale_Payment found by the `where` argument doesn't exist, create a new Sale_Payment with this data.
+     */
+    create: XOR<Sale_PaymentCreateInput, Sale_PaymentUncheckedCreateInput>
+    /**
+     * In case the Sale_Payment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<Sale_PaymentUpdateInput, Sale_PaymentUncheckedUpdateInput>
+  }
+
+  /**
+   * Sale_Payment delete
+   */
+  export type Sale_PaymentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale_Payment
+     */
+    select?: Sale_PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale_Payment
+     */
+    omit?: Sale_PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Sale_PaymentInclude<ExtArgs> | null
+    /**
+     * Filter which Sale_Payment to delete.
+     */
+    where: Sale_PaymentWhereUniqueInput
+  }
+
+  /**
+   * Sale_Payment deleteMany
+   */
+  export type Sale_PaymentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Sale_Payments to delete
+     */
+    where?: Sale_PaymentWhereInput
+    /**
+     * Limit how many Sale_Payments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Sale_Payment.bank
+   */
+  export type Sale_Payment$bankArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Bank
+     */
+    select?: BankSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Bank
+     */
+    omit?: BankOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BankInclude<ExtArgs> | null
+    where?: BankWhereInput
+  }
+
+  /**
+   * Sale_Payment without action
+   */
+  export type Sale_PaymentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Sale_Payment
+     */
+    select?: Sale_PaymentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Sale_Payment
+     */
+    omit?: Sale_PaymentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: Sale_PaymentInclude<ExtArgs> | null
   }
 
 
@@ -69067,10 +70486,27 @@ export namespace Prisma {
     customerId: 'customerId',
     soMstrCardNo: 'soMstrCardNo',
     mtype: 'mtype',
-    soMstrMBank: 'soMstrMBank'
+    soMstrMBank: 'soMstrMBank',
+    soMstrPaidAmt: 'soMstrPaidAmt',
+    soMstrDueAmt: 'soMstrDueAmt',
+    soMstrPaymentStatus: 'soMstrPaymentStatus'
   };
 
   export type T_SOMstrScalarFieldEnum = (typeof T_SOMstrScalarFieldEnum)[keyof typeof T_SOMstrScalarFieldEnum]
+
+
+  export const Sale_PaymentScalarFieldEnum: {
+    id: 'id',
+    saleId: 'saleId',
+    method: 'method',
+    amount: 'amount',
+    bankId: 'bankId',
+    cardNo: 'cardNo',
+    transactionRef: 'transactionRef',
+    createdAt: 'createdAt'
+  };
+
+  export type Sale_PaymentScalarFieldEnum = (typeof Sale_PaymentScalarFieldEnum)[keyof typeof Sale_PaymentScalarFieldEnum]
 
 
   export const T_SODetScalarFieldEnum: {
@@ -69892,6 +71328,7 @@ export namespace Prisma {
     createBy?: StringNullableFilter<"Bank"> | string | null
     createDate?: DateTimeNullableFilter<"Bank"> | Date | string | null
     sales?: T_SOMstrListRelationFilter
+    salePayments?: Sale_PaymentListRelationFilter
   }
 
   export type BankOrderByWithRelationInput = {
@@ -69900,6 +71337,7 @@ export namespace Prisma {
     createBy?: SortOrderInput | SortOrder
     createDate?: SortOrderInput | SortOrder
     sales?: t_SOMstrOrderByRelationAggregateInput
+    salePayments?: Sale_PaymentOrderByRelationAggregateInput
   }
 
   export type BankWhereUniqueInput = Prisma.AtLeast<{
@@ -69911,6 +71349,7 @@ export namespace Prisma {
     createBy?: StringNullableFilter<"Bank"> | string | null
     createDate?: DateTimeNullableFilter<"Bank"> | Date | string | null
     sales?: T_SOMstrListRelationFilter
+    salePayments?: Sale_PaymentListRelationFilter
   }, "id">
 
   export type BankOrderByWithAggregationInput = {
@@ -71758,9 +73197,13 @@ export namespace Prisma {
     soMstrCardNo?: StringNullableFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrMBank?: UuidNullableFilter<"t_SOMstr"> | string | null
+    soMstrPaidAmt?: DecimalNullableFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: DecimalNullableFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: StringNullableFilter<"t_SOMstr"> | string | null
     bank?: XOR<BankNullableScalarRelationFilter, BankWhereInput> | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     details?: T_SODetListRelationFilter
+    payments?: Sale_PaymentListRelationFilter
   }
 
   export type t_SOMstrOrderByWithRelationInput = {
@@ -71788,9 +73231,13 @@ export namespace Prisma {
     soMstrCardNo?: SortOrderInput | SortOrder
     mtype?: SortOrderInput | SortOrder
     soMstrMBank?: SortOrderInput | SortOrder
+    soMstrPaidAmt?: SortOrderInput | SortOrder
+    soMstrDueAmt?: SortOrderInput | SortOrder
+    soMstrPaymentStatus?: SortOrderInput | SortOrder
     bank?: BankOrderByWithRelationInput
     customer?: CustomerOrderByWithRelationInput
     details?: t_SODetOrderByRelationAggregateInput
+    payments?: Sale_PaymentOrderByRelationAggregateInput
   }
 
   export type t_SOMstrWhereUniqueInput = Prisma.AtLeast<{
@@ -71821,9 +73268,13 @@ export namespace Prisma {
     soMstrCardNo?: StringNullableFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrMBank?: UuidNullableFilter<"t_SOMstr"> | string | null
+    soMstrPaidAmt?: DecimalNullableFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: DecimalNullableFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: StringNullableFilter<"t_SOMstr"> | string | null
     bank?: XOR<BankNullableScalarRelationFilter, BankWhereInput> | null
     customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     details?: T_SODetListRelationFilter
+    payments?: Sale_PaymentListRelationFilter
   }, "id">
 
   export type t_SOMstrOrderByWithAggregationInput = {
@@ -71851,6 +73302,9 @@ export namespace Prisma {
     soMstrCardNo?: SortOrderInput | SortOrder
     mtype?: SortOrderInput | SortOrder
     soMstrMBank?: SortOrderInput | SortOrder
+    soMstrPaidAmt?: SortOrderInput | SortOrder
+    soMstrDueAmt?: SortOrderInput | SortOrder
+    soMstrPaymentStatus?: SortOrderInput | SortOrder
     _count?: t_SOMstrCountOrderByAggregateInput
     _avg?: t_SOMstrAvgOrderByAggregateInput
     _max?: t_SOMstrMaxOrderByAggregateInput
@@ -71886,6 +73340,84 @@ export namespace Prisma {
     soMstrCardNo?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     soMstrMBank?: UuidNullableWithAggregatesFilter<"t_SOMstr"> | string | null
+    soMstrPaidAmt?: DecimalNullableWithAggregatesFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: DecimalNullableWithAggregatesFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
+  }
+
+  export type Sale_PaymentWhereInput = {
+    AND?: Sale_PaymentWhereInput | Sale_PaymentWhereInput[]
+    OR?: Sale_PaymentWhereInput[]
+    NOT?: Sale_PaymentWhereInput | Sale_PaymentWhereInput[]
+    id?: UuidFilter<"Sale_Payment"> | string
+    saleId?: UuidFilter<"Sale_Payment"> | string
+    method?: StringFilter<"Sale_Payment"> | string
+    amount?: DecimalFilter<"Sale_Payment"> | Decimal | DecimalJsLike | number | string
+    bankId?: UuidNullableFilter<"Sale_Payment"> | string | null
+    cardNo?: StringNullableFilter<"Sale_Payment"> | string | null
+    transactionRef?: StringNullableFilter<"Sale_Payment"> | string | null
+    createdAt?: DateTimeNullableFilter<"Sale_Payment"> | Date | string | null
+    sale?: XOR<T_SOMstrScalarRelationFilter, t_SOMstrWhereInput>
+    bank?: XOR<BankNullableScalarRelationFilter, BankWhereInput> | null
+  }
+
+  export type Sale_PaymentOrderByWithRelationInput = {
+    id?: SortOrder
+    saleId?: SortOrder
+    method?: SortOrder
+    amount?: SortOrder
+    bankId?: SortOrderInput | SortOrder
+    cardNo?: SortOrderInput | SortOrder
+    transactionRef?: SortOrderInput | SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    sale?: t_SOMstrOrderByWithRelationInput
+    bank?: BankOrderByWithRelationInput
+  }
+
+  export type Sale_PaymentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: Sale_PaymentWhereInput | Sale_PaymentWhereInput[]
+    OR?: Sale_PaymentWhereInput[]
+    NOT?: Sale_PaymentWhereInput | Sale_PaymentWhereInput[]
+    saleId?: UuidFilter<"Sale_Payment"> | string
+    method?: StringFilter<"Sale_Payment"> | string
+    amount?: DecimalFilter<"Sale_Payment"> | Decimal | DecimalJsLike | number | string
+    bankId?: UuidNullableFilter<"Sale_Payment"> | string | null
+    cardNo?: StringNullableFilter<"Sale_Payment"> | string | null
+    transactionRef?: StringNullableFilter<"Sale_Payment"> | string | null
+    createdAt?: DateTimeNullableFilter<"Sale_Payment"> | Date | string | null
+    sale?: XOR<T_SOMstrScalarRelationFilter, t_SOMstrWhereInput>
+    bank?: XOR<BankNullableScalarRelationFilter, BankWhereInput> | null
+  }, "id">
+
+  export type Sale_PaymentOrderByWithAggregationInput = {
+    id?: SortOrder
+    saleId?: SortOrder
+    method?: SortOrder
+    amount?: SortOrder
+    bankId?: SortOrderInput | SortOrder
+    cardNo?: SortOrderInput | SortOrder
+    transactionRef?: SortOrderInput | SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    _count?: Sale_PaymentCountOrderByAggregateInput
+    _avg?: Sale_PaymentAvgOrderByAggregateInput
+    _max?: Sale_PaymentMaxOrderByAggregateInput
+    _min?: Sale_PaymentMinOrderByAggregateInput
+    _sum?: Sale_PaymentSumOrderByAggregateInput
+  }
+
+  export type Sale_PaymentScalarWhereWithAggregatesInput = {
+    AND?: Sale_PaymentScalarWhereWithAggregatesInput | Sale_PaymentScalarWhereWithAggregatesInput[]
+    OR?: Sale_PaymentScalarWhereWithAggregatesInput[]
+    NOT?: Sale_PaymentScalarWhereWithAggregatesInput | Sale_PaymentScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Sale_Payment"> | string
+    saleId?: UuidWithAggregatesFilter<"Sale_Payment"> | string
+    method?: StringWithAggregatesFilter<"Sale_Payment"> | string
+    amount?: DecimalWithAggregatesFilter<"Sale_Payment"> | Decimal | DecimalJsLike | number | string
+    bankId?: UuidNullableWithAggregatesFilter<"Sale_Payment"> | string | null
+    cardNo?: StringNullableWithAggregatesFilter<"Sale_Payment"> | string | null
+    transactionRef?: StringNullableWithAggregatesFilter<"Sale_Payment"> | string | null
+    createdAt?: DateTimeNullableWithAggregatesFilter<"Sale_Payment"> | Date | string | null
   }
 
   export type t_SODetWhereInput = {
@@ -74647,6 +76179,7 @@ export namespace Prisma {
     createBy?: string | null
     createDate?: Date | string | null
     sales?: t_SOMstrCreateNestedManyWithoutBankInput
+    salePayments?: Sale_PaymentCreateNestedManyWithoutBankInput
   }
 
   export type BankUncheckedCreateInput = {
@@ -74655,6 +76188,7 @@ export namespace Prisma {
     createBy?: string | null
     createDate?: Date | string | null
     sales?: t_SOMstrUncheckedCreateNestedManyWithoutBankInput
+    salePayments?: Sale_PaymentUncheckedCreateNestedManyWithoutBankInput
   }
 
   export type BankUpdateInput = {
@@ -74663,6 +76197,7 @@ export namespace Prisma {
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: t_SOMstrUpdateManyWithoutBankNestedInput
+    salePayments?: Sale_PaymentUpdateManyWithoutBankNestedInput
   }
 
   export type BankUncheckedUpdateInput = {
@@ -74671,6 +76206,7 @@ export namespace Prisma {
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sales?: t_SOMstrUncheckedUpdateManyWithoutBankNestedInput
+    salePayments?: Sale_PaymentUncheckedUpdateManyWithoutBankNestedInput
   }
 
   export type BankCreateManyInput = {
@@ -76720,9 +78256,13 @@ export namespace Prisma {
     soMstrDiscountContact?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
+    soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: string | null
     bank?: BankCreateNestedOneWithoutSalesInput
     customer?: CustomerCreateNestedOneWithoutPosSalesInput
     details?: t_SODetCreateNestedManyWithoutSaleInput
+    payments?: Sale_PaymentCreateNestedManyWithoutSaleInput
   }
 
   export type t_SOMstrUncheckedCreateInput = {
@@ -76750,7 +78290,11 @@ export namespace Prisma {
     soMstrCardNo?: string | null
     mtype?: string | null
     soMstrMBank?: string | null
+    soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: string | null
     details?: t_SODetUncheckedCreateNestedManyWithoutSaleInput
+    payments?: Sale_PaymentUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type t_SOMstrUpdateInput = {
@@ -76776,9 +78320,13 @@ export namespace Prisma {
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: BankUpdateOneWithoutSalesNestedInput
     customer?: CustomerUpdateOneWithoutPosSalesNestedInput
     details?: t_SODetUpdateManyWithoutSaleNestedInput
+    payments?: Sale_PaymentUpdateManyWithoutSaleNestedInput
   }
 
   export type t_SOMstrUncheckedUpdateInput = {
@@ -76806,7 +78354,11 @@ export namespace Prisma {
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     details?: t_SODetUncheckedUpdateManyWithoutSaleNestedInput
+    payments?: Sale_PaymentUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type t_SOMstrCreateManyInput = {
@@ -76834,6 +78386,9 @@ export namespace Prisma {
     soMstrCardNo?: string | null
     mtype?: string | null
     soMstrMBank?: string | null
+    soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: string | null
   }
 
   export type t_SOMstrUpdateManyMutationInput = {
@@ -76859,6 +78414,9 @@ export namespace Prisma {
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SOMstrUncheckedUpdateManyInput = {
@@ -76886,6 +78444,84 @@ export namespace Prisma {
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Sale_PaymentCreateInput = {
+    id?: string
+    method: string
+    amount: Decimal | DecimalJsLike | number | string
+    cardNo?: string | null
+    transactionRef?: string | null
+    createdAt?: Date | string | null
+    sale: t_SOMstrCreateNestedOneWithoutPaymentsInput
+    bank?: BankCreateNestedOneWithoutSalePaymentsInput
+  }
+
+  export type Sale_PaymentUncheckedCreateInput = {
+    id?: string
+    saleId: string
+    method: string
+    amount: Decimal | DecimalJsLike | number | string
+    bankId?: string | null
+    cardNo?: string | null
+    transactionRef?: string | null
+    createdAt?: Date | string | null
+  }
+
+  export type Sale_PaymentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionRef?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sale?: t_SOMstrUpdateOneRequiredWithoutPaymentsNestedInput
+    bank?: BankUpdateOneWithoutSalePaymentsNestedInput
+  }
+
+  export type Sale_PaymentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    saleId?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankId?: NullableStringFieldUpdateOperationsInput | string | null
+    cardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionRef?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Sale_PaymentCreateManyInput = {
+    id?: string
+    saleId: string
+    method: string
+    amount: Decimal | DecimalJsLike | number | string
+    bankId?: string | null
+    cardNo?: string | null
+    transactionRef?: string | null
+    createdAt?: Date | string | null
+  }
+
+  export type Sale_PaymentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionRef?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Sale_PaymentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    saleId?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankId?: NullableStringFieldUpdateOperationsInput | string | null
+    cardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionRef?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type t_SODetCreateInput = {
@@ -80237,7 +81873,17 @@ export namespace Prisma {
     none?: t_SOMstrWhereInput
   }
 
+  export type Sale_PaymentListRelationFilter = {
+    every?: Sale_PaymentWhereInput
+    some?: Sale_PaymentWhereInput
+    none?: Sale_PaymentWhereInput
+  }
+
   export type t_SOMstrOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type Sale_PaymentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -81700,6 +83346,9 @@ export namespace Prisma {
     soMstrCardNo?: SortOrder
     mtype?: SortOrder
     soMstrMBank?: SortOrder
+    soMstrPaidAmt?: SortOrder
+    soMstrDueAmt?: SortOrder
+    soMstrPaymentStatus?: SortOrder
   }
 
   export type t_SOMstrAvgOrderByAggregateInput = {
@@ -81708,6 +83357,8 @@ export namespace Prisma {
     somstrNetAmt?: SortOrder
     somstrCustomerpay?: SortOrder
     somstrChange?: SortOrder
+    soMstrPaidAmt?: SortOrder
+    soMstrDueAmt?: SortOrder
   }
 
   export type t_SOMstrMaxOrderByAggregateInput = {
@@ -81735,6 +83386,9 @@ export namespace Prisma {
     soMstrCardNo?: SortOrder
     mtype?: SortOrder
     soMstrMBank?: SortOrder
+    soMstrPaidAmt?: SortOrder
+    soMstrDueAmt?: SortOrder
+    soMstrPaymentStatus?: SortOrder
   }
 
   export type t_SOMstrMinOrderByAggregateInput = {
@@ -81762,6 +83416,9 @@ export namespace Prisma {
     soMstrCardNo?: SortOrder
     mtype?: SortOrder
     soMstrMBank?: SortOrder
+    soMstrPaidAmt?: SortOrder
+    soMstrDueAmt?: SortOrder
+    soMstrPaymentStatus?: SortOrder
   }
 
   export type t_SOMstrSumOrderByAggregateInput = {
@@ -81770,6 +83427,54 @@ export namespace Prisma {
     somstrNetAmt?: SortOrder
     somstrCustomerpay?: SortOrder
     somstrChange?: SortOrder
+    soMstrPaidAmt?: SortOrder
+    soMstrDueAmt?: SortOrder
+  }
+
+  export type T_SOMstrScalarRelationFilter = {
+    is?: t_SOMstrWhereInput
+    isNot?: t_SOMstrWhereInput
+  }
+
+  export type Sale_PaymentCountOrderByAggregateInput = {
+    id?: SortOrder
+    saleId?: SortOrder
+    method?: SortOrder
+    amount?: SortOrder
+    bankId?: SortOrder
+    cardNo?: SortOrder
+    transactionRef?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type Sale_PaymentAvgOrderByAggregateInput = {
+    amount?: SortOrder
+  }
+
+  export type Sale_PaymentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    saleId?: SortOrder
+    method?: SortOrder
+    amount?: SortOrder
+    bankId?: SortOrder
+    cardNo?: SortOrder
+    transactionRef?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type Sale_PaymentMinOrderByAggregateInput = {
+    id?: SortOrder
+    saleId?: SortOrder
+    method?: SortOrder
+    amount?: SortOrder
+    bankId?: SortOrder
+    cardNo?: SortOrder
+    transactionRef?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type Sale_PaymentSumOrderByAggregateInput = {
+    amount?: SortOrder
   }
 
   export type T_SOMstrNullableScalarRelationFilter = {
@@ -83686,11 +85391,25 @@ export namespace Prisma {
     connect?: t_SOMstrWhereUniqueInput | t_SOMstrWhereUniqueInput[]
   }
 
+  export type Sale_PaymentCreateNestedManyWithoutBankInput = {
+    create?: XOR<Sale_PaymentCreateWithoutBankInput, Sale_PaymentUncheckedCreateWithoutBankInput> | Sale_PaymentCreateWithoutBankInput[] | Sale_PaymentUncheckedCreateWithoutBankInput[]
+    connectOrCreate?: Sale_PaymentCreateOrConnectWithoutBankInput | Sale_PaymentCreateOrConnectWithoutBankInput[]
+    createMany?: Sale_PaymentCreateManyBankInputEnvelope
+    connect?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+  }
+
   export type t_SOMstrUncheckedCreateNestedManyWithoutBankInput = {
     create?: XOR<t_SOMstrCreateWithoutBankInput, t_SOMstrUncheckedCreateWithoutBankInput> | t_SOMstrCreateWithoutBankInput[] | t_SOMstrUncheckedCreateWithoutBankInput[]
     connectOrCreate?: t_SOMstrCreateOrConnectWithoutBankInput | t_SOMstrCreateOrConnectWithoutBankInput[]
     createMany?: t_SOMstrCreateManyBankInputEnvelope
     connect?: t_SOMstrWhereUniqueInput | t_SOMstrWhereUniqueInput[]
+  }
+
+  export type Sale_PaymentUncheckedCreateNestedManyWithoutBankInput = {
+    create?: XOR<Sale_PaymentCreateWithoutBankInput, Sale_PaymentUncheckedCreateWithoutBankInput> | Sale_PaymentCreateWithoutBankInput[] | Sale_PaymentUncheckedCreateWithoutBankInput[]
+    connectOrCreate?: Sale_PaymentCreateOrConnectWithoutBankInput | Sale_PaymentCreateOrConnectWithoutBankInput[]
+    createMany?: Sale_PaymentCreateManyBankInputEnvelope
+    connect?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -83711,6 +85430,20 @@ export namespace Prisma {
     deleteMany?: t_SOMstrScalarWhereInput | t_SOMstrScalarWhereInput[]
   }
 
+  export type Sale_PaymentUpdateManyWithoutBankNestedInput = {
+    create?: XOR<Sale_PaymentCreateWithoutBankInput, Sale_PaymentUncheckedCreateWithoutBankInput> | Sale_PaymentCreateWithoutBankInput[] | Sale_PaymentUncheckedCreateWithoutBankInput[]
+    connectOrCreate?: Sale_PaymentCreateOrConnectWithoutBankInput | Sale_PaymentCreateOrConnectWithoutBankInput[]
+    upsert?: Sale_PaymentUpsertWithWhereUniqueWithoutBankInput | Sale_PaymentUpsertWithWhereUniqueWithoutBankInput[]
+    createMany?: Sale_PaymentCreateManyBankInputEnvelope
+    set?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    disconnect?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    delete?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    connect?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    update?: Sale_PaymentUpdateWithWhereUniqueWithoutBankInput | Sale_PaymentUpdateWithWhereUniqueWithoutBankInput[]
+    updateMany?: Sale_PaymentUpdateManyWithWhereWithoutBankInput | Sale_PaymentUpdateManyWithWhereWithoutBankInput[]
+    deleteMany?: Sale_PaymentScalarWhereInput | Sale_PaymentScalarWhereInput[]
+  }
+
   export type t_SOMstrUncheckedUpdateManyWithoutBankNestedInput = {
     create?: XOR<t_SOMstrCreateWithoutBankInput, t_SOMstrUncheckedCreateWithoutBankInput> | t_SOMstrCreateWithoutBankInput[] | t_SOMstrUncheckedCreateWithoutBankInput[]
     connectOrCreate?: t_SOMstrCreateOrConnectWithoutBankInput | t_SOMstrCreateOrConnectWithoutBankInput[]
@@ -83723,6 +85456,20 @@ export namespace Prisma {
     update?: t_SOMstrUpdateWithWhereUniqueWithoutBankInput | t_SOMstrUpdateWithWhereUniqueWithoutBankInput[]
     updateMany?: t_SOMstrUpdateManyWithWhereWithoutBankInput | t_SOMstrUpdateManyWithWhereWithoutBankInput[]
     deleteMany?: t_SOMstrScalarWhereInput | t_SOMstrScalarWhereInput[]
+  }
+
+  export type Sale_PaymentUncheckedUpdateManyWithoutBankNestedInput = {
+    create?: XOR<Sale_PaymentCreateWithoutBankInput, Sale_PaymentUncheckedCreateWithoutBankInput> | Sale_PaymentCreateWithoutBankInput[] | Sale_PaymentUncheckedCreateWithoutBankInput[]
+    connectOrCreate?: Sale_PaymentCreateOrConnectWithoutBankInput | Sale_PaymentCreateOrConnectWithoutBankInput[]
+    upsert?: Sale_PaymentUpsertWithWhereUniqueWithoutBankInput | Sale_PaymentUpsertWithWhereUniqueWithoutBankInput[]
+    createMany?: Sale_PaymentCreateManyBankInputEnvelope
+    set?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    disconnect?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    delete?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    connect?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    update?: Sale_PaymentUpdateWithWhereUniqueWithoutBankInput | Sale_PaymentUpdateWithWhereUniqueWithoutBankInput[]
+    updateMany?: Sale_PaymentUpdateManyWithWhereWithoutBankInput | Sale_PaymentUpdateManyWithWhereWithoutBankInput[]
+    deleteMany?: Sale_PaymentScalarWhereInput | Sale_PaymentScalarWhereInput[]
   }
 
   export type t_UserRoleCreateNestedManyWithoutUserInput = {
@@ -85140,11 +86887,25 @@ export namespace Prisma {
     connect?: t_SODetWhereUniqueInput | t_SODetWhereUniqueInput[]
   }
 
+  export type Sale_PaymentCreateNestedManyWithoutSaleInput = {
+    create?: XOR<Sale_PaymentCreateWithoutSaleInput, Sale_PaymentUncheckedCreateWithoutSaleInput> | Sale_PaymentCreateWithoutSaleInput[] | Sale_PaymentUncheckedCreateWithoutSaleInput[]
+    connectOrCreate?: Sale_PaymentCreateOrConnectWithoutSaleInput | Sale_PaymentCreateOrConnectWithoutSaleInput[]
+    createMany?: Sale_PaymentCreateManySaleInputEnvelope
+    connect?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+  }
+
   export type t_SODetUncheckedCreateNestedManyWithoutSaleInput = {
     create?: XOR<t_SODetCreateWithoutSaleInput, t_SODetUncheckedCreateWithoutSaleInput> | t_SODetCreateWithoutSaleInput[] | t_SODetUncheckedCreateWithoutSaleInput[]
     connectOrCreate?: t_SODetCreateOrConnectWithoutSaleInput | t_SODetCreateOrConnectWithoutSaleInput[]
     createMany?: t_SODetCreateManySaleInputEnvelope
     connect?: t_SODetWhereUniqueInput | t_SODetWhereUniqueInput[]
+  }
+
+  export type Sale_PaymentUncheckedCreateNestedManyWithoutSaleInput = {
+    create?: XOR<Sale_PaymentCreateWithoutSaleInput, Sale_PaymentUncheckedCreateWithoutSaleInput> | Sale_PaymentCreateWithoutSaleInput[] | Sale_PaymentUncheckedCreateWithoutSaleInput[]
+    connectOrCreate?: Sale_PaymentCreateOrConnectWithoutSaleInput | Sale_PaymentCreateOrConnectWithoutSaleInput[]
+    createMany?: Sale_PaymentCreateManySaleInputEnvelope
+    connect?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
   }
 
   export type BankUpdateOneWithoutSalesNestedInput = {
@@ -85181,6 +86942,20 @@ export namespace Prisma {
     deleteMany?: t_SODetScalarWhereInput | t_SODetScalarWhereInput[]
   }
 
+  export type Sale_PaymentUpdateManyWithoutSaleNestedInput = {
+    create?: XOR<Sale_PaymentCreateWithoutSaleInput, Sale_PaymentUncheckedCreateWithoutSaleInput> | Sale_PaymentCreateWithoutSaleInput[] | Sale_PaymentUncheckedCreateWithoutSaleInput[]
+    connectOrCreate?: Sale_PaymentCreateOrConnectWithoutSaleInput | Sale_PaymentCreateOrConnectWithoutSaleInput[]
+    upsert?: Sale_PaymentUpsertWithWhereUniqueWithoutSaleInput | Sale_PaymentUpsertWithWhereUniqueWithoutSaleInput[]
+    createMany?: Sale_PaymentCreateManySaleInputEnvelope
+    set?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    disconnect?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    delete?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    connect?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    update?: Sale_PaymentUpdateWithWhereUniqueWithoutSaleInput | Sale_PaymentUpdateWithWhereUniqueWithoutSaleInput[]
+    updateMany?: Sale_PaymentUpdateManyWithWhereWithoutSaleInput | Sale_PaymentUpdateManyWithWhereWithoutSaleInput[]
+    deleteMany?: Sale_PaymentScalarWhereInput | Sale_PaymentScalarWhereInput[]
+  }
+
   export type t_SODetUncheckedUpdateManyWithoutSaleNestedInput = {
     create?: XOR<t_SODetCreateWithoutSaleInput, t_SODetUncheckedCreateWithoutSaleInput> | t_SODetCreateWithoutSaleInput[] | t_SODetUncheckedCreateWithoutSaleInput[]
     connectOrCreate?: t_SODetCreateOrConnectWithoutSaleInput | t_SODetCreateOrConnectWithoutSaleInput[]
@@ -85193,6 +86968,50 @@ export namespace Prisma {
     update?: t_SODetUpdateWithWhereUniqueWithoutSaleInput | t_SODetUpdateWithWhereUniqueWithoutSaleInput[]
     updateMany?: t_SODetUpdateManyWithWhereWithoutSaleInput | t_SODetUpdateManyWithWhereWithoutSaleInput[]
     deleteMany?: t_SODetScalarWhereInput | t_SODetScalarWhereInput[]
+  }
+
+  export type Sale_PaymentUncheckedUpdateManyWithoutSaleNestedInput = {
+    create?: XOR<Sale_PaymentCreateWithoutSaleInput, Sale_PaymentUncheckedCreateWithoutSaleInput> | Sale_PaymentCreateWithoutSaleInput[] | Sale_PaymentUncheckedCreateWithoutSaleInput[]
+    connectOrCreate?: Sale_PaymentCreateOrConnectWithoutSaleInput | Sale_PaymentCreateOrConnectWithoutSaleInput[]
+    upsert?: Sale_PaymentUpsertWithWhereUniqueWithoutSaleInput | Sale_PaymentUpsertWithWhereUniqueWithoutSaleInput[]
+    createMany?: Sale_PaymentCreateManySaleInputEnvelope
+    set?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    disconnect?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    delete?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    connect?: Sale_PaymentWhereUniqueInput | Sale_PaymentWhereUniqueInput[]
+    update?: Sale_PaymentUpdateWithWhereUniqueWithoutSaleInput | Sale_PaymentUpdateWithWhereUniqueWithoutSaleInput[]
+    updateMany?: Sale_PaymentUpdateManyWithWhereWithoutSaleInput | Sale_PaymentUpdateManyWithWhereWithoutSaleInput[]
+    deleteMany?: Sale_PaymentScalarWhereInput | Sale_PaymentScalarWhereInput[]
+  }
+
+  export type t_SOMstrCreateNestedOneWithoutPaymentsInput = {
+    create?: XOR<t_SOMstrCreateWithoutPaymentsInput, t_SOMstrUncheckedCreateWithoutPaymentsInput>
+    connectOrCreate?: t_SOMstrCreateOrConnectWithoutPaymentsInput
+    connect?: t_SOMstrWhereUniqueInput
+  }
+
+  export type BankCreateNestedOneWithoutSalePaymentsInput = {
+    create?: XOR<BankCreateWithoutSalePaymentsInput, BankUncheckedCreateWithoutSalePaymentsInput>
+    connectOrCreate?: BankCreateOrConnectWithoutSalePaymentsInput
+    connect?: BankWhereUniqueInput
+  }
+
+  export type t_SOMstrUpdateOneRequiredWithoutPaymentsNestedInput = {
+    create?: XOR<t_SOMstrCreateWithoutPaymentsInput, t_SOMstrUncheckedCreateWithoutPaymentsInput>
+    connectOrCreate?: t_SOMstrCreateOrConnectWithoutPaymentsInput
+    upsert?: t_SOMstrUpsertWithoutPaymentsInput
+    connect?: t_SOMstrWhereUniqueInput
+    update?: XOR<XOR<t_SOMstrUpdateToOneWithWhereWithoutPaymentsInput, t_SOMstrUpdateWithoutPaymentsInput>, t_SOMstrUncheckedUpdateWithoutPaymentsInput>
+  }
+
+  export type BankUpdateOneWithoutSalePaymentsNestedInput = {
+    create?: XOR<BankCreateWithoutSalePaymentsInput, BankUncheckedCreateWithoutSalePaymentsInput>
+    connectOrCreate?: BankCreateOrConnectWithoutSalePaymentsInput
+    upsert?: BankUpsertWithoutSalePaymentsInput
+    disconnect?: BankWhereInput | boolean
+    delete?: BankWhereInput | boolean
+    connect?: BankWhereUniqueInput
+    update?: XOR<XOR<BankUpdateToOneWithWhereWithoutSalePaymentsInput, BankUpdateWithoutSalePaymentsInput>, BankUncheckedUpdateWithoutSalePaymentsInput>
   }
 
   export type t_SOMstrCreateNestedOneWithoutDetailsInput = {
@@ -86644,8 +88463,12 @@ export namespace Prisma {
     soMstrDiscountContact?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
+    soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: string | null
     customer?: CustomerCreateNestedOneWithoutPosSalesInput
     details?: t_SODetCreateNestedManyWithoutSaleInput
+    payments?: Sale_PaymentCreateNestedManyWithoutSaleInput
   }
 
   export type t_SOMstrUncheckedCreateWithoutBankInput = {
@@ -86672,7 +88495,11 @@ export namespace Prisma {
     customerId?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
+    soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: string | null
     details?: t_SODetUncheckedCreateNestedManyWithoutSaleInput
+    payments?: Sale_PaymentUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type t_SOMstrCreateOrConnectWithoutBankInput = {
@@ -86682,6 +88509,36 @@ export namespace Prisma {
 
   export type t_SOMstrCreateManyBankInputEnvelope = {
     data: t_SOMstrCreateManyBankInput | t_SOMstrCreateManyBankInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type Sale_PaymentCreateWithoutBankInput = {
+    id?: string
+    method: string
+    amount: Decimal | DecimalJsLike | number | string
+    cardNo?: string | null
+    transactionRef?: string | null
+    createdAt?: Date | string | null
+    sale: t_SOMstrCreateNestedOneWithoutPaymentsInput
+  }
+
+  export type Sale_PaymentUncheckedCreateWithoutBankInput = {
+    id?: string
+    saleId: string
+    method: string
+    amount: Decimal | DecimalJsLike | number | string
+    cardNo?: string | null
+    transactionRef?: string | null
+    createdAt?: Date | string | null
+  }
+
+  export type Sale_PaymentCreateOrConnectWithoutBankInput = {
+    where: Sale_PaymentWhereUniqueInput
+    create: XOR<Sale_PaymentCreateWithoutBankInput, Sale_PaymentUncheckedCreateWithoutBankInput>
+  }
+
+  export type Sale_PaymentCreateManyBankInputEnvelope = {
+    data: Sale_PaymentCreateManyBankInput | Sale_PaymentCreateManyBankInput[]
     skipDuplicates?: boolean
   }
 
@@ -86729,6 +88586,39 @@ export namespace Prisma {
     soMstrCardNo?: StringNullableFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrMBank?: UuidNullableFilter<"t_SOMstr"> | string | null
+    soMstrPaidAmt?: DecimalNullableFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: DecimalNullableFilter<"t_SOMstr"> | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: StringNullableFilter<"t_SOMstr"> | string | null
+  }
+
+  export type Sale_PaymentUpsertWithWhereUniqueWithoutBankInput = {
+    where: Sale_PaymentWhereUniqueInput
+    update: XOR<Sale_PaymentUpdateWithoutBankInput, Sale_PaymentUncheckedUpdateWithoutBankInput>
+    create: XOR<Sale_PaymentCreateWithoutBankInput, Sale_PaymentUncheckedCreateWithoutBankInput>
+  }
+
+  export type Sale_PaymentUpdateWithWhereUniqueWithoutBankInput = {
+    where: Sale_PaymentWhereUniqueInput
+    data: XOR<Sale_PaymentUpdateWithoutBankInput, Sale_PaymentUncheckedUpdateWithoutBankInput>
+  }
+
+  export type Sale_PaymentUpdateManyWithWhereWithoutBankInput = {
+    where: Sale_PaymentScalarWhereInput
+    data: XOR<Sale_PaymentUpdateManyMutationInput, Sale_PaymentUncheckedUpdateManyWithoutBankInput>
+  }
+
+  export type Sale_PaymentScalarWhereInput = {
+    AND?: Sale_PaymentScalarWhereInput | Sale_PaymentScalarWhereInput[]
+    OR?: Sale_PaymentScalarWhereInput[]
+    NOT?: Sale_PaymentScalarWhereInput | Sale_PaymentScalarWhereInput[]
+    id?: UuidFilter<"Sale_Payment"> | string
+    saleId?: UuidFilter<"Sale_Payment"> | string
+    method?: StringFilter<"Sale_Payment"> | string
+    amount?: DecimalFilter<"Sale_Payment"> | Decimal | DecimalJsLike | number | string
+    bankId?: UuidNullableFilter<"Sale_Payment"> | string | null
+    cardNo?: StringNullableFilter<"Sale_Payment"> | string | null
+    transactionRef?: StringNullableFilter<"Sale_Payment"> | string | null
+    createdAt?: DateTimeNullableFilter<"Sale_Payment"> | Date | string | null
   }
 
   export type t_UserRoleCreateWithoutUserInput = {
@@ -87703,8 +89593,12 @@ export namespace Prisma {
     soMstrDiscountContact?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
+    soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: string | null
     bank?: BankCreateNestedOneWithoutSalesInput
     details?: t_SODetCreateNestedManyWithoutSaleInput
+    payments?: Sale_PaymentCreateNestedManyWithoutSaleInput
   }
 
   export type t_SOMstrUncheckedCreateWithoutCustomerInput = {
@@ -87731,7 +89625,11 @@ export namespace Prisma {
     soMstrCardNo?: string | null
     mtype?: string | null
     soMstrMBank?: string | null
+    soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: string | null
     details?: t_SODetUncheckedCreateNestedManyWithoutSaleInput
+    payments?: Sale_PaymentUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type t_SOMstrCreateOrConnectWithoutCustomerInput = {
@@ -90147,6 +92045,7 @@ export namespace Prisma {
     name?: string | null
     createBy?: string | null
     createDate?: Date | string | null
+    salePayments?: Sale_PaymentCreateNestedManyWithoutBankInput
   }
 
   export type BankUncheckedCreateWithoutSalesInput = {
@@ -90154,6 +92053,7 @@ export namespace Prisma {
     name?: string | null
     createBy?: string | null
     createDate?: Date | string | null
+    salePayments?: Sale_PaymentUncheckedCreateNestedManyWithoutBankInput
   }
 
   export type BankCreateOrConnectWithoutSalesInput = {
@@ -90242,6 +92142,36 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type Sale_PaymentCreateWithoutSaleInput = {
+    id?: string
+    method: string
+    amount: Decimal | DecimalJsLike | number | string
+    cardNo?: string | null
+    transactionRef?: string | null
+    createdAt?: Date | string | null
+    bank?: BankCreateNestedOneWithoutSalePaymentsInput
+  }
+
+  export type Sale_PaymentUncheckedCreateWithoutSaleInput = {
+    id?: string
+    method: string
+    amount: Decimal | DecimalJsLike | number | string
+    bankId?: string | null
+    cardNo?: string | null
+    transactionRef?: string | null
+    createdAt?: Date | string | null
+  }
+
+  export type Sale_PaymentCreateOrConnectWithoutSaleInput = {
+    where: Sale_PaymentWhereUniqueInput
+    create: XOR<Sale_PaymentCreateWithoutSaleInput, Sale_PaymentUncheckedCreateWithoutSaleInput>
+  }
+
+  export type Sale_PaymentCreateManySaleInputEnvelope = {
+    data: Sale_PaymentCreateManySaleInput | Sale_PaymentCreateManySaleInput[]
+    skipDuplicates?: boolean
+  }
+
   export type BankUpsertWithoutSalesInput = {
     update: XOR<BankUpdateWithoutSalesInput, BankUncheckedUpdateWithoutSalesInput>
     create: XOR<BankCreateWithoutSalesInput, BankUncheckedCreateWithoutSalesInput>
@@ -90258,6 +92188,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salePayments?: Sale_PaymentUpdateManyWithoutBankNestedInput
   }
 
   export type BankUncheckedUpdateWithoutSalesInput = {
@@ -90265,6 +92196,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createBy?: NullableStringFieldUpdateOperationsInput | string | null
     createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    salePayments?: Sale_PaymentUncheckedUpdateManyWithoutBankNestedInput
   }
 
   export type CustomerUpsertWithoutPosSalesInput = {
@@ -90326,6 +92258,210 @@ export namespace Prisma {
     data: XOR<t_SODetUpdateManyMutationInput, t_SODetUncheckedUpdateManyWithoutSaleInput>
   }
 
+  export type Sale_PaymentUpsertWithWhereUniqueWithoutSaleInput = {
+    where: Sale_PaymentWhereUniqueInput
+    update: XOR<Sale_PaymentUpdateWithoutSaleInput, Sale_PaymentUncheckedUpdateWithoutSaleInput>
+    create: XOR<Sale_PaymentCreateWithoutSaleInput, Sale_PaymentUncheckedCreateWithoutSaleInput>
+  }
+
+  export type Sale_PaymentUpdateWithWhereUniqueWithoutSaleInput = {
+    where: Sale_PaymentWhereUniqueInput
+    data: XOR<Sale_PaymentUpdateWithoutSaleInput, Sale_PaymentUncheckedUpdateWithoutSaleInput>
+  }
+
+  export type Sale_PaymentUpdateManyWithWhereWithoutSaleInput = {
+    where: Sale_PaymentScalarWhereInput
+    data: XOR<Sale_PaymentUpdateManyMutationInput, Sale_PaymentUncheckedUpdateManyWithoutSaleInput>
+  }
+
+  export type t_SOMstrCreateWithoutPaymentsInput = {
+    id?: string
+    somstrCode?: string | null
+    somstrDate?: Date | string | null
+    somstrTotalAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrDiscAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrNetAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrVatClnNo?: string | null
+    somstrVatDate?: Date | string | null
+    somstrPricingDate?: Date | string | null
+    somstrCreator?: string | null
+    somstrCreationDate?: Date | string | null
+    somstrUpdateBy?: string | null
+    somstrUpdateDate?: Date | string | null
+    somstrIsActive?: boolean | null
+    somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
+    somstrChange?: Decimal | DecimalJsLike | number | string | null
+    branchId?: string | null
+    soMstrDiscountRemarks?: string | null
+    soMstrModifyRemarks?: string | null
+    soMstrDiscountContact?: string | null
+    soMstrCardNo?: string | null
+    mtype?: string | null
+    soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: string | null
+    bank?: BankCreateNestedOneWithoutSalesInput
+    customer?: CustomerCreateNestedOneWithoutPosSalesInput
+    details?: t_SODetCreateNestedManyWithoutSaleInput
+  }
+
+  export type t_SOMstrUncheckedCreateWithoutPaymentsInput = {
+    id?: string
+    somstrCode?: string | null
+    somstrDate?: Date | string | null
+    somstrTotalAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrDiscAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrNetAmt?: Decimal | DecimalJsLike | number | string | null
+    somstrVatClnNo?: string | null
+    somstrVatDate?: Date | string | null
+    somstrPricingDate?: Date | string | null
+    somstrCreator?: string | null
+    somstrCreationDate?: Date | string | null
+    somstrUpdateBy?: string | null
+    somstrUpdateDate?: Date | string | null
+    somstrIsActive?: boolean | null
+    somstrCustomerpay?: Decimal | DecimalJsLike | number | string | null
+    somstrChange?: Decimal | DecimalJsLike | number | string | null
+    branchId?: string | null
+    soMstrDiscountRemarks?: string | null
+    soMstrModifyRemarks?: string | null
+    soMstrDiscountContact?: string | null
+    customerId?: string | null
+    soMstrCardNo?: string | null
+    mtype?: string | null
+    soMstrMBank?: string | null
+    soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: string | null
+    details?: t_SODetUncheckedCreateNestedManyWithoutSaleInput
+  }
+
+  export type t_SOMstrCreateOrConnectWithoutPaymentsInput = {
+    where: t_SOMstrWhereUniqueInput
+    create: XOR<t_SOMstrCreateWithoutPaymentsInput, t_SOMstrUncheckedCreateWithoutPaymentsInput>
+  }
+
+  export type BankCreateWithoutSalePaymentsInput = {
+    id?: string
+    name?: string | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    sales?: t_SOMstrCreateNestedManyWithoutBankInput
+  }
+
+  export type BankUncheckedCreateWithoutSalePaymentsInput = {
+    id?: string
+    name?: string | null
+    createBy?: string | null
+    createDate?: Date | string | null
+    sales?: t_SOMstrUncheckedCreateNestedManyWithoutBankInput
+  }
+
+  export type BankCreateOrConnectWithoutSalePaymentsInput = {
+    where: BankWhereUniqueInput
+    create: XOR<BankCreateWithoutSalePaymentsInput, BankUncheckedCreateWithoutSalePaymentsInput>
+  }
+
+  export type t_SOMstrUpsertWithoutPaymentsInput = {
+    update: XOR<t_SOMstrUpdateWithoutPaymentsInput, t_SOMstrUncheckedUpdateWithoutPaymentsInput>
+    create: XOR<t_SOMstrCreateWithoutPaymentsInput, t_SOMstrUncheckedCreateWithoutPaymentsInput>
+    where?: t_SOMstrWhereInput
+  }
+
+  export type t_SOMstrUpdateToOneWithWhereWithoutPaymentsInput = {
+    where?: t_SOMstrWhereInput
+    data: XOR<t_SOMstrUpdateWithoutPaymentsInput, t_SOMstrUncheckedUpdateWithoutPaymentsInput>
+  }
+
+  export type t_SOMstrUpdateWithoutPaymentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    somstrCode?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrTotalAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrDiscAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrNetAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrVatClnNo?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrVatDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrPricingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrCreator?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrCreationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    mtype?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    bank?: BankUpdateOneWithoutSalesNestedInput
+    customer?: CustomerUpdateOneWithoutPosSalesNestedInput
+    details?: t_SODetUpdateManyWithoutSaleNestedInput
+  }
+
+  export type t_SOMstrUncheckedUpdateWithoutPaymentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    somstrCode?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrTotalAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrDiscAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrNetAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrVatClnNo?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrVatDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrPricingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrCreator?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrCreationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    somstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    somstrCustomerpay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    somstrChange?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    mtype?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: t_SODetUncheckedUpdateManyWithoutSaleNestedInput
+  }
+
+  export type BankUpsertWithoutSalePaymentsInput = {
+    update: XOR<BankUpdateWithoutSalePaymentsInput, BankUncheckedUpdateWithoutSalePaymentsInput>
+    create: XOR<BankCreateWithoutSalePaymentsInput, BankUncheckedCreateWithoutSalePaymentsInput>
+    where?: BankWhereInput
+  }
+
+  export type BankUpdateToOneWithWhereWithoutSalePaymentsInput = {
+    where?: BankWhereInput
+    data: XOR<BankUpdateWithoutSalePaymentsInput, BankUncheckedUpdateWithoutSalePaymentsInput>
+  }
+
+  export type BankUpdateWithoutSalePaymentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sales?: t_SOMstrUpdateManyWithoutBankNestedInput
+  }
+
+  export type BankUncheckedUpdateWithoutSalePaymentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sales?: t_SOMstrUncheckedUpdateManyWithoutBankNestedInput
+  }
+
   export type t_SOMstrCreateWithoutDetailsInput = {
     id?: string
     somstrCode?: string | null
@@ -90349,8 +92485,12 @@ export namespace Prisma {
     soMstrDiscountContact?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
+    soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: string | null
     bank?: BankCreateNestedOneWithoutSalesInput
     customer?: CustomerCreateNestedOneWithoutPosSalesInput
+    payments?: Sale_PaymentCreateNestedManyWithoutSaleInput
   }
 
   export type t_SOMstrUncheckedCreateWithoutDetailsInput = {
@@ -90378,6 +92518,10 @@ export namespace Prisma {
     soMstrCardNo?: string | null
     mtype?: string | null
     soMstrMBank?: string | null
+    soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: string | null
+    payments?: Sale_PaymentUncheckedCreateNestedManyWithoutSaleInput
   }
 
   export type t_SOMstrCreateOrConnectWithoutDetailsInput = {
@@ -90482,8 +92626,12 @@ export namespace Prisma {
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: BankUpdateOneWithoutSalesNestedInput
     customer?: CustomerUpdateOneWithoutPosSalesNestedInput
+    payments?: Sale_PaymentUpdateManyWithoutSaleNestedInput
   }
 
   export type t_SOMstrUncheckedUpdateWithoutDetailsInput = {
@@ -90511,6 +92659,10 @@ export namespace Prisma {
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    payments?: Sale_PaymentUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type Item_InformationUpsertWithoutRunningSaleDetailsInput = {
@@ -93405,6 +95557,19 @@ export namespace Prisma {
     customerId?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
+    soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: string | null
+  }
+
+  export type Sale_PaymentCreateManyBankInput = {
+    id?: string
+    saleId: string
+    method: string
+    amount: Decimal | DecimalJsLike | number | string
+    cardNo?: string | null
+    transactionRef?: string | null
+    createdAt?: Date | string | null
   }
 
   export type t_SOMstrUpdateWithoutBankInput = {
@@ -93430,8 +95595,12 @@ export namespace Prisma {
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     customer?: CustomerUpdateOneWithoutPosSalesNestedInput
     details?: t_SODetUpdateManyWithoutSaleNestedInput
+    payments?: Sale_PaymentUpdateManyWithoutSaleNestedInput
   }
 
   export type t_SOMstrUncheckedUpdateWithoutBankInput = {
@@ -93458,7 +95627,11 @@ export namespace Prisma {
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     details?: t_SODetUncheckedUpdateManyWithoutSaleNestedInput
+    payments?: Sale_PaymentUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type t_SOMstrUncheckedUpdateManyWithoutBankInput = {
@@ -93485,6 +95658,39 @@ export namespace Prisma {
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Sale_PaymentUpdateWithoutBankInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionRef?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sale?: t_SOMstrUpdateOneRequiredWithoutPaymentsNestedInput
+  }
+
+  export type Sale_PaymentUncheckedUpdateWithoutBankInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    saleId?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionRef?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Sale_PaymentUncheckedUpdateManyWithoutBankInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    saleId?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionRef?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type t_UserRoleCreateManyUserInput = {
@@ -93765,6 +95971,9 @@ export namespace Prisma {
     soMstrCardNo?: string | null
     mtype?: string | null
     soMstrMBank?: string | null
+    soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: string | null
   }
 
   export type CSMasterUpdateWithoutCustomerInput = {
@@ -93982,8 +96191,12 @@ export namespace Prisma {
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     bank?: BankUpdateOneWithoutSalesNestedInput
     details?: t_SODetUpdateManyWithoutSaleNestedInput
+    payments?: Sale_PaymentUpdateManyWithoutSaleNestedInput
   }
 
   export type t_SOMstrUncheckedUpdateWithoutCustomerInput = {
@@ -94010,7 +96223,11 @@ export namespace Prisma {
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
     details?: t_SODetUncheckedUpdateManyWithoutSaleNestedInput
+    payments?: Sale_PaymentUncheckedUpdateManyWithoutSaleNestedInput
   }
 
   export type t_SOMstrUncheckedUpdateManyWithoutCustomerInput = {
@@ -94037,6 +96254,9 @@ export namespace Prisma {
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
+    soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrDueAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    soMstrPaymentStatus?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type t_SODetCreateManyItemInput = {
@@ -95032,6 +97252,16 @@ export namespace Prisma {
     branchId?: string | null
   }
 
+  export type Sale_PaymentCreateManySaleInput = {
+    id?: string
+    method: string
+    amount: Decimal | DecimalJsLike | number | string
+    bankId?: string | null
+    cardNo?: string | null
+    transactionRef?: string | null
+    createdAt?: Date | string | null
+  }
+
   export type t_SODetUpdateWithoutSaleInput = {
     id?: StringFieldUpdateOperationsInput | string
     sodetItemSLNum?: NullableStringFieldUpdateOperationsInput | string | null
@@ -95081,6 +97311,36 @@ export namespace Prisma {
     sodetDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     sodetNetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type Sale_PaymentUpdateWithoutSaleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionRef?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    bank?: BankUpdateOneWithoutSalePaymentsNestedInput
+  }
+
+  export type Sale_PaymentUncheckedUpdateWithoutSaleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankId?: NullableStringFieldUpdateOperationsInput | string | null
+    cardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionRef?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type Sale_PaymentUncheckedUpdateManyWithoutSaleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    method?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    bankId?: NullableStringFieldUpdateOperationsInput | string | null
+    cardNo?: NullableStringFieldUpdateOperationsInput | string | null
+    transactionRef?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type t_SODeVCreateManySaleInput = {
