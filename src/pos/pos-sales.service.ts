@@ -14,7 +14,7 @@ type SaleWithDetails = t_SOMstr & {
 
 /** The joined customer every read of a sale carries — a counter sale now names
  *  who it was billed to, and the invoice prints their code, name and mobile. */
-const CUSTOMER_SELECT = { id: true, code: true, name: true, mobile: true } as const;
+const CUSTOMER_SELECT = { id: true, code: true, name: true, mobile: true, isWalkIn: true } as const;
 
 /** What every read of a sale joins in. One definition, so the list, the single
  *  read and the row a write returns can't disagree about what a sale carries. */
@@ -103,19 +103,32 @@ export class PosSalesService {
     };
   }
 
-  /** The customer a sale is billed to, or null for a walk-in.
+  /** The customer a sale is billed to. When the till sends nobody this falls
+   *  back to the walk-in customer, so every sale carries a CustomerID rather
+   *  than the NULL that used to stand for "counter sale".
    *
    *  Resolved from the database rather than trusted from the body: the sale
    *  denormalises the customer's name and mobile onto the legacy audit columns
-   *  the reports read, and those have to be what is actually on file. */
+   *  the reports read, and those have to be what is actually on file.
+   *
+   *  Returns null only when no customer was named AND no walk-in row is flagged
+   *  — an unconfigured database, where the old NULL behaviour is the safe
+   *  landing rather than refusing the sale. */
   private async loadCustomer(customerId?: string | null) {
-    if (!customerId) return null;
+    if (!customerId) return this.walkInCustomer();
     const customer = await this.prisma.customer.findUnique({
       where: { id: customerId },
       select: CUSTOMER_SELECT,
     });
     if (!customer) throw new BadRequestException(`Customer not found: ${customerId}`);
     return customer;
+  }
+
+  /** The row flagged Customer.isWalkIn — the counter customer the POS bills to
+   *  when the cashier picks nobody. At most one row can carry the flag (partial
+   *  unique index), so this is unambiguous. */
+  private walkInCustomer() {
+    return this.prisma.customer.findFirst({ where: { isWalkIn: true }, select: CUSTOMER_SELECT });
   }
 
   /** Last 4 digits of the card, kept only on a Card sale. Anything else is
@@ -254,11 +267,13 @@ export class PosSalesService {
       );
     }
 
-    // Who the sale is billed to. A walk-in (no customer) is the norm at the
-    // counter — but not for a discounted bill: the Daily Final Report and the
-    // Discount Log both exist to say who each discount went to.
+    // Who the sale is billed to. The walk-in customer is the norm at the counter
+    // — but not for a discounted bill: the Daily Final Report and the Discount
+    // Log both exist to say who each discount went to. Note the test is on the
+    // walk-in FLAG, not on the absence of a customer: now that walk-in is a real
+    // Customer row, "has a customerId" no longer means "was given to somebody".
     const customer = await this.loadCustomer(p.customerId);
-    if (discountAmount > 0 && !customer && p.requireCustomerForDiscount !== false) {
+    if (discountAmount > 0 && (!customer || customer.isWalkIn) && p.requireCustomerForDiscount !== false) {
       throw new BadRequestException(
         'A discounted sale must be billed to a customer — select one instead of walk-in',
       );
@@ -504,9 +519,10 @@ export class PosSalesService {
       );
     }
     // Same rule as a new sale: a discount has to be given to somebody, so an
-    // edit that applies one has to name the customer it was given to.
+    // edit that applies one has to name the customer it was given to — and the
+    // walk-in customer is not somebody.
     const customer = await this.loadCustomer(dto.customerId);
-    if (discountAmount > 0 && !customer) {
+    if (discountAmount > 0 && (!customer || customer.isWalkIn)) {
       throw new BadRequestException(
         'A discounted sale must be billed to a customer — select one instead of walk-in',
       );

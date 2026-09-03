@@ -221,6 +221,12 @@ model Customer {
   /// discount on a credit sale when the customer is picked; the operator can
   /// still change it, and a picked PO overrides it with the order's own rate.
   defaultDiscount      Decimal?               @map("DefaultDiscount") @db.Decimal(5, 2)
+  /// The counter customer the POS bills to when the cashier picks nobody, so a
+  /// walk-in sale still carries a CustomerID. Exactly one row may be flagged:
+  /// enforced by the partial unique index "Customer_IsWalkIn_key", which Prisma
+  /// cannot express here — see prisma/migrations/customer_walkin_flag.sql.
+  /// The discount rule reads this to tell walk-in from a named customer.
+  isWalkIn             Boolean                @default(false) @map("IsWalkIn")
   sales                CSMaster[]
   salesVat             CSVMaster[]
   customerTransactions Customer_Transaction[]

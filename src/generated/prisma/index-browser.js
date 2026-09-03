@@ -266,7 +266,8 @@ exports.Prisma.CustomerScalarFieldEnum = {
   address: 'address',
   email: 'email',
   joiningDate: 'joiningDate',
-  defaultDiscount: 'defaultDiscount'
+  defaultDiscount: 'defaultDiscount',
+  isWalkIn: 'isWalkIn'
 };
 
 exports.Prisma.Customer_TransactionScalarFieldEnum = {

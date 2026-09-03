@@ -19699,6 +19699,7 @@ export namespace Prisma {
     email: string | null
     joiningDate: Date | null
     defaultDiscount: Decimal | null
+    isWalkIn: boolean | null
   }
 
   export type CustomerMaxAggregateOutputType = {
@@ -19710,6 +19711,7 @@ export namespace Prisma {
     email: string | null
     joiningDate: Date | null
     defaultDiscount: Decimal | null
+    isWalkIn: boolean | null
   }
 
   export type CustomerCountAggregateOutputType = {
@@ -19721,6 +19723,7 @@ export namespace Prisma {
     email: number
     joiningDate: number
     defaultDiscount: number
+    isWalkIn: number
     _all: number
   }
 
@@ -19742,6 +19745,7 @@ export namespace Prisma {
     email?: true
     joiningDate?: true
     defaultDiscount?: true
+    isWalkIn?: true
   }
 
   export type CustomerMaxAggregateInputType = {
@@ -19753,6 +19757,7 @@ export namespace Prisma {
     email?: true
     joiningDate?: true
     defaultDiscount?: true
+    isWalkIn?: true
   }
 
   export type CustomerCountAggregateInputType = {
@@ -19764,6 +19769,7 @@ export namespace Prisma {
     email?: true
     joiningDate?: true
     defaultDiscount?: true
+    isWalkIn?: true
     _all?: true
   }
 
@@ -19862,6 +19868,7 @@ export namespace Prisma {
     email: string | null
     joiningDate: Date | null
     defaultDiscount: Decimal | null
+    isWalkIn: boolean
     _count: CustomerCountAggregateOutputType | null
     _avg: CustomerAvgAggregateOutputType | null
     _sum: CustomerSumAggregateOutputType | null
@@ -19892,6 +19899,7 @@ export namespace Prisma {
     email?: boolean
     joiningDate?: boolean
     defaultDiscount?: boolean
+    isWalkIn?: boolean
     sales?: boolean | Customer$salesArgs<ExtArgs>
     salesVat?: boolean | Customer$salesVatArgs<ExtArgs>
     customerTransactions?: boolean | Customer$customerTransactionsArgs<ExtArgs>
@@ -19909,6 +19917,7 @@ export namespace Prisma {
     email?: boolean
     joiningDate?: boolean
     defaultDiscount?: boolean
+    isWalkIn?: boolean
   }, ExtArgs["result"]["customer"]>
 
   export type CustomerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -19920,6 +19929,7 @@ export namespace Prisma {
     email?: boolean
     joiningDate?: boolean
     defaultDiscount?: boolean
+    isWalkIn?: boolean
   }, ExtArgs["result"]["customer"]>
 
   export type CustomerSelectScalar = {
@@ -19931,9 +19941,10 @@ export namespace Prisma {
     email?: boolean
     joiningDate?: boolean
     defaultDiscount?: boolean
+    isWalkIn?: boolean
   }
 
-  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "name" | "mobile" | "address" | "email" | "joiningDate" | "defaultDiscount", ExtArgs["result"]["customer"]>
+  export type CustomerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "name" | "mobile" | "address" | "email" | "joiningDate" | "defaultDiscount" | "isWalkIn", ExtArgs["result"]["customer"]>
   export type CustomerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sales?: boolean | Customer$salesArgs<ExtArgs>
     salesVat?: boolean | Customer$salesVatArgs<ExtArgs>
@@ -19968,6 +19979,14 @@ export namespace Prisma {
        * still change it, and a picked PO overrides it with the order's own rate.
        */
       defaultDiscount: Prisma.Decimal | null
+      /**
+       * The counter customer the POS bills to when the cashier picks nobody, so a
+       * walk-in sale still carries a CustomerID. Exactly one row may be flagged:
+       * enforced by the partial unique index "Customer_IsWalkIn_key", which Prisma
+       * cannot express here — see prisma/migrations/customer_walkin_flag.sql.
+       * The discount rule reads this to tell walk-in from a named customer.
+       */
+      isWalkIn: boolean
     }, ExtArgs["result"]["customer"]>
     composites: {}
   }
@@ -20404,6 +20423,7 @@ export namespace Prisma {
     readonly email: FieldRef<"Customer", 'String'>
     readonly joiningDate: FieldRef<"Customer", 'DateTime'>
     readonly defaultDiscount: FieldRef<"Customer", 'Decimal'>
+    readonly isWalkIn: FieldRef<"Customer", 'Boolean'>
   }
     
 
@@ -68820,7 +68840,8 @@ export namespace Prisma {
     address: 'address',
     email: 'email',
     joiningDate: 'joiningDate',
-    defaultDiscount: 'defaultDiscount'
+    defaultDiscount: 'defaultDiscount',
+    isWalkIn: 'isWalkIn'
   };
 
   export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
@@ -70590,6 +70611,7 @@ export namespace Prisma {
     email?: StringNullableFilter<"Customer"> | string | null
     joiningDate?: DateTimeNullableFilter<"Customer"> | Date | string | null
     defaultDiscount?: DecimalNullableFilter<"Customer"> | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFilter<"Customer"> | boolean
     sales?: CSMasterListRelationFilter
     salesVat?: CSVMasterListRelationFilter
     customerTransactions?: Customer_TransactionListRelationFilter
@@ -70606,6 +70628,7 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     joiningDate?: SortOrderInput | SortOrder
     defaultDiscount?: SortOrderInput | SortOrder
+    isWalkIn?: SortOrder
     sales?: CSMasterOrderByRelationAggregateInput
     salesVat?: CSVMasterOrderByRelationAggregateInput
     customerTransactions?: Customer_TransactionOrderByRelationAggregateInput
@@ -70625,6 +70648,7 @@ export namespace Prisma {
     email?: StringNullableFilter<"Customer"> | string | null
     joiningDate?: DateTimeNullableFilter<"Customer"> | Date | string | null
     defaultDiscount?: DecimalNullableFilter<"Customer"> | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFilter<"Customer"> | boolean
     sales?: CSMasterListRelationFilter
     salesVat?: CSVMasterListRelationFilter
     customerTransactions?: Customer_TransactionListRelationFilter
@@ -70641,6 +70665,7 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     joiningDate?: SortOrderInput | SortOrder
     defaultDiscount?: SortOrderInput | SortOrder
+    isWalkIn?: SortOrder
     _count?: CustomerCountOrderByAggregateInput
     _avg?: CustomerAvgOrderByAggregateInput
     _max?: CustomerMaxOrderByAggregateInput
@@ -70660,6 +70685,7 @@ export namespace Prisma {
     email?: StringNullableWithAggregatesFilter<"Customer"> | string | null
     joiningDate?: DateTimeNullableWithAggregatesFilter<"Customer"> | Date | string | null
     defaultDiscount?: DecimalNullableWithAggregatesFilter<"Customer"> | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolWithAggregatesFilter<"Customer"> | boolean
   }
 
   export type Customer_TransactionWhereInput = {
@@ -75419,6 +75445,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
@@ -75435,6 +75462,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
@@ -75451,6 +75479,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
@@ -75467,6 +75496,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
@@ -75483,6 +75513,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
   }
 
   export type CustomerUpdateManyMutationInput = {
@@ -75494,6 +75525,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CustomerUncheckedUpdateManyInput = {
@@ -75505,6 +75537,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type Customer_TransactionCreateInput = {
@@ -80751,6 +80784,7 @@ export namespace Prisma {
     email?: SortOrder
     joiningDate?: SortOrder
     defaultDiscount?: SortOrder
+    isWalkIn?: SortOrder
   }
 
   export type CustomerAvgOrderByAggregateInput = {
@@ -80766,6 +80800,7 @@ export namespace Prisma {
     email?: SortOrder
     joiningDate?: SortOrder
     defaultDiscount?: SortOrder
+    isWalkIn?: SortOrder
   }
 
   export type CustomerMinOrderByAggregateInput = {
@@ -80777,6 +80812,7 @@ export namespace Prisma {
     email?: SortOrder
     joiningDate?: SortOrder
     defaultDiscount?: SortOrder
+    isWalkIn?: SortOrder
   }
 
   export type CustomerSumOrderByAggregateInput = {
@@ -87875,6 +87911,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
@@ -87890,6 +87927,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
@@ -87921,6 +87959,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
@@ -87936,6 +87975,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
@@ -89542,6 +89582,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
@@ -89557,6 +89598,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
@@ -89622,6 +89664,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
@@ -89637,6 +89680,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
@@ -89888,6 +89932,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
@@ -89903,6 +89948,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
@@ -89966,6 +90012,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
@@ -89981,6 +90028,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
@@ -90122,6 +90170,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
@@ -90137,6 +90186,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
@@ -90237,6 +90287,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
@@ -90252,6 +90303,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
@@ -92366,6 +92418,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
@@ -92381,6 +92434,7 @@ export namespace Prisma {
     email?: string | null
     joiningDate?: Date | string | null
     defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
@@ -92444,6 +92498,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
@@ -92459,6 +92514,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
