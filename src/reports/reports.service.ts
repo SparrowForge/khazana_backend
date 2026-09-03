@@ -351,7 +351,13 @@ export class ReportsService {
       }),
       this.prisma.t_NCMstr.findMany({
         where: { ncmstrDate: window, ncmstrIsActive: true, branchId },
-        include: { details: { select: { ncdetNetAmount: true, ncdetVATAmount: true } } },
+        include: {
+          details: { select: { ncdetNetAmount: true, ncdetVATAmount: true } },
+          // The NC breakdown names who received the goods. That is the linked
+          // customer now; the free-text columns only still carry rows entered
+          // before the link existed.
+          customer: { select: { name: true, mobile: true } },
+        },
       }),
     ]);
 
@@ -416,8 +422,8 @@ export class ReportsService {
     // ncdetNetAmount is stored net of VAT — add ncdetVATAmount back so an NC's
     // value matches what the goods would actually have sold for.
     const ncRows = nc.map((n) => ({
-      name: n.ncmstrName ?? '',
-      contact: n.ncmstrContactNo ?? '',
+      name: n.customer?.name ?? n.ncmstrName ?? '',
+      contact: n.customer?.mobile ?? n.ncmstrContactNo ?? '',
       amount: n.details.reduce((t, d) => t + num(d.ncdetNetAmount) + num(d.ncdetVATAmount), 0),
     }));
     const ncSale = ncRows.reduce((t, r) => t + r.amount, 0);
@@ -2111,7 +2117,7 @@ export class ReportsService {
   // Item Receive/Reject this isn't a datewise pivot — dates repeat per line,
   // same as the source sheet and the same shape getSalesHistory already uses.
   async getNCReport(
-    query: { fromDate?: string; toDate?: string; branchId?: string },
+    query: { fromDate?: string; toDate?: string; branchId?: string; customerId?: string },
     accessibleBranchIds?: string[],
   ) {
     const { from, to } = this.parseRange({ fromDate: query.fromDate, toDate: query.toDate });
@@ -2121,8 +2127,16 @@ export class ReportsService {
         ncmstrDate: { gte: from, lte: to },
         ncmstrIsActive: true,
         ...branchScope(accessibleBranchIds, ['branchId'], query.branchId),
+        // Who the goods went to. Only NCs actually linked to that customer
+        // match — the ones entered before the link existed carry a typed name
+        // and no CustomerID, so they are correctly left out of a customer's
+        // list rather than matched on a string that was never a key.
+        ...(query.customerId && { customerId: query.customerId }),
       },
-      include: { details: { include: { item: { select: { itmName: true, itmUOM: true } } } } },
+      include: {
+        details: { include: { item: { select: { itmName: true, itmUOM: true } } } },
+        customer: { select: { name: true, mobile: true } },
+      },
       orderBy: { ncmstrDate: 'asc' },
     });
 
@@ -2143,7 +2157,7 @@ export class ReportsService {
         uom: d.item?.itmUOM ?? d.ncdetUOM ?? '',
         qty: num(d.ncdetQTY),
         amount: r2signed(num(d.ncdetNetAmount) + num(d.ncdetVATAmount)),
-        name: nc.ncmstrName ?? '',
+        name: nc.customer?.name ?? nc.ncmstrName ?? '',
         reference: nc.ncmstrReference ?? '',
         outlet: nc.branchId ? branchNameById.get(nc.branchId) ?? '' : '',
       })),
@@ -2154,9 +2168,14 @@ export class ReportsService {
       amount: r2signed(rows.reduce((s, r) => s + r.amount, 0)),
     };
 
-    const branch = query.branchId
-      ? await this.prisma.branch.findUnique({ where: { id: query.branchId }, select: { branchName: true } })
-      : null;
+    const [branch, customer] = await Promise.all([
+      query.branchId
+        ? this.prisma.branch.findUnique({ where: { id: query.branchId }, select: { branchName: true } })
+        : null,
+      query.customerId
+        ? this.prisma.customer.findUnique({ where: { id: query.customerId }, select: { code: true, name: true } })
+        : null,
+    ]);
 
     return {
       fromDate: from.toISOString().split('T')[0],
@@ -2164,6 +2183,11 @@ export class ReportsService {
       branch: query.branchId
         ? { id: query.branchId, name: branch?.branchName ?? '' }
         : { id: '', name: 'All Branches' },
+      // Named on the printed header the same way the branch is, so a sheet run
+      // for one customer says so on the page.
+      customer: query.customerId
+        ? { id: query.customerId, code: customer?.code ?? '', name: customer?.name ?? '' }
+        : { id: '', code: '', name: 'All Customers' },
       items: rows,
       totals,
     };

@@ -5858,6 +5858,7 @@ export namespace Prisma {
     sales: number
     salesVat: number
     customerTransactions: number
+    ncAdjustments: number
     orders: number
     posSales: number
   }
@@ -5866,6 +5867,7 @@ export namespace Prisma {
     sales?: boolean | CustomerCountOutputTypeCountSalesArgs
     salesVat?: boolean | CustomerCountOutputTypeCountSalesVatArgs
     customerTransactions?: boolean | CustomerCountOutputTypeCountCustomerTransactionsArgs
+    ncAdjustments?: boolean | CustomerCountOutputTypeCountNcAdjustmentsArgs
     orders?: boolean | CustomerCountOutputTypeCountOrdersArgs
     posSales?: boolean | CustomerCountOutputTypeCountPosSalesArgs
   }
@@ -5900,6 +5902,13 @@ export namespace Prisma {
    */
   export type CustomerCountOutputTypeCountCustomerTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: Customer_TransactionWhereInput
+  }
+
+  /**
+   * CustomerCountOutputType without action
+   */
+  export type CustomerCountOutputTypeCountNcAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: t_NCMstrWhereInput
   }
 
   /**
@@ -20051,6 +20060,7 @@ export namespace Prisma {
     sales?: boolean | Customer$salesArgs<ExtArgs>
     salesVat?: boolean | Customer$salesVatArgs<ExtArgs>
     customerTransactions?: boolean | Customer$customerTransactionsArgs<ExtArgs>
+    ncAdjustments?: boolean | Customer$ncAdjustmentsArgs<ExtArgs>
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     posSales?: boolean | Customer$posSalesArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
@@ -20097,6 +20107,7 @@ export namespace Prisma {
     sales?: boolean | Customer$salesArgs<ExtArgs>
     salesVat?: boolean | Customer$salesVatArgs<ExtArgs>
     customerTransactions?: boolean | Customer$customerTransactionsArgs<ExtArgs>
+    ncAdjustments?: boolean | Customer$ncAdjustmentsArgs<ExtArgs>
     orders?: boolean | Customer$ordersArgs<ExtArgs>
     posSales?: boolean | Customer$posSalesArgs<ExtArgs>
     _count?: boolean | CustomerCountOutputTypeDefaultArgs<ExtArgs>
@@ -20110,6 +20121,7 @@ export namespace Prisma {
       sales: Prisma.$CSMasterPayload<ExtArgs>[]
       salesVat: Prisma.$CSVMasterPayload<ExtArgs>[]
       customerTransactions: Prisma.$Customer_TransactionPayload<ExtArgs>[]
+      ncAdjustments: Prisma.$t_NCMstrPayload<ExtArgs>[]
       orders: Prisma.$OrderReceive_MasterPayload<ExtArgs>[]
       posSales: Prisma.$t_SOMstrPayload<ExtArgs>[]
     }
@@ -20532,6 +20544,7 @@ export namespace Prisma {
     sales<T extends Customer$salesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$salesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CSMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     salesVat<T extends Customer$salesVatArgs<ExtArgs> = {}>(args?: Subset<T, Customer$salesVatArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CSVMasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     customerTransactions<T extends Customer$customerTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$customerTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$Customer_TransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    ncAdjustments<T extends Customer$ncAdjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, Customer$ncAdjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_NCMstrPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orders<T extends Customer$ordersArgs<ExtArgs> = {}>(args?: Subset<T, Customer$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderReceive_MasterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     posSales<T extends Customer$posSalesArgs<ExtArgs> = {}>(args?: Subset<T, Customer$posSalesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_SOMstrPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -21029,6 +21042,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Customer_TransactionScalarFieldEnum | Customer_TransactionScalarFieldEnum[]
+  }
+
+  /**
+   * Customer.ncAdjustments
+   */
+  export type Customer$ncAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the t_NCMstr
+     */
+    select?: t_NCMstrSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the t_NCMstr
+     */
+    omit?: t_NCMstrOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: t_NCMstrInclude<ExtArgs> | null
+    where?: t_NCMstrWhereInput
+    orderBy?: t_NCMstrOrderByWithRelationInput | t_NCMstrOrderByWithRelationInput[]
+    cursor?: t_NCMstrWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: T_NCMstrScalarFieldEnum | T_NCMstrScalarFieldEnum[]
   }
 
   /**
@@ -45635,6 +45672,7 @@ export namespace Prisma {
     ncmstrUpdateDate: Date | null
     ncmstrIsActive: boolean | null
     branchId: string | null
+    customerId: string | null
     ncmstrName: string | null
     ncmstrContactNo: string | null
     ncmstrReference: string | null
@@ -45650,6 +45688,7 @@ export namespace Prisma {
     ncmstrUpdateDate: Date | null
     ncmstrIsActive: boolean | null
     branchId: string | null
+    customerId: string | null
     ncmstrName: string | null
     ncmstrContactNo: string | null
     ncmstrReference: string | null
@@ -45665,6 +45704,7 @@ export namespace Prisma {
     ncmstrUpdateDate: number
     ncmstrIsActive: number
     branchId: number
+    customerId: number
     ncmstrName: number
     ncmstrContactNo: number
     ncmstrReference: number
@@ -45682,6 +45722,7 @@ export namespace Prisma {
     ncmstrUpdateDate?: true
     ncmstrIsActive?: true
     branchId?: true
+    customerId?: true
     ncmstrName?: true
     ncmstrContactNo?: true
     ncmstrReference?: true
@@ -45697,6 +45738,7 @@ export namespace Prisma {
     ncmstrUpdateDate?: true
     ncmstrIsActive?: true
     branchId?: true
+    customerId?: true
     ncmstrName?: true
     ncmstrContactNo?: true
     ncmstrReference?: true
@@ -45712,6 +45754,7 @@ export namespace Prisma {
     ncmstrUpdateDate?: true
     ncmstrIsActive?: true
     branchId?: true
+    customerId?: true
     ncmstrName?: true
     ncmstrContactNo?: true
     ncmstrReference?: true
@@ -45800,6 +45843,7 @@ export namespace Prisma {
     ncmstrUpdateDate: Date | null
     ncmstrIsActive: boolean | null
     branchId: string | null
+    customerId: string | null
     ncmstrName: string | null
     ncmstrContactNo: string | null
     ncmstrReference: string | null
@@ -45832,9 +45876,11 @@ export namespace Prisma {
     ncmstrUpdateDate?: boolean
     ncmstrIsActive?: boolean
     branchId?: boolean
+    customerId?: boolean
     ncmstrName?: boolean
     ncmstrContactNo?: boolean
     ncmstrReference?: boolean
+    customer?: boolean | t_NCMstr$customerArgs<ExtArgs>
     details?: boolean | t_NCMstr$detailsArgs<ExtArgs>
     _count?: boolean | T_NCMstrCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["t_NCMstr"]>
@@ -45849,9 +45895,11 @@ export namespace Prisma {
     ncmstrUpdateDate?: boolean
     ncmstrIsActive?: boolean
     branchId?: boolean
+    customerId?: boolean
     ncmstrName?: boolean
     ncmstrContactNo?: boolean
     ncmstrReference?: boolean
+    customer?: boolean | t_NCMstr$customerArgs<ExtArgs>
   }, ExtArgs["result"]["t_NCMstr"]>
 
   export type t_NCMstrSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -45864,9 +45912,11 @@ export namespace Prisma {
     ncmstrUpdateDate?: boolean
     ncmstrIsActive?: boolean
     branchId?: boolean
+    customerId?: boolean
     ncmstrName?: boolean
     ncmstrContactNo?: boolean
     ncmstrReference?: boolean
+    customer?: boolean | t_NCMstr$customerArgs<ExtArgs>
   }, ExtArgs["result"]["t_NCMstr"]>
 
   export type t_NCMstrSelectScalar = {
@@ -45879,22 +45929,29 @@ export namespace Prisma {
     ncmstrUpdateDate?: boolean
     ncmstrIsActive?: boolean
     branchId?: boolean
+    customerId?: boolean
     ncmstrName?: boolean
     ncmstrContactNo?: boolean
     ncmstrReference?: boolean
   }
 
-  export type t_NCMstrOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ncmstrCode" | "ncmstrDate" | "ncmstrCreator" | "ncmstrCreationDate" | "ncmstrUpdateBy" | "ncmstrUpdateDate" | "ncmstrIsActive" | "branchId" | "ncmstrName" | "ncmstrContactNo" | "ncmstrReference", ExtArgs["result"]["t_NCMstr"]>
+  export type t_NCMstrOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ncmstrCode" | "ncmstrDate" | "ncmstrCreator" | "ncmstrCreationDate" | "ncmstrUpdateBy" | "ncmstrUpdateDate" | "ncmstrIsActive" | "branchId" | "customerId" | "ncmstrName" | "ncmstrContactNo" | "ncmstrReference", ExtArgs["result"]["t_NCMstr"]>
   export type t_NCMstrInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | t_NCMstr$customerArgs<ExtArgs>
     details?: boolean | t_NCMstr$detailsArgs<ExtArgs>
     _count?: boolean | T_NCMstrCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type t_NCMstrIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type t_NCMstrIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type t_NCMstrIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | t_NCMstr$customerArgs<ExtArgs>
+  }
+  export type t_NCMstrIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    customer?: boolean | t_NCMstr$customerArgs<ExtArgs>
+  }
 
   export type $t_NCMstrPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "t_NCMstr"
     objects: {
+      customer: Prisma.$CustomerPayload<ExtArgs> | null
       details: Prisma.$t_NCDetPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -45907,6 +45964,16 @@ export namespace Prisma {
       ncmstrUpdateDate: Date | null
       ncmstrIsActive: boolean | null
       branchId: string | null
+      /**
+       * Who the non-charge goods went to. Picked from the customer list on the NC
+       * screen — the same link a credit sale carries.
+       */
+      customerId: string | null
+      /**
+       * Legacy free-text attribution, from before the customer link existed. No
+       * longer written; kept so historical NCs still say who received the goods
+       * when their typed name matched no Customer. Readers prefer `customer`.
+       */
       ncmstrName: string | null
       ncmstrContactNo: string | null
       ncmstrReference: string | null
@@ -46304,6 +46371,7 @@ export namespace Prisma {
    */
   export interface Prisma__t_NCMstrClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    customer<T extends t_NCMstr$customerArgs<ExtArgs> = {}>(args?: Subset<T, t_NCMstr$customerArgs<ExtArgs>>): Prisma__CustomerClient<$Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     details<T extends t_NCMstr$detailsArgs<ExtArgs> = {}>(args?: Subset<T, t_NCMstr$detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$t_NCDetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -46343,6 +46411,7 @@ export namespace Prisma {
     readonly ncmstrUpdateDate: FieldRef<"t_NCMstr", 'DateTime'>
     readonly ncmstrIsActive: FieldRef<"t_NCMstr", 'Boolean'>
     readonly branchId: FieldRef<"t_NCMstr", 'String'>
+    readonly customerId: FieldRef<"t_NCMstr", 'String'>
     readonly ncmstrName: FieldRef<"t_NCMstr", 'String'>
     readonly ncmstrContactNo: FieldRef<"t_NCMstr", 'String'>
     readonly ncmstrReference: FieldRef<"t_NCMstr", 'String'>
@@ -46595,6 +46664,10 @@ export namespace Prisma {
      */
     data: t_NCMstrCreateManyInput | t_NCMstrCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: t_NCMstrIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -46665,6 +46738,10 @@ export namespace Prisma {
      * Limit how many t_NCMstrs to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: t_NCMstrIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -46731,6 +46808,25 @@ export namespace Prisma {
      * Limit how many t_NCMstrs to delete.
      */
     limit?: number
+  }
+
+  /**
+   * t_NCMstr.customer
+   */
+  export type t_NCMstr$customerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Customer
+     */
+    select?: CustomerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Customer
+     */
+    omit?: CustomerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CustomerInclude<ExtArgs> | null
+    where?: CustomerWhereInput
   }
 
   /**
@@ -70633,6 +70729,7 @@ export namespace Prisma {
     ncmstrUpdateDate: 'ncmstrUpdateDate',
     ncmstrIsActive: 'ncmstrIsActive',
     branchId: 'branchId',
+    customerId: 'customerId',
     ncmstrName: 'ncmstrName',
     ncmstrContactNo: 'ncmstrContactNo',
     ncmstrReference: 'ncmstrReference'
@@ -72054,6 +72151,7 @@ export namespace Prisma {
     sales?: CSMasterListRelationFilter
     salesVat?: CSVMasterListRelationFilter
     customerTransactions?: Customer_TransactionListRelationFilter
+    ncAdjustments?: T_NCMstrListRelationFilter
     orders?: OrderReceive_MasterListRelationFilter
     posSales?: T_SOMstrListRelationFilter
   }
@@ -72071,6 +72169,7 @@ export namespace Prisma {
     sales?: CSMasterOrderByRelationAggregateInput
     salesVat?: CSVMasterOrderByRelationAggregateInput
     customerTransactions?: Customer_TransactionOrderByRelationAggregateInput
+    ncAdjustments?: t_NCMstrOrderByRelationAggregateInput
     orders?: OrderReceive_MasterOrderByRelationAggregateInput
     posSales?: t_SOMstrOrderByRelationAggregateInput
   }
@@ -72091,6 +72190,7 @@ export namespace Prisma {
     sales?: CSMasterListRelationFilter
     salesVat?: CSVMasterListRelationFilter
     customerTransactions?: Customer_TransactionListRelationFilter
+    ncAdjustments?: T_NCMstrListRelationFilter
     orders?: OrderReceive_MasterListRelationFilter
     posSales?: T_SOMstrListRelationFilter
   }, "id" | "code">
@@ -74022,9 +74122,11 @@ export namespace Prisma {
     ncmstrUpdateDate?: DateTimeNullableFilter<"t_NCMstr"> | Date | string | null
     ncmstrIsActive?: BoolNullableFilter<"t_NCMstr"> | boolean | null
     branchId?: UuidNullableFilter<"t_NCMstr"> | string | null
+    customerId?: UuidNullableFilter<"t_NCMstr"> | string | null
     ncmstrName?: StringNullableFilter<"t_NCMstr"> | string | null
     ncmstrContactNo?: StringNullableFilter<"t_NCMstr"> | string | null
     ncmstrReference?: StringNullableFilter<"t_NCMstr"> | string | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     details?: T_NCDetListRelationFilter
   }
 
@@ -74038,9 +74140,11 @@ export namespace Prisma {
     ncmstrUpdateDate?: SortOrderInput | SortOrder
     ncmstrIsActive?: SortOrderInput | SortOrder
     branchId?: SortOrderInput | SortOrder
+    customerId?: SortOrderInput | SortOrder
     ncmstrName?: SortOrderInput | SortOrder
     ncmstrContactNo?: SortOrderInput | SortOrder
     ncmstrReference?: SortOrderInput | SortOrder
+    customer?: CustomerOrderByWithRelationInput
     details?: t_NCDetOrderByRelationAggregateInput
   }
 
@@ -74057,9 +74161,11 @@ export namespace Prisma {
     ncmstrUpdateDate?: DateTimeNullableFilter<"t_NCMstr"> | Date | string | null
     ncmstrIsActive?: BoolNullableFilter<"t_NCMstr"> | boolean | null
     branchId?: UuidNullableFilter<"t_NCMstr"> | string | null
+    customerId?: UuidNullableFilter<"t_NCMstr"> | string | null
     ncmstrName?: StringNullableFilter<"t_NCMstr"> | string | null
     ncmstrContactNo?: StringNullableFilter<"t_NCMstr"> | string | null
     ncmstrReference?: StringNullableFilter<"t_NCMstr"> | string | null
+    customer?: XOR<CustomerNullableScalarRelationFilter, CustomerWhereInput> | null
     details?: T_NCDetListRelationFilter
   }, "id">
 
@@ -74073,6 +74179,7 @@ export namespace Prisma {
     ncmstrUpdateDate?: SortOrderInput | SortOrder
     ncmstrIsActive?: SortOrderInput | SortOrder
     branchId?: SortOrderInput | SortOrder
+    customerId?: SortOrderInput | SortOrder
     ncmstrName?: SortOrderInput | SortOrder
     ncmstrContactNo?: SortOrderInput | SortOrder
     ncmstrReference?: SortOrderInput | SortOrder
@@ -74094,6 +74201,7 @@ export namespace Prisma {
     ncmstrUpdateDate?: DateTimeNullableWithAggregatesFilter<"t_NCMstr"> | Date | string | null
     ncmstrIsActive?: BoolNullableWithAggregatesFilter<"t_NCMstr"> | boolean | null
     branchId?: UuidNullableWithAggregatesFilter<"t_NCMstr"> | string | null
+    customerId?: UuidNullableWithAggregatesFilter<"t_NCMstr"> | string | null
     ncmstrName?: StringNullableWithAggregatesFilter<"t_NCMstr"> | string | null
     ncmstrContactNo?: StringNullableWithAggregatesFilter<"t_NCMstr"> | string | null
     ncmstrReference?: StringNullableWithAggregatesFilter<"t_NCMstr"> | string | null
@@ -76985,6 +77093,7 @@ export namespace Prisma {
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
+    ncAdjustments?: t_NCMstrCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
     posSales?: t_SOMstrCreateNestedManyWithoutCustomerInput
   }
@@ -77002,6 +77111,7 @@ export namespace Prisma {
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+    ncAdjustments?: t_NCMstrUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
     posSales?: t_SOMstrUncheckedCreateNestedManyWithoutCustomerInput
   }
@@ -77019,6 +77129,7 @@ export namespace Prisma {
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
+    ncAdjustments?: t_NCMstrUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
     posSales?: t_SOMstrUpdateManyWithoutCustomerNestedInput
   }
@@ -77036,6 +77147,7 @@ export namespace Prisma {
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
+    ncAdjustments?: t_NCMstrUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
     posSales?: t_SOMstrUncheckedUpdateManyWithoutCustomerNestedInput
   }
@@ -79232,6 +79344,7 @@ export namespace Prisma {
     ncmstrName?: string | null
     ncmstrContactNo?: string | null
     ncmstrReference?: string | null
+    customer?: CustomerCreateNestedOneWithoutNcAdjustmentsInput
     details?: t_NCDetCreateNestedManyWithoutSaleInput
   }
 
@@ -79245,6 +79358,7 @@ export namespace Prisma {
     ncmstrUpdateDate?: Date | string | null
     ncmstrIsActive?: boolean | null
     branchId?: string | null
+    customerId?: string | null
     ncmstrName?: string | null
     ncmstrContactNo?: string | null
     ncmstrReference?: string | null
@@ -79264,6 +79378,7 @@ export namespace Prisma {
     ncmstrName?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrContactNo?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrReference?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutNcAdjustmentsNestedInput
     details?: t_NCDetUpdateManyWithoutSaleNestedInput
   }
 
@@ -79277,6 +79392,7 @@ export namespace Prisma {
     ncmstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ncmstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrName?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrContactNo?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrReference?: NullableStringFieldUpdateOperationsInput | string | null
@@ -79293,6 +79409,7 @@ export namespace Prisma {
     ncmstrUpdateDate?: Date | string | null
     ncmstrIsActive?: boolean | null
     branchId?: string | null
+    customerId?: string | null
     ncmstrName?: string | null
     ncmstrContactNo?: string | null
     ncmstrReference?: string | null
@@ -79323,6 +79440,7 @@ export namespace Prisma {
     ncmstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ncmstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrName?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrContactNo?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrReference?: NullableStringFieldUpdateOperationsInput | string | null
@@ -82399,6 +82517,12 @@ export namespace Prisma {
     none?: Customer_TransactionWhereInput
   }
 
+  export type T_NCMstrListRelationFilter = {
+    every?: t_NCMstrWhereInput
+    some?: t_NCMstrWhereInput
+    none?: t_NCMstrWhereInput
+  }
+
   export type OrderReceive_MasterListRelationFilter = {
     every?: OrderReceive_MasterWhereInput
     some?: OrderReceive_MasterWhereInput
@@ -82414,6 +82538,10 @@ export namespace Prisma {
   }
 
   export type Customer_TransactionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type t_NCMstrOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -83903,6 +84031,7 @@ export namespace Prisma {
     ncmstrUpdateDate?: SortOrder
     ncmstrIsActive?: SortOrder
     branchId?: SortOrder
+    customerId?: SortOrder
     ncmstrName?: SortOrder
     ncmstrContactNo?: SortOrder
     ncmstrReference?: SortOrder
@@ -83918,6 +84047,7 @@ export namespace Prisma {
     ncmstrUpdateDate?: SortOrder
     ncmstrIsActive?: SortOrder
     branchId?: SortOrder
+    customerId?: SortOrder
     ncmstrName?: SortOrder
     ncmstrContactNo?: SortOrder
     ncmstrReference?: SortOrder
@@ -83933,6 +84063,7 @@ export namespace Prisma {
     ncmstrUpdateDate?: SortOrder
     ncmstrIsActive?: SortOrder
     branchId?: SortOrder
+    customerId?: SortOrder
     ncmstrName?: SortOrder
     ncmstrContactNo?: SortOrder
     ncmstrReference?: SortOrder
@@ -85793,6 +85924,13 @@ export namespace Prisma {
     connect?: Customer_TransactionWhereUniqueInput | Customer_TransactionWhereUniqueInput[]
   }
 
+  export type t_NCMstrCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<t_NCMstrCreateWithoutCustomerInput, t_NCMstrUncheckedCreateWithoutCustomerInput> | t_NCMstrCreateWithoutCustomerInput[] | t_NCMstrUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: t_NCMstrCreateOrConnectWithoutCustomerInput | t_NCMstrCreateOrConnectWithoutCustomerInput[]
+    createMany?: t_NCMstrCreateManyCustomerInputEnvelope
+    connect?: t_NCMstrWhereUniqueInput | t_NCMstrWhereUniqueInput[]
+  }
+
   export type OrderReceive_MasterCreateNestedManyWithoutCustomerInput = {
     create?: XOR<OrderReceive_MasterCreateWithoutCustomerInput, OrderReceive_MasterUncheckedCreateWithoutCustomerInput> | OrderReceive_MasterCreateWithoutCustomerInput[] | OrderReceive_MasterUncheckedCreateWithoutCustomerInput[]
     connectOrCreate?: OrderReceive_MasterCreateOrConnectWithoutCustomerInput | OrderReceive_MasterCreateOrConnectWithoutCustomerInput[]
@@ -85826,6 +85964,13 @@ export namespace Prisma {
     connectOrCreate?: Customer_TransactionCreateOrConnectWithoutCustomerInput | Customer_TransactionCreateOrConnectWithoutCustomerInput[]
     createMany?: Customer_TransactionCreateManyCustomerInputEnvelope
     connect?: Customer_TransactionWhereUniqueInput | Customer_TransactionWhereUniqueInput[]
+  }
+
+  export type t_NCMstrUncheckedCreateNestedManyWithoutCustomerInput = {
+    create?: XOR<t_NCMstrCreateWithoutCustomerInput, t_NCMstrUncheckedCreateWithoutCustomerInput> | t_NCMstrCreateWithoutCustomerInput[] | t_NCMstrUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: t_NCMstrCreateOrConnectWithoutCustomerInput | t_NCMstrCreateOrConnectWithoutCustomerInput[]
+    createMany?: t_NCMstrCreateManyCustomerInputEnvelope
+    connect?: t_NCMstrWhereUniqueInput | t_NCMstrWhereUniqueInput[]
   }
 
   export type OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput = {
@@ -85890,6 +86035,20 @@ export namespace Prisma {
     update?: Customer_TransactionUpdateWithWhereUniqueWithoutCustomerInput | Customer_TransactionUpdateWithWhereUniqueWithoutCustomerInput[]
     updateMany?: Customer_TransactionUpdateManyWithWhereWithoutCustomerInput | Customer_TransactionUpdateManyWithWhereWithoutCustomerInput[]
     deleteMany?: Customer_TransactionScalarWhereInput | Customer_TransactionScalarWhereInput[]
+  }
+
+  export type t_NCMstrUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<t_NCMstrCreateWithoutCustomerInput, t_NCMstrUncheckedCreateWithoutCustomerInput> | t_NCMstrCreateWithoutCustomerInput[] | t_NCMstrUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: t_NCMstrCreateOrConnectWithoutCustomerInput | t_NCMstrCreateOrConnectWithoutCustomerInput[]
+    upsert?: t_NCMstrUpsertWithWhereUniqueWithoutCustomerInput | t_NCMstrUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: t_NCMstrCreateManyCustomerInputEnvelope
+    set?: t_NCMstrWhereUniqueInput | t_NCMstrWhereUniqueInput[]
+    disconnect?: t_NCMstrWhereUniqueInput | t_NCMstrWhereUniqueInput[]
+    delete?: t_NCMstrWhereUniqueInput | t_NCMstrWhereUniqueInput[]
+    connect?: t_NCMstrWhereUniqueInput | t_NCMstrWhereUniqueInput[]
+    update?: t_NCMstrUpdateWithWhereUniqueWithoutCustomerInput | t_NCMstrUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: t_NCMstrUpdateManyWithWhereWithoutCustomerInput | t_NCMstrUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: t_NCMstrScalarWhereInput | t_NCMstrScalarWhereInput[]
   }
 
   export type OrderReceive_MasterUpdateManyWithoutCustomerNestedInput = {
@@ -85960,6 +86119,20 @@ export namespace Prisma {
     update?: Customer_TransactionUpdateWithWhereUniqueWithoutCustomerInput | Customer_TransactionUpdateWithWhereUniqueWithoutCustomerInput[]
     updateMany?: Customer_TransactionUpdateManyWithWhereWithoutCustomerInput | Customer_TransactionUpdateManyWithWhereWithoutCustomerInput[]
     deleteMany?: Customer_TransactionScalarWhereInput | Customer_TransactionScalarWhereInput[]
+  }
+
+  export type t_NCMstrUncheckedUpdateManyWithoutCustomerNestedInput = {
+    create?: XOR<t_NCMstrCreateWithoutCustomerInput, t_NCMstrUncheckedCreateWithoutCustomerInput> | t_NCMstrCreateWithoutCustomerInput[] | t_NCMstrUncheckedCreateWithoutCustomerInput[]
+    connectOrCreate?: t_NCMstrCreateOrConnectWithoutCustomerInput | t_NCMstrCreateOrConnectWithoutCustomerInput[]
+    upsert?: t_NCMstrUpsertWithWhereUniqueWithoutCustomerInput | t_NCMstrUpsertWithWhereUniqueWithoutCustomerInput[]
+    createMany?: t_NCMstrCreateManyCustomerInputEnvelope
+    set?: t_NCMstrWhereUniqueInput | t_NCMstrWhereUniqueInput[]
+    disconnect?: t_NCMstrWhereUniqueInput | t_NCMstrWhereUniqueInput[]
+    delete?: t_NCMstrWhereUniqueInput | t_NCMstrWhereUniqueInput[]
+    connect?: t_NCMstrWhereUniqueInput | t_NCMstrWhereUniqueInput[]
+    update?: t_NCMstrUpdateWithWhereUniqueWithoutCustomerInput | t_NCMstrUpdateWithWhereUniqueWithoutCustomerInput[]
+    updateMany?: t_NCMstrUpdateManyWithWhereWithoutCustomerInput | t_NCMstrUpdateManyWithWhereWithoutCustomerInput[]
+    deleteMany?: t_NCMstrScalarWhereInput | t_NCMstrScalarWhereInput[]
   }
 
   export type OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput = {
@@ -87192,6 +87365,12 @@ export namespace Prisma {
     update?: XOR<XOR<AsstMsrtUpdateToOneWithWhereWithoutDetailsInput, AsstMsrtUpdateWithoutDetailsInput>, AsstMsrtUncheckedUpdateWithoutDetailsInput>
   }
 
+  export type CustomerCreateNestedOneWithoutNcAdjustmentsInput = {
+    create?: XOR<CustomerCreateWithoutNcAdjustmentsInput, CustomerUncheckedCreateWithoutNcAdjustmentsInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutNcAdjustmentsInput
+    connect?: CustomerWhereUniqueInput
+  }
+
   export type t_NCDetCreateNestedManyWithoutSaleInput = {
     create?: XOR<t_NCDetCreateWithoutSaleInput, t_NCDetUncheckedCreateWithoutSaleInput> | t_NCDetCreateWithoutSaleInput[] | t_NCDetUncheckedCreateWithoutSaleInput[]
     connectOrCreate?: t_NCDetCreateOrConnectWithoutSaleInput | t_NCDetCreateOrConnectWithoutSaleInput[]
@@ -87204,6 +87383,16 @@ export namespace Prisma {
     connectOrCreate?: t_NCDetCreateOrConnectWithoutSaleInput | t_NCDetCreateOrConnectWithoutSaleInput[]
     createMany?: t_NCDetCreateManySaleInputEnvelope
     connect?: t_NCDetWhereUniqueInput | t_NCDetWhereUniqueInput[]
+  }
+
+  export type CustomerUpdateOneWithoutNcAdjustmentsNestedInput = {
+    create?: XOR<CustomerCreateWithoutNcAdjustmentsInput, CustomerUncheckedCreateWithoutNcAdjustmentsInput>
+    connectOrCreate?: CustomerCreateOrConnectWithoutNcAdjustmentsInput
+    upsert?: CustomerUpsertWithoutNcAdjustmentsInput
+    disconnect?: CustomerWhereInput | boolean
+    delete?: CustomerWhereInput | boolean
+    connect?: CustomerWhereUniqueInput
+    update?: XOR<XOR<CustomerUpdateToOneWithWhereWithoutNcAdjustmentsInput, CustomerUpdateWithoutNcAdjustmentsInput>, CustomerUncheckedUpdateWithoutNcAdjustmentsInput>
   }
 
   export type t_NCDetUpdateManyWithoutSaleNestedInput = {
@@ -89520,6 +89709,48 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type t_NCMstrCreateWithoutCustomerInput = {
+    id?: string
+    ncmstrCode?: string | null
+    ncmstrDate?: Date | string | null
+    ncmstrCreator?: string | null
+    ncmstrCreationDate?: Date | string | null
+    ncmstrUpdateBy?: string | null
+    ncmstrUpdateDate?: Date | string | null
+    ncmstrIsActive?: boolean | null
+    branchId?: string | null
+    ncmstrName?: string | null
+    ncmstrContactNo?: string | null
+    ncmstrReference?: string | null
+    details?: t_NCDetCreateNestedManyWithoutSaleInput
+  }
+
+  export type t_NCMstrUncheckedCreateWithoutCustomerInput = {
+    id?: string
+    ncmstrCode?: string | null
+    ncmstrDate?: Date | string | null
+    ncmstrCreator?: string | null
+    ncmstrCreationDate?: Date | string | null
+    ncmstrUpdateBy?: string | null
+    ncmstrUpdateDate?: Date | string | null
+    ncmstrIsActive?: boolean | null
+    branchId?: string | null
+    ncmstrName?: string | null
+    ncmstrContactNo?: string | null
+    ncmstrReference?: string | null
+    details?: t_NCDetUncheckedCreateNestedManyWithoutSaleInput
+  }
+
+  export type t_NCMstrCreateOrConnectWithoutCustomerInput = {
+    where: t_NCMstrWhereUniqueInput
+    create: XOR<t_NCMstrCreateWithoutCustomerInput, t_NCMstrUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type t_NCMstrCreateManyCustomerInputEnvelope = {
+    data: t_NCMstrCreateManyCustomerInput | t_NCMstrCreateManyCustomerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrderReceive_MasterCreateWithoutCustomerInput = {
     id?: string
     serialNo?: string | null
@@ -89745,6 +89976,41 @@ export namespace Prisma {
     branchId?: UuidNullableFilter<"Customer_Transaction"> | string | null
   }
 
+  export type t_NCMstrUpsertWithWhereUniqueWithoutCustomerInput = {
+    where: t_NCMstrWhereUniqueInput
+    update: XOR<t_NCMstrUpdateWithoutCustomerInput, t_NCMstrUncheckedUpdateWithoutCustomerInput>
+    create: XOR<t_NCMstrCreateWithoutCustomerInput, t_NCMstrUncheckedCreateWithoutCustomerInput>
+  }
+
+  export type t_NCMstrUpdateWithWhereUniqueWithoutCustomerInput = {
+    where: t_NCMstrWhereUniqueInput
+    data: XOR<t_NCMstrUpdateWithoutCustomerInput, t_NCMstrUncheckedUpdateWithoutCustomerInput>
+  }
+
+  export type t_NCMstrUpdateManyWithWhereWithoutCustomerInput = {
+    where: t_NCMstrScalarWhereInput
+    data: XOR<t_NCMstrUpdateManyMutationInput, t_NCMstrUncheckedUpdateManyWithoutCustomerInput>
+  }
+
+  export type t_NCMstrScalarWhereInput = {
+    AND?: t_NCMstrScalarWhereInput | t_NCMstrScalarWhereInput[]
+    OR?: t_NCMstrScalarWhereInput[]
+    NOT?: t_NCMstrScalarWhereInput | t_NCMstrScalarWhereInput[]
+    id?: UuidFilter<"t_NCMstr"> | string
+    ncmstrCode?: StringNullableFilter<"t_NCMstr"> | string | null
+    ncmstrDate?: DateTimeNullableFilter<"t_NCMstr"> | Date | string | null
+    ncmstrCreator?: StringNullableFilter<"t_NCMstr"> | string | null
+    ncmstrCreationDate?: DateTimeNullableFilter<"t_NCMstr"> | Date | string | null
+    ncmstrUpdateBy?: StringNullableFilter<"t_NCMstr"> | string | null
+    ncmstrUpdateDate?: DateTimeNullableFilter<"t_NCMstr"> | Date | string | null
+    ncmstrIsActive?: BoolNullableFilter<"t_NCMstr"> | boolean | null
+    branchId?: UuidNullableFilter<"t_NCMstr"> | string | null
+    customerId?: UuidNullableFilter<"t_NCMstr"> | string | null
+    ncmstrName?: StringNullableFilter<"t_NCMstr"> | string | null
+    ncmstrContactNo?: StringNullableFilter<"t_NCMstr"> | string | null
+    ncmstrReference?: StringNullableFilter<"t_NCMstr"> | string | null
+  }
+
   export type OrderReceive_MasterUpsertWithWhereUniqueWithoutCustomerInput = {
     where: OrderReceive_MasterWhereUniqueInput
     update: XOR<OrderReceive_MasterUpdateWithoutCustomerInput, OrderReceive_MasterUncheckedUpdateWithoutCustomerInput>
@@ -89812,6 +90078,7 @@ export namespace Prisma {
     isWalkIn?: boolean
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
+    ncAdjustments?: t_NCMstrCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
     posSales?: t_SOMstrCreateNestedManyWithoutCustomerInput
   }
@@ -89828,6 +90095,7 @@ export namespace Prisma {
     isWalkIn?: boolean
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
+    ncAdjustments?: t_NCMstrUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
     posSales?: t_SOMstrUncheckedCreateNestedManyWithoutCustomerInput
   }
@@ -89860,6 +90128,7 @@ export namespace Prisma {
     isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
+    ncAdjustments?: t_NCMstrUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
     posSales?: t_SOMstrUpdateManyWithoutCustomerNestedInput
   }
@@ -89876,6 +90145,7 @@ export namespace Prisma {
     isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
+    ncAdjustments?: t_NCMstrUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
     posSales?: t_SOMstrUncheckedUpdateManyWithoutCustomerNestedInput
   }
@@ -91483,6 +91753,7 @@ export namespace Prisma {
     isWalkIn?: boolean
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
+    ncAdjustments?: t_NCMstrCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
     posSales?: t_SOMstrCreateNestedManyWithoutCustomerInput
   }
@@ -91499,6 +91770,7 @@ export namespace Prisma {
     isWalkIn?: boolean
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+    ncAdjustments?: t_NCMstrUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
     posSales?: t_SOMstrUncheckedCreateNestedManyWithoutCustomerInput
   }
@@ -91565,6 +91837,7 @@ export namespace Prisma {
     isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
+    ncAdjustments?: t_NCMstrUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
     posSales?: t_SOMstrUpdateManyWithoutCustomerNestedInput
   }
@@ -91581,6 +91854,7 @@ export namespace Prisma {
     isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
+    ncAdjustments?: t_NCMstrUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
     posSales?: t_SOMstrUncheckedUpdateManyWithoutCustomerNestedInput
   }
@@ -91833,6 +92107,7 @@ export namespace Prisma {
     isWalkIn?: boolean
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
+    ncAdjustments?: t_NCMstrCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
     posSales?: t_SOMstrCreateNestedManyWithoutCustomerInput
   }
@@ -91849,6 +92124,7 @@ export namespace Prisma {
     isWalkIn?: boolean
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+    ncAdjustments?: t_NCMstrUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
     posSales?: t_SOMstrUncheckedCreateNestedManyWithoutCustomerInput
   }
@@ -91913,6 +92189,7 @@ export namespace Prisma {
     isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
+    ncAdjustments?: t_NCMstrUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
     posSales?: t_SOMstrUpdateManyWithoutCustomerNestedInput
   }
@@ -91929,6 +92206,7 @@ export namespace Prisma {
     isWalkIn?: BoolFieldUpdateOperationsInput | boolean
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
+    ncAdjustments?: t_NCMstrUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
     posSales?: t_SOMstrUncheckedUpdateManyWithoutCustomerNestedInput
   }
@@ -92074,6 +92352,7 @@ export namespace Prisma {
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
+    ncAdjustments?: t_NCMstrCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
   }
 
@@ -92090,6 +92369,7 @@ export namespace Prisma {
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+    ncAdjustments?: t_NCMstrUncheckedCreateNestedManyWithoutCustomerInput
     orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
   }
 
@@ -92223,6 +92503,7 @@ export namespace Prisma {
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
+    ncAdjustments?: t_NCMstrUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
   }
 
@@ -92239,6 +92520,7 @@ export namespace Prisma {
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
+    ncAdjustments?: t_NCMstrUncheckedUpdateManyWithoutCustomerNestedInput
     orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
@@ -93332,6 +93614,45 @@ export namespace Prisma {
     discountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type CustomerCreateWithoutNcAdjustmentsInput = {
+    id?: string
+    code: string
+    name: string
+    mobile?: string | null
+    address?: string | null
+    email?: string | null
+    joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
+    sales?: CSMasterCreateNestedManyWithoutCustomerInput
+    salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
+    customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
+    orders?: OrderReceive_MasterCreateNestedManyWithoutCustomerInput
+    posSales?: t_SOMstrCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerUncheckedCreateWithoutNcAdjustmentsInput = {
+    id?: string
+    code: string
+    name: string
+    mobile?: string | null
+    address?: string | null
+    email?: string | null
+    joiningDate?: Date | string | null
+    defaultDiscount?: Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: boolean
+    sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
+    salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
+    customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+    orders?: OrderReceive_MasterUncheckedCreateNestedManyWithoutCustomerInput
+    posSales?: t_SOMstrUncheckedCreateNestedManyWithoutCustomerInput
+  }
+
+  export type CustomerCreateOrConnectWithoutNcAdjustmentsInput = {
+    where: CustomerWhereUniqueInput
+    create: XOR<CustomerCreateWithoutNcAdjustmentsInput, CustomerUncheckedCreateWithoutNcAdjustmentsInput>
+  }
+
   export type t_NCDetCreateWithoutSaleInput = {
     id?: string
     ncdetItemSLNum?: string | null
@@ -93376,6 +93697,51 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CustomerUpsertWithoutNcAdjustmentsInput = {
+    update: XOR<CustomerUpdateWithoutNcAdjustmentsInput, CustomerUncheckedUpdateWithoutNcAdjustmentsInput>
+    create: XOR<CustomerCreateWithoutNcAdjustmentsInput, CustomerUncheckedCreateWithoutNcAdjustmentsInput>
+    where?: CustomerWhereInput
+  }
+
+  export type CustomerUpdateToOneWithWhereWithoutNcAdjustmentsInput = {
+    where?: CustomerWhereInput
+    data: XOR<CustomerUpdateWithoutNcAdjustmentsInput, CustomerUncheckedUpdateWithoutNcAdjustmentsInput>
+  }
+
+  export type CustomerUpdateWithoutNcAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mobile?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
+    sales?: CSMasterUpdateManyWithoutCustomerNestedInput
+    salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
+    customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
+    orders?: OrderReceive_MasterUpdateManyWithoutCustomerNestedInput
+    posSales?: t_SOMstrUpdateManyWithoutCustomerNestedInput
+  }
+
+  export type CustomerUncheckedUpdateWithoutNcAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    mobile?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    joiningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    defaultDiscount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isWalkIn?: BoolFieldUpdateOperationsInput | boolean
+    sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
+    salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
+    customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
+    orders?: OrderReceive_MasterUncheckedUpdateManyWithoutCustomerNestedInput
+    posSales?: t_SOMstrUncheckedUpdateManyWithoutCustomerNestedInput
+  }
+
   export type t_NCDetUpsertWithWhereUniqueWithoutSaleInput = {
     where: t_NCDetWhereUniqueInput
     update: XOR<t_NCDetUpdateWithoutSaleInput, t_NCDetUncheckedUpdateWithoutSaleInput>
@@ -93405,6 +93771,7 @@ export namespace Prisma {
     ncmstrName?: string | null
     ncmstrContactNo?: string | null
     ncmstrReference?: string | null
+    customer?: CustomerCreateNestedOneWithoutNcAdjustmentsInput
   }
 
   export type t_NCMstrUncheckedCreateWithoutDetailsInput = {
@@ -93417,6 +93784,7 @@ export namespace Prisma {
     ncmstrUpdateDate?: Date | string | null
     ncmstrIsActive?: boolean | null
     branchId?: string | null
+    customerId?: string | null
     ncmstrName?: string | null
     ncmstrContactNo?: string | null
     ncmstrReference?: string | null
@@ -93514,6 +93882,7 @@ export namespace Prisma {
     ncmstrName?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrContactNo?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrReference?: NullableStringFieldUpdateOperationsInput | string | null
+    customer?: CustomerUpdateOneWithoutNcAdjustmentsNestedInput
   }
 
   export type t_NCMstrUncheckedUpdateWithoutDetailsInput = {
@@ -93526,6 +93895,7 @@ export namespace Prisma {
     ncmstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     ncmstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerId?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrName?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrContactNo?: NullableStringFieldUpdateOperationsInput | string | null
     ncmstrReference?: NullableStringFieldUpdateOperationsInput | string | null
@@ -94574,6 +94944,7 @@ export namespace Prisma {
     sales?: CSMasterCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionCreateNestedManyWithoutCustomerInput
+    ncAdjustments?: t_NCMstrCreateNestedManyWithoutCustomerInput
     posSales?: t_SOMstrCreateNestedManyWithoutCustomerInput
   }
 
@@ -94590,6 +94961,7 @@ export namespace Prisma {
     sales?: CSMasterUncheckedCreateNestedManyWithoutCustomerInput
     salesVat?: CSVMasterUncheckedCreateNestedManyWithoutCustomerInput
     customerTransactions?: Customer_TransactionUncheckedCreateNestedManyWithoutCustomerInput
+    ncAdjustments?: t_NCMstrUncheckedCreateNestedManyWithoutCustomerInput
     posSales?: t_SOMstrUncheckedCreateNestedManyWithoutCustomerInput
   }
 
@@ -94654,6 +95026,7 @@ export namespace Prisma {
     sales?: CSMasterUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUpdateManyWithoutCustomerNestedInput
+    ncAdjustments?: t_NCMstrUpdateManyWithoutCustomerNestedInput
     posSales?: t_SOMstrUpdateManyWithoutCustomerNestedInput
   }
 
@@ -94670,6 +95043,7 @@ export namespace Prisma {
     sales?: CSMasterUncheckedUpdateManyWithoutCustomerNestedInput
     salesVat?: CSVMasterUncheckedUpdateManyWithoutCustomerNestedInput
     customerTransactions?: Customer_TransactionUncheckedUpdateManyWithoutCustomerNestedInput
+    ncAdjustments?: t_NCMstrUncheckedUpdateManyWithoutCustomerNestedInput
     posSales?: t_SOMstrUncheckedUpdateManyWithoutCustomerNestedInput
   }
 
@@ -95928,6 +96302,21 @@ export namespace Prisma {
     branchId?: string | null
   }
 
+  export type t_NCMstrCreateManyCustomerInput = {
+    id?: string
+    ncmstrCode?: string | null
+    ncmstrDate?: Date | string | null
+    ncmstrCreator?: string | null
+    ncmstrCreationDate?: Date | string | null
+    ncmstrUpdateBy?: string | null
+    ncmstrUpdateDate?: Date | string | null
+    ncmstrIsActive?: boolean | null
+    branchId?: string | null
+    ncmstrName?: string | null
+    ncmstrContactNo?: string | null
+    ncmstrReference?: string | null
+  }
+
   export type OrderReceive_MasterCreateManyCustomerInput = {
     id?: string
     serialNo?: string | null
@@ -96107,6 +96496,53 @@ export namespace Prisma {
     bankName?: NullableStringFieldUpdateOperationsInput | string | null
     bankNo?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type t_NCMstrUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ncmstrCode?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ncmstrCreator?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrCreationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ncmstrUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ncmstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrName?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrContactNo?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrReference?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: t_NCDetUpdateManyWithoutSaleNestedInput
+  }
+
+  export type t_NCMstrUncheckedUpdateWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ncmstrCode?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ncmstrCreator?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrCreationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ncmstrUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ncmstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrName?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrContactNo?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrReference?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: t_NCDetUncheckedUpdateManyWithoutSaleNestedInput
+  }
+
+  export type t_NCMstrUncheckedUpdateManyWithoutCustomerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ncmstrCode?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ncmstrCreator?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrCreationDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ncmstrUpdateBy?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrUpdateDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    ncmstrIsActive?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    branchId?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrName?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrContactNo?: NullableStringFieldUpdateOperationsInput | string | null
+    ncmstrReference?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderReceive_MasterUpdateWithoutCustomerInput = {

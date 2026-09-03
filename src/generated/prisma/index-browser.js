@@ -577,6 +577,7 @@ exports.Prisma.T_NCMstrScalarFieldEnum = {
   ncmstrUpdateDate: 'ncmstrUpdateDate',
   ncmstrIsActive: 'ncmstrIsActive',
   branchId: 'branchId',
+  customerId: 'customerId',
   ncmstrName: 'ncmstrName',
   ncmstrContactNo: 'ncmstrContactNo',
   ncmstrReference: 'ncmstrReference'

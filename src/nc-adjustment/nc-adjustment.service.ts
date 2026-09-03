@@ -8,6 +8,21 @@ import type { Prisma } from '../generated/prisma';
 
 const r2 = (n: number) => Math.round(n * 100) / 100;
 
+/** The customer fields every NC read needs. An NC is non-charge, so the
+ *  recipient on file IS the audit trail — name and number always travel with
+ *  the record rather than being re-typed per document. */
+const customerSelect = { select: { id: true, code: true, name: true, mobile: true } } as const;
+
+type NcCustomer = { name?: string | null; mobile?: string | null } | null | undefined;
+
+/** Who the goods went to. Rows entered before the customer link existed carry
+ *  only the free text that was typed at the time, so that is the fallback —
+ *  see prisma/migrations/ncmstr_customerid.sql. */
+const recipientOf = (customer: NcCustomer, legacyName?: string | null, legacyContact?: string | null) => ({
+  name: customer?.name ?? legacyName ?? '',
+  contactNo: customer?.mobile ?? legacyContact ?? '',
+});
+
 export class NcAdjustmentItemDto {
   @IsString()
   @IsNotEmpty()
@@ -54,15 +69,12 @@ export class CreateNcAdjustmentDto {
   @IsNotEmpty()
   date: string;
 
-  // Name / contact / reference identify who the non-charge goods went to and why.
-  // Mandatory: an NC with no attribution can't be audited.
-  @IsString()
-  @IsNotEmpty({ message: 'Name is required' })
-  name: string;
-
-  @IsString()
-  @IsNotEmpty({ message: 'Contact No is required' })
-  contactNo: string;
+  // Customer + reference identify who the non-charge goods went to and why.
+  // Mandatory: an NC with no attribution can't be audited. The recipient used
+  // to be typed as free text (name + contact no); it is now a picked Customer,
+  // so the name and number on the document are the ones on file.
+  @IsUUID(undefined, { message: 'Customer is required' })
+  customerId: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Reference is required' })
@@ -91,15 +103,9 @@ export class UpdateNcAdjustmentDto {
 
   // Optional to keep header-only/partial edits working, but non-empty when sent —
   // an edit must not be able to blank out the NC's attribution.
-  @IsString()
+  @IsUUID(undefined, { message: 'Customer is required' })
   @IsOptional()
-  @IsNotEmpty({ message: 'Name is required' })
-  name?: string;
-
-  @IsString()
-  @IsOptional()
-  @IsNotEmpty({ message: 'Contact No is required' })
-  contactNo?: string;
+  customerId?: string;
 
   @IsString()
   @IsOptional()
@@ -128,7 +134,7 @@ export class NcAdjustmentService {
       ...(ncmstrDate && { ncmstrDate }),
     };
     const [rows, total] = await Promise.all([
-      this.prisma.t_NCMstr.findMany({ where, include: { details: true }, orderBy: { ncmstrDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.t_NCMstr.findMany({ where, include: { details: true, customer: customerSelect }, orderBy: { ncmstrDate: 'desc' }, skip: (page - 1) * limit, take: limit }),
       this.prisma.t_NCMstr.count({ where }),
     ]);
     return { items: rows, meta: buildPaginationMeta(total, page, limit) };
@@ -137,7 +143,7 @@ export class NcAdjustmentService {
   async findOne(id: string) {
     const nc = await this.prisma.t_NCMstr.findUnique({
       where: { id },
-      include: { details: { include: { item: true } } },
+      include: { details: { include: { item: true } }, customer: customerSelect },
     });
     if (!nc) throw new NotFoundException('NC adjustment not found');
     return nc;
@@ -155,6 +161,7 @@ export class NcAdjustmentService {
         details: {
           include: { item: { select: { id: true, itmCode: true, itmName: true, itmUOM: true } } },
         },
+        customer: customerSelect,
       },
     });
     if (!nc) throw new NotFoundException('NC adjustment not found');
@@ -188,8 +195,10 @@ export class NcAdjustmentService {
       id: nc.id,
       ncCode: nc.ncmstrCode,
       ncDate: nc.ncmstrDate,
-      name: nc.ncmstrName,
-      contactNo: nc.ncmstrContactNo,
+      // The document still prints a name and a contact number; they now come off
+      // the linked customer instead of being typed per NC.
+      ...recipientOf(nc.customer, nc.ncmstrName, nc.ncmstrContactNo),
+      customerCode: nc.customer?.code ?? null,
       reference: nc.ncmstrReference,
       issuedBy: nc.ncmstrUpdateBy ?? nc.ncmstrCreator,
       branch: branch
@@ -230,8 +239,7 @@ export class NcAdjustmentService {
         data: {
           ncmstrCode: code,
           ncmstrDate: new Date(dto.date),
-          ncmstrName: dto.name,
-          ncmstrContactNo: dto.contactNo,
+          customerId: dto.customerId,
           ncmstrReference: dto.reference,
           branchId,
           ncmstrIsActive: true,
@@ -292,8 +300,7 @@ export class NcAdjustmentService {
     // (same approach as the branchId backfill above).
     else if (!existing.ncmstrCode) data.ncmstrCode = await this.generateNcCode(branchId);
     if (dto.date !== undefined) data.ncmstrDate = new Date(dto.date);
-    if (dto.name !== undefined) data.ncmstrName = dto.name;
-    if (dto.contactNo !== undefined) data.ncmstrContactNo = dto.contactNo;
+    if (dto.customerId !== undefined) data.customerId = dto.customerId;
     if (dto.reference !== undefined) data.ncmstrReference = dto.reference;
     if (dto.items) {
       data.details = {

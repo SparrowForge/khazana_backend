@@ -231,6 +231,7 @@ model Customer {
   sales                CSMaster[]
   salesVat             CSVMaster[]
   customerTransactions Customer_Transaction[]
+  ncAdjustments        t_NCMstr[]
   orders               OrderReceive_Master[]
   posSales             t_SOMstr[]
 
@@ -712,9 +713,16 @@ model t_NCMstr {
   ncmstrUpdateDate   DateTime? @map("NCMstr_UpdateDate")
   ncmstrIsActive     Boolean?  @map("NCMstr_IsActive")
   branchId           String?   @map("BranchId") @db.Uuid
+  /// Who the non-charge goods went to. Picked from the customer list on the NC
+  /// screen — the same link a credit sale carries.
+  customerId         String?   @map("CustomerID") @db.Uuid
+  /// Legacy free-text attribution, from before the customer link existed. No
+  /// longer written; kept so historical NCs still say who received the goods
+  /// when their typed name matched no Customer. Readers prefer `customer`.
   ncmstrName         String?   @map("NCMstr_Name")
   ncmstrContactNo    String?   @map("NCMstr_ContactNo")
   ncmstrReference    String?   @map("NCMstr_Reference")
+  customer           Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   details            t_NCDet[]
 
   @@map("t_NCMstr")

@@ -108,7 +108,7 @@ async function main() {
     { menuName: 'Customer List', controlName: 'CustomerList', order: 1, parentMenu: 'Customers', module: 'Sale' },
     { menuName: 'Customer Money Receipt', controlName: 'CustomerPayments', order: 2, parentMenu: 'Customers', module: 'Sale' },
     // Orders
-    { menuName: 'Orders List', controlName: 'OrdersList', order: 1, parentMenu: 'Orders', module: 'Sale' },
+    { menuName: 'Advance Order', controlName: 'OrdersList', order: 1, parentMenu: 'Orders', module: 'Sale' },
     { menuName: 'VAT Orders', controlName: 'VatOrders', order: 2, parentMenu: 'Orders', module: 'Sale' },
     { menuName: 'Demand Order', controlName: 'DemandOrders', order: 3, parentMenu: 'Orders', module: 'Sale' },
     // Pricing

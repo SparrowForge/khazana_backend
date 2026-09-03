@@ -273,15 +273,17 @@ export class ReportsController {
   @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
   @ApiQuery({ name: 'toDate', required: true, description: 'Range end date, inclusive (ISO 8601)' })
   @ApiQuery({ name: 'branchId', required: false, description: 'Branch (Outlet) — omit to aggregate every branch the caller may see' })
+  @ApiQuery({ name: 'customerId', required: false, description: 'Customer the NCs were issued to (Customer.id) — omit for every customer' })
   @ApiResponse({ status: 200, description: 'NC line rows with attribution (Name/Reference) and VAT-inclusive amount' })
   getNCReport(
     @CurrentUser('branchIds') branchIds: string[],
     @Query('fromDate') fromDate: string,
     @Query('toDate') toDate: string,
     @Query('branchId') branchId?: string,
+    @Query('customerId') customerId?: string,
   ) {
     return this.reportsService.getNCReport(
-      { fromDate, toDate, branchId: branchId || undefined },
+      { fromDate, toDate, branchId: branchId || undefined, customerId: customerId || undefined },
       branchIds,
     );
   }
