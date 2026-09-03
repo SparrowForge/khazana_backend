@@ -15,7 +15,7 @@ const prisma = new PrismaClient();
 
 // New per-page leaf menus (must match the additions in seed.ts / navRegistry).
 const newMenus = [
-  { menuName: 'Sales List', controlName: 'SalesList', order: 5, parentMenu: 'Sales', module: 'Sale' },
+  { menuName: 'Credit Sales List', controlName: 'SalesList', order: 5, parentMenu: 'Sales', module: 'Sale' },
   { menuName: 'New NC', controlName: 'NCNew', order: 1, parentMenu: 'NCAdjustment', module: 'Sale' },
   { menuName: 'NC List', controlName: 'NCList', order: 2, parentMenu: 'NCAdjustment', module: 'Sale' },
   { menuName: 'New Assortment', controlName: 'AssortmentNew', order: 1, parentMenu: 'Assortment', module: 'Sale' },

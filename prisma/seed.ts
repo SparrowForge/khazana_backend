@@ -43,9 +43,8 @@ async function main() {
   const menus = [
     { menuName: 'Dashboard', controlName: 'Dashboard', order: 1, parentMenu: null, module: null },
     { menuName: 'Sales', controlName: 'Sales', order: 3, parentMenu: null, module: 'Sale' },
-    { menuName: 'POS Terminal', controlName: 'POSTerminal', order: 1, parentMenu: 'Sales', module: 'Sale' },
-    { menuName: 'POS Sales', controlName: 'POSSales', order: 2, parentMenu: 'Sales', module: 'Sale' },
-    { menuName: 'Cash Sales', controlName: 'CashSales', order: 3, parentMenu: 'Sales', module: 'Sale' },
+    { menuName: 'Cash Sales', controlName: 'POSTerminal', order: 1, parentMenu: 'Sales', module: 'Sale' },
+    { menuName: 'Cash Sales List', controlName: 'POSSales', order: 2, parentMenu: 'Sales', module: 'Sale' },
     { menuName: 'Credit Sales', controlName: 'CreditSales', order: 4, parentMenu: 'Sales', module: 'Sale' },
     { menuName: 'VAT Cash Sales', controlName: 'VatCashSales', order: 5, parentMenu: 'Sales', module: 'Sale' },
     { menuName: 'VAT Credit Sales', controlName: 'VatCreditSales', order: 6, parentMenu: 'Sales', module: 'Sale' },
@@ -91,7 +90,7 @@ async function main() {
     // ---- Per-page leaf menus: every navigable page is its own menu row so it
     // can be permission-controlled individually (mirrors frontend navRegistry).
     // Sales
-    { menuName: 'Sales List', controlName: 'SalesList', order: 7, parentMenu: 'Sales', module: 'Sale' },
+    { menuName: 'Credit Sales List', controlName: 'SalesList', order: 7, parentMenu: 'Sales', module: 'Sale' },
     // NC Adjustment
     { menuName: 'New NC', controlName: 'NCNew', order: 1, parentMenu: 'NCAdjustment', module: 'Sale' },
     { menuName: 'NC List', controlName: 'NCList', order: 2, parentMenu: 'NCAdjustment', module: 'Sale' },

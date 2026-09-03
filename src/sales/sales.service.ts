@@ -1,6 +1,5 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import { CreateCashSaleDto } from './dto/create-cash-sale.dto';
 import { CreateCreditSaleDto } from './dto/create-credit-sale.dto';
 import { CreateVatCashSaleDto } from './dto/create-vat-cash-sale.dto';
 import { CreateVatCreditSaleDto } from './dto/create-vat-credit-sale.dto';
@@ -27,56 +26,6 @@ const r2 = (n: number): number => Math.round(n * 100) / 100;
 @Injectable()
 export class SalesService {
   constructor(private prisma: PrismaService) {}
-
-  // ── Cash Sale (Non-VAT) ──────────────────────────────────────
-
-  async createCashSale(
-    dto: CreateCashSaleDto,
-    userName: string,
-    userBranchId?: string,
-  ) {
-    // Treat a blank invoiceNo as "auto-generate" (the UI sends "" to mean that).
-    const invoiceNo = dto.invoiceNo || (await this.generateInvoiceNo('CS', dto.branchId ?? userBranchId));
-    // Branch comes from the request, else the session branch, else the default
-    // branch — t_SOMstr/t_SODet.branchId are now Branch UUIDs.
-    const branchId = toBranchUuid(dto.branchId ?? userBranchId);
-
-    const sale = await this.prisma.t_SOMstr.create({
-      data: {
-        somstrCode: invoiceNo,
-        somstrDate: new Date(dto.invoiceDate),
-        somstrTotalAmt: dto.totalAmount,
-        somstrDiscAmt: dto.totalDiscount ?? 0,
-        somstrNetAmt: dto.netAmount,
-        somstrCustomerpay: dto.paidAmount,
-        somstrChange: dto.changeAmount,
-        branchId,
-        mtype: dto.paymentMethod,
-        soMstrMBank: dto.bankId,
-        soMstrDiscountRemarks: dto.discountRemarks,
-        somstrCreator: userName,
-        somstrCreationDate: new Date(),
-        somstrIsActive: true,
-        details: {
-          create: dto.items.map((item, index) => ({
-            sodetItemSLNum: String(index + 1),
-            sodetItemOID: item.itemId,
-            sodetQTY: item.quantity,
-            sodetPrice: item.rate,
-            sodetAmount: item.rate * item.quantity,
-            sodetDiscount: item.discount ?? 0,
-            sodetVATValue: item.vat ?? 0,
-            sodetNetAmount: item.total,
-            branchId,
-          })),
-        },
-      },
-      include: { details: true },
-    });
-
-    await this.deductStock(this.prisma, dto.items.map((i) => ({ itemId: i.itemId, qty: i.quantity })));
-    return sale;
-  }
 
   // ── Credit Sale (Non-VAT) ─────────────────────────────────────
 
@@ -371,67 +320,6 @@ export class SalesService {
     return { items, meta: buildPaginationMeta(total, page, limit) };
   }
 
-  // ── Cash sale edit / delete (t_SOMstr + t_SODet, stock keyed by item id) ──
-
-  async updateCashSale(id: string, dto: UpdateSalesDto, userName: string) {
-    if (!dto.items?.length) throw new BadRequestException('At least one item is required');
-    const existing = await this.prisma.t_SOMstr.findUnique({ where: { id }, include: { details: true } });
-    if (!existing) throw new BadRequestException('Cash sale not found');
-    const branchId = toBranchUuid(existing.branchId);
-
-    // Stock delta (sale deducts): increment by (oldQty − newQty) per item id.
-    const delta = new Map<string, number>();
-    for (const d of existing.details) if (d.sodetItemOID) delta.set(d.sodetItemOID, (delta.get(d.sodetItemOID) ?? 0) + Number(d.sodetQTY ?? 0));
-    for (const it of dto.items) if (it.itemId) delta.set(it.itemId, (delta.get(it.itemId) ?? 0) - it.qty);
-
-    await this.prisma.$transaction(async (tx) => {
-      await tx.t_SODet.deleteMany({ where: { t_SOMstr_id: id } });
-      await tx.t_SOMstr.update({
-        where: { id },
-        data: {
-          somstrDate: dto.invoiceDate ? new Date(dto.invoiceDate) : undefined,
-          somstrTotalAmt: dto.totalAmount,
-          somstrDiscAmt: dto.totalDiscount,
-          somstrNetAmt: dto.netAmount,
-          somstrCustomerpay: dto.paidAmount,
-          somstrChange: dto.changeAmount,
-          mtype: dto.paymentMethod ?? undefined,
-          somstrUpdateBy: userName,
-          somstrUpdateDate: new Date(),
-          details: {
-            create: dto.items.map((it, i) => ({
-              sodetItemSLNum: String(i + 1),
-              sodetItemOID: it.itemId!,
-              sodetQTY: it.qty,
-              sodetPrice: it.rate ?? 0,
-              sodetAmount: (it.rate ?? 0) * it.qty,
-              sodetDiscount: it.discount ?? 0,
-              sodetVATValue: it.vat ?? 0,
-              sodetNetAmount: it.total ?? 0,
-              branchId,
-            })),
-          },
-        },
-      });
-      for (const [itemId, q] of delta) if (q) await tx.inventory.updateMany({ where: { itemId }, data: { quantity: { increment: q } } });
-    });
-    return this.prisma.t_SOMstr.findUnique({ where: { id }, include: { details: true } });
-  }
-
-  async removeCashSale(id: string) {
-    const existing = await this.prisma.t_SOMstr.findUnique({ where: { id }, include: { details: true } });
-    if (!existing) throw new BadRequestException('Cash sale not found');
-    await this.prisma.$transaction(async (tx) => {
-      for (const d of existing.details) {
-        const q = Number(d.sodetQTY ?? 0);
-        if (q && d.sodetItemOID) await tx.inventory.updateMany({ where: { itemId: d.sodetItemOID }, data: { quantity: { increment: q } } });
-      }
-      await tx.t_SODet.deleteMany({ where: { t_SOMstr_id: id } });
-      await tx.t_SOMstr.delete({ where: { id } });
-    });
-    return { message: 'Cash sale deleted successfully' };
-  }
-
   // ── Credit sale edit / delete (cSMaster + cSDetail; itemOId is a uuid FK) ──
 
   /** Load a single credit sale shaped for the edit form (master + customer +
@@ -691,7 +579,7 @@ export class SalesService {
     if (!existing) throw new BadRequestException('Credit sale not found');
 
     // Stock delta (a credit sale deducts): increment by (oldQty − newQty) per
-    // item, the same shape updateCashSale uses.
+    // item.
     const released = existing.details.map((d) => ({ itemId: d.itemOId, qty: Number(d.qty ?? 0) }));
     const delta = new Map<string, number>();
     for (const d of released) if (d.itemId) delta.set(d.itemId, (delta.get(d.itemId) ?? 0) + d.qty);

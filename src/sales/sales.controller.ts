@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { SalesService } from './sales.service';
-import { CreateCashSaleDto } from './dto/create-cash-sale.dto';
 import { CreateCreditSaleDto } from './dto/create-credit-sale.dto';
 import { CreateVatCashSaleDto } from './dto/create-vat-cash-sale.dto';
 import { CreateVatCreditSaleDto } from './dto/create-vat-credit-sale.dto';
@@ -27,19 +26,6 @@ export class SalesController {
   async findAll(@Query() query: SalesQueryDto, @CurrentUser('branchIds') branchIds: string[]) {
     const { items, meta } = await this.salesService.findAll(query, branchIds);
     return paginatedResponse(items, meta, 'Sale');
-  }
-
-  @Post('cash')
-  @RequiredPermission({ control: 'CashSales', action: 'addAccess' })
-  @ApiOperation({ summary: 'Create a cash sale' })
-  @ApiResponse({ status: 201, description: 'Cash sale created successfully' })
-  @ApiResponse({ status: 400, description: 'Invalid sale data' })
-  createCashSale(
-    @Body() dto: CreateCashSaleDto,
-    @CurrentUser('userName') userName: string,
-    @CurrentUser('branchId') branchId: string,
-  ) {
-    return this.salesService.createCashSale(dto, userName, branchId);
   }
 
   @Post('credit')
@@ -77,23 +63,6 @@ export class SalesController {
     @CurrentUser('branchId') branchId: string,
   ) {
     return this.salesService.createVatCreditSale(dto, userName, branchId);
-  }
-
-  // ── Cash sale edit / delete ───────────────────────────────────
-  @Patch('cash/:id')
-  @RequiredPermission({ control: 'CashSales', action: 'editAccess' })
-  @ApiOperation({ summary: 'Edit a cash sale (purge-replace lines, delta-adjust stock)' })
-  @ApiResponse({ status: 403, description: 'No edit permission for Cash Sales' })
-  updateCashSale(@Param('id') id: string, @Body() dto: UpdateSalesDto, @CurrentUser('userName') userName: string) {
-    return this.salesService.updateCashSale(id, dto, userName);
-  }
-
-  @Delete('cash/:id')
-  @RequiredPermission({ control: 'CashSales', action: 'deleteAccess' })
-  @ApiOperation({ summary: 'Delete a cash sale (cascade master + details, restore stock)' })
-  @ApiResponse({ status: 403, description: 'No delete permission for Cash Sales' })
-  removeCashSale(@Param('id') id: string) {
-    return this.salesService.removeCashSale(id);
   }
 
   // ── Credit sale edit / delete ─────────────────────────────────
