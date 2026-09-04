@@ -51,6 +51,14 @@ export class NcAdjustmentItemDto {
   @IsOptional()
   vatAmount?: number;
 
+  /**
+   * @deprecated An NC is non-charge — goods given free — so there is nothing to
+   * discount, and the column is always written as 0.
+   *
+   * The field is kept (and still accepted) only so a client that has not been
+   * reloaded yet, or a queued offline entry raised before the change, does not
+   * 400 against the whitelisting ValidationPipe. Its value is ignored.
+   */
   @IsNumber()
   @IsOptional()
   discount?: number;
@@ -255,7 +263,8 @@ export class NcAdjustmentService {
               ncdetAmount: item.amount ?? 0,
               ncdetVATValue: item.vatValue ?? 0,
               ncdetVATAmount: item.vatAmount ?? 0,
-              ncdetDiscount: item.discount ?? 0,
+              // Always 0: an NC is given free, so a discount is meaningless.
+              ncdetDiscount: 0,
               ncdetNetAmount: item.netAmount ?? 0,
               branchId,
             })),
@@ -313,7 +322,8 @@ export class NcAdjustmentService {
           ncdetAmount: item.amount ?? 0,
           ncdetVATValue: item.vatValue ?? 0,
           ncdetVATAmount: item.vatAmount ?? 0,
-          ncdetDiscount: item.discount ?? 0,
+          // Always 0: an NC is given free, so a discount is meaningless.
+          ncdetDiscount: 0,
           ncdetNetAmount: item.netAmount ?? 0,
           branchId,
         })),

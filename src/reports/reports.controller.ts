@@ -332,6 +332,34 @@ export class ReportsController {
     });
   }
 
+  @Get('daily-sales')
+  @ApiOperation({
+    summary:
+      'Factory-only Daily Sales Report: total sale and invoice count per branch, with the Food Panda / Foodi online slice, plus outlet / factory / MTD totals',
+  })
+  @ApiQuery({ name: 'fromDate', required: false, description: 'Range start date (ISO 8601); defaults to today' })
+  @ApiQuery({ name: 'toDate', required: false, description: 'Range end date, inclusive; defaults to fromDate' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch — omit for every branch' })
+  @ApiResponse({ status: 200, description: 'Per-branch sale/invoice/online figures and the report totals' })
+  @ApiResponse({ status: 403, description: 'Session branch is not the Factory' })
+  getDailySalesReport(
+    @CurrentUser('branchId') sessionBranchId: string,
+    @Query('fromDate') fromDate?: string,
+    @Query('toDate') toDate?: string,
+    @Query('branchId') branchId?: string,
+  ) {
+    // The report is run for "today" more often than for anything else, so an
+    // omitted range means today rather than a 400.
+    const today = new Date().toISOString().split('T')[0];
+    const start = fromDate || today;
+    return this.reportsService.getDailySalesReport({
+      fromDate: start,
+      toDate: toDate || start,
+      branchId: branchId || undefined,
+      sessionBranchId,
+    });
+  }
+
   @Get('demand')
   @ApiOperation({ summary: 'Factory-only Demand Report: every item down the side, one column per demanding branch' })
   @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })

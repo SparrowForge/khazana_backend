@@ -6427,6 +6427,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "customerId",
+            "required": false,
+            "in": "query",
+            "description": "Customer the NCs were issued to (Customer.id) — omit for every customer",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -6548,6 +6557,57 @@
           }
         ],
         "summary": "Factory-only Branchwise Delivery report: per-item, per-day issue quantities out of one branch",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/reports/daily-sales": {
+      "get": {
+        "operationId": "ReportsController_getDailySalesReport",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Range start date (ISO 8601); defaults to today",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end date, inclusive; defaults to fromDate",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Branch — omit for every branch",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Per-branch sale/invoice/online figures and the report totals"
+          },
+          "403": {
+            "description": "Session branch is not the Factory"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Factory-only Daily Sales Report: total sale and invoice count per branch, with the Food Panda / Foodi online slice, plus outlet / factory / MTD totals",
         "tags": [
           "Reports"
         ]
@@ -7598,6 +7658,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Unsupported or empty file"
+          },
+          "413": {
+            "description": "File exceeds the maximum upload size"
           }
         },
         "security": [

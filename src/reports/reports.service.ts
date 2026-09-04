@@ -2734,4 +2734,189 @@ export class ReportsService {
       totals,
     };
   }
+
+  // ── Daily Sales Report (branch summary, shareable as text) ────────────
+
+  /**
+   * Food Panda and Foodi are billed as ordinary credit invoices to a customer
+   * named for the channel — there is no "online" flag on a sale anywhere. The
+   * customer name is what identifies them, the same convention `channelColumn`
+   * uses for the Sales History sheet.
+   *
+   * Pathao is deliberately absent: this report counts only the two channels the
+   * outlets call "online". Add it here if that ever changes.
+   */
+  private static readonly ONLINE_CUSTOMER = /panda|foodi/i;
+
+  /** Credit money is value + VAT − discount. NOT `totalAmount`, which is stored
+   *  net of VAT — the trap the Daily Final Report footer fell into. */
+  private static creditNet(s: { totalAmount: unknown; totalVat: unknown; totalDiscount: unknown }): number {
+    return num(s.totalAmount) + num(s.totalVat) - num(s.totalDiscount);
+  }
+
+  /**
+   * Money and invoice counts per branch over one window, across ALL FOUR sale
+   * ledgers — counter (t_SOMstr), VAT counter (t_SOMstV), credit (CSMaster) and
+   * VAT credit (CSVMaster). Reading only the counter ledger would silently drop
+   * every credit sale, which is exactly where the online orders live.
+   *
+   * `online` is the Food Panda / Foodi subset OF `sale`, never an addition to
+   * it — the branch figure is the whole of what the branch sold.
+   */
+  private async salesTallyByBranch(window: { gte: Date; lt: Date }, branchId?: string) {
+    const branchFilter = branchId ? { branchId } : {};
+    const customer = { customer: { select: { name: true } } } as const;
+
+    const [cash, vatCash, credit, vatCredit] = await this.prisma.$transaction([
+      this.prisma.t_SOMstr.findMany({
+        where: { somstrDate: window, somstrIsActive: true, ...branchFilter },
+        select: { branchId: true, somstrNetAmt: true, ...customer },
+      }),
+      // The VAT cash form has no customer picker, so it can never be an online
+      // order — it is counter money by construction.
+      this.prisma.t_SOMstV.findMany({
+        where: { somstrDate: window, somstrIsActive: true, ...branchFilter },
+        select: { branchId: true, somstrNetAmt: true },
+      }),
+      this.prisma.cSMaster.findMany({
+        where: { invDate: window, isActive: 1, ...branchFilter },
+        select: { branchId: true, totalAmount: true, totalVat: true, totalDiscount: true, ...customer },
+      }),
+      // CSVMaster carries no IsActive column — every row counts, which is how
+      // getSalesReport reads it too.
+      this.prisma.cSVMaster.findMany({
+        where: { invDate: window, ...branchFilter },
+        select: { branchId: true, totalAmount: true, totalVat: true, totalDiscount: true, ...customer },
+      }),
+    ]);
+
+    const tally = new Map<string, { sale: number; invoices: number; online: number; onlineInvoices: number }>();
+    const add = (id: string | null, amount: number, online: boolean) => {
+      if (!id) return; // unattributable to a branch; no row could show it
+      const t = tally.get(id) ?? { sale: 0, invoices: 0, online: 0, onlineInvoices: 0 };
+      t.sale += amount;
+      t.invoices += 1;
+      if (online) {
+        t.online += amount;
+        t.onlineInvoices += 1;
+      }
+      tally.set(id, t);
+    };
+    const isOnline = (name?: string | null) => ReportsService.ONLINE_CUSTOMER.test(name ?? '');
+
+    // somstrNetAmt is already VAT-inclusive and post-discount — the amount
+    // actually charged at the till.
+    for (const s of cash) add(s.branchId, num(s.somstrNetAmt), isOnline(s.customer?.name));
+    for (const s of vatCash) add(s.branchId, num(s.somstrNetAmt), false);
+    for (const s of credit) add(s.branchId, ReportsService.creditNet(s), isOnline(s.customer?.name));
+    for (const s of vatCredit) add(s.branchId, ReportsService.creditNet(s), isOnline(s.customer?.name));
+
+    return tally;
+  }
+
+  /**
+   * Daily Sales Report — one block per branch (total sale, invoice count, and
+   * the online slice of each), then the outlet / online / factory / MTD totals.
+   *
+   * The factory is kept out of "Total Outlet Sales" and added separately, so
+   * Total Sale = outlets + factory. The online total is a memo line: that money
+   * is already inside the branch figures above it, so adding it again would
+   * double-count.
+   */
+  async getDailySalesReport(query: {
+    fromDate?: string;
+    toDate?: string;
+    branchId?: string;
+    sessionBranchId?: string;
+  }) {
+    // Factory-only, like its siblings in the Factory Report menu. The session
+    // branch is what's checked; the branch filter stays a free parameter.
+    const sessionBranch = query.sessionBranchId
+      ? await this.prisma.branch
+          .findUnique({ where: { id: query.sessionBranchId }, select: { branchCode: true, branchName: true } })
+          .catch(() => null)
+      : null;
+    if (!isFactoryBranch(sessionBranch)) {
+      throw new ForbiddenException('The Daily Sales Report is available only at the Factory branch');
+    }
+
+    const from = new Date(query.fromDate ?? '');
+    if (isNaN(from.getTime())) throw new BadRequestException('Valid `fromDate` is required');
+    const to = new Date(query.toDate || (query.fromDate ?? ''));
+    if (isNaN(to.getTime())) throw new BadRequestException('Valid `toDate` is required');
+    if (to < from) throw new BadRequestException('`toDate` must not be earlier than `fromDate`');
+
+    // Dates arrive as bare `YYYY-MM-DD` (parsed as UTC midnight), so the window
+    // is bucketed in UTC too — the same convention the other factory reports
+    // use, which keeps a sale on the day the sheet labels it with.
+    const toExclusive = new Date(to);
+    toExclusive.setUTCDate(toExclusive.getUTCDate() + 1);
+
+    // Month-to-date runs from the 1st of the END date's month to the end of the
+    // range — so a report run for one day shows that day inside its month.
+    const monthStart = new Date(Date.UTC(to.getUTCFullYear(), to.getUTCMonth(), 1));
+
+    const [tally, mtdTally, allBranches, company] = await Promise.all([
+      this.salesTallyByBranch({ gte: from, lt: toExclusive }, query.branchId),
+      this.salesTallyByBranch({ gte: monthStart, lt: toExclusive }, query.branchId),
+      // Ordered by Branch.SortingNo — the reading order of the printed report,
+      // which is not alphabetical. A branch with no SortingNo sorts last.
+      this.prisma.branch.findMany({
+        ...(query.branchId ? { where: { id: query.branchId } } : {}),
+        select: { id: true, branchCode: true, branchName: true, sortingNo: true },
+        orderBy: [{ sortingNo: { sort: 'asc', nulls: 'last' } }, { branchCode: 'asc' }],
+      }),
+      this.prisma.setup_System.findFirst({ select: { companyName: true, companyAddress: true } }),
+    ]);
+
+    const branches = allBranches.map((b) => {
+      const t = tally.get(b.id) ?? { sale: 0, invoices: 0, online: 0, onlineInvoices: 0 };
+      return {
+        id: b.id,
+        code: b.branchCode ?? '',
+        name: b.branchName ?? '',
+        isFactory: isFactoryBranch(b),
+        sale: r2signed(t.sale),
+        invoiceCount: t.invoices,
+        /** The Food Panda / Foodi slice OF `sale` — already included in it. */
+        onlineSale: r2signed(t.online),
+        onlineInvoiceCount: t.onlineInvoices,
+      };
+    });
+
+    const sumOf = (rows: typeof branches, pick: (b: (typeof branches)[number]) => number) =>
+      r2signed(rows.reduce((s, b) => s + pick(b), 0));
+
+    const outlets = branches.filter((b) => !b.isFactory);
+    const factory = branches.filter((b) => b.isFactory);
+
+    const outletSales = sumOf(outlets, (b) => b.sale);
+    const factorySales = sumOf(factory, (b) => b.sale);
+    const mtdSales = r2signed([...mtdTally.values()].reduce((s, t) => s + t.sale, 0));
+
+    return {
+      fromDate: from.toISOString().split('T')[0],
+      toDate: to.toISOString().split('T')[0],
+      company: {
+        name: company?.companyName ?? 'Khazana Mithai',
+        address: company?.companyAddress ?? '',
+      },
+      branch: query.branchId
+        ? { id: query.branchId, name: branches[0]?.name ?? '' }
+        : { id: '', name: 'All Branches' },
+      branches,
+      totals: {
+        outletSales,
+        outletInvoices: outlets.reduce((s, b) => s + b.invoiceCount, 0),
+        /** Memo only — this money is already counted inside the branch figures. */
+        onlineSales: sumOf(branches, (b) => b.onlineSale),
+        onlineInvoices: branches.reduce((s, b) => s + b.onlineInvoiceCount, 0),
+        factorySales,
+        factoryInvoices: factory.reduce((s, b) => s + b.invoiceCount, 0),
+        totalSales: r2signed(outletSales + factorySales),
+        /** Same basis, from the 1st of the end date's month through `toDate`. */
+        mtdSales,
+      },
+    };
+  }
 }

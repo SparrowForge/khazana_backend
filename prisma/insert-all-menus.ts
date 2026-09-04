@@ -34,6 +34,8 @@ const newMenus = [
   // Factory Report — a top-level group (parentMenu null) whose every leaf is
   // factory-only, so the sidebar drops the whole group for any other branch.
   { menuName: 'Factory Report', controlName: 'FactoryReport', order: 12, parentMenu: null, module: 'Inventory' },
+  // The branch sales summary the factory sends out on WhatsApp each evening.
+  { menuName: 'Daily Sales Report', controlName: 'DailySalesReport', order: 0, parentMenu: 'FactoryReport', module: null },
   { menuName: 'Production & Delivery Report', controlName: 'ProductionDeliveryReport', order: 1, parentMenu: 'FactoryReport', module: 'Inventory' },
   { menuName: 'Branchwise Delivery Report', controlName: 'BranchwiseDeliveryReport', order: 2, parentMenu: 'FactoryReport', module: null },
   // Opens the SAME page as Reports > Discount Summary (the route re-exports it),
