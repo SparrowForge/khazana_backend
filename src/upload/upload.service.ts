@@ -37,7 +37,14 @@ export class UploadService {
     }
 
     const folder = this.config.get<string>('CLOUDINARY_FOLDER') ?? 'uploads';
-    const stem   = path.parse(file.originalname).name.replace(/\s+/g, '_');
+    // Cloudinary rejects a public_id containing ? & # \ % < >, so collapse
+    // everything outside [A-Za-z0-9_.-] rather than only whitespace — a file
+    // like "Date & Honey Laddu.jpg" used to fail the upload outright.
+    const stem =
+      path.parse(file.originalname).name
+        .replace(/[^\w.-]+/g, '_')
+        .replace(/^[_.]+|_+$/g, '')
+        .slice(0, 100) || 'file';
 
     // Upload to Cloudinary using resource_type: 'auto' to handle all types
     let cloudinaryResult: { public_id: string; secure_url: string };
