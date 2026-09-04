@@ -1,15 +1,17 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v2 as cloudinary } from 'cloudinary';
 import * as path from 'path';
 import { PrismaService } from '../database/prisma.service';
-
-const EXT_TYPE_MAP: Record<string, string> = {
-  jpg: 'image', jpeg: 'image', png: 'image', gif: 'image', webp: 'image', svg: 'image',
-  pdf: 'pdf',
-  doc: 'doc', docx: 'doc',
-  xls: 'excel', xlsx: 'excel',
-};
+import {
+  ALLOWED_FILE_DESCRIPTION,
+  describeRejectedFile,
+  resolveFileType,
+} from './file-type';
 
 @Injectable()
 export class UploadService {
@@ -25,12 +27,12 @@ export class UploadService {
   }
 
   async uploadFile(file: Express.Multer.File, uploadedById?: string) {
-    const ext      = path.extname(file.originalname).toLowerCase().replace('.', '');
-    const fileType = EXT_TYPE_MAP[ext];
+    // Mimetype first, extension as fallback — see file-type.ts.
+    const fileType = resolveFileType(file.mimetype, file.originalname);
 
     if (!fileType) {
       throw new BadRequestException(
-        `Unsupported file type ".${ext}". Allowed: jpg, png, gif, webp, svg, pdf, doc, docx, xls, xlsx`,
+        `Unsupported file type ${describeRejectedFile(file.mimetype, file.originalname)}. Allowed: ${ALLOWED_FILE_DESCRIPTION}`,
       );
     }
 
@@ -38,23 +40,39 @@ export class UploadService {
     const stem   = path.parse(file.originalname).name.replace(/\s+/g, '_');
 
     // Upload to Cloudinary using resource_type: 'auto' to handle all types
-    const cloudinaryResult = await new Promise<{ public_id: string; secure_url: string }>(
-      (resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          {
-            folder,
-            resource_type: 'auto',
-            public_id: `${Date.now()}_${stem}`,
-            overwrite: false,
-          },
-          (error, result) => {
-            if (error || !result) return reject(error ?? new Error('Cloudinary upload failed'));
-            resolve({ public_id: result.public_id, secure_url: result.secure_url });
-          },
-        );
-        stream.end(file.buffer);
-      },
-    );
+    let cloudinaryResult: { public_id: string; secure_url: string };
+    try {
+      cloudinaryResult = await new Promise<{ public_id: string; secure_url: string }>(
+        (resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            {
+              folder,
+              resource_type: 'auto',
+              public_id: `${Date.now()}_${stem}`,
+              overwrite: false,
+            },
+            (error, result) => {
+              if (error || !result) return reject(error ?? new Error('Cloudinary upload failed'));
+              resolve({ public_id: result.public_id, secure_url: result.secure_url });
+            },
+          );
+          stream.end(file.buffer);
+        },
+      );
+    } catch (err: any) {
+      // Cloudinary rejects oversized or over-resolution images (and quota
+      // overruns) with a real reason. Surface it instead of letting the raw
+      // error become an opaque 500 the UI cannot explain.
+      const reason = err?.message ?? err?.error?.message ?? 'unknown error';
+      const status = err?.http_code ?? err?.error?.http_code;
+
+      if (status === 400 || status === 420) {
+        throw new BadRequestException(`Image rejected by the media server: ${reason}`);
+      }
+      throw new ServiceUnavailableException(
+        `Could not reach the media server (${reason}). Please try again.`,
+      );
+    }
 
     // Persist record in media_files table
     const record = await this.prisma.mediaFile.create({
