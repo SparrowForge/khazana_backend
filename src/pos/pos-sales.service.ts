@@ -4,7 +4,8 @@ import { CreatePosSaleDto, UpdatePosSaleDto } from './dto/create-pos-sale.dto';
 import { allocateDiscount, assertStockAvailable, roundPayable, toBranchUuid } from '../common/helpers';
 import { dateRangeFilter } from '../common/dto';
 import { PosSalesQueryDto } from './dto/pos-sales-query.dto';
-import type { Prisma, t_SOMstr, t_SODet, Item_Information, Sale_Payment } from '../generated/prisma';
+import { Prisma } from '../generated/prisma';
+import type { t_SOMstr, t_SODet, Item_Information, Sale_Payment } from '../generated/prisma';
 
 type SaleWithDetails = t_SOMstr & {
   details: (t_SODet & { item: Item_Information | null })[];
@@ -435,7 +436,12 @@ export class PosSalesService {
     // Availability check, the write and the deduction all share one transaction:
     // checking outside it leaves a window for two terminals to both pass the
     // check on the last unit and both sell it.
-    const sale = await this.prisma.$transaction(async (tx) => {
+    //
+    // Nothing else belongs in here. Every statement is a round trip to a Neon
+    // database in another region, and the transaction is on a clock (P2028), so
+    // the read-back that builds the receipt is deliberately left until after the
+    // commit — it is a pure read of a row that is by then durable.
+    const saleId = await this.prisma.$transaction(async (tx) => {
       const stockLines = lines.map((l) => ({ itemId: l.itemId, qty: l.sodetQTY }));
       if (p.enforceStock !== false) await assertStockAvailable(tx, stockLines);
 
@@ -497,12 +503,22 @@ export class PosSalesService {
             })),
           },
         },
-        include: SALE_INCLUDE,
+        // Just the key: the joins the receipt needs are read back below, once
+        // the transaction is off the clock.
+        select: { id: true },
       });
 
       await this.deductStock(tx, stockLines);
-      return created;
+      return created.id;
     });
+
+    const sale = await this.prisma.t_SOMstr.findUnique({
+      where: { id: saleId },
+      include: SALE_INCLUDE,
+    });
+    // Committed a statement ago, so this cannot miss — but the read is typed
+    // nullable and a silent `!` would hide a real fault behind a crash.
+    if (!sale) throw new NotFoundException(`Invoice ${p.invoiceNo} was written but could not be read back`);
 
     return this.toResponse(sale as SaleWithDetails);
   }
@@ -582,14 +598,38 @@ export class PosSalesService {
   }
 
   /** Takes the client so the deduction runs in the same transaction as the
-   *  availability check that cleared it. */
+   *  availability check that cleared it.
+   *
+   *  ONE statement for the whole basket, not one per line. A round trip per line
+   *  put the transaction's lifetime in the hands of the cart size — a twenty-line
+   *  basket spent twenty round trips here alone and blew the transaction clock
+   *  (P2028), rejecting a valid sale with an opaque 500.
+   *
+   *  Lines are summed per item first, so two lines of the same item deduct once
+   *  with their combined quantity — the same total the loop produced, and the
+   *  same grouping `assertStockAvailable` judged the basket by. An item with no
+   *  Inventory row matches nothing and is skipped, exactly as `updateMany` did. */
   private async deductStock(db: Prisma.TransactionClient, items: { itemId: string; qty: number }[]) {
+    const byItem = new Map<string, number>();
     for (const i of items) {
-      await db.inventory.updateMany({
-        where: { itemId: i.itemId },
-        data: { quantity: { decrement: i.qty } },
-      });
+      if (!i.itemId) continue;
+      const qty = Number(i.qty) || 0;
+      if (qty <= 0) continue;
+      byItem.set(i.itemId, (byItem.get(i.itemId) ?? 0) + qty);
     }
+    if (!byItem.size) return;
+
+    // Quantities are bound as text and cast, never as float8: Inventory.Quantity
+    // is Decimal(18,4) and a binary float is the one way to put drift into it.
+    const rows = [...byItem].map(
+      ([itemId, qty]) => Prisma.sql`(${itemId}::uuid, ${String(qty)}::numeric)`,
+    );
+    await db.$executeRaw`
+      UPDATE "Inventory" AS inv
+      SET "Quantity" = inv."Quantity" - taken.qty
+      FROM (VALUES ${Prisma.join(rows)}) AS taken(item_id, qty)
+      WHERE inv."ItemId" = taken.item_id
+    `;
   }
 
   /** Re-price {itemId, qty} lines from the active t_Price as-of a date.
