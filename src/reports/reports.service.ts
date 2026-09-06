@@ -320,7 +320,7 @@ export class ReportsService {
 
     const window = { gte: day, lt: nextDay };
 
-    const [branch, cash, assorted, issues, credit, nc] = await Promise.all([
+    const [branch, cash, assorted, issues, credit, nc, advance, vatAdvance] = await Promise.all([
       this.prisma.branch.findUnique({ where: { id: branchId }, select: { branchName: true, address: true, vatNo: true } }),
       this.prisma.t_SOMstr.findMany({
         where: { somstrDate: window, somstrIsActive: true, branchId },
@@ -358,6 +358,19 @@ export class ReportsService {
           // before the link existed.
           customer: { select: { name: true, mobile: true } },
         },
+      }),
+      // Advance taken on orders received today. BOTH order ledgers are summed:
+      // a regular order and a VAT order are separate tables, and reading only
+      // one silently drops half the day's advances — the same trap the sale
+      // ledgers set. VOrderReceive_Master has no IsActive column, so only the
+      // regular table can be filtered on it.
+      this.prisma.orderReceive_Master.aggregate({
+        where: { orderDate: window, isActive: 1, branchId, advance: { gt: 0 } },
+        _sum: { advance: true },
+      }),
+      this.prisma.vOrderReceive_Master.aggregate({
+        where: { orderDate: window, branchId, advance: { gt: 0 } },
+        _sum: { advance: true },
       }),
     ]);
 
@@ -408,7 +421,15 @@ export class ReportsService {
       if (/card|bank/.test(m) || hasBank) return 'card';
       return 'cash';
     };
-    const payments = { bkash: 0, card: 0, cash: 0, credit: creditAmt };
+    // Advance collected on today's orders. It sits in the payment block because
+    // it IS money taken at the counter today — but deliberately NOT in
+    // `totalSale`: an order is invoiced out later as a credit sale for its full
+    // value, and the customer ledger settles the advance against that invoice
+    // (outstanding = credit sales − receipts − advances). Counting it as a sale
+    // today as well would bill the same money twice, on two different days.
+    const advanceAmt = num(advance._sum.advance) + num(vatAdvance._sum.advance);
+
+    const payments = { bkash: 0, card: 0, cash: 0, credit: creditAmt, advance: advanceAmt };
     const cardBank = new Map<string, number>();
     for (const s of cash) {
       for (const t of ReportsService.tendersOf(s, num(s.somstrNetAmt))) {
