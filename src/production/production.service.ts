@@ -247,6 +247,7 @@ export class ProductionService {
         tx,
         existing.map((r) => ({ itemId: r.itemId, qty: Number(r.qty ?? 0) })),
         this.toStockLines(dto.items),
+        existing[0].branchId ?? branch.id,
       );
 
       for (const row of existing) {
@@ -294,10 +295,13 @@ export class ProductionService {
 
     await this.prisma.$transaction(async (tx) => {
       // Deleting withdraws what this entry added; refuse if those units are gone
-      // rather than driving Inventory negative.
+      // rather than driving stock negative — at the producing branch as well as
+      // company-wide, since the units it is taking back are that branch's.
       await assertStockAvailable(
         tx,
         existing.map((r) => ({ itemId: r.itemId, qty: Number(r.qty ?? 0) })),
+        [],
+        existing[0].branchId ?? sessionBranchId,
       );
       for (const row of existing) {
         if (row.itemId) {
@@ -352,6 +356,7 @@ export class ProductionService {
         tx,
         previous.map((r) => ({ itemId: r.itemId, qty: Number(r.qty ?? 0) })),
         lines.map((l) => ({ itemId: l.itemId, qty: l.qty })),
+        opts.branchId,
       );
       for (const row of previous) {
         if (!row.itemId) continue;

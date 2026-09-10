@@ -44,7 +44,9 @@ export class SalesService {
     const stockLines = dto.items.map((i) => ({ itemId: i.itemId, qty: i.qty }));
     const detailLines = await this.distributeInvoiceDiscount(dto.items, dto.discountPercent ?? 0);
     const sale = await this.prisma.$transaction(async (tx) => {
-      await assertStockAvailable(tx, stockLines);
+      // Branch-scoped for the same reason a cash sale is: the goods leave this
+      // branch's shelf, so this branch's balance is what has to cover them.
+      await assertStockAvailable(tx, stockLines, [], branchId);
       const created = await tx.cSMaster.create({
         data: {
           invNo,
@@ -613,6 +615,7 @@ export class SalesService {
         tx,
         dto.items.map((it) => ({ itemId: it.itemId, qty: it.qty })),
         released,
+        existing.branchId,
       );
       await tx.cSDetail.deleteMany({ where: { invNo: existing.invNo } });
       await tx.cSMaster.update({

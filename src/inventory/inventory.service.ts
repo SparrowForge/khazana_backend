@@ -259,7 +259,7 @@ export class InventoryService {
     const serialNo = this.buildSerialNo('TRF', branchCode, baseCount + 1);
 
     return this.prisma.$transaction(async (tx) => {
-      await this.assertTransferable(tx, dto.items);
+      await this.assertTransferable(tx, dto.items, dto.issueBranchId);
 
       const rows = [];
       for (const line of dto.items) {
@@ -307,13 +307,25 @@ export class InventoryService {
    *  alone, with no branch dimension, so moving units between branches leaves the
    *  balance untouched and there is nothing to deduct. What it must still not do
    *  is ship units that don't exist anywhere, so the lines are measured against
-   *  the whole-company on-hand qty. Nothing is ever "released" back on an edit,
-   *  for the same reason: the previous version never consumed anything. */
+   *  the whole-company on-hand qty.
+   *
+   *  Per BRANCH it is emphatically not net-zero: the issuing branch is down the
+   *  quantity the moment the transfer is written, and that is the balance the
+   *  Production & Delivery report closes on. `issueBranchId` is what makes this
+   *  check see that — without it a branch can transfer out stock it never held,
+   *  bankrolled by whatever the other outlets happen to be holding.
+   *
+   *  `released` is the previous version's lines on an edit. Nothing is released
+   *  against `Inventory` — that balance never moved — but the source branch does
+   *  get its old quantity back, or re-saving an unchanged transfer would fail
+   *  against its own outgoing leg. */
   private async assertTransferable(
     tx: Prisma.TransactionClient,
     items: { itemId: string; qty: number }[],
+    issueBranchId: string,
+    released: { itemId: string | null; qty: number }[] = [],
   ) {
-    await assertStockAvailable(tx, items);
+    await assertStockAvailable(tx, items, released, issueBranchId);
   }
 
   async findTransferHistory(query: DateRangeQueryDto, accessibleBranchIds?: string[]) {
@@ -389,8 +401,22 @@ export class InventoryService {
     const issueDate = dto.issueDate ? new Date(dto.issueDate) : new Date();
     const key = existing[0].serialNo || existing[0].id;
 
+    // The source branch: the edit may move the transfer to a different one, in
+    // which case the new branch is what has to cover the lines.
+    const issueBranchId = dto.issueBranchId ?? existing[0].issueBranchId;
+
     return this.prisma.$transaction(async (tx) => {
-      await this.assertTransferable(tx, dto.items);
+      // The old rows are still in place at this point — deleted a few lines
+      // below — so they are handed back as `released`, otherwise this document's
+      // own outgoing leg counts against it.
+      await this.assertTransferable(
+        tx,
+        dto.items,
+        issueBranchId,
+        existing
+          .filter((r) => r.issueBranchId === issueBranchId)
+          .map((r) => ({ itemId: r.itemId, qty: Number(r.qty ?? 0) })),
+      );
 
       await tx.item_Issue.deleteMany({ where: { serialNo: key } });
       await tx.item_Receive.deleteMany({ where: { serialNo: key } });
@@ -784,7 +810,10 @@ export class InventoryService {
 
       // Inside the transaction that decrements, so a concurrent issue can't pass
       // the same check on the same units. Sums repeated lines of one item too.
-      await assertStockAvailable(tx, this.stockCheckedLines(dto.items));
+      // Scoped to the issuing branch: this is the path that shipped 11 out of a
+      // production run of 10, because the company-wide balance the old check
+      // read was propped up by stock sitting in the outlets.
+      await assertStockAvailable(tx, this.stockCheckedLines(dto.items), [], dto.issueBranchId);
 
       const issues = [];
       for (const line of dto.items) {
@@ -1096,7 +1125,11 @@ export class InventoryService {
       // Step 3: the replacement lines, checked against the balance those two
       // steps just left behind. Production lines are exempt — step 2 just added
       // their quantity, so they cannot come up short.
-      await assertStockAvailable(tx, this.stockCheckedLines(dto.items));
+      //
+      // No `released` argument: step 1 already reversed the old lines in the
+      // ledger itself, so the branch roll-forward reads the restored balance
+      // directly rather than being told about it.
+      await assertStockAvailable(tx, this.stockCheckedLines(dto.items), [], issueBranchId);
 
       const issues = [];
       for (const line of dto.items) {

@@ -242,7 +242,9 @@ export class NcAdjustmentService {
     // transaction so a concurrent document can't slip through on the same units.
     const stockLines = dto.items.map((i) => ({ itemId: i.itemId, qty: i.qty }));
     return this.prisma.$transaction(async (tx) => {
-      await assertStockAvailable(tx, stockLines);
+      // Branch-scoped: an NC deducts, so it is the issuing branch's balance the
+      // goods have to come out of, not the company's.
+      await assertStockAvailable(tx, stockLines, [], branchId);
       const nc = await tx.t_NCMstr.create({
         data: {
           ncmstrCode: code,
@@ -333,7 +335,7 @@ export class NcAdjustmentService {
     return this.prisma.$transaction(async (tx) => {
       // Only a lines edit moves stock — a header-only edit leaves it untouched.
       if (dto.items) {
-        await assertStockAvailable(tx, newLines, heldLines);
+        await assertStockAvailable(tx, newLines, heldLines, branchId);
         // Give back what the previous version took, then drop its rows so the
         // replacements below are the only lines left.
         await this.adjustStock(tx, heldLines);

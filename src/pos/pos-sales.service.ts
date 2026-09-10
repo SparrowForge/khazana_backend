@@ -443,7 +443,10 @@ export class PosSalesService {
     // commit — it is a pure read of a row that is by then durable.
     const saleId = await this.prisma.$transaction(async (tx) => {
       const stockLines = lines.map((l) => ({ itemId: l.itemId, qty: l.sodetQTY }));
-      if (p.enforceStock !== false) await assertStockAvailable(tx, stockLines);
+      // Scoped to the selling branch — the company-wide balance alone would let
+      // a terminal keep selling an item its own shop ran out of days ago, on the
+      // strength of stock sitting in another outlet.
+      if (p.enforceStock !== false) await assertStockAvailable(tx, stockLines, [], branchId);
 
       const created = await tx.t_SOMstr.create({
         data: {
@@ -748,6 +751,7 @@ export class PosSalesService {
         tx,
         lines.map((l) => ({ itemId: l.itemId, qty: l.sodetQTY })),
         existing.details.map((d) => ({ itemId: d.sodetItemOID, qty: Number(d.sodetQTY ?? 0) })),
+        branchId,
       );
       await tx.t_SODet.deleteMany({ where: { t_SOMstr_id: id } });
       await tx.t_SOMstr.update({
