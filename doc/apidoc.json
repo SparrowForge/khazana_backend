@@ -5784,10 +5784,41 @@
     "/reports/stock": {
       "get": {
         "operationId": "ReportsController_getStockReport",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "fromDate",
+            "required": false,
+            "in": "query",
+            "description": "Range start (ISO 8601); omit for \"since the beginning\", which makes Opening zero",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end, inclusive (ISO 8601); omit for \"up to now\"",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Branch — omit to combine every branch (the company-wide position)",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Stock levels for all items"
+            "description": "Rows where Opening + In - Out = Closing exactly"
+          },
+          "403": {
+            "description": "Caller has no access to the requested branch"
           }
         },
         "security": [
@@ -5795,7 +5826,7 @@
             "access-token": []
           }
         ],
-        "summary": "Get current stock report for all items",
+        "summary": "Per-item stock movement for one branch: opening, in, out and closing",
         "tags": [
           "Reports"
         ]

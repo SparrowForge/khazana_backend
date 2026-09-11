@@ -56,9 +56,23 @@ export class ReportsController {
   }
 
   @Get('stock')
-  @ApiOperation({ summary: 'Get current stock report for all items' })
-  @ApiResponse({ status: 200, description: 'Stock levels for all items' })
-  getStockReport() { return this.reportsService.getStockReport(); }
+  @ApiOperation({ summary: 'Per-item stock movement for one branch: opening, in, out and closing' })
+  @ApiQuery({ name: 'fromDate', required: false, description: 'Range start (ISO 8601); omit for "since the beginning", which makes Opening zero' })
+  @ApiQuery({ name: 'toDate', required: false, description: 'Range end, inclusive (ISO 8601); omit for "up to now"' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch — omit to combine every branch (the company-wide position)' })
+  @ApiResponse({ status: 200, description: 'Rows where Opening + In - Out = Closing exactly' })
+  @ApiResponse({ status: 403, description: 'Caller has no access to the requested branch' })
+  getStockReport(
+    @CurrentUser('branchIds') branchIds: string[],
+    @Query('fromDate') fromDate?: string,
+    @Query('toDate') toDate?: string,
+    @Query('branchId') branchId?: string,
+  ) {
+    return this.reportsService.getStockReport(
+      { fromDate: fromDate || undefined, toDate: toDate || undefined, branchId: branchId || undefined },
+      branchIds,
+    );
+  }
 
   @Get('stock-analysis')
   @ApiOperation({ summary: 'Get the per-item Stock Analysis report for a branch + date range' })

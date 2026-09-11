@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
-import { branchScope, isFactoryBranch, roundPayable } from '../common/helpers';
+import { branchScope, canAccessBranch, isFactoryBranch, roundPayable } from '../common/helpers';
 
 export interface DateRangeQuery {
   fromDate?: string;
@@ -817,8 +817,13 @@ export class ReportsService {
    *   in   = Production + Item_Receive + ItemReject.Excess
    *   out  = Item_Issue + all four sale ledgers + t_NCDet
    *        + ItemReject.Assort + .Reject + .Short
+   *
+   * An undefined `branchId` drops the branch filter entirely, giving every
+   * branch's movements together — Prisma omits an `undefined` where-clause key.
+   * Summed that way an internal transfer nets out (issued by one branch,
+   * received by the other), so the result is the company-wide position.
    */
-  private async factoryLedgerWindows(branchId: string, before: object, during: object) {
+  private async factoryLedgerWindows(branchId: string | undefined, before: object, during: object) {
     const prodWhere = (w: object) => ({ branchId, isActive: 1, productionDate: w });
     const recvWhere = (w: object) => ({ receiveBranchID: branchId, isActive: 1, purDate: w });
     const issueWhere = (w: object) => ({ issueBranchId: branchId, isActive: 1, issueDate: w });
@@ -1170,47 +1175,103 @@ export class ReportsService {
   }
 
   // ── Stock Report ──────────────────────────────────────────────
-  // Returns per-item movement summary: all-time receives vs all-time issues,
-  // with the current quantity as the closing balance.
+  // Per-item stock movement for ONE BRANCH over a date range: what it held
+  // before the range, what came in and went out during it, and what it is left
+  // holding. Opening + In - Out = Closing on every row, exactly.
+  //
+  // Runs on `factoryLedgerWindows`, the same ledgers and signs as the Production
+  // & Delivery and Business Analysis sheets and as the save-time stock guard, so
+  // a figure here cannot contradict any of them.
 
-  async getStockReport() {
-    const [inventory, receives, issues] = await Promise.all([
-      this.prisma.inventory.findMany({
-        include: { item: true },
-        orderBy: { item: { itmName: 'asc' } },
+  async getStockReport(
+    query: { fromDate?: string; toDate?: string; branchId?: string } = {},
+    accessibleBranchIds?: string[],
+  ) {
+    // Asking for a branch the caller cannot see returns nothing rather than
+    // quietly widening the report — the same rule the other branch-scoped
+    // reports follow.
+    if (query.branchId && !canAccessBranch(accessibleBranchIds, query.branchId)) {
+      throw new ForbiddenException('You do not have access to that branch');
+    }
+
+    // Both dates are optional. No `fromDate` means "since the beginning", which
+    // makes Opening zero — the honest answer, since nothing moved before the
+    // first movement. No `toDate` means "up to now".
+    const from = query.fromDate ? new Date(query.fromDate) : null;
+    if (from && isNaN(from.getTime())) throw new BadRequestException('Valid `fromDate` is required');
+    const to = query.toDate ? new Date(query.toDate) : null;
+    if (to && isNaN(to.getTime())) throw new BadRequestException('Valid `toDate` is required');
+    if (from && to && to < from) throw new BadRequestException('`toDate` must not be earlier than `fromDate`');
+
+    const toExclusive = to ? new Date(to) : null;
+    if (toExclusive) toExclusive.setUTCDate(toExclusive.getUTCDate() + 1);
+
+    // `before` is everything prior to the range; with no `fromDate` it can match
+    // nothing, which is what an all-time report wants.
+    const before = from ? { lt: from } : { lt: new Date(0) };
+    const during = {
+      ...(from ? { gte: from } : {}),
+      ...(toExclusive ? { lt: toExclusive } : {}),
+    };
+
+    const [items, ledgers, branch] = await Promise.all([
+      this.prisma.item_Information.findMany({
+        orderBy: { itmName: 'asc' },
+        select: { id: true, itmCode: true, itmName: true, itmUOM: true },
       }),
-      this.prisma.item_Receive.groupBy({
-        by: ['itemId'],
-        where: { isActive: 1 },
-        _sum: { qty: true },
-      }),
-      this.prisma.item_Issue.groupBy({
-        by: ['itemId'],
-        where: { isActive: 1 },
-        _sum: { qty: true },
-      }),
+      this.factoryLedgerWindows(query.branchId, before, during),
+      query.branchId
+        ? this.prisma.branch.findUnique({ where: { id: query.branchId }, select: { branchName: true } })
+        : null,
     ]);
 
-    const inMap = new Map(receives.map((r) => [r.itemId, num(r._sum.qty)]));
-    const outMap = new Map(issues.map((i) => [i.itemId, num(i._sum.qty)]));
+    const {
+      prodB, prodD, recvB, recvD, issB, issD,
+      salB, salD, ncB, ncD,
+      assortB, assortD, rejectB, rejectD, shortB, shortD, excessB, excessD,
+    } = ledgers;
+    const g = (m: Map<string, number>, id: string) => m.get(id) ?? 0;
 
-    return inventory.map((row) => {
-      const inwardQty = inMap.get(row.itemId) ?? 0;
-      const outwardQty = outMap.get(row.itemId) ?? 0;
-      const closingQty = num(row.quantity);
-      // Opening is derived: closing - in + out (what it was before all movements)
-      const openingQty = closingQty - inwardQty + outwardQty;
+    const rows = items.map((it) => {
+      const id = it.id;
+      // Opening: the signed roll-forward of everything dated before the range.
+      // NOT clamped at zero — a branch that has issued more than it produced is
+      // genuinely negative, and hiding that is what let an over-issue go unseen.
+      const openingQty = r2signed(
+        g(prodB, id) + g(recvB, id) + g(excessB, id)
+        - (g(issB, id) + g(salB, id) + g(assortB, id) + g(ncB, id) + g(rejectB, id) + g(shortB, id)),
+      );
+      // In / Out carry EVERY ledger, not just Item_Receive and Item_Issue as
+      // this report used to: production, sales, NC, assortment and the reject
+      // columns all move stock, and leaving them out is why Opening + In - Out
+      // never used to equal Closing.
+      const inwardQty = r2signed(g(prodD, id) + g(recvD, id) + g(excessD, id));
+      const outwardQty = r2signed(
+        g(issD, id) + g(salD, id) + g(assortD, id) + g(ncD, id) + g(rejectD, id) + g(shortD, id),
+      );
+      const closingQty = r2signed(openingQty + inwardQty - outwardQty);
       return {
-        id: row.itemId,
-        itemCode: row.item.itmCode,
-        itemName: row.item?.itmName ?? '',
-        uom: row.item?.itmUOM ?? '',
-        openingQty: Math.max(0, openingQty),
+        id,
+        itemCode: it.itmCode,
+        itemName: it.itmName ?? '',
+        uom: it.itmUOM ?? '',
+        openingQty,
         inwardQty,
         outwardQty,
         closingQty,
       };
     });
+
+    return {
+      fromDate: from ? from.toISOString().split('T')[0] : null,
+      toDate: to ? to.toISOString().split('T')[0] : null,
+      branch: query.branchId
+        ? { id: query.branchId, name: branch?.branchName ?? '' }
+        : { id: '', name: 'All Branches' },
+      // Items that never moved and hold nothing would pad the sheet with rows of
+      // zeros; a row is kept if it carries any figure at all.
+      items: rows.filter((r) => r.openingQty || r.inwardQty || r.outwardQty || r.closingQty),
+    };
   }
 
   // ── Item-wise Sales (qty + amount per item, cash + vat merged) ───────
