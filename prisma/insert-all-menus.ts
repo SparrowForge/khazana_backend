@@ -38,8 +38,8 @@ const newMenus = [
   { menuName: 'Daily Sales Report', controlName: 'DailySalesReport', order: 0, parentMenu: 'FactoryReport', module: null },
   { menuName: 'Production & Delivery Report', controlName: 'ProductionDeliveryReport', order: 1, parentMenu: 'FactoryReport', module: 'Inventory' },
   { menuName: 'Branchwise Delivery Report', controlName: 'BranchwiseDeliveryReport', order: 2, parentMenu: 'FactoryReport', module: null },
-  { menuName: 'Monthly Production Report', controlName: 'MonthlyProductionReport', order: 6, parentMenu: 'FactoryReport', module: 'Inventory' },
-  { menuName: 'Business Analysis Report', controlName: 'BusinessAnalysisReport', order: 7, parentMenu: 'FactoryReport', module: 'Inventory' },
+  { menuName: 'Monthly Production Report', controlName: 'MonthlyProductionReport', order: 8, parentMenu: 'FactoryReport', module: 'Inventory' },
+  { menuName: 'Business Analysis Report', controlName: 'BusinessAnalysisReport', order: 9, parentMenu: 'FactoryReport', module: 'Inventory' },
   // Opens the SAME page as Reports > Discount Summary (the route re-exports it),
   // but needs its own ControlName: that column is unique, so reusing
   // 'DiscountSummary' would match the existing Reports row and this upsert
