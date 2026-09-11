@@ -972,6 +972,16 @@ export class ReportsService {
 
     const g = (m: Map<string, number>, id: string) => m.get(id) ?? 0;
 
+    /** True when a row has any figure on it. The item catalogue is listed in
+     *  full, so most rows in a short range are entirely empty — a unit that only
+     *  has dormant items should not earn a subtotal block of zeros. */
+    const rowHasMovement = (r: {
+      openingQty: number; productionQty: number; returnQty: number; salesQty: number;
+      deliveryQty: number; rejectQty: number; shortQty: number; overQty: number; closingQty: number;
+    }) =>
+      !!(r.openingQty || r.productionQty || r.returnQty || r.salesQty
+        || r.deliveryQty || r.rejectQty || r.shortQty || r.overQty || r.closingQty);
+
     const rows = items.map((it, idx) => {
       const id = it.id;
       const rate = rateOf(it);
@@ -1025,19 +1035,36 @@ export class ReportsService {
       };
     });
 
-    const sum = (k: keyof (typeof rows)[number]) => r2signed(rows.reduce((s, r) => s + (r[k] as number), 0));
-    const totals = {
-      openingQty: sum('openingQty'), openingTk: sum('openingTk'),
-      productionQty: sum('productionQty'), productionTk: sum('productionTk'),
-      returnQty: sum('returnQty'), returnTk: sum('returnTk'),
-      totalStockQty: sum('totalStockQty'), totalStockTk: sum('totalStockTk'),
-      salesQty: sum('salesQty'), salesTk: sum('salesTk'),
-      rejectQty: sum('rejectQty'), rejectTk: sum('rejectTk'),
-      shortQty: sum('shortQty'), shortTk: sum('shortTk'),
-      overQty: sum('overQty'), overTk: sum('overTk'),
-      deliveryQty: sum('deliveryQty'), deliveryTk: sum('deliveryTk'),
-      closingQty: sum('closingQty'), closingTk: sum('closingTk'),
+    /** Every Qty/Tk figure summed over an arbitrary set of rows — used for both
+     *  the per-unit subtotals and the grand total, so the two can never be
+     *  computed by different rules and disagree. */
+    const totalsOf = (rs: typeof rows) => {
+      const sum = (k: keyof (typeof rows)[number]) => r2signed(rs.reduce((s, r) => s + (r[k] as number), 0));
+      return {
+        openingQty: sum('openingQty'), openingTk: sum('openingTk'),
+        productionQty: sum('productionQty'), productionTk: sum('productionTk'),
+        returnQty: sum('returnQty'), returnTk: sum('returnTk'),
+        totalStockQty: sum('totalStockQty'), totalStockTk: sum('totalStockTk'),
+        salesQty: sum('salesQty'), salesTk: sum('salesTk'),
+        rejectQty: sum('rejectQty'), rejectTk: sum('rejectTk'),
+        shortQty: sum('shortQty'), shortTk: sum('shortTk'),
+        overQty: sum('overQty'), overTk: sum('overTk'),
+        deliveryQty: sum('deliveryQty'), deliveryTk: sum('deliveryTk'),
+        closingQty: sum('closingQty'), closingTk: sum('closingTk'),
+      };
     };
+
+    const totals = totalsOf(rows);
+
+    // A subtotal per unit of measure. Adding a KG quantity to a Pcs quantity
+    // states nothing true, so the per-unit figure is the one to read — and it is
+    // what lines up against the Business Analysis sheet, which carries a column
+    // per unit. Blank/unset units sort last under '—'.
+    const uomKey = (u: string) => (u ?? '').trim() || '—';
+    const uomRank = (u: string) => (u === '—' ? '1' : `0${u.toLowerCase()}`);
+    const uomTotals = [...new Set(rows.filter((r) => rowHasMovement(r)).map((r) => uomKey(r.uom)))]
+      .sort((a, b) => uomRank(a).localeCompare(uomRank(b)))
+      .map((uom) => ({ uom, totals: totalsOf(rows.filter((r) => uomKey(r.uom) === uom)) }));
 
     const [branch, company] = await Promise.all([
       this.prisma.branch.findUnique({ where: { id: branchId }, select: { branchName: true, address: true, vatNo: true } }),
@@ -1054,6 +1081,9 @@ export class ReportsService {
       branch: { name: branch?.branchName ?? '', address: branch?.address ?? '', vatNo: branch?.vatNo ?? '' },
       items: rows,
       totals,
+      /** Subtotal per unit of measure, in print order — a KG total and a Pcs
+       *  total are different quantities and must never be added together. */
+      uomTotals,
     };
   }
 
@@ -3382,7 +3412,10 @@ export class ReportsService {
       put(nc, uom, ncQty, tk(ncQty));
       put(reject, uom, rejectQty, tk(rejectQty));
       put(shortRow, uom, shortQty, tk(shortQty));
-      put(closing, uom, closingQty, 0); // amount filled in below, as the residual
+      // Valued at the list rate, exactly as the Production & Delivery sheet
+      // values its own closing column — the two reports are cross-checked
+      // against each other and must put the same value on the same stock.
+      put(closing, uom, closingQty, tk(closingQty));
 
       for (const [rbId, perItem] of issueQtyByBranch) {
         const qty = perItem.get(id) ?? 0;
@@ -3409,18 +3442,6 @@ export class ReportsService {
       amount: r2signed(row.amount),
     });
 
-    // ── The two blocks ──
-    // In: what the branch started with plus everything that came in.
-    // Out: everything that left, plus what it is still holding.
-    //
-    // `Over` and `Short` are rows here rather than the memo box the legacy pad
-    // puts them in: they are real stock movements, and left out of the
-    // arithmetic the two blocks would stop totalling to the same figure the
-    // moment either was non-zero. The memo box still prints them, captioned as
-    // a restatement so nothing reads as counted twice.
-    const inflow = [opening, production, returnReceive, over].map(round);
-    const outflowBeforeClosing = [sale, ...deliveries, assorted, nc, reject, shortRow].map(round);
-
     const sumRows = (label: string, rows: Row[]): Row => {
       const out = mkRow(label);
       for (const r of rows) {
@@ -3429,20 +3450,43 @@ export class ReportsService {
       }
       return round(out);
     };
+    const negate = (r: Row, label: string): Row =>
+      round({ label, qty: Object.fromEntries(Object.entries(r.qty).map(([u, v]) => [u, -v])), amount: -r.amount });
 
+    // ── The two blocks ──
+    // In: what the branch started with plus everything that came in.
+    // Out: everything that left, plus what it is still holding.
+    //
+    // `Short` is a row here rather than only in the memo box the legacy pad puts
+    // it in: it is a real stock movement, and left out of the arithmetic the two
+    // blocks would stop totalling to the same figure the moment it was non-zero.
+    //
+    // `Over` is an excess FOUND in stock, so it reduces what must have gone out
+    // — it sits in the outflow block as a deduction rather than in the inflow
+    // block. That placement is deliberate: it makes this sheet's "Total
+    // Production" equal the Production & Delivery sheet's "Total Stock"
+    // (opening + production + return), so the two cross-check line for line.
+    const inflow = [opening, production, returnReceive].map(round);
     const inflowTotal = sumRows('Total Production', inflow);
-    // Closing's QUANTITY is the real stock figure computed per item above. Its
-    // AMOUNT is the residual value — what is left of the money that came in
-    // after what went out is taken at its own value. It has to be: sales carry
-    // their actual (discounted) money while stock is valued at the list rate, so
-    // no independent valuation of closing stock could make the two blocks agree.
-    // Treat it as the balancing figure it is, not as a valuation of the shelf.
+
+    const overOut = negate(over, 'Over (found in stock)');
     const closingRow = round(closing);
-    closingRow.amount = r2signed(
-      inflowTotal.amount - outflowBeforeClosing.reduce((s, r) => s + r.amount, 0),
+    const outflowRows = [sale, ...deliveries, assorted, nc, reject, shortRow].map(round);
+
+    // Everything on this sheet is valued at the VAT-inclusive list rate except
+    // two things: sales carry the money actually received (net of discount), and
+    // production carries the rate each entry recorded. So goods can leave worth
+    // more at list than the money that came back, and the blocks would not
+    // balance. That difference is a real figure — mostly sales discount — and it
+    // gets its own row instead of being buried in Closing Balance, where it
+    // would overstate the value of stock still on the shelf and put this sheet
+    // at odds with Production & Delivery.
+    const variance = mkRow('Discount & Rate Variance');
+    variance.amount = r2signed(
+      inflowTotal.amount - [...outflowRows, overOut, closingRow].reduce((s, r) => s + r.amount, 0),
     );
 
-    const outflow = [...outflowBeforeClosing, closingRow];
+    const outflow = [...outflowRows, overOut, round(variance), closingRow];
     const outflowTotal = sumRows('Total', outflow);
 
     return {
