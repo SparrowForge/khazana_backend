@@ -802,46 +802,23 @@ export class ReportsService {
     return { qty, amount };
   }
 
-  async getProductionDeliveryReport(fromDate: string, toDate: string, branchId: string) {
-    // Factory-only. The sidebar and the route guard hide the page; this closes
-    // the direct-API path, exactly as ProductionService#assertFactoryBranch does.
-    const sessionBranch = branchId
-      ? await this.prisma.branch
-          .findUnique({ where: { id: branchId }, select: { branchCode: true, branchName: true } })
-          .catch(() => null)
-      : null;
-    if (!isFactoryBranch(sessionBranch)) {
-      throw new ForbiddenException('The Production & Delivery report is available only at the Factory branch');
-    }
-
-    const from = new Date(fromDate);
-    if (isNaN(from.getTime())) throw new BadRequestException('Valid `fromDate` is required');
-    const to = toDate ? new Date(toDate) : new Date(fromDate);
-    if (isNaN(to.getTime())) throw new BadRequestException('Valid `toDate` is required');
-    const toExclusive = new Date(to);
-    toExclusive.setDate(toExclusive.getDate() + 1);
-    const day = from;
-    const before = { lt: from };
-    const during = { gte: from, lt: toExclusive };
-
-    const items = await this.prisma.item_Information.findMany({
-      orderBy: { itmName: 'asc' },
-      select: {
-        id: true, itmCode: true, itmName: true, itmUOM: true,
-        prices: {
-          where: { priceIsActive: 1 },
-          orderBy: { priceFromDate: 'desc' },
-          select: { priceListPrice: true, priceVatPercent: true, priceFromDate: true, priceToDate: true },
-        },
-      },
-    });
-    const rateOf = (i: (typeof items)[number]) => {
-      const p =
-        i.prices.find((pr) => (!pr.priceFromDate || pr.priceFromDate <= day) && (!pr.priceToDate || pr.priceToDate >= day)) ??
-        i.prices[0];
-      return r2signed(num(p?.priceListPrice) * (1 + num(p?.priceVatPercent) / 100));
-    };
-
+  /**
+   * Every stock ledger for one branch, summed per item, over the two windows a
+   * stock statement needs: `before` (everything prior to the range, which gives
+   * the opening balance) and `during` (the range itself).
+   *
+   * Shared by `getProductionDeliveryReport` and `getBusinessAnalysisReport` so
+   * the two can never drift apart — they are the same statement at different
+   * granularity (per item vs per unit of measure), and a figure that disagreed
+   * between them would make both untrustworthy. `branchStockOnHand` in
+   * common/helpers/stock.helper.ts runs the same ledgers and signs as an
+   * all-time balance; if one of the three gains a ledger, so must the others.
+   *
+   *   in   = Production + Item_Receive + ItemReject.Excess
+   *   out  = Item_Issue + all four sale ledgers + t_NCDet
+   *        + ItemReject.Assort + .Reject + .Short
+   */
+  private async factoryLedgerWindows(branchId: string, before: object, during: object) {
     const prodWhere = (w: object) => ({ branchId, isActive: 1, productionDate: w });
     const recvWhere = (w: object) => ({ receiveBranchID: branchId, isActive: 1, purDate: w });
     const issueWhere = (w: object) => ({ issueBranchId: branchId, isActive: 1, issueDate: w });
@@ -935,6 +912,63 @@ export class ReportsService {
     const rejectB = rej(rejBefore, 'reject'), rejectD = rej(rejDuring, 'reject');
     const shortB = rej(rejBefore, 'short'), shortD = rej(rejDuring, 'short');
     const excessB = rej(rejBefore, 'excess'), excessD = rej(rejDuring, 'excess');
+
+    return {
+      prodB, prodD, recvB, recvD, issB, issD,
+      salB, salD, salAmtD, ncB, ncD,
+      assortB, assortD, rejectB, rejectD, shortB, shortD, excessB, excessD,
+      prodValue,
+    };
+  }
+
+  async getProductionDeliveryReport(fromDate: string, toDate: string, branchId: string) {
+    // Factory-only. The sidebar and the route guard hide the page; this closes
+    // the direct-API path, exactly as ProductionService#assertFactoryBranch does.
+    const sessionBranch = branchId
+      ? await this.prisma.branch
+          .findUnique({ where: { id: branchId }, select: { branchCode: true, branchName: true } })
+          .catch(() => null)
+      : null;
+    if (!isFactoryBranch(sessionBranch)) {
+      throw new ForbiddenException('The Production & Delivery report is available only at the Factory branch');
+    }
+
+    const from = new Date(fromDate);
+    if (isNaN(from.getTime())) throw new BadRequestException('Valid `fromDate` is required');
+    const to = toDate ? new Date(toDate) : new Date(fromDate);
+    if (isNaN(to.getTime())) throw new BadRequestException('Valid `toDate` is required');
+    const toExclusive = new Date(to);
+    toExclusive.setDate(toExclusive.getDate() + 1);
+    const day = from;
+    const before = { lt: from };
+    const during = { gte: from, lt: toExclusive };
+
+    const items = await this.prisma.item_Information.findMany({
+      orderBy: { itmName: 'asc' },
+      select: {
+        id: true, itmCode: true, itmName: true, itmUOM: true,
+        prices: {
+          where: { priceIsActive: 1 },
+          orderBy: { priceFromDate: 'desc' },
+          select: { priceListPrice: true, priceVatPercent: true, priceFromDate: true, priceToDate: true },
+        },
+      },
+    });
+    const rateOf = (i: (typeof items)[number]) => {
+      const p =
+        i.prices.find((pr) => (!pr.priceFromDate || pr.priceFromDate <= day) && (!pr.priceToDate || pr.priceToDate >= day)) ??
+        i.prices[0];
+      return r2signed(num(p?.priceListPrice) * (1 + num(p?.priceVatPercent) / 100));
+    };
+
+    // Every ledger, per item, for the two windows — shared with the Business
+    // Analysis statement so the two reports can never disagree.
+    const {
+      prodB, prodD, recvB, recvD, issB, issD,
+      salB, salD, salAmtD, ncB, ncD,
+      assortB, assortD, rejectB, rejectD, shortB, shortD, excessB, excessD,
+      prodValue,
+    } = await this.factoryLedgerWindows(branchId, before, during);
 
     const g = (m: Map<string, number>, id: string) => m.get(id) ?? 0;
 
@@ -2377,10 +2411,11 @@ export class ReportsService {
   // The legacy sheet runs a whole calendar month (columns 1..31), but any range
   // works — the columns follow whatever was asked for.
 
-  /** A range wider than this makes an unreadable sheet (and a very wide print),
-   *  so it is refused rather than silently truncated. A quarter is already well
-   *  past the monthly run the report is designed around. */
-  private static readonly MAX_DELIVERY_DAYS = 92;
+  /** Day cap shared by the day-pivot sheets (Branchwise Delivery, Monthly
+   *  Production): a range wider than this makes an unreadable sheet (and a very
+   *  wide print), so it is refused rather than silently truncated. A quarter is
+   *  already well past the monthly run they are designed around. */
+  private static readonly MAX_PIVOT_DAYS = 92;
 
   async getBranchwiseDeliveryReport(query: {
     fromDate?: string;
@@ -2415,9 +2450,9 @@ export class ReportsService {
     const dayKey = (d: Date) => d.toISOString().split('T')[0];
     const days: string[] = [];
     for (let d = new Date(from); d <= to; d.setUTCDate(d.getUTCDate() + 1)) days.push(dayKey(d));
-    if (days.length > ReportsService.MAX_DELIVERY_DAYS) {
+    if (days.length > ReportsService.MAX_PIVOT_DAYS) {
       throw new BadRequestException(
-        `The date range is too wide — at most ${ReportsService.MAX_DELIVERY_DAYS} days (one column per day) can be printed`,
+        `The date range is too wide — at most ${ReportsService.MAX_PIVOT_DAYS} days (one column per day) can be printed`,
       );
     }
     // Exclusive upper bound, so the whole of `toDate` is included regardless of
@@ -2938,6 +2973,506 @@ export class ReportsService {
         /** Same basis, from the 1st of the end date's month through `toDate`. */
         mtdSales,
       },
+    };
+  }
+
+  // ── Monthly Production Report ─────────────────────────────────
+  // A day-pivot of the Production ledger: every item down the side, one column
+  // per day of the range, the quantity produced in the cell.
+  //
+  // The one structural difference from its Branchwise Delivery sibling is that
+  // the sheet is broken into a BLOCK PER UNIT OF MEASURE, each carrying its own
+  // subtotal row. A KG total and a Pcs total are different quantities, and a
+  // single figure adding 7,888 KG to 2,823 Pcs states nothing true — so the
+  // per-UOM subtotal is the number the factory reads, and the grand total row
+  // (which the legacy sheet prints) is labelled as the cross-unit sum it is.
+
+  async getMonthlyProductionReport(query: {
+    fromDate?: string;
+    toDate?: string;
+    /** Producing branch. Omitted = every branch — the "All Branch" option. */
+    branchId?: string;
+    sessionBranchId?: string;
+  }) {
+    // Factory-only, like every other leaf of the Factory Report menu. The
+    // *session* branch is what's checked; the branch filter stays free, so the
+    // factory can run the sheet for any branch or for all of them.
+    const sessionBranch = query.sessionBranchId
+      ? await this.prisma.branch
+          .findUnique({ where: { id: query.sessionBranchId }, select: { branchCode: true, branchName: true } })
+          .catch(() => null)
+      : null;
+    if (!isFactoryBranch(sessionBranch)) {
+      throw new ForbiddenException('The Monthly Production Report is available only at the Factory branch');
+    }
+
+    const from = new Date(query.fromDate ?? '');
+    if (isNaN(from.getTime())) throw new BadRequestException('Valid `fromDate` is required');
+    const to = new Date(query.toDate || (query.fromDate ?? ''));
+    if (isNaN(to.getTime())) throw new BadRequestException('Valid `toDate` is required');
+    if (to < from) throw new BadRequestException('`toDate` must not be earlier than `fromDate`');
+
+    // Day buckets in UTC — the dates arrive as bare `YYYY-MM-DD` (parsed as UTC
+    // midnight) and the sheet prints them in UTC, so bucketing in UTC keeps the
+    // column a row lands in the same one the frontend labels it with.
+    const dayKey = (d: Date) => d.toISOString().split('T')[0];
+    const days: string[] = [];
+    for (let d = new Date(from); d <= to; d.setUTCDate(d.getUTCDate() + 1)) days.push(dayKey(d));
+    if (days.length > ReportsService.MAX_PIVOT_DAYS) {
+      throw new BadRequestException(
+        `The date range is too wide — at most ${ReportsService.MAX_PIVOT_DAYS} days (one column per day) can be printed`,
+      );
+    }
+    // Exclusive upper bound, so the whole of `toDate` is included regardless of
+    // the time-of-day stored on the entry.
+    const toExclusive = new Date(to);
+    toExclusive.setUTCDate(toExclusive.getUTCDate() + 1);
+
+    // Rows mirrored in from a Stock Issue (those carrying `issueSerialNo`) are
+    // production too — the factory made those goods — so they are deliberately
+    // NOT filtered out here.
+    const entries = await this.prisma.production.findMany({
+      where: {
+        isActive: 1,
+        productionDate: { gte: from, lt: toExclusive },
+        ...(query.branchId ? { branchId: query.branchId } : {}),
+      },
+      select: {
+        itemId: true,
+        qty: true,
+        rate: true,
+        productionDate: true,
+        item: { select: { itmCode: true, itmName: true, itmUOM: true } },
+      },
+    });
+
+    type Row = {
+      sl: number;
+      itemCode: string;
+      itemName: string;
+      uom: string;
+      rate: number;
+      /** True when the item was produced at more than one rate during the range,
+       *  which makes `rate` an average that need not multiply out to `amount`
+       *  exactly. The sheet marks these so the row cannot be read as an
+       *  arithmetic error. */
+      rateIsAverage: boolean;
+      /** Qty per day, keyed by the same `YYYY-MM-DD` strings as `days`. Days the
+       *  item wasn't produced on are simply absent, not zero. */
+      qtyByDate: Record<string, number>;
+      totalQty: number;
+      amount: number;
+    };
+
+    const acc = new Map<string, Omit<Row, 'sl' | 'rate' | 'rateIsAverage'>>();
+    /** The distinct rates each item was produced at — one means the printed Rate
+     *  is exact, more than one means it can only ever be an average. */
+    const ratesSeen = new Map<string, Set<number>>();
+    for (const e of entries) {
+      if (!e.itemId) continue;
+      const row =
+        acc.get(e.itemId) ??
+        {
+          itemCode: e.item?.itmCode ?? '',
+          itemName: e.item?.itmName ?? '',
+          uom: e.item?.itmUOM ?? '',
+          qtyByDate: {} as Record<string, number>,
+          totalQty: 0,
+          amount: 0,
+        };
+      const qty = num(e.qty);
+      const key = e.productionDate ? dayKey(e.productionDate) : '';
+      if (key) row.qtyByDate[key] = r2signed((row.qtyByDate[key] ?? 0) + qty);
+      row.totalQty += qty;
+      // Money is the sum of qty x rate off each entry, so an item produced at
+      // different rates during the range is still valued at what each batch cost.
+      //
+      // No VAT gross-up: `Production.rate` is ALREADY the VAT-inclusive unit
+      // price (ProductionService derives it from the ex-VAT list price on the
+      // way in), unlike Item_Issue.unitPrice which the Branchwise Delivery sheet
+      // has to gross up itself.
+      row.amount += qty * num(e.rate);
+      acc.set(e.itemId, row);
+      const seen = ratesSeen.get(e.itemId) ?? new Set<number>();
+      seen.add(num(e.rate));
+      ratesSeen.set(e.itemId, seen);
+    }
+
+    /** Blank UOM sorts last — an item with no unit set is an exception, and it
+     *  should not head the sheet. Otherwise plain alphabetical, which is the
+     *  order the legacy sheet prints its blocks in (KG, Packets, Pcs). */
+    const uomRank = (u: string) => (u.trim() ? `0${u.toLowerCase()}` : '1');
+
+    const sorted = [...acc.entries()].sort(
+      ([, a], [, b]) => uomRank(a.uom).localeCompare(uomRank(b.uom)) || a.itemName.localeCompare(b.itemName),
+    );
+
+    // SL runs unbroken across the blocks (1…43 KG, 44…45 Packets, 46…58 Pcs on
+    // the legacy sheet), so it is stamped after the full sort, not per group.
+    const rows: Row[] = sorted.map(([itemId, r], idx) => ({
+      ...r,
+      sl: idx + 1,
+      totalQty: r2signed(r.totalQty),
+      amount: r2signed(r.amount),
+      // The printed "Rate" is the effective VAT-inclusive unit price, derived
+      // from the money rather than read off one entry. With a single rate that
+      // is exact and Rate x TotalQty ties back to Amount. Where an item was
+      // produced at several rates it is a weighted average, and rounding it to
+      // the 2dp the sheet prints can leave it a paisa or two short of Amount —
+      // Amount is the real money (it feeds every subtotal), so Rate is the
+      // column that gives, and `rateIsAverage` marks the row as approximate
+      // rather than leaving it looking like bad arithmetic.
+      rate: r.totalQty !== 0 ? r2signed(r.amount / r.totalQty) : 0,
+      rateIsAverage: (ratesSeen.get(itemId)?.size ?? 0) > 1,
+    }));
+
+    /** Column and grand totals over an arbitrary set of rows — used for both a
+     *  UOM block's subtotal and the sheet's grand total, so the two can never
+     *  be computed by two different rules and disagree. */
+    const totalsOf = (rs: Row[]) => ({
+      qtyByDate: days.reduce<Record<string, number>>((m, d) => {
+        const t = rs.reduce((s, r) => s + (r.qtyByDate[d] ?? 0), 0);
+        if (t !== 0) m[d] = r2signed(t);
+        return m;
+      }, {}),
+      totalQty: r2signed(rs.reduce((s, r) => s + r.totalQty, 0)),
+      amount: r2signed(rs.reduce((s, r) => s + r.amount, 0)),
+    });
+
+    // One block per unit of measure, in the order the sort above established.
+    const groups: { uom: string; items: Row[]; totals: ReturnType<typeof totalsOf> }[] = [];
+    for (const r of rows) {
+      const last = groups[groups.length - 1];
+      if (last && last.uom === r.uom) last.items.push(r);
+      else groups.push({ uom: r.uom, items: [r], totals: totalsOf([]) });
+    }
+    for (const g of groups) g.totals = totalsOf(g.items);
+
+    const [branch, company] = await Promise.all([
+      query.branchId
+        ? this.prisma.branch.findUnique({
+            where: { id: query.branchId },
+            select: { branchName: true, address: true, vatNo: true },
+          })
+        : null,
+      this.prisma.setup_System.findFirst({ select: { companyName: true, companyAddress: true } }),
+    ]);
+
+    return {
+      fromDate: dayKey(from),
+      toDate: dayKey(to),
+      days,
+      company: {
+        name: company?.companyName ?? 'Khazana Mithai',
+        address: company?.companyAddress ?? '',
+      },
+      // 'All Branches' when no branch was picked — the letterhead then falls
+      // back to the company address, since no one branch produced the sheet.
+      branch: query.branchId
+        ? {
+            id: query.branchId,
+            name: branch?.branchName ?? '',
+            address: branch?.address ?? '',
+            vatNo: branch?.vatNo ?? '',
+          }
+        : { id: '', name: 'All Branches', address: '', vatNo: '' },
+      groups,
+      /** Across every block. `amount` is the figure that matters; `totalQty`
+       *  adds quantities in different units and is printed only because the
+       *  legacy sheet prints it. */
+      totals: totalsOf(rows),
+    };
+  }
+
+  // ── Business Analysis Report ──────────────────────────────────
+  // A stock statement for one branch over a date range: what the branch started
+  // with and took in down the top block, what it sold, delivered, lost and is
+  // left holding down the bottom block, with the two blocks totalling to the
+  // same figure. Quantities are carried in a column per unit of measure (the
+  // legacy pad prints KG and Pcs) so units are never added together.
+  //
+  // Same ledgers and signs as the Production & Delivery report — they share
+  // `factoryLedgerWindows` — so this is that report re-cut per unit of measure
+  // and per delivery destination rather than per item.
+
+  /** The Main Store (raw materials) block of the legacy pad. Nothing in this
+   *  system records raw purchases, indents or a raw-material store — there is no
+   *  table behind any of it — so the block prints its legacy columns as zeros,
+   *  exactly as the sample sheet does, and says so via `available: false`. */
+  private static readonly MAIN_STORE_COLUMNS = ['Kg', 'Pcs', 'Lt', 'Packet'];
+  private static readonly MAIN_STORE_ROWS = [
+    'Opening Balance', 'Raw Purchase', 'Total', 'Indent', 'Short/Over', 'Closing Balance',
+  ];
+
+  async getBusinessAnalysisReport(query: {
+    fromDate?: string;
+    toDate?: string;
+    /** The branch the statement is for; defaults to the session branch. */
+    branchId?: string;
+    sessionBranchId?: string;
+  }) {
+    // Factory-only, like every other leaf of the Factory Report menu.
+    const sessionBranch = query.sessionBranchId
+      ? await this.prisma.branch
+          .findUnique({ where: { id: query.sessionBranchId }, select: { branchCode: true, branchName: true } })
+          .catch(() => null)
+      : null;
+    if (!isFactoryBranch(sessionBranch)) {
+      throw new ForbiddenException('The Business Analysis Report is available only at the Factory branch');
+    }
+
+    const from = new Date(query.fromDate ?? '');
+    if (isNaN(from.getTime())) throw new BadRequestException('Valid `fromDate` is required');
+    const to = new Date(query.toDate || (query.fromDate ?? ''));
+    if (isNaN(to.getTime())) throw new BadRequestException('Valid `toDate` is required');
+    if (to < from) throw new BadRequestException('`toDate` must not be earlier than `fromDate`');
+
+    // A stock statement is a roll-forward for ONE branch — there is no "all
+    // branches" option, because Inventory holds a single global balance and a
+    // transfer between two branches would net to nothing in a combined figure
+    // while still printing on both delivery lines.
+    const branchId = query.branchId || query.sessionBranchId;
+    if (!branchId) throw new BadRequestException('`branchId` is required');
+
+    const toExclusive = new Date(to);
+    toExclusive.setUTCDate(toExclusive.getUTCDate() + 1);
+    const before = { lt: from };
+    const during = { gte: from, lt: toExclusive };
+
+    const items = await this.prisma.item_Information.findMany({
+      orderBy: { itmName: 'asc' },
+      select: {
+        id: true, itmName: true, itmUOM: true,
+        prices: {
+          where: { priceIsActive: 1 },
+          orderBy: { priceFromDate: 'desc' },
+          select: { priceListPrice: true, priceVatPercent: true, priceFromDate: true, priceToDate: true },
+        },
+      },
+    });
+    /** VAT-INCLUSIVE list rate on the range's first day — the basis every
+     *  non-sale figure on this sheet is valued at, matching Production &
+     *  Delivery so the two value the same movement identically. */
+    const rateOf = (i: (typeof items)[number]) => {
+      const p =
+        i.prices.find((pr) => (!pr.priceFromDate || pr.priceFromDate <= from) && (!pr.priceToDate || pr.priceToDate >= from)) ??
+        i.prices[0];
+      return r2signed(num(p?.priceListPrice) * (1 + num(p?.priceVatPercent) / 100));
+    };
+
+    const [ledgers, issueByBranch, branches, company, branch] = await Promise.all([
+      this.factoryLedgerWindows(branchId, before, during),
+      // The delivery split the per-item report doesn't need: the same issues it
+      // counts as one `issD` total, broken out by who received them.
+      this.prisma.item_Issue.groupBy({
+        by: ['receiveBranchId', 'itemId'],
+        where: { issueBranchId: branchId, isActive: 1, issueDate: during },
+        _sum: { qty: true },
+      }),
+      // Display order for the delivery rows. Branch.SortingNo drives branch
+      // order everywhere on reports; NULL sorts last.
+      this.prisma.branch.findMany({ select: { id: true, branchName: true, sortingNo: true } }),
+      this.prisma.setup_System.findFirst({ select: { companyName: true, companyAddress: true } }),
+      this.prisma.branch.findUnique({
+        where: { id: branchId },
+        select: { branchName: true, address: true, vatNo: true },
+      }),
+    ]);
+
+    const {
+      prodB, prodD, recvB, recvD, issB, issD,
+      salB, salD, salAmtD, ncB, ncD,
+      assortB, assortD, rejectB, rejectD, shortB, shortD, excessB, excessD,
+      prodValue,
+    } = ledgers;
+    const g = (m: Map<string, number>, id: string) => m.get(id) ?? 0;
+
+    /** One printed line: a quantity per unit of measure, and one money figure. */
+    type Row = { label: string; qty: Record<string, number>; amount: number };
+    const mkRow = (label: string): Row => ({ label, qty: {}, amount: 0 });
+    /** Adds an item's quantity into the row's column for that item's unit, and
+     *  its value into the row's single money figure. Quantities NEVER cross
+     *  between units; only the money is ever added across them. */
+    const put = (row: Row, uom: string, qty: number, amount: number) => {
+      if (qty) row.qty[uom] = (row.qty[uom] ?? 0) + qty;
+      row.amount += amount;
+    };
+
+    const opening = mkRow('Opening Balance');
+    const production = mkRow('Production');
+    const returnReceive = mkRow('Return Receive');
+    const over = mkRow('Over');
+    const sale = mkRow('Sale');
+    const assorted = mkRow('Delivery To ASSORTED');
+    const nc = mkRow('Delivery To N.C');
+    const reject = mkRow('Reject');
+    const shortRow = mkRow('Short');
+    const closing = mkRow('Closing Balance');
+
+    /** Delivery rows keyed by receiving branch, filled per item below. */
+    const deliveryByBranch = new Map<string, Row>();
+    const issueQtyByBranch = new Map<string, Map<string, number>>();
+    for (const r of issueByBranch) {
+      if (!r.itemId) continue;
+      const perItem = issueQtyByBranch.get(r.receiveBranchId) ?? new Map<string, number>();
+      perItem.set(r.itemId, (perItem.get(r.itemId) ?? 0) + num(r._sum.qty));
+      issueQtyByBranch.set(r.receiveBranchId, perItem);
+    }
+    const branchName = new Map(branches.map((b) => [b.id, b.branchName ?? '']));
+    const branchOrder = new Map(
+      [...branches]
+        .sort((a, b) => {
+          // NULL sorts last, then by name so the order is stable.
+          const sa = a.sortingNo ?? Number.MAX_SAFE_INTEGER;
+          const sb = b.sortingNo ?? Number.MAX_SAFE_INTEGER;
+          return sa - sb || (a.branchName ?? '').localeCompare(b.branchName ?? '');
+        })
+        .map((b, i) => [b.id, i] as const),
+    );
+
+    /** Units that actually carry a figure, so the sheet never prints a column
+     *  of nothing — nor silently drops one that does have movement. */
+    const uomsSeen = new Set<string>();
+
+    for (const it of items) {
+      const id = it.id;
+      const uom = (it.itmUOM ?? '').trim() || '—';
+      const rate = rateOf(it);
+      const tk = (qty: number) => r2signed(qty * rate);
+
+      // Opening = signed roll-forward of every movement dated BEFORE the range.
+      // Identical formula to Production & Delivery's opening balance.
+      const openingQty = r2signed(
+        g(prodB, id) + g(recvB, id) + g(excessB, id)
+        - (g(issB, id) + g(salB, id) + g(assortB, id) + g(ncB, id) + g(rejectB, id) + g(shortB, id)),
+      );
+      const productionQty = g(prodD, id);
+      const returnQty = g(recvD, id);
+      const overQty = g(excessD, id);
+      const salesQty = g(salD, id);
+      const issueQty = g(issD, id);
+      const ncQty = g(ncD, id);
+      const assortQty = g(assortD, id);
+      const rejectQty = g(rejectD, id);
+      const shortQty = g(shortD, id);
+
+      // Closing is the real stock figure, not a plug: in minus out, the same
+      // formula the per-item report and the stock guard both use.
+      const closingQty = r2signed(
+        openingQty + productionQty + returnQty + overQty
+        - (salesQty + issueQty + ncQty + assortQty + rejectQty + shortQty),
+      );
+
+      if (
+        !openingQty && !productionQty && !returnQty && !overQty && !salesQty
+        && !issueQty && !ncQty && !assortQty && !rejectQty && !shortQty && !closingQty
+      ) continue;
+      uomsSeen.add(uom);
+
+      put(opening, uom, openingQty, tk(openingQty));
+      // Production is valued at the rate each entry recorded (already
+      // VAT-inclusive); the list rate is only a fallback for an item with no
+      // production rows in range.
+      put(production, uom, productionQty, prodValue.has(id) ? r2signed(prodValue.get(id)!) : tk(productionQty));
+      put(returnReceive, uom, returnQty, tk(returnQty));
+      put(over, uom, overQty, tk(overQty));
+      // Sales carry their real money — all four sale ledgers, net of discount.
+      put(sale, uom, salesQty, g(salAmtD, id));
+      put(assorted, uom, assortQty, tk(assortQty));
+      put(nc, uom, ncQty, tk(ncQty));
+      put(reject, uom, rejectQty, tk(rejectQty));
+      put(shortRow, uom, shortQty, tk(shortQty));
+      put(closing, uom, closingQty, 0); // amount filled in below, as the residual
+
+      for (const [rbId, perItem] of issueQtyByBranch) {
+        const qty = perItem.get(id) ?? 0;
+        if (!qty) continue;
+        const row = deliveryByBranch.get(rbId) ?? mkRow(`Delivery To ${branchName.get(rbId) || 'Unknown Branch'}`);
+        put(row, uom, qty, tk(qty));
+        deliveryByBranch.set(rbId, row);
+      }
+    }
+
+    const uoms = [...uomsSeen].sort((a, b) =>
+      // Blank/unknown unit last; otherwise alphabetical, which is the order the
+      // legacy pad prints its columns in (KG before Pcs).
+      (a === '—' ? '1' : `0${a.toLowerCase()}`).localeCompare(b === '—' ? '1' : `0${b.toLowerCase()}`),
+    );
+
+    const deliveries = [...deliveryByBranch.entries()]
+      .sort(([a], [b]) => (branchOrder.get(a) ?? 0) - (branchOrder.get(b) ?? 0))
+      .map(([, row]) => row);
+
+    const round = (row: Row): Row => ({
+      label: row.label,
+      qty: Object.fromEntries(Object.entries(row.qty).map(([k, v]) => [k, r2signed(v)])),
+      amount: r2signed(row.amount),
+    });
+
+    // ── The two blocks ──
+    // In: what the branch started with plus everything that came in.
+    // Out: everything that left, plus what it is still holding.
+    //
+    // `Over` and `Short` are rows here rather than the memo box the legacy pad
+    // puts them in: they are real stock movements, and left out of the
+    // arithmetic the two blocks would stop totalling to the same figure the
+    // moment either was non-zero. The memo box still prints them, captioned as
+    // a restatement so nothing reads as counted twice.
+    const inflow = [opening, production, returnReceive, over].map(round);
+    const outflowBeforeClosing = [sale, ...deliveries, assorted, nc, reject, shortRow].map(round);
+
+    const sumRows = (label: string, rows: Row[]): Row => {
+      const out = mkRow(label);
+      for (const r of rows) {
+        for (const [u, v] of Object.entries(r.qty)) out.qty[u] = (out.qty[u] ?? 0) + v;
+        out.amount += r.amount;
+      }
+      return round(out);
+    };
+
+    const inflowTotal = sumRows('Total Production', inflow);
+    // Closing's QUANTITY is the real stock figure computed per item above. Its
+    // AMOUNT is the residual value — what is left of the money that came in
+    // after what went out is taken at its own value. It has to be: sales carry
+    // their actual (discounted) money while stock is valued at the list rate, so
+    // no independent valuation of closing stock could make the two blocks agree.
+    // Treat it as the balancing figure it is, not as a valuation of the shelf.
+    const closingRow = round(closing);
+    closingRow.amount = r2signed(
+      inflowTotal.amount - outflowBeforeClosing.reduce((s, r) => s + r.amount, 0),
+    );
+
+    const outflow = [...outflowBeforeClosing, closingRow];
+    const outflowTotal = sumRows('Total', outflow);
+
+    return {
+      fromDate: from.toISOString().split('T')[0],
+      toDate: to.toISOString().split('T')[0],
+      company: {
+        name: company?.companyName ?? 'Khazana Mithai',
+        address: company?.companyAddress ?? '',
+      },
+      branch: {
+        id: branchId,
+        name: branch?.branchName ?? '',
+        address: branch?.address ?? '',
+        vatNo: branch?.vatNo ?? '',
+      },
+      /** Quantity columns, in print order — one per unit of measure in play. */
+      uoms,
+      mainStore: {
+        available: false,
+        columns: ReportsService.MAIN_STORE_COLUMNS,
+        rows: ReportsService.MAIN_STORE_ROWS.map((label) => ({
+          label,
+          qty: Object.fromEntries(ReportsService.MAIN_STORE_COLUMNS.map((c) => [c, 0])),
+          amount: 0,
+        })),
+      },
+      finishGoods: { inflow, inflowTotal, outflow, outflowTotal },
+      /** The pad's "Comments: (Factory)" box. Restates the Short and Over rows
+       *  that are already counted in the blocks above. */
+      comments: { short: round(shortRow), over: round(over) },
     };
   }
 }

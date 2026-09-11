@@ -73,6 +73,8 @@ async function main() {
     { menuName: 'Factory Report', controlName: 'FactoryReport', order: 13, parentMenu: null, module: 'Inventory' },
     { menuName: 'Production & Delivery Report', controlName: 'ProductionDeliveryReport', order: 1, parentMenu: 'FactoryReport', module: 'Inventory' },
     { menuName: 'Branchwise Delivery Report', controlName: 'BranchwiseDeliveryReport', order: 2, parentMenu: 'FactoryReport', module: 'Inventory' },
+    { menuName: 'Monthly Production Report', controlName: 'MonthlyProductionReport', order: 7, parentMenu: 'FactoryReport', module: 'Inventory' },
+    { menuName: 'Business Analysis Report', controlName: 'BusinessAnalysisReport', order: 8, parentMenu: 'FactoryReport', module: 'Inventory' },
     { menuName: 'Discount Log Report', controlName: 'DiscountLogReport', order: 3, parentMenu: 'FactoryReport', module: 'Inventory' },
     { menuName: 'Demand Report', controlName: 'DemandReport', order: 4, parentMenu: 'FactoryReport', module: 'Inventory' },
     { menuName: 'Sales History Report', controlName: 'SalesHistoryReport', order: 5, parentMenu: 'FactoryReport', module: null },

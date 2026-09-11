@@ -6613,6 +6613,108 @@
         ]
       }
     },
+    "/reports/monthly-production": {
+      "get": {
+        "operationId": "ReportsController_getMonthlyProductionReport",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "required": true,
+            "in": "query",
+            "description": "Range start date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end date, inclusive (ISO 8601); defaults to fromDate",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Producing branch — omit for all branches",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "One block per unit of measure, each with per-item day columns and its own subtotal"
+          },
+          "403": {
+            "description": "Session branch is not the Factory"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Factory-only Monthly Production Report: per-item, per-day production quantities, blocked by unit of measure",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
+    "/reports/business-analysis": {
+      "get": {
+        "operationId": "ReportsController_getBusinessAnalysisReport",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "required": true,
+            "in": "query",
+            "description": "Range start date (ISO 8601)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "required": false,
+            "in": "query",
+            "description": "Range end date, inclusive (ISO 8601); defaults to fromDate",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "branchId",
+            "required": false,
+            "in": "query",
+            "description": "Branch the statement is for; defaults to the session branch. No all-branches option — a roll-forward is per branch",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Opening/production/return inflow and sale/delivery/closing outflow blocks, which total to the same figure"
+          },
+          "403": {
+            "description": "Session branch is not the Factory"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Factory-only Business Analysis Report: a stock statement for one branch, quantities columned per unit of measure",
+        "tags": [
+          "Reports"
+        ]
+      }
+    },
     "/reports/demand": {
       "get": {
         "operationId": "ReportsController_getDemandReport",

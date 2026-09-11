@@ -360,6 +360,51 @@ export class ReportsController {
     });
   }
 
+  @Get('monthly-production')
+  @ApiOperation({ summary: 'Factory-only Monthly Production Report: per-item, per-day production quantities, blocked by unit of measure' })
+  @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
+  @ApiQuery({ name: 'toDate', required: false, description: 'Range end date, inclusive (ISO 8601); defaults to fromDate' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Producing branch — omit for all branches' })
+  @ApiResponse({ status: 200, description: 'One block per unit of measure, each with per-item day columns and its own subtotal' })
+  @ApiResponse({ status: 403, description: 'Session branch is not the Factory' })
+  getMonthlyProductionReport(
+    @Query('fromDate') fromDate: string,
+    @Query('toDate') toDate: string,
+    @CurrentUser('branchId') sessionBranchId: string,
+    @Query('branchId') branchId?: string,
+  ) {
+    return this.reportsService.getMonthlyProductionReport({
+      fromDate,
+      toDate: toDate || fromDate,
+      // Deliberately NOT defaulted to the session branch: the page seeds its own
+      // picker with the logged-in factory, so an omitted `branchId` here can
+      // only mean the user chose "All Branch".
+      branchId: branchId || undefined,
+      sessionBranchId,
+    });
+  }
+
+  @Get('business-analysis')
+  @ApiOperation({ summary: 'Factory-only Business Analysis Report: a stock statement for one branch, quantities columned per unit of measure' })
+  @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
+  @ApiQuery({ name: 'toDate', required: false, description: 'Range end date, inclusive (ISO 8601); defaults to fromDate' })
+  @ApiQuery({ name: 'branchId', required: false, description: 'Branch the statement is for; defaults to the session branch. No all-branches option — a roll-forward is per branch' })
+  @ApiResponse({ status: 200, description: 'Opening/production/return inflow and sale/delivery/closing outflow blocks, which total to the same figure' })
+  @ApiResponse({ status: 403, description: 'Session branch is not the Factory' })
+  getBusinessAnalysisReport(
+    @Query('fromDate') fromDate: string,
+    @Query('toDate') toDate: string,
+    @CurrentUser('branchId') sessionBranchId: string,
+    @Query('branchId') branchId?: string,
+  ) {
+    return this.reportsService.getBusinessAnalysisReport({
+      fromDate,
+      toDate: toDate || fromDate,
+      branchId: branchId || sessionBranchId,
+      sessionBranchId,
+    });
+  }
+
   @Get('demand')
   @ApiOperation({ summary: 'Factory-only Demand Report: every item down the side, one column per demanding branch' })
   @ApiQuery({ name: 'fromDate', required: true, description: 'Range start date (ISO 8601)' })
