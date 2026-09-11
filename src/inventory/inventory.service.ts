@@ -5,7 +5,7 @@ import { ReceiveStockDto, UpdateReceiveStockDto } from './dto/receive-stock.dto'
 import { IssueStockDto, UpdateIssueStockDto } from './dto/issue-stock.dto';
 import { BranchPaginationQueryDto, DateRangeQueryDto, dateRangeFilter } from '../common/dto';
 import { ItemQueryDto } from './dto/item-query.dto';
-import { assertStockAvailable, buildPaginationMeta, toBranchUuid, branchScope, UUID_RE } from '../common/helpers';
+import { assertStockAvailable, branchStockLevels, buildPaginationMeta, toBranchUuid, branchScope, UUID_RE } from '../common/helpers';
 import { ProductionService } from '../production/production.service';
 import type { Prisma } from '../generated/prisma';
 
@@ -50,7 +50,7 @@ export class InventoryService {
 
   // ── Current Stock ─────────────────────────────────────────────
 
-  async findAll(query: BranchPaginationQueryDto) {
+  async findAll(query: BranchPaginationQueryDto, branchId?: string) {
     const { page, limit } = query;
     const [rows, total] = await Promise.all([
       this.prisma.inventory.findMany({
@@ -60,33 +60,50 @@ export class InventoryService {
       }),
       this.prisma.inventory.count(),
     ]);
+    // Branch stock, for the same reason as the pickers above: the Stock View
+    // must not claim the branch holds what the company holds.
+    const levels = branchId ? await branchStockLevels(this.prisma, branchId) : null;
     const items = rows.map((row) => {
       const price = Number(row.item?.prices?.[0]?.priceListPrice ?? 0);
-      const qty = Number(row.quantity);
+      const qty = levels ? (levels.get(row.itemId) ?? 0) : Number(row.quantity);
       // `id` mirrors the primary key so list consumers have a stable row key —
       // the same shape getStockReport returns.
-      return { ...row, id: row.itemId, unitCost: price, totalValue: price * qty };
+      return { ...row, quantity: qty, id: row.itemId, unitCost: price, totalValue: price * qty };
     });
     return { items, meta: buildPaginationMeta(total, page, limit) };
   }
 
-  /** Every item's on-hand quantity, keyed by the item UUID the sales screens
-   *  address stock by.
+  /** Every item's on-hand quantity AT ONE BRANCH, keyed by the item UUID the
+   *  sales screens address stock by.
+   *
+   *  Branch-scoped, not the company-wide `Inventory.quantity` pool: that pool
+   *  answers "does the company have any", which an outlet's shelf stock happily
+   *  satisfies on the Factory's behalf, and it is net-zero across an internal
+   *  transfer. Showing it here is what let the Factory offer 3.25 of an item it
+   *  was actually 4 short of — the same figure the Production & Delivery report
+   *  closes at. `branchStockLevels` is the guard's own formula, so what the
+   *  operator sees is what the save will enforce.
    *
    *  Deliberately tiny: the POS terminal and the credit-sale forms re-read this
    *  on a timer so a sale booked on another till (or a factory issue, receive,
-   *  adjustment...) shows up without reloading the page, and paying for the
-   *  whole priced catalogue on every poll would be wasteful. Items with no
-   *  Inventory row are absent — the caller treats a missing id as zero. */
-  async getStockLevels(): Promise<{ itemId: string; itemCode: string; quantity: number }[]> {
-    const rows = await this.prisma.inventory.findMany({
-      select: { itemId: true, quantity: true, item: { select: { itmCode: true } } },
-    });
-    return rows.map((r) => ({
-      itemId: r.itemId,
-      itemCode: r.item.itmCode,
-      quantity: Number(r.quantity),
-    }));
+   *  adjustment...) shows up without reloading the page. Items with no movement
+   *  at the branch are absent — the caller treats a missing id as zero. */
+  async getStockLevels(branchId?: string): Promise<{ itemId: string; itemCode: string; quantity: number }[]> {
+    // No branch on the session (a service token, an old client) falls back to
+    // the company-wide pool rather than reporting every item as zero.
+    if (!branchId) {
+      const rows = await this.prisma.inventory.findMany({
+        select: { itemId: true, quantity: true, item: { select: { itmCode: true } } },
+      });
+      return rows.map((r) => ({ itemId: r.itemId, itemCode: r.item.itmCode, quantity: Number(r.quantity) }));
+    }
+    const [levels, items] = await Promise.all([
+      branchStockLevels(this.prisma, branchId),
+      this.prisma.item_Information.findMany({ select: { id: true, itmCode: true } }),
+    ]);
+    return items
+      .filter((i) => levels.has(i.id))
+      .map((i) => ({ itemId: i.id, itemCode: i.itmCode, quantity: levels.get(i.id) ?? 0 }));
   }
 
   /** Takes the item uuid, or its code for callers that still hold one. */
@@ -102,7 +119,7 @@ export class InventoryService {
 
   // ── Items ─────────────────────────────────────────────────────
 
-  async findAllItems(query: ItemQueryDto) {
+  async findAllItems(query: ItemQueryDto, branchId?: string) {
     const { page, limit, isActive, search } = query;
     const term = (search ?? '').trim();
     // `undefined` rather than `{}` when nothing is filtered, so the count query
@@ -140,11 +157,15 @@ export class InventoryService {
     // the joined Inventory row the same way, so the sale / issue / transfer forms
     // can show on-hand qty per item and refuse to over-commit it before the
     // server has to (0 when the item has never been received).
+    // `stock` is the quantity AT THE SESSION BRANCH, not the company-wide
+    // Inventory pool — the forms refuse to over-commit against this number, so
+    // it has to be the same one the save-time guard enforces.
+    const levels = branchId ? await branchStockLevels(this.prisma, branchId) : null;
     const items = rows.map((row) => ({
       ...row,
       price: Number(row.prices?.[0]?.priceListPrice ?? 0),
       vatPercentage: Number(row.prices?.[0]?.priceVatPercent ?? 0),
-      stock: Number(row.inventory?.quantity ?? 0),
+      stock: levels ? (levels.get(row.id) ?? 0) : Number(row.inventory?.quantity ?? 0),
     }));
     return { items, meta: buildPaginationMeta(total, page, limit) };
   }

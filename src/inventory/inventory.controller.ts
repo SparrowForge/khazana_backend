@@ -21,16 +21,22 @@ export class InventoryController {
   @Get()
   @ApiOperation({ summary: 'Get current stock levels' })
   @ApiResponse({ status: 200, description: 'Paginated stock summary' })
-  async findAll(@Query() query: BranchPaginationQueryDto) {
-    const { items, meta } = await this.inventoryService.findAll(query);
+  async findAll(
+    @Query() query: BranchPaginationQueryDto,
+    @CurrentUser('branchId') branchId: string,
+  ) {
+    const { items, meta } = await this.inventoryService.findAll(query, branchId);
     return paginatedResponse(items, meta, 'Inventory');
   }
 
   @Get('items')
   @ApiOperation({ summary: 'Get all items' })
   @ApiResponse({ status: 200, description: 'Paginated list of all items' })
-  async findAllItems(@Query() query: ItemQueryDto) {
-    const { items, meta } = await this.inventoryService.findAllItems(query);
+  async findAllItems(
+    @Query() query: ItemQueryDto,
+    @CurrentUser('branchId') branchId: string,
+  ) {
+    const { items, meta } = await this.inventoryService.findAllItems(query, branchId);
     return paginatedResponse(items, meta, 'Item');
   }
 
@@ -130,8 +136,8 @@ export class InventoryController {
   @Get('stock-levels')
   @ApiOperation({ summary: 'On-hand quantity of every item (compact, for live stock polling)' })
   @ApiResponse({ status: 200, description: 'Array of { itemId, itemCode, quantity }' })
-  getStockLevels() {
-    return this.inventoryService.getStockLevels();
+  getStockLevels(@CurrentUser('branchId') branchId: string) {
+    return this.inventoryService.getStockLevels(branchId);
   }
 
   @Get('stock/:item')

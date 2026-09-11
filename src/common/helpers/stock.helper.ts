@@ -61,6 +61,81 @@ function sumByItem(lines: StockLine[]): Map<string, number> {
  * LATEST closing balance. A back-dated document can still dip an intermediate
  * day negative while ending up square, which no single-balance check can see.
  */
+/**
+ * The movement UNION for one branch, optionally narrowed to a set of items.
+ *
+ * Defined once and shared by `branchStockOnHand` (a few items, inside the
+ * deducting transaction) and `branchStockLevels` (the whole catalogue, for the
+ * screens). Two copies of this query is exactly how the guard and the stock
+ * figure on screen would drift apart again.
+ */
+function branchMovementRows(
+  db: Prisma.TransactionClient,
+  branchId: string,
+  itemIds: string[] | null,
+) {
+  const branch = Prisma.sql`${branchId}::uuid`;
+  const ids = itemIds?.length ? Prisma.join(itemIds.map((id) => Prisma.sql`${id}::uuid`)) : null;
+  /** Item filter for a uuid column; empty when every item is wanted. Column
+   *  names are our own literals, never caller input. */
+  const only = (col: string) => (ids ? Prisma.sql`AND ${Prisma.raw(col)} IN (${ids})` : Prisma.empty);
+  // CSVDetail."ItemOId" is plain text, not uuid — it predates the item-code to
+  // uuid migration. Compared as text so a row still holding a loose item CODE
+  // simply doesn't match, exactly as it doesn't in the report, instead of
+  // failing the whole statement on a cast error.
+  const onlyText = (col: string) =>
+    ids ? Prisma.sql`AND ${Prisma.raw(col)} = ANY (ARRAY[${ids}]::text[])` : Prisma.empty;
+
+  return db.$queryRaw<{ item_id: string; qty: number }[]>`
+    SELECT m.item_id::text AS item_id, SUM(m.qty)::float8 AS qty
+    FROM (
+      SELECT p."ItemId" AS item_id, COALESCE(p."Qty", 0) AS qty
+        FROM "Production" p
+       WHERE p."IsActive" = 1 AND p."BranchId" = ${branch} ${only('p."ItemId"')}
+      UNION ALL
+      SELECT r."ItemId", COALESCE(r."Qty", 0)
+        FROM "Item_Receive" r
+       WHERE r."IsActive" = 1 AND r."ReceiveBranchID" = ${branch} ${only('r."ItemId"')}
+      UNION ALL
+      SELECT j."itmOId", COALESCE(j."Excess", 0)
+             - COALESCE(j."Assort", 0) - COALESCE(j."Reject", 0) - COALESCE(j."Short", 0)
+        FROM "ItemReject" j
+       WHERE j."IsActive" = 1 AND j."BranchId" = ${branch} ${only('j."itmOId"')}
+      UNION ALL
+      SELECT i."ItemId", -COALESCE(i."Qty", 0)
+        FROM "Item_Issue" i
+       WHERE i."IsActive" = 1 AND i."IssueBranchId" = ${branch} ${only('i."ItemId"')}
+      UNION ALL
+      SELECT d."SODet_ItemOID", -COALESCE(d."SODet_QTY", 0)
+        FROM "t_SODet" d
+        JOIN "t_SOMstr" s ON s."SOMstr_OID" = d."SODet_MStrOID"
+       WHERE s."SOMstr_IsActive" = true AND s."BranchId" = ${branch} ${only('d."SODet_ItemOID"')}
+      UNION ALL
+      SELECT v."SODet_ItemOID", -COALESCE(v."SODet_QTY", 0)
+        FROM "t_SODeV" v
+        JOIN "t_SOMstV" sv ON sv."SOMstr_OID" = v."SODet_MStrOID"
+       WHERE sv."SOMstr_IsActive" = true AND sv."BranchId" = ${branch} ${only('v."SODet_ItemOID"')}
+      UNION ALL
+      SELECT n."NCDet_ItemOID", -COALESCE(n."NCDet_QTY", 0)
+        FROM "t_NCDet" n
+        JOIN "t_NCMstr" nm ON nm."NCMstr_OID" = n."NCDet_MStrOID"
+       WHERE nm."NCMstr_IsActive" = true AND nm."BranchId" = ${branch} ${only('n."NCDet_ItemOID"')}
+      UNION ALL
+      SELECT c."ItemOId", -COALESCE(c."Qty", 0)
+        FROM "CSDetail" c
+        JOIN "CSMaster" cm ON cm."InvNo" = c."InvNo"
+       WHERE cm."IsActive" = 1 AND cm."BranchId" = ${branch} ${only('c."ItemOId"')}
+      UNION ALL
+      SELECT cv."ItemOId"::uuid AS item_id, -COALESCE(cv."Qty", 0)
+        FROM "CSVDetail" cv
+        JOIN "CSVMaster" cvm ON cvm."InvNo" = cv."InvNo"
+       WHERE cvm."BranchId" = ${branch} ${onlyText('cv."ItemOId"')}
+    ) AS m
+    WHERE m.item_id IS NOT NULL
+    GROUP BY m.item_id
+  `;
+}
+
 export async function branchStockOnHand(
   db: Prisma.TransactionClient,
   itemIds: string[],
@@ -68,69 +143,36 @@ export async function branchStockOnHand(
 ): Promise<Map<string, number>> {
   const onHand = new Map<string, number>();
   if (!itemIds.length || !branchId) return onHand;
+  for (const row of await branchMovementRows(db, branchId, itemIds)) {
+    onHand.set(row.item_id, Number(row.qty) || 0);
+  }
+  return onHand;
+}
 
-  const ids = Prisma.join(itemIds.map((id) => Prisma.sql`${id}::uuid`));
-  const branch = Prisma.sql`${branchId}::uuid`;
-
-  // CSVDetail."ItemOId" is plain text, not uuid — it predates the item-code to
-  // uuid migration. Compared as text so a row still holding a loose item CODE
-  // simply doesn't match, exactly as it doesn't in the report, instead of
-  // failing the whole statement on a cast error.
-  const rows = await db.$queryRaw<{ item_id: string; qty: number }[]>`
-    SELECT m.item_id::text AS item_id, SUM(m.qty)::float8 AS qty
-    FROM (
-      SELECT p."ItemId" AS item_id, COALESCE(p."Qty", 0) AS qty
-        FROM "Production" p
-       WHERE p."IsActive" = 1 AND p."BranchId" = ${branch} AND p."ItemId" IN (${ids})
-      UNION ALL
-      SELECT r."ItemId", COALESCE(r."Qty", 0)
-        FROM "Item_Receive" r
-       WHERE r."IsActive" = 1 AND r."ReceiveBranchID" = ${branch} AND r."ItemId" IN (${ids})
-      UNION ALL
-      SELECT j."itmOId", COALESCE(j."Excess", 0)
-             - COALESCE(j."Assort", 0) - COALESCE(j."Reject", 0) - COALESCE(j."Short", 0)
-        FROM "ItemReject" j
-       WHERE j."IsActive" = 1 AND j."BranchId" = ${branch} AND j."itmOId" IN (${ids})
-      UNION ALL
-      SELECT i."ItemId", -COALESCE(i."Qty", 0)
-        FROM "Item_Issue" i
-       WHERE i."IsActive" = 1 AND i."IssueBranchId" = ${branch} AND i."ItemId" IN (${ids})
-      UNION ALL
-      SELECT d."SODet_ItemOID", -COALESCE(d."SODet_QTY", 0)
-        FROM "t_SODet" d
-        JOIN "t_SOMstr" s ON s."SOMstr_OID" = d."SODet_MStrOID"
-       WHERE s."SOMstr_IsActive" = true AND s."BranchId" = ${branch}
-         AND d."SODet_ItemOID" IN (${ids})
-      UNION ALL
-      SELECT v."SODet_ItemOID", -COALESCE(v."SODet_QTY", 0)
-        FROM "t_SODeV" v
-        JOIN "t_SOMstV" sv ON sv."SOMstr_OID" = v."SODet_MStrOID"
-       WHERE sv."SOMstr_IsActive" = true AND sv."BranchId" = ${branch}
-         AND v."SODet_ItemOID" IN (${ids})
-      UNION ALL
-      SELECT n."NCDet_ItemOID", -COALESCE(n."NCDet_QTY", 0)
-        FROM "t_NCDet" n
-        JOIN "t_NCMstr" nm ON nm."NCMstr_OID" = n."NCDet_MStrOID"
-       WHERE nm."NCMstr_IsActive" = true AND nm."BranchId" = ${branch}
-         AND n."NCDet_ItemOID" IN (${ids})
-      UNION ALL
-      SELECT c."ItemOId", -COALESCE(c."Qty", 0)
-        FROM "CSDetail" c
-        JOIN "CSMaster" cm ON cm."InvNo" = c."InvNo"
-       WHERE cm."IsActive" = 1 AND cm."BranchId" = ${branch}
-         AND c."ItemOId" IN (${ids})
-      UNION ALL
-      SELECT cv."ItemOId"::uuid AS item_id, -COALESCE(cv."Qty", 0)
-        FROM "CSVDetail" cv
-        JOIN "CSVMaster" cvm ON cvm."InvNo" = cv."InvNo"
-       WHERE cvm."BranchId" = ${branch}
-         AND cv."ItemOId" = ANY (ARRAY[${ids}]::text[])
-    ) AS m
-    WHERE m.item_id IS NOT NULL
-    GROUP BY m.item_id
-  `;
-
-  for (const row of rows) onHand.set(row.item_id, Number(row.qty) || 0);
+/**
+ * What a branch holds, for EVERY item — the figure the stock screens show.
+ *
+ * Same ledgers, same signs and the same single SQL definition as
+ * `branchStockOnHand`, so what an operator is shown is exactly what the guard
+ * will enforce and exactly what the Production & Delivery report closes at.
+ * Reading `Inventory.quantity` instead shows the company-wide pool, which is a
+ * different and much larger number: the Factory could hold -4 of an item while
+ * the screens cheerfully offered 3.25, because an outlet's shelf stock was
+ * making up the difference.
+ *
+ * No item filter at all is cheaper than one naming the whole catalogue, so this
+ * is the right shape for the polled stock-levels endpoint rather than passing
+ * every id in the price list.
+ */
+export async function branchStockLevels(
+  db: Prisma.TransactionClient,
+  branchId: string,
+): Promise<Map<string, number>> {
+  const onHand = new Map<string, number>();
+  if (!branchId) return onHand;
+  for (const row of await branchMovementRows(db, branchId, null)) {
+    onHand.set(row.item_id, Number(row.qty) || 0);
+  }
   return onHand;
 }
 
