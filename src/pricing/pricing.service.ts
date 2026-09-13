@@ -70,7 +70,21 @@ export class PricingService {
 
     const where = { priceIsActive: 1, ...(itemId && { priceItemOId: itemId }) };
     const [rows, total] = await Promise.all([
-      this.prisma.t_Price.findMany({ where, include: { item: true }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.t_Price.findMany({
+        where,
+        include: { item: true },
+        // Category first, then name — the order the price list is read in, and
+        // the order the page/print/Excel all inherit. Ordering has to happen
+        // here rather than on the client: the list is paginated, so a sort of
+        // the current page alone would shuffle rows within a page and leave
+        // the pages themselves in insertion order.
+        orderBy: [
+          { item: { itmCategory: 'asc' } },
+          { item: { itmName: 'asc' } },
+        ],
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
       this.prisma.t_Price.count({ where }),
     ]);
     return { items: rows, meta: buildPaginationMeta(total, page, limit) };
