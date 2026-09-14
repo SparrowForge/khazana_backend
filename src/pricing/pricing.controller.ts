@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery, ApiParam } from '@nestjs/swagger';
 import { PricingService } from './pricing.service';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
@@ -53,6 +53,16 @@ export class PricingController {
     return this.pricingService.updatePrice(id, body, userName);
   }
 
+  @Delete('prices/:id')
+  @RequiredPermission({ control: 'Pricing', action: 'deleteAccess' })
+  @ApiOperation({ summary: 'Delete a sale price by ID' })
+  @ApiParam({ name: 'id', description: 'Price record UUID' })
+  @ApiResponse({ status: 200, description: 'Sale price deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Price record not found' })
+  removePrice(@Param('id') id: string) {
+    return this.pricingService.removePrice(id);
+  }
+
   @Get('cost-prices')
   @ApiOperation({ summary: 'Get cost prices (optionally filter by item code)' })
   @ApiResponse({ status: 200, description: 'Paginated list of cost prices' })
@@ -76,5 +86,15 @@ export class PricingController {
   @ApiResponse({ status: 200, description: 'Cost price updated successfully' })
   updateCostPrice(@Param('id') id: string, @Body() body: any, @CurrentUser('userName') userName: string) {
     return this.pricingService.updateCostPrice(id, body, userName);
+  }
+
+  @Delete('cost-prices/:id')
+  @RequiredPermission({ control: 'Pricing', action: 'deleteAccess' })
+  @ApiOperation({ summary: 'Delete a cost price by ID' })
+  @ApiParam({ name: 'id', description: 'Cost price record UUID' })
+  @ApiResponse({ status: 200, description: 'Cost price deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Cost price record not found' })
+  removeCostPrice(@Param('id') id: string) {
+    return this.pricingService.removeCostPrice(id);
   }
 }

@@ -4295,6 +4295,37 @@
         "tags": [
           "Pricing"
         ]
+      },
+      "delete": {
+        "operationId": "PricingController_removePrice",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Price record UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sale price deleted successfully"
+          },
+          "404": {
+            "description": "Price record not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete a sale price by ID",
+        "tags": [
+          "Pricing"
+        ]
       }
     },
     "/pricing/cost-prices": {
@@ -4402,6 +4433,37 @@
           }
         ],
         "summary": "Update a cost price by ID",
+        "tags": [
+          "Pricing"
+        ]
+      },
+      "delete": {
+        "operationId": "PricingController_removeCostPrice",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Cost price record UUID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cost price deleted successfully"
+          },
+          "404": {
+            "description": "Cost price record not found"
+          }
+        },
+        "security": [
+          {
+            "access-token": []
+          }
+        ],
+        "summary": "Delete a cost price by ID",
         "tags": [
           "Pricing"
         ]

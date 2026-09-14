@@ -166,6 +166,17 @@ export class PricingService {
     });
   }
 
+  /** Hard delete. Sale lines keep their own copy of the price they charged
+   *  (SODet_Price and friends), so nothing historical is rewritten by this —
+   *  but the item is left with no active price until one is set again, since
+   *  a superseded row is not revived. */
+  async removePrice(id: string) {
+    const existing = await this.prisma.t_Price.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException('Price record not found');
+    await this.prisma.t_Price.delete({ where: { id } });
+    return { message: 'Price deleted successfully' };
+  }
+
   // ── Cost Prices ───────────────────────────────────────────────
 
   async findAllCostPrices(query: PriceQueryDto) {
@@ -214,5 +225,13 @@ export class PricingService {
       where: { id },
       data: { ...data, priceUpdateBy: updatedBy, priceUpdateDate: new Date() },
     });
+  }
+
+  /** Hard delete — see removePrice. */
+  async removeCostPrice(id: string) {
+    const existing = await this.prisma.t_CostPr.findUnique({ where: { id } });
+    if (!existing) throw new NotFoundException('Cost price record not found');
+    await this.prisma.t_CostPr.delete({ where: { id } });
+    return { message: 'Cost price deleted successfully' };
   }
 }
