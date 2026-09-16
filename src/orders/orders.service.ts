@@ -91,6 +91,10 @@ export class CreateOrderDto {
   @IsOptional()
   deliveryTime?: string;
 
+  @IsString()
+  @IsOptional()
+  remarks?: string;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => OrderItemDto)
@@ -341,6 +345,7 @@ export class OrdersService {
         discount: dto.discount,
         deliveryDate: dto.deliveryDate ? new Date(dto.deliveryDate) : undefined,
         deliveryAddress: dto.deliveryAddress,
+        remarks: dto.remarks,
         cType: dto.cType,
         branchId,
         deliveryTime: dto.deliveryTime ? new Date(dto.deliveryTime) : undefined,

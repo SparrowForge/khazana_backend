@@ -753,6 +753,7 @@ exports.Prisma.OrderReceive_MasterScalarFieldEnum = {
   discount: 'discount',
   deliveryDate: 'deliveryDate',
   deliveryAddress: 'deliveryAddress',
+  remarks: 'remarks',
   cType: 'cType',
   branchId: 'branchId',
   deliveryTime: 'deliveryTime',

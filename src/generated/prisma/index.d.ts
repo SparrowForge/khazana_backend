@@ -58237,6 +58237,7 @@ export namespace Prisma {
     discount: Decimal | null
     deliveryDate: Date | null
     deliveryAddress: string | null
+    remarks: string | null
     cType: string | null
     branchId: string | null
     deliveryTime: Date | null
@@ -58257,6 +58258,7 @@ export namespace Prisma {
     discount: Decimal | null
     deliveryDate: Date | null
     deliveryAddress: string | null
+    remarks: string | null
     cType: string | null
     branchId: string | null
     deliveryTime: Date | null
@@ -58277,6 +58279,7 @@ export namespace Prisma {
     discount: number
     deliveryDate: number
     deliveryAddress: number
+    remarks: number
     cType: number
     branchId: number
     deliveryTime: number
@@ -58313,6 +58316,7 @@ export namespace Prisma {
     discount?: true
     deliveryDate?: true
     deliveryAddress?: true
+    remarks?: true
     cType?: true
     branchId?: true
     deliveryTime?: true
@@ -58333,6 +58337,7 @@ export namespace Prisma {
     discount?: true
     deliveryDate?: true
     deliveryAddress?: true
+    remarks?: true
     cType?: true
     branchId?: true
     deliveryTime?: true
@@ -58353,6 +58358,7 @@ export namespace Prisma {
     discount?: true
     deliveryDate?: true
     deliveryAddress?: true
+    remarks?: true
     cType?: true
     branchId?: true
     deliveryTime?: true
@@ -58460,6 +58466,7 @@ export namespace Prisma {
     discount: Decimal | null
     deliveryDate: Date | null
     deliveryAddress: string | null
+    remarks: string | null
     cType: string | null
     branchId: string | null
     deliveryTime: Date | null
@@ -58499,6 +58506,7 @@ export namespace Prisma {
     discount?: boolean
     deliveryDate?: boolean
     deliveryAddress?: boolean
+    remarks?: boolean
     cType?: boolean
     branchId?: boolean
     deliveryTime?: boolean
@@ -58522,6 +58530,7 @@ export namespace Prisma {
     discount?: boolean
     deliveryDate?: boolean
     deliveryAddress?: boolean
+    remarks?: boolean
     cType?: boolean
     branchId?: boolean
     deliveryTime?: boolean
@@ -58543,6 +58552,7 @@ export namespace Prisma {
     discount?: boolean
     deliveryDate?: boolean
     deliveryAddress?: boolean
+    remarks?: boolean
     cType?: boolean
     branchId?: boolean
     deliveryTime?: boolean
@@ -58564,6 +58574,7 @@ export namespace Prisma {
     discount?: boolean
     deliveryDate?: boolean
     deliveryAddress?: boolean
+    remarks?: boolean
     cType?: boolean
     branchId?: boolean
     deliveryTime?: boolean
@@ -58574,7 +58585,7 @@ export namespace Prisma {
     updateDate?: boolean
   }
 
-  export type OrderReceive_MasterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clientId" | "serialNo" | "advance" | "orderDate" | "totalPrice" | "discount" | "deliveryDate" | "deliveryAddress" | "cType" | "branchId" | "deliveryTime" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["orderReceive_Master"]>
+  export type OrderReceive_MasterOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clientId" | "serialNo" | "advance" | "orderDate" | "totalPrice" | "discount" | "deliveryDate" | "deliveryAddress" | "remarks" | "cType" | "branchId" | "deliveryTime" | "isActive" | "createBy" | "createDate" | "updateBy" | "updateDate", ExtArgs["result"]["orderReceive_Master"]>
   export type OrderReceive_MasterInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | OrderReceive_Master$customerArgs<ExtArgs>
     details?: boolean | OrderReceive_Master$detailsArgs<ExtArgs>
@@ -58603,6 +58614,7 @@ export namespace Prisma {
       discount: Prisma.Decimal | null
       deliveryDate: Date | null
       deliveryAddress: string | null
+      remarks: string | null
       cType: string | null
       branchId: string | null
       deliveryTime: Date | null
@@ -59045,6 +59057,7 @@ export namespace Prisma {
     readonly discount: FieldRef<"OrderReceive_Master", 'Decimal'>
     readonly deliveryDate: FieldRef<"OrderReceive_Master", 'DateTime'>
     readonly deliveryAddress: FieldRef<"OrderReceive_Master", 'String'>
+    readonly remarks: FieldRef<"OrderReceive_Master", 'String'>
     readonly cType: FieldRef<"OrderReceive_Master", 'String'>
     readonly branchId: FieldRef<"OrderReceive_Master", 'String'>
     readonly deliveryTime: FieldRef<"OrderReceive_Master", 'DateTime'>
@@ -70935,6 +70948,7 @@ export namespace Prisma {
     discount: 'discount',
     deliveryDate: 'deliveryDate',
     deliveryAddress: 'deliveryAddress',
+    remarks: 'remarks',
     cType: 'cType',
     branchId: 'branchId',
     deliveryTime: 'deliveryTime',
@@ -75179,6 +75193,7 @@ export namespace Prisma {
     discount?: DecimalNullableFilter<"OrderReceive_Master"> | Decimal | DecimalJsLike | number | string | null
     deliveryDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
     deliveryAddress?: StringNullableFilter<"OrderReceive_Master"> | string | null
+    remarks?: StringNullableFilter<"OrderReceive_Master"> | string | null
     cType?: StringNullableFilter<"OrderReceive_Master"> | string | null
     branchId?: UuidNullableFilter<"OrderReceive_Master"> | string | null
     deliveryTime?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
@@ -75201,6 +75216,7 @@ export namespace Prisma {
     discount?: SortOrderInput | SortOrder
     deliveryDate?: SortOrderInput | SortOrder
     deliveryAddress?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
     cType?: SortOrderInput | SortOrder
     branchId?: SortOrderInput | SortOrder
     deliveryTime?: SortOrderInput | SortOrder
@@ -75226,6 +75242,7 @@ export namespace Prisma {
     discount?: DecimalNullableFilter<"OrderReceive_Master"> | Decimal | DecimalJsLike | number | string | null
     deliveryDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
     deliveryAddress?: StringNullableFilter<"OrderReceive_Master"> | string | null
+    remarks?: StringNullableFilter<"OrderReceive_Master"> | string | null
     cType?: StringNullableFilter<"OrderReceive_Master"> | string | null
     branchId?: UuidNullableFilter<"OrderReceive_Master"> | string | null
     deliveryTime?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
@@ -75248,6 +75265,7 @@ export namespace Prisma {
     discount?: SortOrderInput | SortOrder
     deliveryDate?: SortOrderInput | SortOrder
     deliveryAddress?: SortOrderInput | SortOrder
+    remarks?: SortOrderInput | SortOrder
     cType?: SortOrderInput | SortOrder
     branchId?: SortOrderInput | SortOrder
     deliveryTime?: SortOrderInput | SortOrder
@@ -75276,6 +75294,7 @@ export namespace Prisma {
     discount?: DecimalNullableWithAggregatesFilter<"OrderReceive_Master"> | Decimal | DecimalJsLike | number | string | null
     deliveryDate?: DateTimeNullableWithAggregatesFilter<"OrderReceive_Master"> | Date | string | null
     deliveryAddress?: StringNullableWithAggregatesFilter<"OrderReceive_Master"> | string | null
+    remarks?: StringNullableWithAggregatesFilter<"OrderReceive_Master"> | string | null
     cType?: StringNullableWithAggregatesFilter<"OrderReceive_Master"> | string | null
     branchId?: UuidNullableWithAggregatesFilter<"OrderReceive_Master"> | string | null
     deliveryTime?: DateTimeNullableWithAggregatesFilter<"OrderReceive_Master"> | Date | string | null
@@ -80574,6 +80593,7 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string | null
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
+    remarks?: string | null
     cType?: string | null
     branchId?: string | null
     deliveryTime?: Date | string | null
@@ -80596,6 +80616,7 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string | null
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
+    remarks?: string | null
     cType?: string | null
     branchId?: string | null
     deliveryTime?: Date | string | null
@@ -80616,6 +80637,7 @@ export namespace Prisma {
     discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -80638,6 +80660,7 @@ export namespace Prisma {
     discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -80659,6 +80682,7 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string | null
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
+    remarks?: string | null
     cType?: string | null
     branchId?: string | null
     deliveryTime?: Date | string | null
@@ -80678,6 +80702,7 @@ export namespace Prisma {
     discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -80698,6 +80723,7 @@ export namespace Prisma {
     discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -84709,6 +84735,7 @@ export namespace Prisma {
     discount?: SortOrder
     deliveryDate?: SortOrder
     deliveryAddress?: SortOrder
+    remarks?: SortOrder
     cType?: SortOrder
     branchId?: SortOrder
     deliveryTime?: SortOrder
@@ -84736,6 +84763,7 @@ export namespace Prisma {
     discount?: SortOrder
     deliveryDate?: SortOrder
     deliveryAddress?: SortOrder
+    remarks?: SortOrder
     cType?: SortOrder
     branchId?: SortOrder
     deliveryTime?: SortOrder
@@ -84756,6 +84784,7 @@ export namespace Prisma {
     discount?: SortOrder
     deliveryDate?: SortOrder
     deliveryAddress?: SortOrder
+    remarks?: SortOrder
     cType?: SortOrder
     branchId?: SortOrder
     deliveryTime?: SortOrder
@@ -89760,6 +89789,7 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string | null
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
+    remarks?: string | null
     cType?: string | null
     branchId?: string | null
     deliveryTime?: Date | string | null
@@ -89780,6 +89810,7 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string | null
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
+    remarks?: string | null
     cType?: string | null
     branchId?: string | null
     deliveryTime?: Date | string | null
@@ -90040,6 +90071,7 @@ export namespace Prisma {
     discount?: DecimalNullableFilter<"OrderReceive_Master"> | Decimal | DecimalJsLike | number | string | null
     deliveryDate?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
     deliveryAddress?: StringNullableFilter<"OrderReceive_Master"> | string | null
+    remarks?: StringNullableFilter<"OrderReceive_Master"> | string | null
     cType?: StringNullableFilter<"OrderReceive_Master"> | string | null
     branchId?: UuidNullableFilter<"OrderReceive_Master"> | string | null
     deliveryTime?: DateTimeNullableFilter<"OrderReceive_Master"> | Date | string | null
@@ -95072,6 +95104,7 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string | null
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
+    remarks?: string | null
     cType?: string | null
     branchId?: string | null
     deliveryTime?: Date | string | null
@@ -95093,6 +95126,7 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string | null
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
+    remarks?: string | null
     cType?: string | null
     branchId?: string | null
     deliveryTime?: Date | string | null
@@ -95191,6 +95225,7 @@ export namespace Prisma {
     discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -95212,6 +95247,7 @@ export namespace Prisma {
     discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96326,6 +96362,7 @@ export namespace Prisma {
     discount?: Decimal | DecimalJsLike | number | string | null
     deliveryDate?: Date | string | null
     deliveryAddress?: string | null
+    remarks?: string | null
     cType?: string | null
     branchId?: string | null
     deliveryTime?: Date | string | null
@@ -96554,6 +96591,7 @@ export namespace Prisma {
     discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96574,6 +96612,7 @@ export namespace Prisma {
     discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96594,6 +96633,7 @@ export namespace Prisma {
     discount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deliveryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    remarks?: NullableStringFieldUpdateOperationsInput | string | null
     cType?: NullableStringFieldUpdateOperationsInput | string | null
     branchId?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryTime?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

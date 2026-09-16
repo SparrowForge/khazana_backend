@@ -978,6 +978,7 @@ model OrderReceive_Master {
   discount        Decimal?              @map("Discount") @db.Decimal(18, 2)
   deliveryDate    DateTime?             @map("DeliveryDate")
   deliveryAddress String?               @map("DeliveryAddress")
+  remarks         String?               @map("Remarks")
   cType           String?               @map("CType")
   branchId        String?               @map("BranchId") @db.Uuid
   deliveryTime    DateTime?             @map("DeliveryTime")
