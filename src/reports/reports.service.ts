@@ -2855,7 +2855,10 @@ export class ReportsService {
 
     const [toBranch, company] = await Promise.all([
       toBranchId
-        ? this.prisma.branch.findUnique({ where: { id: toBranchId }, select: { branchCode: true, branchName: true } })
+        ? this.prisma.branch.findUnique({
+            where: { id: toBranchId },
+            select: { branchCode: true, branchName: true, address: true },
+          })
         : null,
       this.prisma.setup_System.findFirst({ select: { companyName: true, companyAddress: true } }),
     ]);
@@ -2867,7 +2870,12 @@ export class ReportsService {
         name: company?.companyName ?? 'Khazana Mithai',
         address: company?.companyAddress ?? '',
       },
-      toBranch: { id: toBranchId ?? '', code: toBranch?.branchCode ?? '', name: toBranch?.branchName ?? '' },
+      toBranch: {
+        id: toBranchId ?? '',
+        code: toBranch?.branchCode ?? '',
+        name: toBranch?.branchName ?? '',
+        address: toBranch?.address ?? '',
+      },
       /** The round this run was filtered to, '' for every round. Echoed back so
        *  the sheet can name it — including behind a public share link, which
        *  re-runs the report from the stored params with no page state to read. */
