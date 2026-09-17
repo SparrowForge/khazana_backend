@@ -179,26 +179,51 @@ export class InventoryService {
     return item;
   }
 
-  /** Suggests the next Item Code for a category: its first letter plus a
-   *  4-digit running count, e.g. "Sweets" -> S0001, S0002... Scanned from
-   *  existing codes rather than a stored counter, so it self-heals if a code
-   *  was ever entered out of sequence or edited by hand. */
+  /** Suggests the next Item Code for a category: the first letter of the
+   *  category's CODE, a hyphen, then a 4-digit running count — "Sweets" ->
+   *  S-1049, S-1050...
+   *
+   *  The letter comes from Item_Category.code, not from the string handed in.
+   *  Item_Information.itmCategory holds the category NAME, and the item form
+   *  posts that same name, so taking its first letter produced "Fresh Sweets"
+   *  -> F0001 while every other sweet was S-####. The name is what we are
+   *  given, so it is resolved back to its category row here.
+   *
+   *  Scanned from existing codes rather than a stored counter, so it self-heals
+   *  if a code was ever entered out of sequence or edited by hand. */
   async getNextItemCode(category: string) {
-    const firstChar = category?.trim().charAt(0).toUpperCase();
-    if (!firstChar) throw new BadRequestException('Category is required to generate an item code');
+    const term = category?.trim();
+    if (!term) throw new BadRequestException('Category is required to generate an item code');
+
+    // Matched on either column: the form sends the name, but a caller holding
+    // the code should not get a different answer.
+    const row = await this.prisma.item_Category.findFirst({
+      where: {
+        OR: [
+          { code: { equals: term, mode: 'insensitive' } },
+          { name: { equals: term, mode: 'insensitive' } },
+        ],
+      },
+      select: { code: true },
+    });
+
+    // An unrecognised category falls back to what was passed rather than
+    // blocking item entry — the dropdown is fed from this table, so this only
+    // fires for a hand-made request.
+    const prefix = (row?.code ?? term).charAt(0).toUpperCase();
 
     const existing = await this.prisma.item_Information.findMany({
-      where: { itmCode: { startsWith: firstChar, mode: 'insensitive' } },
+      where: { itmCode: { startsWith: `${prefix}-`, mode: 'insensitive' } },
       select: { itmCode: true },
     });
 
-    const pattern = new RegExp(`^${firstChar}(\\d{4})$`, 'i');
+    const pattern = new RegExp(`^${prefix}-(\d{4})$`, 'i');
     const maxSeq = existing.reduce((max, { itmCode }) => {
       const match = itmCode.match(pattern);
       return match ? Math.max(max, Number(match[1])) : max;
     }, 0);
 
-    return { itmCode: `${firstChar}${String(maxSeq + 1).padStart(4, '0')}` };
+    return { itmCode: `${prefix}-${String(maxSeq + 1).padStart(4, '0')}` };
   }
 
   async createItem(data: {
