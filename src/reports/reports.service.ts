@@ -28,29 +28,43 @@ const r2signed = (n: number): number => Math.round(n * 100) / 100;
  *  The terminal picks a customer, so `t_SOMstr.CustomerID` is the answer
  *  whenever there is one:
  *
- *   1. The joined `Customer.Name` — who the sale was billed to.
- *   2. `SoMstr_DiscountRemarks`, the old typed discount authoriser. Only ever
+ *   1. `SoMstr_GuestName` — the name typed at the till for a walk-in. First
+ *      because it is only ever written when the sale has NO real customer (see
+ *      PosSalesService.resolveParty): where it exists, it is the only answer.
+ *   2. The joined `Customer.Name` — who the sale was billed to. On a walk-in
+ *      nobody named, this is the counter row itself.
+ *   3. `SoMstr_DiscountRemarks`, the old typed discount authoriser. Only ever
  *      written when a discount was applied — but still the best name available
- *      on a sale discounted before the picker existed.
+ *      on a sale discounted before either of the other two existed.
  *
- *  Failing both, 'POS'. Not a blank: a walk-in is a real answer, and an empty
- *  cell looks like missing data on a sheet whose whole point is that every row
- *  is identified.
+ *  Failing all three, 'POS'. Not a blank: a walk-in is a real answer, and an
+ *  empty cell looks like missing data on a sheet whose whole point is that every
+ *  row is identified.
  *
  *  Blank and whitespace-only count as no name — the discount column does hold ''
  *  on some rows, which would otherwise print an empty cell. */
 const posClientName = (
+  guestName?: string | null,
   customerName?: string | null,
   discountAuthoriser?: string | null,
 ): string =>
-  (customerName ?? '').trim() || (discountAuthoriser ?? '').trim() || 'POS';
+  (guestName ?? '').trim() ||
+  (customerName ?? '').trim() ||
+  (discountAuthoriser ?? '').trim() ||
+  'POS';
 
-/** Contact number for a POS terminal sale: the picked customer's mobile, else
- *  the number typed against the discount before the picker existed. */
+/** Contact number for a POS terminal sale, in the same order as the name: the
+ *  number typed for a walk-in, else the picked customer's mobile, else the one
+ *  typed against the discount before either existed. */
 const posClientContact = (
+  guestContact?: string | null,
   customerMobile?: string | null,
   discountContact?: string | null,
-): string => (customerMobile ?? '').trim() || (discountContact ?? '').trim() || '';
+): string =>
+  (guestContact ?? '').trim() ||
+  (customerMobile ?? '').trim() ||
+  (discountContact ?? '').trim() ||
+  '';
 
 /** What every report that names a POS sale's customer joins in. */
 const POS_CUSTOMER_INCLUDE = { customer: { select: { name: true, mobile: true } } } as const;
@@ -125,8 +139,8 @@ export class ReportsService {
       // counter sale alike. A walk-in resolves to 'POS', which is what it is.
       ...cash.map((s) => ({
         id: s.id, invNo: s.somstrCode, date: s.somstrDate,
-        customerName: posClientName(s.customer?.name, s.soMstrDiscountRemarks),
-        contactNo: posClientContact(s.customer?.mobile, s.soMstrDiscountContact),
+        customerName: posClientName(s.somstrGuestName, s.customer?.name, s.soMstrDiscountRemarks),
+        contactNo: posClientContact(s.somstrGuestContact, s.customer?.mobile, s.soMstrDiscountContact),
         totalAmount: cashGross(s), discount: num(s.somstrDiscAmt), netAmount: num(s.somstrNetAmt),
         saleType: s.mtype || 'Cash',
         // Last 4 digits of the card, on a Card sale — what ties a row on this
@@ -144,8 +158,8 @@ export class ReportsService {
       // no customer picker and no card field, so these two stay as they were.
       ...vatCash.map((s) => ({
         id: s.id, invNo: s.somstrCode, date: s.somstrDate,
-        customerName: posClientName(null, s.soMstrDiscountRemarks),
-        contactNo: posClientContact(null, s.soMstrDiscountContact),
+        customerName: posClientName(null, null, s.soMstrDiscountRemarks),
+        contactNo: posClientContact(null, null, s.soMstrDiscountContact),
         totalAmount: cashGross(s), discount: num(s.somstrDiscAmt), netAmount: num(s.somstrNetAmt),
         saleType: s.mtype ? `${s.mtype} (VAT)` : 'Cash (VAT)',
         cardNo: '',
@@ -474,16 +488,16 @@ export class ReportsService {
     }));
 
     const discountBreakdown = [
-      // Who each counter discount was given to. That is the picked customer
-      // now — the terminal will not take a discount for a walk-in — with the
-      // typed authoriser columns behind it for anything discounted before the
-      // picker existed.
+      // Who each counter discount was given to: the name typed at the till for
+      // a walk-in, else the picked customer, with the typed authoriser columns
+      // behind both for anything discounted before either existed. The terminal
+      // will not take a discount without one of them.
       ...cash
         .filter((s) => num(s.somstrDiscAmt) > 0)
         .map((s) =>
           discRow(
-            posClientName(s.customer?.name, s.soMstrDiscountRemarks),
-            posClientContact(s.customer?.mobile, s.soMstrDiscountContact),
+            posClientName(s.somstrGuestName, s.customer?.name, s.soMstrDiscountRemarks),
+            posClientContact(s.somstrGuestContact, s.customer?.mobile, s.soMstrDiscountContact),
             num(s.somstrDiscAmt),
             num(s.somstrTotalAmt),
           ),
@@ -1725,7 +1739,7 @@ export class ReportsService {
         {
           date: s.somstrDate,
           invoiceNo: s.somstrCode ?? '',
-          clientName: posClientName(s.customer?.name, s.soMstrDiscountRemarks),
+          clientName: posClientName(s.somstrGuestName, s.customer?.name, s.soMstrDiscountRemarks),
           branchId: s.branchId,
         },
         s.details.map((d) => ({
@@ -1752,7 +1766,7 @@ export class ReportsService {
         // t_SOMstV carries neither a customer nor a guest name: it is written by
         // the VAT cash form, not the POS terminal, so only the discount
         // authoriser is available.
-        { date: s.somstrDate, invoiceNo: s.somstrCode ?? '', clientName: posClientName(null, s.soMstrDiscountRemarks), branchId: s.branchId },
+        { date: s.somstrDate, invoiceNo: s.somstrCode ?? '', clientName: posClientName(null, null, s.soMstrDiscountRemarks), branchId: s.branchId },
         s.details.map((d) => ({
           itemName: d.item?.itmName || d.item?.itmCode || '',
           uom: d.item?.itmUOM ?? d.sodetUOM ?? '',
@@ -2427,11 +2441,12 @@ export class ReportsService {
         // Only t_SOMstr has a customer — t_SOMstV is written by the VAT cash
         // form, which has no picker — so the two ledgers are zipped with the
         // customer each of them can supply and share one row builder.
-        ...cash.map((s) => ({ sale: s, customer: s.customer })),
-        ...vatCash.map((s) => ({ sale: s, customer: null })),
+        ...cash.map((s) => ({ sale: s, customer: s.customer, guest: s })),
+        // t_SOMstV has neither a picker nor the typed pair.
+        ...vatCash.map((s) => ({ sale: s, customer: null, guest: null })),
       ]
         .filter(({ sale }) => num(sale.somstrDiscAmt) > 0)
-        .map(({ sale, customer }) => {
+        .map(({ sale, customer, guest }) => {
           const amount = cashGross(sale);
           const discount = r2signed(num(sale.somstrDiscAmt));
           return {
@@ -2440,8 +2455,19 @@ export class ReportsService {
             amount,
             discountPercent: pctOf(discount, amount),
             discount,
-            contactNo: posClientContact(customer?.mobile, sale.soMstrDiscountContact),
-            remarks: (customer?.name ?? '').trim() || sale.soMstrDiscountRemarks || '',
+            contactNo: posClientContact(
+              guest?.somstrGuestContact,
+              customer?.mobile,
+              sale.soMstrDiscountContact,
+            ),
+            // Blank rather than 'POS' here: this column is the discount's
+            // authority, and printing a placeholder where a name is missing
+            // would read as an answer to the question the sheet is asking.
+            remarks:
+              (guest?.somstrGuestName ?? '').trim() ||
+              (customer?.name ?? '').trim() ||
+              sale.soMstrDiscountRemarks ||
+              '',
             outlet: outletOf(sale.branchId),
           };
         }),

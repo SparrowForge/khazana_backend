@@ -20129,6 +20129,13 @@ export namespace Prisma {
       id: string
       code: string
       name: string
+      /**
+       * Contact no — unique across customers, and the handle the counter searches
+       * on: the pickers on every entry screen match code, name OR this. Enforced
+       * by the partial unique index "Customer_Mobile_key", which skips NULL and ''
+       * so legacy rows with no number on file stay valid; Prisma cannot express a
+       * partial index here — see prisma/migrations/customer_mobile_unique.sql.
+       */
       mobile: string | null
       address: string | null
       email: string | null
@@ -36494,6 +36501,8 @@ export namespace Prisma {
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
+    somstrGuestName: string | null
+    somstrGuestContact: string | null
     customerId: string | null
     soMstrCardNo: string | null
     mtype: string | null
@@ -36524,6 +36533,8 @@ export namespace Prisma {
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
+    somstrGuestName: string | null
+    somstrGuestContact: string | null
     customerId: string | null
     soMstrCardNo: string | null
     mtype: string | null
@@ -36554,6 +36565,8 @@ export namespace Prisma {
     soMstrDiscountRemarks: number
     soMstrModifyRemarks: number
     soMstrDiscountContact: number
+    somstrGuestName: number
+    somstrGuestContact: number
     customerId: number
     soMstrCardNo: number
     mtype: number
@@ -36606,6 +36619,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: true
     soMstrModifyRemarks?: true
     soMstrDiscountContact?: true
+    somstrGuestName?: true
+    somstrGuestContact?: true
     customerId?: true
     soMstrCardNo?: true
     mtype?: true
@@ -36636,6 +36651,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: true
     soMstrModifyRemarks?: true
     soMstrDiscountContact?: true
+    somstrGuestName?: true
+    somstrGuestContact?: true
     customerId?: true
     soMstrCardNo?: true
     mtype?: true
@@ -36666,6 +36683,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: true
     soMstrModifyRemarks?: true
     soMstrDiscountContact?: true
+    somstrGuestName?: true
+    somstrGuestContact?: true
     customerId?: true
     soMstrCardNo?: true
     mtype?: true
@@ -36783,6 +36802,8 @@ export namespace Prisma {
     soMstrDiscountRemarks: string | null
     soMstrModifyRemarks: string | null
     soMstrDiscountContact: string | null
+    somstrGuestName: string | null
+    somstrGuestContact: string | null
     customerId: string | null
     soMstrCardNo: string | null
     mtype: string | null
@@ -36832,6 +36853,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: boolean
     soMstrModifyRemarks?: boolean
     soMstrDiscountContact?: boolean
+    somstrGuestName?: boolean
+    somstrGuestContact?: boolean
     customerId?: boolean
     soMstrCardNo?: boolean
     mtype?: boolean
@@ -36867,6 +36890,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: boolean
     soMstrModifyRemarks?: boolean
     soMstrDiscountContact?: boolean
+    somstrGuestName?: boolean
+    somstrGuestContact?: boolean
     customerId?: boolean
     soMstrCardNo?: boolean
     mtype?: boolean
@@ -36899,6 +36924,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: boolean
     soMstrModifyRemarks?: boolean
     soMstrDiscountContact?: boolean
+    somstrGuestName?: boolean
+    somstrGuestContact?: boolean
     customerId?: boolean
     soMstrCardNo?: boolean
     mtype?: boolean
@@ -36931,6 +36958,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: boolean
     soMstrModifyRemarks?: boolean
     soMstrDiscountContact?: boolean
+    somstrGuestName?: boolean
+    somstrGuestContact?: boolean
     customerId?: boolean
     soMstrCardNo?: boolean
     mtype?: boolean
@@ -36940,7 +36969,7 @@ export namespace Prisma {
     soMstrPaymentStatus?: boolean
   }
 
-  export type t_SOMstrOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "somstrCode" | "somstrDate" | "somstrTotalAmt" | "somstrDiscAmt" | "somstrNetAmt" | "somstrVatClnNo" | "somstrVatDate" | "somstrPricingDate" | "somstrCreator" | "somstrCreationDate" | "somstrUpdateBy" | "somstrUpdateDate" | "somstrIsActive" | "somstrCustomerpay" | "somstrChange" | "branchId" | "soMstrDiscountRemarks" | "soMstrModifyRemarks" | "soMstrDiscountContact" | "customerId" | "soMstrCardNo" | "mtype" | "soMstrMBank" | "soMstrPaidAmt" | "soMstrDueAmt" | "soMstrPaymentStatus", ExtArgs["result"]["t_SOMstr"]>
+  export type t_SOMstrOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "somstrCode" | "somstrDate" | "somstrTotalAmt" | "somstrDiscAmt" | "somstrNetAmt" | "somstrVatClnNo" | "somstrVatDate" | "somstrPricingDate" | "somstrCreator" | "somstrCreationDate" | "somstrUpdateBy" | "somstrUpdateDate" | "somstrIsActive" | "somstrCustomerpay" | "somstrChange" | "branchId" | "soMstrDiscountRemarks" | "soMstrModifyRemarks" | "soMstrDiscountContact" | "somstrGuestName" | "somstrGuestContact" | "customerId" | "soMstrCardNo" | "mtype" | "soMstrMBank" | "soMstrPaidAmt" | "soMstrDueAmt" | "soMstrPaymentStatus", ExtArgs["result"]["t_SOMstr"]>
   export type t_SOMstrInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     bank?: boolean | t_SOMstr$bankArgs<ExtArgs>
     customer?: boolean | t_SOMstr$customerArgs<ExtArgs>
@@ -36991,6 +37020,19 @@ export namespace Prisma {
       soMstrDiscountRemarks: string | null
       soMstrModifyRemarks: string | null
       soMstrDiscountContact: string | null
+      /**
+       * Who a walk-in cash sale was for, typed at the till: the name and contact no
+       * of somebody with no Customer record. Written ONLY when the sale is billed
+       * to the walk-in row (or to nobody) — a sale billed to a real customer takes
+       * its name from the join, and a stray typed name beside it would be a second,
+       * contradictory answer to the same question.
+       * 
+       * Independent of the discount panel, so a name can be taken on any sale; and
+       * it is also what lets a walk-in bill BE discounted, since it answers the
+       * question the discount audit asks — who the discount was given to.
+       */
+      somstrGuestName: string | null
+      somstrGuestContact: string | null
       /**
        * The customer this counter sale was billed to. NULL is the walk-in case —
        * the default at the till, and the only case with no name behind the sale.
@@ -37475,6 +37517,8 @@ export namespace Prisma {
     readonly soMstrDiscountRemarks: FieldRef<"t_SOMstr", 'String'>
     readonly soMstrModifyRemarks: FieldRef<"t_SOMstr", 'String'>
     readonly soMstrDiscountContact: FieldRef<"t_SOMstr", 'String'>
+    readonly somstrGuestName: FieldRef<"t_SOMstr", 'String'>
+    readonly somstrGuestContact: FieldRef<"t_SOMstr", 'String'>
     readonly customerId: FieldRef<"t_SOMstr", 'String'>
     readonly soMstrCardNo: FieldRef<"t_SOMstr", 'String'>
     readonly mtype: FieldRef<"t_SOMstr", 'String'>
@@ -70592,6 +70636,8 @@ export namespace Prisma {
     soMstrDiscountRemarks: 'soMstrDiscountRemarks',
     soMstrModifyRemarks: 'soMstrModifyRemarks',
     soMstrDiscountContact: 'soMstrDiscountContact',
+    somstrGuestName: 'somstrGuestName',
+    somstrGuestContact: 'somstrGuestContact',
     customerId: 'customerId',
     soMstrCardNo: 'soMstrCardNo',
     mtype: 'mtype',
@@ -73307,6 +73353,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableFilter<"t_SOMstr"> | string | null
+    somstrGuestName?: StringNullableFilter<"t_SOMstr"> | string | null
+    somstrGuestContact?: StringNullableFilter<"t_SOMstr"> | string | null
     customerId?: UuidNullableFilter<"t_SOMstr"> | string | null
     soMstrCardNo?: StringNullableFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableFilter<"t_SOMstr"> | string | null
@@ -73341,6 +73389,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrderInput | SortOrder
     soMstrModifyRemarks?: SortOrderInput | SortOrder
     soMstrDiscountContact?: SortOrderInput | SortOrder
+    somstrGuestName?: SortOrderInput | SortOrder
+    somstrGuestContact?: SortOrderInput | SortOrder
     customerId?: SortOrderInput | SortOrder
     soMstrCardNo?: SortOrderInput | SortOrder
     mtype?: SortOrderInput | SortOrder
@@ -73378,6 +73428,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableFilter<"t_SOMstr"> | string | null
+    somstrGuestName?: StringNullableFilter<"t_SOMstr"> | string | null
+    somstrGuestContact?: StringNullableFilter<"t_SOMstr"> | string | null
     customerId?: UuidNullableFilter<"t_SOMstr"> | string | null
     soMstrCardNo?: StringNullableFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableFilter<"t_SOMstr"> | string | null
@@ -73412,6 +73464,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrderInput | SortOrder
     soMstrModifyRemarks?: SortOrderInput | SortOrder
     soMstrDiscountContact?: SortOrderInput | SortOrder
+    somstrGuestName?: SortOrderInput | SortOrder
+    somstrGuestContact?: SortOrderInput | SortOrder
     customerId?: SortOrderInput | SortOrder
     soMstrCardNo?: SortOrderInput | SortOrder
     mtype?: SortOrderInput | SortOrder
@@ -73450,6 +73504,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
+    somstrGuestName?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
+    somstrGuestContact?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     customerId?: UuidNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     soMstrCardNo?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableWithAggregatesFilter<"t_SOMstr"> | string | null
@@ -78385,6 +78441,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    somstrGuestName?: string | null
+    somstrGuestContact?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
     soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
@@ -78417,6 +78475,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    somstrGuestName?: string | null
+    somstrGuestContact?: string | null
     customerId?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
@@ -78449,6 +78509,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestContact?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -78481,6 +78543,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestContact?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78513,6 +78577,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    somstrGuestName?: string | null
+    somstrGuestContact?: string | null
     customerId?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
@@ -78543,6 +78609,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestContact?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -78571,6 +78639,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestContact?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
@@ -83496,6 +83566,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrder
     soMstrModifyRemarks?: SortOrder
     soMstrDiscountContact?: SortOrder
+    somstrGuestName?: SortOrder
+    somstrGuestContact?: SortOrder
     customerId?: SortOrder
     soMstrCardNo?: SortOrder
     mtype?: SortOrder
@@ -83536,6 +83608,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrder
     soMstrModifyRemarks?: SortOrder
     soMstrDiscountContact?: SortOrder
+    somstrGuestName?: SortOrder
+    somstrGuestContact?: SortOrder
     customerId?: SortOrder
     soMstrCardNo?: SortOrder
     mtype?: SortOrder
@@ -83566,6 +83640,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: SortOrder
     soMstrModifyRemarks?: SortOrder
     soMstrDiscountContact?: SortOrder
+    somstrGuestName?: SortOrder
+    somstrGuestContact?: SortOrder
     customerId?: SortOrder
     soMstrCardNo?: SortOrder
     mtype?: SortOrder
@@ -88679,6 +88755,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    somstrGuestName?: string | null
+    somstrGuestContact?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
     soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
@@ -88710,6 +88788,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    somstrGuestName?: string | null
+    somstrGuestContact?: string | null
     customerId?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
@@ -88800,6 +88880,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrModifyRemarks?: StringNullableFilter<"t_SOMstr"> | string | null
     soMstrDiscountContact?: StringNullableFilter<"t_SOMstr"> | string | null
+    somstrGuestName?: StringNullableFilter<"t_SOMstr"> | string | null
+    somstrGuestContact?: StringNullableFilter<"t_SOMstr"> | string | null
     customerId?: UuidNullableFilter<"t_SOMstr"> | string | null
     soMstrCardNo?: StringNullableFilter<"t_SOMstr"> | string | null
     mtype?: StringNullableFilter<"t_SOMstr"> | string | null
@@ -89853,6 +89935,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    somstrGuestName?: string | null
+    somstrGuestContact?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
     soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
@@ -89884,6 +89968,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    somstrGuestName?: string | null
+    somstrGuestContact?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
     soMstrMBank?: string | null
@@ -92609,6 +92695,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    somstrGuestName?: string | null
+    somstrGuestContact?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
     soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
@@ -92640,6 +92728,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    somstrGuestName?: string | null
+    somstrGuestContact?: string | null
     customerId?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
@@ -92708,6 +92798,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestContact?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -92739,6 +92831,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestContact?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
@@ -92797,6 +92891,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    somstrGuestName?: string | null
+    somstrGuestContact?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
     soMstrPaidAmt?: Decimal | DecimalJsLike | number | string | null
@@ -92828,6 +92924,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    somstrGuestName?: string | null
+    somstrGuestContact?: string | null
     customerId?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
@@ -92938,6 +93036,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestContact?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -92969,6 +93069,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestContact?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
@@ -95964,6 +96066,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    somstrGuestName?: string | null
+    somstrGuestContact?: string | null
     customerId?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
@@ -96003,6 +96107,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestContact?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -96034,6 +96140,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestContact?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
@@ -96065,6 +96173,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestContact?: NullableStringFieldUpdateOperationsInput | string | null
     customerId?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
@@ -96394,6 +96504,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: string | null
     soMstrModifyRemarks?: string | null
     soMstrDiscountContact?: string | null
+    somstrGuestName?: string | null
+    somstrGuestContact?: string | null
     soMstrCardNo?: string | null
     mtype?: string | null
     soMstrMBank?: string | null
@@ -96665,6 +96777,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestContact?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrPaidAmt?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -96696,6 +96810,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestContact?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null
@@ -96727,6 +96843,8 @@ export namespace Prisma {
     soMstrDiscountRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrModifyRemarks?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrDiscountContact?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestName?: NullableStringFieldUpdateOperationsInput | string | null
+    somstrGuestContact?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrCardNo?: NullableStringFieldUpdateOperationsInput | string | null
     mtype?: NullableStringFieldUpdateOperationsInput | string | null
     soMstrMBank?: NullableStringFieldUpdateOperationsInput | string | null

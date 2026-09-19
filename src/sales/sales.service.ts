@@ -272,10 +272,23 @@ export class SalesService {
     if (all || type === 'cash') {
       const cash = await this.prisma.t_SOMstr.findMany({
         where: { somstrIsActive: true, ...scope, ...saleDate },
-        select: { id: true, somstrCode: true, somstrDate: true, somstrNetAmt: true },
+        select: {
+          id: true, somstrCode: true, somstrDate: true, somstrNetAmt: true,
+          // Who the counter sale was for. The name typed at the till for a
+          // walk-in comes first: it is only ever written when the sale has no
+          // real customer, so where it exists it is the only answer.
+          somstrGuestName: true,
+          customer: { select: { name: true } },
+        },
       });
       for (const r of cash)
-        rows.push({ id: r.id, invoiceNo: r.somstrCode ?? '', date: r.somstrDate, type: 'Cash', netAmount: num(r.somstrNetAmt), customerName: null });
+        rows.push({
+          id: r.id, invoiceNo: r.somstrCode ?? '', date: r.somstrDate, type: 'Cash',
+          netAmount: num(r.somstrNetAmt),
+          // Null, not 'POS', for an unnamed walk-in: this list renders a missing
+          // name as '-' itself, and a placeholder would also be searched on.
+          customerName: (r.somstrGuestName ?? '').trim() || r.customer?.name || null,
+        });
     }
 
     if (all || type === 'vat-cash') {

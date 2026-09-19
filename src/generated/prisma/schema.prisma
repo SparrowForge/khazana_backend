@@ -214,6 +214,11 @@ model Customer {
   id                   String                 @id @default(dbgenerated("gen_random_uuid()")) @map("ID") @db.Uuid
   code                 String                 @unique @map("Code")
   name                 String                 @map("Name")
+  /// Contact no — unique across customers, and the handle the counter searches
+  /// on: the pickers on every entry screen match code, name OR this. Enforced
+  /// by the partial unique index "Customer_Mobile_key", which skips NULL and ''
+  /// so legacy rows with no number on file stay valid; Prisma cannot express a
+  /// partial index here — see prisma/migrations/customer_mobile_unique.sql.
   mobile               String?                @map("Mobile")
   address              String?                @map("Address")
   email                String?                @map("EMail")
@@ -510,6 +515,17 @@ model t_SOMstr {
   soMstrDiscountRemarks String?        @map("SoMstr_DiscountRemarks")
   soMstrModifyRemarks   String?        @map("SoMstr_ModifyRemarks")
   soMstrDiscountContact String?        @map("SoMstr_DiscountContact")
+  /// Who a walk-in cash sale was for, typed at the till: the name and contact no
+  /// of somebody with no Customer record. Written ONLY when the sale is billed
+  /// to the walk-in row (or to nobody) — a sale billed to a real customer takes
+  /// its name from the join, and a stray typed name beside it would be a second,
+  /// contradictory answer to the same question.
+  ///
+  /// Independent of the discount panel, so a name can be taken on any sale; and
+  /// it is also what lets a walk-in bill BE discounted, since it answers the
+  /// question the discount audit asks — who the discount was given to.
+  somstrGuestName       String?        @map("SoMstr_GuestName")
+  somstrGuestContact    String?        @map("SoMstr_GuestContact")
   /// The customer this counter sale was billed to. NULL is the walk-in case —
   /// the default at the till, and the only case with no name behind the sale.
   /// A discounted sale must have one: who a discount was given to is the whole

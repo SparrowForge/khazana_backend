@@ -4,7 +4,7 @@ import {
   IsOptional, IsIn, Min, IsDateString, ArrayMinSize, IsUUID, MaxLength, Matches,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { PosCartItemDto, SalePaymentDto } from './create-pos-sale.dto';
+import { PosCartItemDto, SalePaymentDto, GUEST_NAME_DESC, GUEST_CONTACT_DESC } from './create-pos-sale.dto';
 
 /** One sale that was completed while the terminal was offline. */
 export class OfflineSaleDto {
@@ -94,17 +94,21 @@ export class OfflineSaleDto {
   @IsOptional()
   payments?: SalePaymentDto[];
 
-  /** @deprecated Accepted but IGNORED — the column it was written to is gone,
-   *  replaced by `customerId`. Kept so a sale queued before the picker existed
-   *  syncs rather than 400-ing. */
-  @ApiPropertyOptional({ example: 'Mr. Rahman', deprecated: true, description: 'Ignored — superseded by customerId. Accepted so a pre-picker offline sale still syncs.' })
+  /** Who a walk-in sale was rung up for, typed at the till. */
+  @ApiPropertyOptional({ example: 'Mr. Rahman', description: GUEST_NAME_DESC })
   @IsString()
   @IsOptional()
   @MaxLength(100)
   guestName?: string;
 
-  /** @deprecated Superseded by `customerId` — see `guestName`. */
-  @ApiPropertyOptional({ example: 'Manager Karim', deprecated: true, description: 'Typed discount authoriser name → SoMstr_DiscountRemarks. Superseded by customerId.' })
+  @ApiPropertyOptional({ example: '01700000000', description: GUEST_CONTACT_DESC })
+  @IsString()
+  @IsOptional()
+  @MaxLength(30)
+  guestContact?: string;
+
+  /** @deprecated Superseded by `customerId` and `guestName`. */
+  @ApiPropertyOptional({ example: 'Manager Karim', deprecated: true, description: 'Typed discount authoriser name → SoMstr_DiscountRemarks. Superseded by customerId/guestName.' })
   @IsString()
   @IsOptional()
   discountRemarks?: string;

@@ -4,6 +4,14 @@ import {
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
+/** Shared with the offline sync DTO, so the terminal and the queue that syncs
+ *  behind it document the same two fields the same way. */
+export const GUEST_NAME_DESC =
+  "The walk-in customer's name, typed at the till for somebody with no Customer record → t_SOMstr.SoMstr_GuestName. IGNORED when the sale names a real (non walk-in) customer: that customer IS the answer, and a typed name beside them would contradict it. With guestContact, this is also what lets a walk-in bill be discounted — the discount audit asks who the discount was given to, and this answers it.";
+
+export const GUEST_CONTACT_DESC =
+  "The walk-in customer's contact no, typed at the till → t_SOMstr.SoMstr_GuestContact. Same rule as guestName, and required alongside it to discount a walk-in sale.";
+
 export class PosCartItemDto {
   @ApiProperty({ example: 'uuid-item-id', description: 'Item_Information UUID' })
   @IsString()
@@ -129,36 +137,42 @@ export class CreatePosSaleDto {
   @Matches(/^[0-9]{4}$/, { message: 'cardNo must be exactly the 4 last digits of the card' })
   cardNo?: string;
 
-  /** @deprecated Accepted but IGNORED — the column it was written to
-   *  (SoMstr_GuestName) is gone, replaced by `customerId`. Kept in the DTO only
-   *  so an offline sale queued before the picker existed still passes validation
-   *  on sync instead of being stranded in the client's queue by a 400. */
+  /** Who a walk-in sale is for. See SoMstr_GuestName in the schema for why the
+   *  picker alone was not enough: most counter trade has no Customer record and
+   *  will not stand at the till while one is created. */
   @ApiPropertyOptional({
     example: 'Mr. Rahman',
-    deprecated: true,
-    description:
-      'Ignored — superseded by customerId. Accepted so an offline sale queued before the customer picker existed still syncs.',
+    description: GUEST_NAME_DESC,
   })
   @IsString()
   @IsOptional()
   @MaxLength(100)
   guestName?: string;
 
-  /** @deprecated Superseded by `customerId` — see `guestName`. */
+  @ApiPropertyOptional({
+    example: '01700000000',
+    description: GUEST_CONTACT_DESC,
+  })
+  @IsString()
+  @IsOptional()
+  @MaxLength(30)
+  guestContact?: string;
+
+  /** @deprecated Superseded by `customerId` and `guestName`. */
   @ApiPropertyOptional({
     example: 'Manager Karim',
     deprecated: true,
-    description: 'Typed discount authoriser name → t_SOMstr.SoMstr_DiscountRemarks. Superseded by customerId; only used when no customerId is given.',
+    description: 'Typed discount authoriser name → t_SOMstr.SoMstr_DiscountRemarks. Superseded by customerId/guestName; only used when neither is given.',
   })
   @IsString()
   @IsOptional()
   discountRemarks?: string;
 
-  /** @deprecated Superseded by `customerId` — see `guestName`. */
+  /** @deprecated Superseded by `customerId` and `guestContact`. */
   @ApiPropertyOptional({
     example: '01700000000',
     deprecated: true,
-    description: 'Typed discount authoriser contact no → t_SOMstr.SoMstr_DiscountContact. Superseded by customerId; only used when no customerId is given.',
+    description: 'Typed discount authoriser contact no → t_SOMstr.SoMstr_DiscountContact. Superseded by customerId/guestContact; only used when neither is given.',
   })
   @IsString()
   @IsOptional()

@@ -49,6 +49,42 @@ export class PosSalesService {
     return Math.round(n * 100) / 100;
   }
 
+  /**
+   * Who a counter sale is FOR, resolved once and used by both write paths.
+   *
+   * The walk-in row is not somebody: it is the counter itself, the default the
+   * till bills to when nobody is named. So the sale's party is either a real
+   * picked customer, or the name and contact no typed at the till for a walk-in
+   * — and never both. The typed pair is dropped when a real customer is picked,
+   * which is what keeps every report able to resolve the name in one order
+   * (typed → joined → legacy discount authoriser) with no ambiguity.
+   *
+   * `identified` is the question the discount audit asks: is there a name
+   * behind this bill? A walk-in with a typed name and number answers it, which
+   * is what allows a discounted counter sale without registering the buyer.
+   */
+  private resolveParty(
+    customer: { id: string; name: string; mobile: string | null; isWalkIn?: boolean } | null,
+    guestName?: string | null,
+    guestContact?: string | null,
+  ) {
+    const named = customer && !customer.isWalkIn ? customer : null;
+    const typedName = named ? null : (guestName ?? '').trim() || null;
+    const typedContact = named ? null : (guestContact ?? '').trim() || null;
+    return {
+      /** The picked customer, or null when the sale is a walk-in. */
+      named,
+      guestName: typedName,
+      guestContact: typedContact,
+      /** A name AND a number: half an identity is not an audit trail. */
+      identified: !!named || (!!typedName && !!typedContact),
+      /** What the discount audit columns record — the same two columns the
+       *  Daily Final Report and the Discount Log have always read. */
+      discountName: named?.name ?? typedName,
+      discountContact: named?.mobile ?? typedContact,
+    };
+  }
+
 
   /** Resolve the session branch (Branch UUID) to its sanitized code, or '' when
    *  it can't be resolved. */
@@ -90,6 +126,10 @@ export class PosSalesService {
       customerCode: sale.customer?.code ?? null,
       customerName: sale.customer?.name ?? null,
       customerMobile: sale.customer?.mobile ?? null,
+      /** Who a walk-in sale was for, typed at the till. Null on a sale billed to
+       *  a real customer, and on a walk-in nobody named. */
+      guestName: sale.somstrGuestName ?? null,
+      guestContact: sale.somstrGuestContact ?? null,
       // Last 4 digits of the card, on a Card sale only.
       cardNo: sale.soMstrCardNo ?? null,
       discountRemarks: sale.soMstrDiscountRemarks ?? null,
@@ -277,6 +317,8 @@ export class PosSalesService {
       branchId,
       discountType: dto.discountType,
       discountValue: dto.discountValue,
+      guestName: dto.guestName,
+      guestContact: dto.guestContact,
       discountRemarks: dto.discountRemarks,
       discountContact: dto.discountContact,
       customerId: dto.customerId,
@@ -311,8 +353,13 @@ export class PosSalesService {
     branchId?: string | null;
     discountType?: 'fixed' | 'percentage';
     discountValue?: number;
-    /** @deprecated Typed authoriser name/contact. Only read when no `customerId`
-     *  is supplied — i.e. an offline sale queued before the picker existed. */
+    /** Who a walk-in sale is for, typed at the till. Dropped when `customerId`
+     *  names a real customer — see resolveParty. */
+    guestName?: string;
+    guestContact?: string;
+    /** @deprecated Typed authoriser name/contact. Only read when the sale names
+     *  neither a customer nor a guest — i.e. an offline sale queued before
+     *  either existed. */
     discountRemarks?: string;
     discountContact?: string;
     /** The customer this sale is billed to. Null/absent is a walk-in, which is
@@ -393,15 +440,17 @@ export class PosSalesService {
       );
     }
 
-    // Who the sale is billed to. The walk-in customer is the norm at the counter
-    // — but not for a discounted bill: the Daily Final Report and the Discount
-    // Log both exist to say who each discount went to. Note the test is on the
-    // walk-in FLAG, not on the absence of a customer: now that walk-in is a real
-    // Customer row, "has a customerId" no longer means "was given to somebody".
+    // Who the sale is for. The walk-in row is the norm at the counter, and for
+    // a discounted bill it is not enough on its own: the Daily Final Report and
+    // the Discount Log both exist to say who each discount went to, and "the
+    // counter" answers nothing. A typed name and number answer it as well as a
+    // picked customer does — better, in fact, than forcing the cashier to
+    // register a passer-by to take 20 taka off a box of sweets.
     const customer = await this.loadCustomer(p.customerId);
-    if (discountAmount > 0 && (!customer || customer.isWalkIn) && p.requireCustomerForDiscount !== false) {
+    const party = this.resolveParty(customer, p.guestName, p.guestContact);
+    if (discountAmount > 0 && !party.identified && p.requireCustomerForDiscount !== false) {
       throw new BadRequestException(
-        'A discounted sale must be billed to a customer — select one instead of walk-in',
+        'A discounted sale must say who it is for — enter the customer name and contact no, or select a registered customer',
       );
     }
 
@@ -478,14 +527,21 @@ export class PosSalesService {
             })),
           },
           customerId: customer?.id ?? null,
-          // Discount audit (only meaningful when a discount applied). Filled
-          // from the picked customer — who the discount was given to — so the
-          // Daily Final Report breakdown and the Discount Log, both of which
-          // read these two columns, keep working untouched. The typed values
-          // are the fallback for a sale that carries no customer, which now
-          // only happens on an offline order queued before the picker existed.
-          soMstrDiscountRemarks: discountAmount > 0 ? (customer?.name ?? p.discountRemarks ?? null) : null,
-          soMstrDiscountContact: discountAmount > 0 ? (customer?.mobile ?? p.discountContact ?? null) : null,
+          // Who a walk-in sale was for. Null on a sale billed to a real
+          // customer — see resolveParty — and null on a walk-in nobody named,
+          // which is most of the counter's trade and perfectly fine.
+          somstrGuestName: party.guestName,
+          somstrGuestContact: party.guestContact,
+          // Discount audit (only meaningful when a discount applied). The party
+          // the bill names — picked customer, else the name typed for a walk-in
+          // — so the Daily Final Report breakdown and the Discount Log, both of
+          // which read these two columns, keep working untouched. The legacy
+          // typed authoriser is the last fallback, for an offline order queued
+          // before either field existed.
+          soMstrDiscountRemarks:
+            discountAmount > 0 ? (party.discountName ?? p.discountRemarks ?? null) : null,
+          soMstrDiscountContact:
+            discountAmount > 0 ? (party.discountContact ?? p.discountContact ?? null) : null,
           somstrCreator: p.servedBy || p.createdBy,
           somstrCreationDate: new Date(),
           somstrIsActive: true,
@@ -717,12 +773,13 @@ export class PosSalesService {
       );
     }
     // Same rule as a new sale: a discount has to be given to somebody, so an
-    // edit that applies one has to name the customer it was given to — and the
-    // walk-in customer is not somebody.
+    // edit that applies one has to say who — a picked customer, or the name and
+    // contact no typed for a walk-in.
     const customer = await this.loadCustomer(dto.customerId);
-    if (discountAmount > 0 && (!customer || customer.isWalkIn)) {
+    const party = this.resolveParty(customer, dto.guestName, dto.guestContact);
+    if (discountAmount > 0 && !party.identified) {
       throw new BadRequestException(
-        'A discounted sale must be billed to a customer — select one instead of walk-in',
+        'A discounted sale must say who it is for — enter the customer name and contact no, or select a registered customer',
       );
     }
 
@@ -786,12 +843,19 @@ export class PosSalesService {
             })),
           },
           customerId: customer?.id ?? null,
+          // Restated, not merged: an edit that picks a real customer must clear
+          // the typed pair the sale was saved with, or the invoice would name
+          // two different buyers.
+          somstrGuestName: party.guestName,
+          somstrGuestContact: party.guestContact,
           // Mandatory audit trail for the Daily Final Report Sales Correction section.
           soMstrModifyRemarks: dto.modifyRemarks,
-          // Discount audit — the picked customer, kept in step with the
+          // Discount audit — the party the bill names, kept in step with the
           // (re-applied) discount. Same fallback order as a new sale.
-          soMstrDiscountRemarks: discountAmount > 0 ? (customer?.name ?? dto.discountRemarks ?? null) : null,
-          soMstrDiscountContact: discountAmount > 0 ? (customer?.mobile ?? dto.discountContact ?? null) : null,
+          soMstrDiscountRemarks:
+            discountAmount > 0 ? (party.discountName ?? dto.discountRemarks ?? null) : null,
+          soMstrDiscountContact:
+            discountAmount > 0 ? (party.discountContact ?? dto.discountContact ?? null) : null,
           somstrUpdateBy: userName,
           somstrUpdateDate: new Date(),
           details: {

@@ -96,6 +96,9 @@ export class PosSyncService {
           branchId: order.branchId ?? null,
           discountType: order.discountType,
           discountValue: order.discountValue,
+          // Named at the till while offline, the same as an online walk-in sale.
+          guestName: order.guestName,
+          guestContact: order.guestContact,
           discountRemarks: order.discountRemarks,
           discountContact: order.discountContact,
           customerId: order.customerId ?? null,
