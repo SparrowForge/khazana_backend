@@ -3,6 +3,8 @@ import { IsString, IsNotEmpty, IsOptional, IsNumber, Min, Max } from 'class-vali
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { PrismaService } from '../database/prisma.service';
 import { PaginationQueryDto } from '../common/dto';
+import { CustomerOptionsQueryDto } from './dto/customer-options-query.dto';
+import { CustomerListQueryDto } from './dto/customer-list-query.dto';
 import { buildPaginationMeta, roundPayable, toBranchUuid } from '../common/helpers';
 
 export class CreateCustomerDto {
@@ -19,7 +21,11 @@ export class CreateCustomerDto {
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({ example: '01700000000', description: 'Customer mobile number' })
+  @ApiProperty({
+    example: '01700000000',
+    description:
+      'Customer contact no. Unique across customers — it is what the counter searches on, so two people cannot share one.',
+  })
   @IsString()
   @IsNotEmpty()
   mobile: string;
@@ -57,7 +63,7 @@ export class UpdateCustomerDto {
   @IsOptional()
   name?: string;
 
-  @ApiPropertyOptional({ example: '01700000000' })
+  @ApiPropertyOptional({ example: '01700000000', description: 'Contact no. Unique across customers.' })
   @IsString()
   @IsOptional()
   mobile?: string;
@@ -125,13 +131,71 @@ export class CustomersService {
     return (branch?.branchCode ?? '').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
   }
 
-  async findAll(query: PaginationQueryDto) {
+  /** The Customers page. `search` matches code, name or contact no and is
+   *  applied before paging — filtering the page after it was fetched would only
+   *  ever search the ten rows on screen, which is no use for finding somebody
+   *  by the number they just gave over the phone. */
+  async findAll(query: CustomerListQueryDto) {
     const { page, limit } = query;
+    const term = (query.search ?? '').trim();
+    // `undefined` rather than {} when nothing is filtered, so the unsearched
+    // list keeps exactly the query it had before search existed.
+    const where = term
+      ? {
+          OR: [
+            { code: { contains: term, mode: 'insensitive' as const } },
+            { name: { contains: term, mode: 'insensitive' as const } },
+            { mobile: { contains: term, mode: 'insensitive' as const } },
+          ],
+        }
+      : undefined;
     const [customers, total] = await Promise.all([
-      this.prisma.customer.findMany({ orderBy: { name: 'asc' }, skip: (page - 1) * limit, take: limit }),
-      this.prisma.customer.count(),
+      this.prisma.customer.findMany({ where, orderBy: { name: 'asc' }, skip: (page - 1) * limit, take: limit }),
+      this.prisma.customer.count({ where }),
     ]);
     return { items: customers, meta: buildPaginationMeta(total, page, limit) };
+  }
+
+  /** The fields a picker needs: enough to search on (code, name, contact no)
+   *  and enough to fill an invoice header once a customer is chosen. */
+  private static readonly OPTION_SELECT = {
+    id: true,
+    code: true,
+    name: true,
+    mobile: true,
+    address: true,
+    email: true,
+    defaultDiscount: true,
+    isWalkIn: true,
+  } as const;
+
+  /**
+   * Customers for a picker — searched on code, name OR contact no, because
+   * that is how the counter identifies somebody: they give a phone number, or
+   * the operator half-remembers a name, or a card carries the code.
+   *
+   * Un-paginated on purpose (see CustomerOptionsQueryDto): the picker is a
+   * list to choose from, not a page to walk. With no search term it returns
+   * the first `limit` by name, which is what a screen loads on open; once the
+   * operator types, the term goes to the database and the match comes back
+   * even for a customer sitting nowhere near the front of the alphabet.
+   */
+  async findOptions(query: CustomerOptionsQueryDto) {
+    const term = (query.search ?? '').trim();
+    return this.prisma.customer.findMany({
+      where: term
+        ? {
+            OR: [
+              { code: { contains: term, mode: 'insensitive' as const } },
+              { name: { contains: term, mode: 'insensitive' as const } },
+              { mobile: { contains: term, mode: 'insensitive' as const } },
+            ],
+          }
+        : undefined,
+      select: CustomersService.OPTION_SELECT,
+      orderBy: { name: 'asc' },
+      take: query.limit,
+    });
   }
 
   findOne(idOrCode: string) {
@@ -168,20 +232,65 @@ export class CustomersService {
     throw new ConflictException('Could not allocate a customer code — enter one manually');
   }
 
+  /**
+   * Refuses a contact no that already sits on another customer.
+   *
+   * The number is the counter's handle on a customer — it is what gets typed
+   * into the picker when somebody walks up. Two rows sharing one make that
+   * search ambiguous, and the ledger then splits one person's history across
+   * two accounts. The database carries the same rule as a partial unique index
+   * (prisma/migrations/customer_mobile_unique.sql); this check is what turns a
+   * violation into a message the operator can act on rather than a 500.
+   *
+   * `excludeId` is the row being edited — a customer keeping their own number
+   * is not a duplicate.
+   */
+  private async assertMobileFree(mobile: string | undefined, excludeId?: string) {
+    const value = mobile?.trim();
+    if (!value) return;
+    const clash = await this.prisma.customer.findFirst({
+      where: {
+        mobile: { equals: value, mode: 'insensitive' },
+        ...(excludeId ? { id: { not: excludeId } } : {}),
+      },
+      select: { code: true, name: true },
+    });
+    if (clash) {
+      throw new ConflictException(
+        `Contact no ${value} already belongs to ${clash.name} (${clash.code})`,
+      );
+    }
+  }
+
   async create(dto: CreateCustomerDto) {
     // A blank code from the form means "auto-generate" — the field is read-only
     // in the UI, so this is the normal path; an explicit code still wins.
     const code = dto.code?.trim() || (await this.generateCustomerCode());
     const existing = await this.prisma.customer.findUnique({ where: { code } });
     if (existing) throw new ConflictException('Customer code already exists');
+    await this.assertMobileFree(dto.mobile);
     return this.prisma.customer.create({
-      data: { ...dto, code, joiningDate: dto.joiningDate ? new Date(dto.joiningDate) : undefined },
+      data: {
+        ...dto,
+        code,
+        // Stored trimmed, so what the picker searches on is exactly what the
+        // duplicate check compared.
+        mobile: dto.mobile.trim(),
+        joiningDate: dto.joiningDate ? new Date(dto.joiningDate) : undefined,
+      },
     });
   }
 
   async update(idOrCode: string, dto: UpdateCustomerDto) {
     const customer = await this.resolveCustomer(idOrCode);
-    return this.prisma.customer.update({ where: { id: customer.id }, data: dto });
+    await this.assertMobileFree(dto.mobile, customer.id);
+    return this.prisma.customer.update({
+      where: { id: customer.id },
+      data: {
+        ...dto,
+        ...(dto.mobile === undefined ? {} : { mobile: dto.mobile.trim() }),
+      },
+    });
   }
 
   // Ledger formula: outstanding = credit sales − money receipts − order advances.

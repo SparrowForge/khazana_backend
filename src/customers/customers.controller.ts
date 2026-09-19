@@ -5,6 +5,8 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { CurrentUser, RequiredPermission } from '../common/decorators';
 import { PaginationQueryDto } from '../common/dto';
+import { CustomerOptionsQueryDto } from './dto/customer-options-query.dto';
+import { CustomerListQueryDto } from './dto/customer-list-query.dto';
 import { paginatedResponse } from '../common/helpers';
 
 @ApiTags('Customers')
@@ -15,14 +17,26 @@ export class CustomersController {
   constructor(private customersService: CustomersService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all customers' })
+  @ApiOperation({ summary: 'Get all customers, optionally searched by code, name or contact no' })
   @ApiResponse({ status: 200, description: 'List of customers' })
-  async findAll(@Query() query: PaginationQueryDto) {
+  async findAll(@Query() query: CustomerListQueryDto) {
     const { items, meta } = await this.customersService.findAll(query);
     return paginatedResponse(items, meta, 'Customer');
   }
 
-  // NOTE: static 'payments' routes must be declared before ':code' so they are matched first
+  // NOTE: static routes ('options', 'payments') must be declared before ':code'
+  // so they are matched first.
+  @Get('options')
+  @ApiOperation({
+    summary: 'Customers for a picker, searchable by code, name or contact no',
+    description:
+      'A flat list (no pagination) for the customer pickers on the entry and report screens. The search term matches the code, the name or the contact no, so the counter can find somebody by whichever of the three they are given.',
+  })
+  @ApiResponse({ status: 200, description: 'Matching customers, ordered by name' })
+  findOptions(@Query() query: CustomerOptionsQueryDto) {
+    return this.customersService.findOptions(query);
+  }
+
   @Get('payments')
   @ApiOperation({ summary: 'Get all customer payments (register)' })
   @ApiResponse({ status: 200, description: 'List of all payments' })
