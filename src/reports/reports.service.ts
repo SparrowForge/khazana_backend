@@ -2410,10 +2410,17 @@ export class ReportsService {
     type Row = {
       date: Date | null;
       invoiceNo: string;
+      /** Who the discount was given to. Its own column since the sheet is read
+       *  invoice-by-invoice: the name belongs beside the invoice number, not in
+       *  a remarks box at the far right. */
+      customerName: string;
       amount: number;
       discountPercent: number;
       discount: number;
       contactNo: string;
+      /** A genuine note about the discount, where one was written. Only credit
+       *  invoices have a field for it; a counter sale has none, so this is
+       *  blank there rather than repeating the name. */
       remarks: string;
       outlet: string;
     };
@@ -2432,11 +2439,12 @@ export class ReportsService {
     const outletOf = (branchId: string | null) => (branchId ? branchNameById.get(branchId) ?? '' : '');
 
     const rows: Row[] = [
-      // Who each counter discount went to. The terminal picks the customer now
-      // and refuses to discount a walk-in, so the report's Contact No./Remarks
-      // columns are their mobile and name — falling back to the SoMstr_Discount*
-      // audit columns, which is what a sale discounted before the picker
-      // existed (and every t_SOMstV row, which has no picker) still carries.
+      // Who each counter discount went to: the name typed at the till for a
+      // walk-in, else the picked customer, falling back to the SoMstr_Discount*
+      // audit columns — what a sale discounted before either existed (and every
+      // t_SOMstV row, which has no picker) still carries. The terminal refuses
+      // to discount a sale that names nobody at all, so a blank here means a
+      // legacy row, not a gap in today's audit.
       ...[
         // Only t_SOMstr has a customer — t_SOMstV is written by the VAT cash
         // form, which has no picker — so the two ledgers are zipped with the
@@ -2455,19 +2463,23 @@ export class ReportsService {
             amount,
             discountPercent: pctOf(discount, amount),
             discount,
+            // Blank rather than 'POS' here: this column is the discount's
+            // authority, and printing a placeholder where a name is missing
+            // would read as an answer to the question the sheet is asking.
+            customerName:
+              (guest?.somstrGuestName ?? '').trim() ||
+              (customer?.name ?? '').trim() ||
+              sale.soMstrDiscountRemarks ||
+              '',
             contactNo: posClientContact(
               guest?.somstrGuestContact,
               customer?.mobile,
               sale.soMstrDiscountContact,
             ),
-            // Blank rather than 'POS' here: this column is the discount's
-            // authority, and printing a placeholder where a name is missing
-            // would read as an answer to the question the sheet is asking.
-            remarks:
-              (guest?.somstrGuestName ?? '').trim() ||
-              (customer?.name ?? '').trim() ||
-              sale.soMstrDiscountRemarks ||
-              '',
+            // A counter sale has no remarks field — SoMstr_DiscountRemarks is
+            // the authoriser's NAME, which is now the column above. Left blank
+            // rather than printing that name twice on one row.
+            remarks: '',
             outlet: outletOf(sale.branchId),
           };
         }),
@@ -2487,8 +2499,12 @@ export class ReportsService {
             amount,
             discountPercent: stored > 0 ? r2signed(stored) : pctOf(discount, amount),
             discount,
+            customerName: s.customer?.name ?? '',
             contactNo: s.customer?.mobile ?? '',
-            remarks: s.discountRemarks || s.customer?.name || '',
+            // The invoice's own note, now that the name has a column of its
+            // own: this used to fall back to the customer's name, which is
+            // where the far-right column got its name from at all.
+            remarks: s.discountRemarks ?? '',
             outlet: outletOf(s.branchId),
           };
         }),
